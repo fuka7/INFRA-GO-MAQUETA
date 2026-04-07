@@ -136,10 +136,9 @@ nav {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: 
-    radial-gradient(ellipse 80% 70% at 65% 40%, rgba(10,40,120,0.55) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 50% at 85% 60%, rgba(20,60,160,0.3) 0%, transparent 60%),
-    linear-gradient(160deg, #040c1c 0%, #071226 40%, #09183a 100%);
+  background: url('/img/Front%20web%201.PNG');
+  background-size: cover;
+  background-position: center;
 }
 
 .hero-grid {
@@ -303,7 +302,7 @@ nav {
   top: 0;
   bottom: 0;
   width: 52%;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 1;
