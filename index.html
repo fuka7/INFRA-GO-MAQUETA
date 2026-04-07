@@ -698,13 +698,11 @@
 ══════════════════════════════════════ -->
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ════════════════════════════════════════════
-   CONFIG — Cambia API_BASE_PROD por tu URL de
-   produccion (ej: https://api.infrago.cl)
+   CONFIG — API_BASE_
 ════════════════════════════════════════════ */
-const IS_LOCAL = ['localhost','127.0.0.1'].includes(window.location.hostname);
-const API_BASE = IS_LOCAL ? 'http://localhost:3001' : 'https://api.infrago.cl';
+const API_BASE = 'https://infrago-backend-production.up.railway.app';
 
-/* ════════════════════════════════════════════
+/* ════════════════════════╗
    CHAT EN VIVO
 ════════════════════════════════════════════ */
 let chatOpen    = false;
