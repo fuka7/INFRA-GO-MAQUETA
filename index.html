@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InfraGo — Operación TI Inteligente. Sin Fricción.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="nav-logo-text">Infra<span class="nav-logo-go">Go</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#hero">INICIO</a></li>
+    <li><a href="#incluye">COMPUTADORES</a></li>
+    <li><a href="#incluye">SERVIDORES</a></li>
+    <li><a href="#planes">LICENCIAS</a></li>
+    <li><a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Soporte Tecnológico<br>B2B en Todo Chile
+    </h1>
+
+    <p class="hero-stats">
+      +10.000 usuarios soportados &nbsp;|&nbsp; Cobertura nacional &nbsp;|&nbsp; SLA garantizado
+    </p>
+
+    <div class="hero-divider"></div>
+
+    <p class="hero-subtitle">Continuidad operacional<br>garantizada para tu empresa.</p>
+    <p class="hero-desc">
+      Infraestructura TI, soporte nacional y respuesta en terreno.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/configurador" class="btn-primary" onclick="openQuoter(); return false;">
+        Cotizar solución en 3 minutos
+      </a>
+    </div>
+  </div>
+
+  <!-- Visual flotante: servidor, laptop, impresora -->
+  <div class="hero-visual">
+    <div class="hero-devices">
+      <!-- Servidor rack (centro) -->
+      <div class="device-server">
+        <div class="server-rack">
+          <div class="server-top-glow"></div>
+          <div class="rack-unit ru-highlight">
+            <div class="ru-led active"></div>
+            <div class="ru-bars"><span></span><span></span><span></span><span></span></div>
+            <div class="ru-label">STORAGE</div>
+          </div>
+          <div class="rack-unit">
+            <div class="ru-led active"></div>
+            <div class="ru-bars"><span></span><span></span><span></span><span></span></div>
+            <div class="ru-label">NET-01</div>
+          </div>
+          <div class="rack-unit">
+            <div class="ru-led active"></div>
+            <div class="ru-bars"><span></span><span></span><span></span></div>
+            <div class="ru-label">SRV-02</div>
+          </div>
+          <div class="rack-unit ru-highlight">
+            <div class="ru-led active"></div>
+            <div class="ru-bars"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="ru-label">CORE</div>
+          </div>
+          <div class="rack-unit">
+            <div class="ru-led"></div>
+            <div class="ru-bars"><span></span><span></span></div>
+            <div class="ru-label">BKUP</div>
+          </div>
+          <div class="rack-unit ru-highlight">
+            <div class="ru-led active"></div>
+            <div class="ru-bars"><span></span><span></span><span></span><span></span></div>
+            <div class="ru-label">FIREWALL</div>
+          </div>
+          <div class="rack-cables">
+            <div class="cable c1"></div>
+            <div class="cable c2"></div>
+            <div class="cable c3"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Laptop (frente-izquierda) -->
+      <div class="device-laptop">
+        <div class="laptop-screen">
+          <div class="laptop-screen-inner">
+            <div class="ls-topbar">
+              <div class="ls-dot r"></div><div class="ls-dot y"></div><div class="ls-dot g"></div>
+            </div>
+            <div class="ls-map"></div>
+            <div class="ls-bars">
+              <div class="ls-bar" style="width:60%;height:4px;background:rgba(59,130,246,0.6);border-radius:2px;margin-bottom:4px;"></div>
+              <div class="ls-bar" style="width:40%;height:4px;background:rgba(240,165,0,0.5);border-radius:2px;margin-bottom:4px;"></div>
+              <div class="ls-bar" style="width:80%;height:4px;background:rgba(59,130,246,0.4);border-radius:2px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="laptop-base"></div>
+      </div>
+      <!-- Monitor (frente-derecha) -->
+      <div class="device-monitor">
+        <div class="monitor-screen">
+          <div class="monitor-inner">
+            <div class="mi-header">DASHBOARD</div>
+            <div class="mi-globe"></div>
+            <div class="mi-stats">
+              <div class="mi-stat"></div>
+              <div class="mi-stat"></div>
+              <div class="mi-stat"></div>
+            </div>
+          </div>
+        </div>
+        <div class="monitor-stand"></div>
+        <div class="monitor-foot"></div>
+      </div>
+      <!-- Impresora (derecha) -->
+      <div class="device-printer">
+        <div class="printer-body">
+          <div class="printer-top">
+            <div class="printer-panel">
+              <div class="pp-circle"></div>
+              <div class="pp-lines">
+                <div></div><div></div>
+              </div>
+            </div>
+          </div>
+          <div class="printer-tray"></div>
+          <div class="printer-slot"></div>
+        </div>
+      </div>
+      <!-- Plataforma reflectante -->
+      <div class="devices-platform"></div>
+      <!-- Glow background -->
+      <div class="devices-glow"></div>
+    </div>
+  </div>
+
+  <!-- Barra de marcas y certificaciones (SLIDER AUTOMÁTICO) -->
+  <div class="hero-brands-bar">
+    <div class="brands-slider-container">
+      <div class="brands-logos" id="brandsLogosSlider">
+        <!-- Primer set de logos -->
+        <!-- HP -->
+        <div class="brand-item">
+          <img src="/img/HP_logo_630x630.png" alt="HP" class="brand-logo">
+        </div>
+        <!-- Apple -->
+        <div class="brand-item">
+          <img src="/img/images-removebg-preview.png" alt="Apple" class="brand-logo">
+        </div>
+        <!-- Lenovo -->
+        <div class="brand-item">
+          <img src="/img/lenovo-white-logo-png-image-701751694772186qprjoasoxm.png" alt="Lenovo" class="brand-logo">
+        </div>
+        <!-- Dell -->
+        <div class="brand-item">
+          <img src="/img/Dell-Logo.png" alt="Dell" class="brand-logo">
+        </div>
+        <!-- ASUS -->
+        <div class="brand-item">
+          <img src="/img/asus_logo_icon_168565.png" alt="ASUS" class="brand-logo">
+        </div>
+        <!-- Brother -->
+        <div class="brand-item">
+          <img src="/img/logo-Brother.png" alt="Brother" class="brand-logo">
+        </div>
+        <!-- Bitdefender -->
+        <div class="brand-item">
+          <img src="/img/Bitdefender_logo.svg.png" alt="Bitdefender" class="brand-logo">
+        </div>
+        <!-- Microsoft -->
+        <div class="brand-item">
+          <img src="/img/Microsoft_logo_(2012).svg.png" alt="Microsoft" class="brand-logo">
+        </div>
+
+        <!-- Segundo set duplicado para loop continuo -->
+        <!-- HP -->
+        <div class="brand-item">
+          <img src="/img/HP_logo_630x630.png" alt="HP" class="brand-logo">
+        </div>
+        <!-- Apple -->
+        <div class="brand-item">
+          <img src="/img/images-removebg-preview.png" alt="Apple" class="brand-logo">
+        </div>
+        <!-- Lenovo -->
+        <div class="brand-item">
+          <img src="/img/lenovo-white-logo-png-image-701751694772186qprjoasoxm.png" alt="Lenovo" class="brand-logo">
+        </div>
+        <!-- Dell -->
+        <div class="brand-item">
+          <img src="/img/Dell-Logo.png" alt="Dell" class="brand-logo">
+        </div>
+        <!-- ASUS -->
+        <div class="brand-item">
+          <img src="/img/asus_logo_icon_168565.png" alt="ASUS" class="brand-logo">
+        </div>
+        <!-- Brother -->
+        <div class="brand-item">
+          <img src="/img/logo-Brother.png" alt="Brother" class="brand-logo">
+        </div>
+        <!-- Bitdefender -->
+        <div class="brand-item">
+          <img src="/img/Bitdefender_logo.svg.png" alt="Bitdefender" class="brand-logo">
+        </div>
+        <!-- Microsoft -->
+        <div class="brand-item">
+          <img src="/img/Microsoft_logo_(2012).svg.png" alt="Microsoft" class="brand-logo">
+        </div>
+      </div>
+    </div>
+    <div class="brands-separator"></div>
+    <div class="brands-certs">
+      <div class="cert-label">Modelo Operativo Certificado</div>
+      <div class="cert-badges">
+        <div class="cert-badge cert-itil">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          ITIL4
+        </div>
+        <div class="cert-badge cert-hipaa">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          HIPAA<br><span>COMPLIANT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- CÓMO FUNCIONA -->
+<section class="how-section" id="como-funciona">
+  <div class="section-tag">Proceso</div>
+  <h2 class="section-title">Cómo funciona</h2>
+  <p class="section-sub">Tres pasos para que tu empresa opere sin preocupaciones tecnológicas desde el primer día.</p>
+
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="step-num">01</div>
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="step-title">Configura tu TI</div>
+      <p class="step-desc">Elige el equipamiento y cantidad que necesitas. Personaliza cada detalle: modelo, RAM, almacenamiento y servicios adicionales.</p>
+      <div class="step-arrow">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 7h8M7 3l4 4-4 4"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="how-step">
+      <div class="step-num">02</div>
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/>
+        </svg>
+      </div>
+      <div class="step-title">Personaliza servicios</div>
+      <p class="step-desc">Agrega capas de valor: instalación profesional, soporte técnico Gold, monitoreo avanzado, seguros de activos y licencias de software.</p>
+      <div class="step-arrow">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 7h8M7 3l4 4-4 4"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="how-step">
+      <div class="step-num">03</div>
+      <div class="step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <div class="step-title">Opera sin preocupaciones</div>
+      <p class="step-desc">Recibe tu equipamiento instalado y configurado. Una cuota mensual fija cubre todo. Tu equipo se enfoca en el negocio, nosotros en la TI.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- QUÉ INCLUYE -->
+<section class="includes-section" id="incluye">
+  <div class="section-tag">Equipamiento</div>
+  <h2 class="section-title">Qué incluye</h2>
+  <p class="section-sub">Todo el hardware que tu empresa necesita, disponible en modalidad de arriendo mensual con soporte integrado.</p>
+
+  <div class="includes-grid">
+    <div class="include-card">
+      <div class="include-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="include-name">Computación</div>
+      <p class="include-desc">Notebooks profesionales HP, Dell y Lenovo. Desde básicos hasta estaciones de trabajo de alto rendimiento.</p>
+    </div>
+
+    <div class="include-card">
+      <div class="include-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="8" rx="2"/>
+          <rect x="2" y="14" width="20" height="8" rx="2"/>
+          <path d="M6 6h.01M6 18h.01"/>
+        </svg>
+      </div>
+      <div class="include-name">Servidores y Redes</div>
+      <p class="include-desc">Servidores rack y torre, switches, routers y equipamiento de red para entornos empresariales exigentes.</p>
+    </div>
+
+    <div class="include-card">
+      <div class="include-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+      </div>
+      <div class="include-name">Impresión y Escaneo</div>
+      <p class="include-desc">Impresoras multifuncionales HP LaserJet y equipos de escaneo corporativo con tóner incluido.</p>
+    </div>
+
+    <div class="include-card">
+      <div class="include-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          <line x1="12" y1="12" x2="12" y2="16"/>
+          <line x1="10" y1="14" x2="14" y2="14"/>
+        </svg>
+      </div>
+      <div class="include-name">Soluciones de Oficina</div>
+      <p class="include-desc">Kits completos de escritorio, monitores, periféricos y mobiliario TI para equipar oficinas desde cero.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- TRUST / PROMESA -->
+<section class="trust-section" id="planes">
+  <div class="trust-layout">
+    <div>
+      <div class="section-tag">Nuestra promesa</div>
+      <h2 class="section-title">Continuidad<br>operativa.</h2>
+      <p class="section-sub">TI que deja de ser un problema para convertirse en un motor de tu negocio.</p>
+
+      <div class="trust-partners">
+        <div class="partner-pill">HP Wolf Security</div>
+        <div class="partner-pill">Microsoft Gold</div>
+        <div class="partner-pill">Cisco Partner</div>
+        <div class="partner-pill">AWS Certified</div>
+        <div class="partner-pill">Bitdefender</div>
+        <div class="partner-pill">HP Inc. Partner</div>
+      </div>
+    </div>
+
+    <div class="trust-stats">
+      <div class="stat-card">
+        <div class="stat-num">99.5%</div>
+        <div class="stat-label">SLA de disponibilidad garantizado en contrato</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">+10</div>
+        <div class="stat-label">Años de trayectoria en TI empresarial en Chile</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">+500</div>
+        <div class="stat-label">Empresas con infraestructura activa gestionada</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Soporte técnico y monitoreo continuo incluido</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="section-tag" style="text-align:center;">Tu empresa no puede esperar</div>
+    <h2 class="cta-title">Tu infraestructura<br><span style="color:var(--gold);">lista en 48 horas.</span></h2>
+    <p class="cta-sub">Configura tu solución ahora y recibe cotización en tiempo real. Sin compromisos, sin letra chica.</p>
+    <div class="cta-actions">
+      <a href="configurador.html" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+        Configurar mi solución
+      </a>
+      <button class="btn-outline" onclick="openQuoter()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6l-4-4z"/>
+          <path d="M9 2v4h4M6 9h4M6 12h2"/>
+        </svg>
+        Cotizar con IA
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
+        <path d="M4 17L12 8L20 17L12 26Z" fill="#1a4fa0"/>
+        <path d="M14 17L22 8L30 17L22 26Z" fill="#2563c4" opacity="0.8"/>
+        <path d="M9 17L17 8L25 17L17 26Z" fill="#3b82f6" opacity="0.6"/>
+      </svg>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;">InfraGo</span>
+    </div>
+    <p>Operación TI inteligente. Sin fricción. Una empresa de TIC Manager's.</p>
+  </div>
+
+  <div class="footer-col">
+    <h4>Soluciones</h4>
+    <ul>
+      <li><a href="#">Notebooks</a></li>
+      <li><a href="#">Servidores y Redes</a></li>
+      <li><a href="#">Impresión</a></li>
+      <li><a href="#">Soluciones de Oficina</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Empresa</h4>
+    <ul>
+      <li><a href="#">Quiénes somos</a></li>
+      <li><a href="#">Planes</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Agendar Demo</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Contacto</h4>
+    <ul>
+      <li><a href="#"><span class="__cf_email__" data-cfemail="c2a1adacb6a3a1b6ad82abaca4b0a3a5adeca1ae">[email&#160;protected]</span></a></li>
+      <li><a href="#">+56 2 xxxx xxxx</a></li>
+      <li><a href="#">Providencia 1208, Of. 307</a></li>
+      <li><a href="#">Soporte</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <p>© 2026 InfraGo SpA. Todos los derechos reservados. Una empresa de TIC Manager's.</p>
+  <div class="footer-socials">
+    <a href="#">LinkedIn</a>
+    <a href="#">Instagram</a>
+    <a href="#">Facebook</a>
+    <a href="#">Términos</a>
+    <a href="#">Privacidad</a>
+  </div>
+</div>
+
+<!-- STICKY EXPERT BUTTON -->
+<a href="#" class="sticky-expert" onclick="openQuoter(); return false;">
+  <div class="sticky-btn">
+    <span class="sticky-dot"></span>
+    Cotizar ahora
+  </div>
+</a>
+
+<!-- ══════════════════════════════════════
+     CHAT EN VIVO CON IA
+══════════════════════════════════════ -->
+<div class="chat-fab" id="chatFab">
+  <div class="chat-fab-label" id="chatFabLabel">Asistente InfraGo</div>
+  <button class="chat-fab-btn" onclick="toggleChat()" aria-label="Abrir chat">
+    <svg id="chatFabIconChat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <svg id="chatFabIconClose" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+      <path d="M18 6L6 18M6 6l12 12"/>
+    </svg>
+    <div class="chat-fab-badge"></div>
+  </button>
+</div>
+
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-avatar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+    </div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">Asistente InfraGo IA</div>
+      <div class="chat-header-status">En línea · responde al instante</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">
+      <div class="chat-msg-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      </div>
+      <div class="chat-msg-bubble">
+        ¡Hola! 👋 Soy el asistente de <strong>InfraGo</strong>. Puedo ayudarte a encontrar la solución TI ideal para tu empresa, responder preguntas sobre planes o conectarte con un experto. ¿En qué te ayudo?
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-suggestions" id="chatSuggestions">
+    <button class="chat-suggestion-btn" onclick="sendSuggestion('¿Qué incluye el plan básico?')">Plan básico</button>
+    <button class="chat-suggestion-btn" onclick="sendSuggestion('Necesito notebooks para mi empresa')">Notebooks</button>
+    <button class="chat-suggestion-btn" onclick="sendSuggestion('¿Cómo funciona el leasing?')">Leasing</button>
+    <button class="chat-suggestion-btn" onclick="sendSuggestion('Quiero hablar con un experto')">Experto</button>
+  </div>
+
+  <div class="chat-input-area">
+    <input
+      class="chat-input"
+      id="chatInput"
+      type="text"
+      placeholder="Escribe tu consulta..."
+      autocomplete="off"
+      onkeydown="if(event.key==='Enter') sendChatMessage()"
+    />
+    <button class="chat-send" onclick="sendChatMessage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL COTIZADOR IA
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="quoterModal" onclick="if(event.target===this) closeQuoter()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6l-4-4z"/>
+            <path d="M9 2v4h4M6 9h4M6 12h2"/>
+            <circle cx="17" cy="17" r="4"/>
+            <path d="M17 15v2l1 1"/>
+          </svg>
+        </div>
+        <div>
+          <div class="modal-header-title">Cotizador Inteligente</div>
+          <div class="modal-header-sub">Powered by IA · Respuesta en segundos</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeQuoter()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Tipo de solución -->
+      <label class="quote-textarea-label" style="margin-bottom:12px;">¿Qué tipo de solución buscas?</label>
+      <div class="quote-type-grid" id="quoteTypeGrid">
+        <button class="quote-type-btn active" onclick="selectType(this, 'notebooks')" data-type="notebooks">
+          <div class="quote-type-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+            </svg>
+          </div>
+          <div>
+            <span class="quote-type-label">Notebooks</span>
+            <span class="quote-type-sub">Cómputo personal</span>
+          </div>
+        </button>
+        <button class="quote-type-btn" onclick="selectType(this, 'servidores')" data-type="servidores">
+          <div class="quote-type-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="8" rx="2"/>
+              <rect x="2" y="14" width="20" height="8" rx="2"/>
+              <path d="M6 6h.01M6 18h.01"/>
+            </svg>
+          </div>
+          <div>
+            <span class="quote-type-label">Servidores</span>
+            <span class="quote-type-sub">Infraestructura centralizada</span>
+          </div>
+        </button>
+        <button class="quote-type-btn" onclick="selectType(this, 'impresion')" data-type="impresion">
+          <div class="quote-type-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="6 9 6 2 18 2 18 9"/>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+              <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+          </div>
+          <div>
+            <span class="quote-type-label">Impresión</span>
+            <span class="quote-type-sub">Multifuncionales HP</span>
+          </div>
+        </button>
+        <button class="quote-type-btn" onclick="selectType(this, 'completo')" data-type="completo">
+          <div class="quote-type-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              <line x1="12" y1="12" x2="12" y2="16"/>
+              <line x1="10" y1="14" x2="14" y2="14"/>
+            </svg>
+          </div>
+          <div>
+            <span class="quote-type-label">Solución Completa</span>
+            <span class="quote-type-sub">Todo integrado</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Cantidades -->
+      <div class="quote-sliders">
+        <div class="quote-slider-item">
+          <label>
+            Equipos / unidades
+            <span id="sliderEquiposVal">10</span>
+          </label>
+          <input type="range" class="quote-slider" id="sliderEquipos" min="1" max="100" value="10"
+            oninput="document.getElementById('sliderEquiposVal').textContent=this.value">
+        </div>
+        <div class="quote-slider-item">
+          <label>
+            Meses de contrato
+            <span id="sliderMesesVal">24</span>
+          </label>
+          <input type="range" class="quote-slider" id="sliderMeses" min="6" max="60" step="6" value="24"
+            oninput="document.getElementById('sliderMesesVal').textContent=this.value">
+        </div>
+      </div>
+
+      <!-- Descripción libre -->
+      <label class="quote-textarea-label">Cuéntanos más sobre tu empresa o necesidad</label>
+      <textarea
+        class="quote-textarea"
+        id="quoteDescription"
+        placeholder="Ej: Somos una empresa de 30 personas en Santiago, necesitamos equipos para trabajo remoto con soporte técnico incluido y buena seguridad..."
+      ></textarea>
+
+      <!-- Botón -->
+      <button class="quote-btn-generate" id="quoteBtnGenerate" onclick="generateQuote()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+        Generar cotización con IA
+      </button>
+
+      <!-- Resultado -->
+      <div class="quote-result" id="quoteResult" style="display:none;">
+        <div id="quoteResultContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ════════════════════════════════════════════
+   CONFIG — Cambia API_BASE_PROD por tu URL de
+   produccion (ej: https://api.infrago.cl)
+════════════════════════════════════════════ */
+const IS_LOCAL = ['localhost','127.0.0.1'].includes(window.location.hostname);
+const API_BASE = IS_LOCAL ? 'http://localhost:3001' : 'https://api.infrago.cl';
+
+/* ════════════════════════════════════════════
+   CHAT EN VIVO
+════════════════════════════════════════════ */
+let chatOpen    = false;
+let chatHistory = [];
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatWindow').classList.toggle('open', chatOpen);
+  document.getElementById('chatFabIconChat').style.display  = chatOpen ? 'none'  : 'block';
+  document.getElementById('chatFabIconClose').style.display = chatOpen ? 'block' : 'none';
+  document.getElementById('chatFabLabel').textContent = chatOpen ? 'Cerrar chat' : 'Asistente InfraGo';
+  if (chatOpen) setTimeout(() => document.getElementById('chatInput').focus(), 300);
+}
+
+function sendSuggestion(text) {
+  document.getElementById('chatInput').value = text;
+  document.getElementById('chatSuggestions').style.display = 'none';
+  sendChatMessage();
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  appendMessage('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  const typingId = appendTyping();
+  try {
+    const res  = await fetch(API_BASE + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory.slice(-10) }),
+    });
+    removeTyping(typingId);
+    const data = await res.json();
+    if (!res.ok) { appendMessage('bot', data.error || 'Ocurrio un error.'); return; }
+    appendMessage('bot', data.text);
+    chatHistory.push({ role: 'assistant', content: data.text });
+  } catch(e) {
+    removeTyping(typingId);
+    appendMessage('bot', 'Problema de conexion. Escribenos a contacto@infrago.cl');
+  }
+}
+
+function appendMessage(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  const wrap = document.createElement('div');
+  wrap.className = 'chat-msg ' + role;
+  const avatar = '<div class="chat-msg-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>';
+  const bubble = '<div class="chat-msg-bubble">' + escapeHtml(text) + '</div>';
+  wrap.innerHTML = (role === 'bot') ? avatar + bubble : bubble;
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function appendTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const id   = 'typing-' + Date.now();
+  const wrap = document.createElement('div');
+  wrap.className = 'chat-msg bot'; wrap.id = id;
+  wrap.innerHTML = '<div class="chat-msg-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><div class="chat-typing"><div class="chat-typing-dots"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) { document.getElementById(id) && document.getElementById(id).remove(); }
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+/* ════════════════════════════════════════════
+   COTIZADOR IA
+════════════════════════════════════════════ */
+let selectedType = 'notebooks';
+
+function openQuoter()  { document.getElementById('quoterModal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeQuoter() { document.getElementById('quoterModal').classList.remove('open'); document.body.style.overflow=''; }
+
+function selectType(btn, type) {
+  selectedType = type;
+  document.querySelectorAll('.quote-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function generateQuote() {
+  const equipos     = document.getElementById('sliderEquipos').value;
+  const meses       = document.getElementById('sliderMeses').value;
+  const descripcion = document.getElementById('quoteDescription').value.trim();
+  const btn         = document.getElementById('quoteBtnGenerate');
+  const result      = document.getElementById('quoteResult');
+  const content     = document.getElementById('quoteResultContent');
+
+  btn.disabled  = true;
+  btn.innerHTML = '<div style="display:flex;align-items:center;gap:8px;"><div class="chat-typing-dots" style="background:none;border:none;padding:0;"><span style="background:var(--navy)"></span><span style="background:var(--navy)"></span><span style="background:var(--navy)"></span></div>Analizando con IA...</div>';
+  result.style.display = 'block';
+  content.innerHTML = '<div class="quote-result-loading"><div class="chat-typing-dots"><span></span><span></span><span></span></div>Generando cotizacion inteligente...</div>';
+
+  try {
+    const res  = await fetch(API_BASE + '/api/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: selectedType, equipos, meses, descripcion }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      content.innerHTML = '<div class="quote-result-text"><p>' + (data.error || 'Error al generar.') + '</p><br><p><strong>Contacto:</strong> contacto@infrago.cl</p></div>';
+    } else {
+      const fu = Number(data.precioUnitario).toLocaleString('es-CL');
+      const ft = Number(data.precioTotal).toLocaleString('es-CL');
+      content.innerHTML =
+        '<div class="quote-result-text">' +
+        '<p>' + data.resumen + '</p><br>' +
+        '<p><strong>Equipamiento:</strong> ' + data.equipamiento + '</p><br>' +
+        '<p><strong>Servicios:</strong> <em>' + data.servicios + '</em></p><br>' +
+        '<p><strong>Financiamiento:</strong> ' + data.financiamiento + '</p><br>' +
+        '<p><strong>SLA:</strong> ' + data.sla + '</p>' +
+        '</div>' +
+        '<div class="quote-result-price">' +
+        '<div><div class="quote-price-label">Total mensual estimado</div><div style="font-size:11px;color:var(--white-30);margin-top:2px;">$' + fu + ' CLP/unidad x ' + equipos + ' equipos</div></div>' +
+        '<div class="quote-price-value">$' + ft + ' <span>CLP/mes</span></div>' +
+        '</div>' +
+        '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">' +
+        '<a href="configurador.html" class="btn-primary" style="flex:1;min-width:160px;justify-content:center;" onclick="closeQuoter()"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>Ir al configurador</a>' +
+        '<button class="btn-outline" style="flex:1;min-width:160px;justify-content:center;" onclick="closeQuoter();toggleChat()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Hablar con experto</button>' +
+        '</div>';
+    }
+  } catch(e) {
+    content.innerHTML = '<div class="quote-result-text"><p>Problema de conexion.</p><br><p>contacto@infrago.cl | +56 2 xxxx xxxx</p></div>';
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Generar cotización con IA';
+  }
+}
+
+/* ════════════════════════════════════════════
+   ANIMACIONES DE ENTRADA (SCROLL)
+════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'fadeUp 0.6s ease both';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  document.querySelectorAll('.include-card, .partner-pill, .stat-card').forEach(el => observer.observe(el));
+});
+
+/* ════════════════════════════════════════════
+   CERRAR MODAL CON ESC
+════════════════════════════════════════════ */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeQuoter();
+  }
+});
+</script>
+
+</body>
+</html>
