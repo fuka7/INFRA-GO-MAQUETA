@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="stylesheet" href="/assets/css/tienda.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
 </head>
 <body>
 
@@ -24,6 +25,18 @@
     <li><a href="index.html#planes-soluciones">PLANES</a></li>
     <li><a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a></li>
   </ul>
+  <button class="nav-hamburger" aria-label="Menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MENÚ MOBILE -->
+<nav class="nav-mobile-menu">
+  <a href="index.html#hero">Inicio</a>
+  <a href="index.html#quienes-somos">Quiénes somos</a>
+  <a href="tienda.html">Tienda</a>
+  <a href="index.html#planes-soluciones">Planes</a>
+  <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a>
 </nav>
 
 <!-- HEADER -->
@@ -812,6 +825,28 @@ window.addEventListener('DOMContentLoaded', () => {
       applyFilters();
     }
   }
+});
+</script>
+<script>
+/* ── HAMBURGER MENU ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector('.nav-hamburger');
+  const menu = document.querySelector('.nav-mobile-menu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', () => {
+    const open = btn.classList.toggle('open');
+    menu.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      btn.classList.remove('open');
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
 });
 </script>
 
