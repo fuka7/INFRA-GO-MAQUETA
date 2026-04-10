@@ -266,3 +266,10 @@ document.addEventListener('DOMContentLoaded', () => {
   updateButtons();
   updateSidebar();
 });
+
+window.toggleProduct = toggleProduct;
+window.incrementQty = incrementQty;
+window.decrementQty = decrementQty;
+window.nextStep = nextStep;
+window.prevStep = prevStep;
+window.solicitarCotizacion = solicitarCotizacion;
