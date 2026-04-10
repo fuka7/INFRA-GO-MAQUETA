@@ -260,6 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
   updateProgressBar();
   updateButtons();
   updateSidebar();
+  document.querySelectorAll('.service-check').forEach(checkbox => {
+    checkbox.addEventListener('change', updateSidebar);
+  });
 });
 
 // 👇 EXPONER FUNCIONES AL HTML
