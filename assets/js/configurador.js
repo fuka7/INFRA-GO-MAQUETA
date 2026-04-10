@@ -1,36 +1,27 @@
 /* ═══════════════════════════════════════════════
    configurador.js
    Wizard de configuración de soluciones (4 pasos)
-   © 2026 InfraGo SpA / TIC Manager's
 ═══════════════════════════════════════════════ */
+
+import { supabaseClient } from './supabase.js'; // 👈 IMPORTANTE
 
 let currentStep = 1;
 const totalSteps = 4;
 
 // Estado global
 const state = {
-  equipos: {},  // { nombre: { qty, precio } }
-  servicios: {}, // { nombre: precio }
+  equipos: {},
+  servicios: {},
   formulario: {}
 };
 
-// Precios de servicios (como referencia)
-const servicePrices = {
-  'Soporte Técnico Premium': 150000,
-  'Monitoreo 24/7': 180000,
-  'Licencias Microsoft': 200000,
-  'Seguros de Activos': 220000,
-  'Backup & Replicación': 250000,
-  'Mantenimiento Preventivo': 120000
-};
-
 // ═════════════════════════════════════════
-// NAVEGACIÓN ENTRE PASOS
+// NAVEGACIÓN
 // ═════════════════════════════════════════
 
 function nextStep() {
   if (!validateStep(currentStep)) return;
-  
+
   if (currentStep < totalSteps) {
     currentStep++;
     updateStepDisplay();
@@ -45,53 +36,33 @@ function prevStep() {
 }
 
 function updateStepDisplay() {
-  // Ocultar todos los pasos
   document.querySelectorAll('.wizard-step').forEach(step => {
     step.classList.remove('active');
   });
-  
-  // Mostrar paso actual
+
   document.querySelector(`.wizard-step[data-step="${currentStep}"]`).classList.add('active');
-  
-  // Actualizar progress bar
+
   updateProgressBar();
-  
-  // Actualizar botones
   updateButtons();
-  
-  // Si es el paso 4, generar resumen
-  if (currentStep === 4) {
-    generateFinalSummary();
-  }
-  
-  // Scroll al inicio
+
+  if (currentStep === 4) generateFinalSummary();
+
   window.scrollTo(0, 0);
 }
 
 function updateProgressBar() {
   const progress = (currentStep / totalSteps) * 100;
   document.getElementById('progressBar').style.width = progress + '%';
-  
-  // Actualizar indicadores
-  document.querySelectorAll('.progress-step').forEach((step, index) => {
-    const stepNum = index + 1;
-    step.classList.remove('active', 'completed');
-    
-    if (stepNum < currentStep) {
-      step.classList.add('completed');
-    } else if (stepNum === currentStep) {
-      step.classList.add('active');
-    }
-  });
 }
 
 function updateButtons() {
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
-  
+
   if (currentStep === 1) {
     btnPrev.style.display = 'none';
     btnNext.textContent = 'Siguiente →';
+    btnNext.onclick = nextStep;
   } else if (currentStep === totalSteps) {
     btnPrev.style.display = 'inline-flex';
     btnNext.textContent = 'Solicitar Cotización';
@@ -103,98 +74,86 @@ function updateButtons() {
   }
 }
 
+// ═════════════════════════════════════════
+// VALIDACIONES
+// ═════════════════════════════════════════
+
 function validateStep(step) {
   if (step === 1) {
-    // Verificar que hay al menos un equipo seleccionado
     let totalQty = 0;
-    document.querySelectorAll('.product-qty-control .qty-value').forEach(el => {
+
+    document.querySelectorAll('.qty-value').forEach(el => {
       totalQty += parseInt(el.textContent) || 0;
     });
-    
+
     if (totalQty === 0) {
-      alert('⚠️ Debes seleccionar al menos un equipo para continuar');
+      alert('⚠️ Debes seleccionar al menos un equipo');
       return false;
     }
+
     collectEquipos();
-  } else if (step === 2) {
-    collectServicios();
-  } else if (step === 3) {
-    if (!validateForm()) {
-      return false;
-    }
   }
-  
+
+  if (step === 2) collectServicios();
+
+  if (step === 3 && !validateForm()) return false;
+
   return true;
 }
 
 function validateForm() {
   const empresa = document.getElementById('empresa').value.trim();
-  const region = document.getElementById('region').value.trim();
-  const ciudad = document.getElementById('ciudad').value.trim();
-  const direccion = document.getElementById('direccion').value.trim();
-  const contacto = document.getElementById('contacto').value.trim();
-  const telefono = document.getElementById('telefono').value.trim();
   const email = document.getElementById('email').value.trim();
 
-  if (!empresa || !region || !ciudad || !direccion || !contacto || !telefono || !email) {
-    alert('⚠️ Por favor completa todos los campos requeridos');
-    return false;
-  }
-
-  if (!email.includes('@')) {
-    alert('⚠️ Por favor ingresa un email válido');
+  if (!empresa || !email) {
+    alert('⚠️ Completa los campos');
     return false;
   }
 
   state.formulario = {
-    empresa, region, ciudad, direccion, contacto, telefono, email,
-    notas: document.getElementById('notas').value.trim()
+    empresa,
+    region: document.getElementById('region').value,
+    ciudad: document.getElementById('ciudad').value,
+    direccion: document.getElementById('direccion').value,
+    contacto: document.getElementById('contacto').value,
+    telefono: document.getElementById('telefono').value,
+    email,
+    notas: document.getElementById('notas').value
   };
 
   return true;
 }
 
 // ═════════════════════════════════════════
-// PRODUCTOS: INCREMENTAR/DECREMENTAR
+// PRODUCTOS
 // ═════════════════════════════════════════
 
 function incrementQty(event) {
   event.preventDefault();
-  event.stopPropagation();
-  
-  const control = event.currentTarget.parentElement;
-  const qtySpan = control.querySelector('.qty-value');
-  const newQty = parseInt(qtySpan.textContent) + 1;
-  qtySpan.textContent = newQty;
-  
+  const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
+  qtySpan.textContent = parseInt(qtySpan.textContent) + 1;
   updateSidebar();
 }
 
 function decrementQty(event) {
   event.preventDefault();
-  event.stopPropagation();
-  
-  const control = event.currentTarget.parentElement;
-  const qtySpan = control.querySelector('.qty-value');
+  const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
   const current = parseInt(qtySpan.textContent);
-  
+
   if (current > 0) {
     qtySpan.textContent = current - 1;
     updateSidebar();
   }
 }
 
-function toggleProduct(element) {
-  // No se necesita toggle, los botones +/- manejan todo
-}
-
 function collectEquipos() {
   state.equipos = {};
+
   document.querySelectorAll('.product-item').forEach(item => {
-    const name = item.getAttribute('data-name');
-    const price = parseInt(item.getAttribute('data-price'));
+    const name = item.dataset.name;
+    const price = parseInt(item.dataset.price);
     const qty = parseInt(item.querySelector('.qty-value').textContent) || 0;
-    
+
     if (qty > 0) {
       state.equipos[name] = { qty, price };
     }
@@ -207,237 +166,99 @@ function collectEquipos() {
 
 function collectServicios() {
   state.servicios = {};
-  document.querySelectorAll('.service-check').forEach(checkbox => {
-    if (checkbox.checked) {
-      const name = checkbox.getAttribute('data-name');
-      const price = parseInt(checkbox.getAttribute('data-price'));
-      state.servicios[name] = price;
-    }
+
+  document.querySelectorAll('.service-check:checked').forEach(el => {
+    const name = el.dataset.name;
+    const price = parseInt(el.dataset.price);
+    state.servicios[name] = price;
   });
 }
 
 // ═════════════════════════════════════════
-// ACTUALIZAR SIDEBAR
+// SIDEBAR
 // ═════════════════════════════════════════
 
 function updateSidebar() {
-  // Contar equipos totales
-  let totalEquiposQty = 0;
-  let equiposCost = 0;
-  
+  let total = 0;
+
   document.querySelectorAll('.product-item').forEach(item => {
     const qty = parseInt(item.querySelector('.qty-value').textContent) || 0;
-    const price = parseInt(item.getAttribute('data-price'));
-    totalEquiposQty += qty;
-    equiposCost += qty * price;
+    const price = parseInt(item.dataset.price);
+    total += qty * price;
   });
-  
-  // Contar servicios
-  let servicioCount = 0;
-  let serviciosCost = 0;
-  
-  document.querySelectorAll('.service-check').forEach(checkbox => {
-    if (checkbox.checked) {
-      servicioCount++;
-      serviciosCost += parseInt(checkbox.getAttribute('data-price'));
-    }
-  });
-  
-  // Actualizar sidebar
-  document.getElementById('countEquipos').textContent = totalEquiposQty;
-  document.getElementById('countServicios').textContent = servicioCount;
-  
-  document.getElementById('totalEquipos').textContent = equiposCost.toLocaleString('es-CL');
-  document.getElementById('totalServicios').textContent = serviciosCost.toLocaleString('es-CL');
-  
-  const totalGeneral = equiposCost + serviciosCost;
-  document.getElementById('totalGeneral').textContent = totalGeneral.toLocaleString('es-CL');
-  
-  // Cuota mensual (dividir entre 24 meses)
-  const cuotaMensual = Math.round(totalGeneral / 24);
-  document.getElementById('cuotaMensual').textContent = cuotaMensual.toLocaleString('es-CL');
-  
-  // Actualizar lista de productos seleccionados
-  let productsListHTML = '';
-  document.querySelectorAll('.product-item').forEach(item => {
-    const qty = parseInt(item.querySelector('.qty-value').textContent) || 0;
-    if (qty > 0) {
-      const name = item.getAttribute('data-name');
-      productsListHTML += `<div style="background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="color: var(--white-80);">${name}</span>
-        <span style="background: var(--gold); color: var(--navy); font-weight: 700; padding: 2px 8px; border-radius: 4px;">x${qty}</span>
-      </div>`;
-    }
-  });
-  
-  const productsListContainer = document.getElementById('productsListSidebar');
-  if (productsListHTML === '') {
-    productsListContainer.innerHTML = '<div style="text-align: center; color: var(--white-60); font-size: 12px; padding: 8px;">Sin productos aún</div>';
-  } else {
-    productsListContainer.innerHTML = productsListHTML;
-  }
+
+  document.getElementById('totalGeneral').textContent = total.toLocaleString('es-CL');
 }
 
 // ═════════════════════════════════════════
-// RESUMEN FINAL (PASO 4)
+// RESUMEN
 // ═════════════════════════════════════════
 
 function generateFinalSummary() {
   collectEquipos();
   collectServicios();
-  
-  // Resumen de equipos
-  let equiposHTML = '';
-  let totalEquiposCost = 0;
-  
-  if (Object.keys(state.equipos).length > 0) {
-    Object.entries(state.equipos).forEach(([nombre, data]) => {
-      const subtotal = data.qty * data.price;
-      equiposHTML += `<div class="summary-item">
-        <div class="summary-item-name">
-          <div class="summary-item-title">${nombre} <strong>(x${data.qty})</strong></div>
-        </div>
-        <div class="summary-item-price">$${subtotal.toLocaleString('es-CL')}</div>
-      </div>`;
-      totalEquiposCost += subtotal;
-    });
-  } else {
-    equiposHTML = '<div style="padding: 16px; text-align: center; color: var(--white-60);">No hay equipos seleccionados</div>';
-  }
-  document.getElementById('summaryEquipos').innerHTML = equiposHTML;
-  
-  // Resumen de servicios
-  let serviciosHTML = '';
-  let totalServicesCost = 0;
-  
-  if (Object.keys(state.servicios).length > 0) {
-    Object.entries(state.servicios).forEach(([nombre, price]) => {
-      serviciosHTML += `<div class="summary-item">
-        <div class="summary-item-name">
-          <div class="summary-item-title">${nombre}</div>
-        </div>
-        <div class="summary-item-price">$${price.toLocaleString('es-CL')}/mes</div>
-      </div>`;
-      totalServicesCost += price;
-    });
-  } else {
-    serviciosHTML = '<div style="padding: 16px; text-align: center; color: var(--white-60);">No hay servicios seleccionados</div>';
-  }
-  document.getElementById('summaryServicios').innerHTML = serviciosHTML;
-  
-  // Totales
-  const monthlyEquipos = Math.round(totalEquiposCost / 24);
-  const monthlyServices = totalServicesCost;
-  const monthlyTotal = monthlyEquipos + monthlyServices;
-  
-  document.getElementById('summarySubtotalEq').textContent = totalEquiposCost.toLocaleString('es-CL');
-  document.getElementById('summarySubtotalSvc').textContent = totalServicesCost.toLocaleString('es-CL');
-  document.getElementById('summaryTotal').textContent = (totalEquiposCost + totalServicesCost).toLocaleString('es-CL');
-  document.getElementById('summaryCuota').textContent = monthlyTotal.toLocaleString('es-CL');
 }
 
 // ═════════════════════════════════════════
-// SOLICITAR COTIZACIÓN
+// SUPABASE
 // ═════════════════════════════════════════
 
-function solicitarCotizacion() {
-  // Validar paso 3
-  if (!validateStep(3)) return;
-  
-  // Recopilar datos finales
-  collectEquipos();
-  collectServicios();
-  
-  if (Object.keys(state.equipos).length === 0) {
-    alert('⚠️ Debes seleccionar al menos un equipo');
-    return;
-  }
-
-  // Mostrar loading
-  const btnNext = document.getElementById('btnNext');
-  const btnOriginalText = btnNext.textContent;
-  btnNext.textContent = '⏳ Guardando cotización...';
-  btnNext.disabled = true;
-
-  // Calcular totales
-  let totalEquiposCost = 0;
-  Object.values(state.equipos).forEach(equipo => {
-    totalEquiposCost += equipo.qty * equipo.price;
-  });
-
-  let totalServicesCost = 0;
-  Object.values(state.servicios).forEach(price => {
-    totalServicesCost += price;
-  });
-
-  // Construir datos para Supabase
-  const cotizacionData = {
-    empresa: state.formulario.empresa,
-    region: state.formulario.region,
-    ciudad: state.formulario.ciudad,
-    direccion: state.formulario.direccion,
-    contacto: state.formulario.contacto,
-    telefono: state.formulario.telefono,
-    email: state.formulario.email,
-    notas: state.formulario.notas || null,
-    productos: state.equipos,
-    servicios: state.servicios,
-    total_productos: totalEquiposCost,
-    total_servicios: totalServicesCost,
-    total_general: totalEquiposCost + totalServicesCost,
-    url: window.location.href
-  };
-
-  // Guardar en Supabase
-  guardarCotizacionSupabase(cotizacionData)
-    .then(() => {
-      // Éxito
-      btnNext.textContent = '✅ ¡Cotización guardada!';
-      
-      const equiposText = Object.entries(state.equipos)
-        .map(([nombre, data]) => `• ${nombre} x${data.qty}`)
-        .join('\n');
-
-      const serviciosText = Object.keys(state.servicios).length > 0
-        ? '\n\nServicios:\n' + Object.keys(state.servicios).map(s => `• ${s}`).join('\n')
-        : '';
-
-      alert(`✅ ¡Cotización solicitada con éxito!\n\nEquipos:\n${equiposText}${serviciosText}\n\nNos pondremos en contacto a ${state.formulario.email} pronto.`);
-      
-      // Redirigir después de 2 segundos
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 2000);
-    })
-    .catch(error => {
-      // Error
-      console.error('Error guardando cotización:', error);
-      btnNext.textContent = btnOriginalText;
-      btnNext.disabled = false;
-      alert('❌ Error al guardar la cotización. Intenta de nuevo.');
-    });
-}
-
-// Función para guardar en Supabase
 async function guardarCotizacionSupabase(data) {
-  // Verificar que Supabase está configurado
-  if (typeof supabaseClient === 'undefined') {
-    throw new Error('Supabase no está configurado. Verifica config.js');
-  }
+  console.log('📦 DATA A ENVIAR:', data);
 
   const { data: result, error } = await supabaseClient
     .from('cotizaciones')
-    .insert([data]);
+    .insert([data])
+    .select();
 
   if (error) {
+    console.error('🔥 ERROR SUPABASE:', error);
+    alert(JSON.stringify(error));
     throw error;
   }
 
+  console.log('✅ GUARDADO:', result);
   return result;
 }
 
 // ═════════════════════════════════════════
-// INICIALIZACIÓN
+// COTIZACIÓN
+// ═════════════════════════════════════════
+
+function solicitarCotizacion() {
+  if (!validateStep(3)) return;
+
+  collectEquipos();
+  collectServicios();
+
+  const totalEquipos = Object.values(state.equipos)
+    .reduce((sum, e) => sum + e.qty * e.price, 0);
+
+  const totalServicios = Object.values(state.servicios)
+    .reduce((sum, s) => sum + s, 0);
+
+  const data = {
+    ...state.formulario,
+    productos: state.equipos,
+    servicios: state.servicios,
+    total_productos: totalEquipos,
+    total_servicios: totalServicios,
+    total_general: totalEquipos + totalServicios,
+    url: window.location.href
+  };
+
+  guardarCotizacionSupabase(data)
+    .then(() => {
+      alert('✅ Cotización guardada');
+      location.reload();
+    })
+    .catch(() => {
+      alert('❌ Error al guardar');
+    });
+}
+
+// ═════════════════════════════════════════
+// INIT
 // ═════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
