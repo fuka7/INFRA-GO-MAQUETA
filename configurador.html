@@ -30,256 +30,358 @@
 <!-- HEADER CONFIGURADOR -->
 <div class="configurador-header">
   <h1>Configurador de Solución</h1>
-  <div class="configurador-breadcrumb">
-    <a href="index.html" class="breadcrumb-link">Inicio</a>
-    <span>/</span>
-    <span>Configurar</span>
+  <p class="configurador-subtitle">Configura tu solución completa en 4 sencillos pasos</p>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-container">
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-steps">
+    <div class="progress-step active" data-step="1">
+      <div class="progress-step-number">1</div>
+      <div class="progress-step-label">Productos</div>
+    </div>
+    <div class="progress-step" data-step="2">
+      <div class="progress-step-number">2</div>
+      <div class="progress-step-label">Servicios</div>
+    </div>
+    <div class="progress-step" data-step="3">
+      <div class="progress-step-number">3</div>
+      <div class="progress-step-label">Información</div>
+    </div>
+    <div class="progress-step" data-step="4">
+      <div class="progress-step-number">4</div>
+      <div class="progress-step-label">Resumen</div>
+    </div>
   </div>
 </div>
 
 <!-- CONTENIDO PRINCIPAL -->
-<div class="config-main">
-  <!-- PRODUCTOS Y SERVICIOS -->
-  <div>
-    <!-- NOTEBOOKS -->
-    <div class="product-category">
-      <div class="product-category-header">
-        <div class="product-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="2" y="3" width="20" height="14" rx="2"/>
-            <path d="M8 21h8M12 17v4"/>
-          </svg>
+<div class="config-wrapper">
+  
+  <!-- CONTENIDO DE PASOS -->
+  <div class="config-content">
+
+    <!-- PASO 1: PRODUCTOS -->
+    <div class="wizard-step active" data-step="1">
+      <div class="step-header">
+        <h2 class="step-title">Selecciona tus Productos</h2>
+        <p class="step-subtitle">Elige los productos que necesitas para tu solución</p>
+      </div>
+
+      <!-- Notebooks -->
+      <div class="product-category">
+        <div class="category-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
+          <h3>Notebooks</h3>
         </div>
-        <div>
-          <div class="product-category-title">Notebooks</div>
-          <span class="product-category-sub">Computación portable</span>
+        <div class="product-list">
+          <div class="product-item" data-name="HP EliteBook 640" data-specs="Intel Core i5 · 16GB RAM · 512GB SSD" data-price="450000" onclick="toggleProduct(this)">
+            <div class="product-details">
+              <div class="product-name">HP EliteBook 640</div>
+              <div class="product-specs">Intel Core i5 · 16GB RAM · 512GB SSD</div>
+            </div>
+            <div class="product-qty-control">
+              <button type="button" onclick="decrementQty(event)">−</button>
+              <span class="qty-value">0</span>
+              <button type="button" onclick="incrementQty(event)">+</button>
+            </div>
+          </div>
+          <div class="product-item" data-name="Dell Inspiron 15" data-specs="Intel Core i7 · 16GB RAM · 512GB SSD" data-price="520000" onclick="toggleProduct(this)">
+            <div class="product-details">
+              <div class="product-name">Dell Inspiron 15</div>
+              <div class="product-specs">Intel Core i7 · 16GB RAM · 512GB SSD</div>
+            </div>
+            <div class="product-qty-control">
+              <button type="button" onclick="decrementQty(event)">−</button>
+              <span class="qty-value">0</span>
+              <button type="button" onclick="incrementQty(event)">+</button>
+            </div>
+          </div>
+          <div class="product-item" data-name="MacBook Pro 14" data-specs="Apple M3 · 16GB RAM · 512GB SSD" data-price="1200000" onclick="toggleProduct(this)">
+            <div class="product-details">
+              <div class="product-name">MacBook Pro 14</div>
+              <div class="product-specs">Apple M3 · 16GB RAM · 512GB SSD</div>
+            </div>
+            <div class="product-qty-control">
+              <button type="button" onclick="decrementQty(event)">−</button>
+              <span class="qty-value">0</span>
+              <button type="button" onclick="incrementQty(event)">+</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="product-items">
-        <div class="product-item" onclick="addProduct(this, 'Notebook HP EliteBook', 'i5 · 16GB RAM', 450000)">
-          <div class="product-item-info">
-            <div class="product-item-name">HP EliteBook 640</div>
-            <div class="product-item-spec">Intel Core i5 · 16GB RAM · 512GB SSD</div>
+
+      <!-- Servidores -->
+      <div class="product-category">
+        <div class="category-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" /><line x1="6" y1="6" x2="18" y2="6" /><rect x="2" y="14" width="20" height="8" rx="2" /><line x1="6" y1="18" x2="18" y2="18" /></svg>
+          <h3>Servidores</h3>
+        </div>
+        <div class="product-list">
+          <div class="product-item" data-name="Server Dell PowerEdge R650" data-specs="Intel Xeon · 64GB RAM · 1TB SSD" data-price="2500000" onclick="toggleProduct(this)">
+            <div class="product-details">
+              <div class="product-name">Dell PowerEdge R650</div>
+              <div class="product-specs">Intel Xeon · 64GB RAM · 1TB SSD</div>
+            </div>
+            <div class="product-qty-control">
+              <button type="button" onclick="decrementQty(event)">−</button>
+              <span class="qty-value">0</span>
+              <button type="button" onclick="incrementQty(event)">+</button>
+            </div>
           </div>
-          <div class="product-item-qty">
-            <button onclick="event.stopPropagation(); decreaseQty(event.currentTarget.parentElement)">−</button>
-            <span class="qty-value">0</span>
-            <button onclick="event.stopPropagation(); increaseQty(event.currentTarget.parentElement)">+</button>
+          <div class="product-item" data-name="Server HP ProLiant DL380" data-specs="Intel Xeon · 128GB RAM · 2TB SSD" data-price="3200000" onclick="toggleProduct(this)">
+            <div class="product-details">
+              <div class="product-name">HP ProLiant DL380</div>
+              <div class="product-specs">Intel Xeon · 128GB RAM · 2TB SSD</div>
+            </div>
+            <div class="product-qty-control">
+              <button type="button" onclick="decrementQty(event)">−</button>
+              <span class="qty-value">0</span>
+              <button type="button" onclick="incrementQty(event)">+</button>
+            </div>
           </div>
         </div>
-        <div class="product-item" onclick="addProduct(this, 'Notebook Dell Inspiron', 'i7 · 16GB RAM', 520000)">
-          <div class="product-item-info">
-            <div class="product-item-name">Dell Inspiron 15</div>
-            <div class="product-item-spec">Intel Core i7 · 16GB RAM · 512GB SSD</div>
-          </div>
-          <div class="product-item-qty">
-            <button onclick="event.stopPropagation(); decreaseQty(event.currentTarget.parentElement)">−</button>
-            <span class="qty-value">0</span>
-            <button onclick="event.stopPropagation(); increaseQty(event.currentTarget.parentElement)">+</button>
-          </div>
+      </div>
+
+      <!-- Impresoras -->
+      <div class="product-category">
+        <div class="category-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z" /><line x1="8" y1="13" x2="16" y2="13" /></svg>
+          <h3>Impresoras</h3>
         </div>
-        <div class="product-item" onclick="addProduct(this, 'MacBook Pro 14', 'M3 · 16GB RAM', 1200000)">
-          <div class="product-item-info">
-            <div class="product-item-name">MacBook Pro 14</div>
-            <div class="product-item-spec">Apple M3 · 16GB RAM · 512GB SSD</div>
-          </div>
-          <div class="product-item-qty">
-            <button onclick="event.stopPropagation(); decreaseQty(event.currentTarget.parentElement)">−</button>
-            <span class="qty-value">0</span>
-            <button onclick="event.stopPropagation(); increaseQty(event.currentTarget.parentElement)">+</button>
+        <div class="product-list">
+          <div class="product-item" data-name="Impresora HP LaserJet M110w" data-specs="Impresión B/N · Red + Wi-Fi" data-price="350000" onclick="toggleProduct(this)">
+            <div class="product-details">
+              <div class="product-name">HP LaserJet M110w</div>
+              <div class="product-specs">Impresión B/N · Red + Wi-Fi</div>
+            </div>
+            <div class="product-qty-control">
+              <button type="button" onclick="decrementQty(event)">−</button>
+              <span class="qty-value">0</span>
+              <button type="button" onclick="incrementQty(event)">+</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SERVIDORES -->
-    <div class="product-category">
-      <div class="product-category-header">
-        <div class="product-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="2" y="2" width="20" height="8" rx="2"/>
-            <rect x="2" y="14" width="20" height="8" rx="2"/>
-            <path d="M6 6h.01M6 18h.01"/>
-          </svg>
+    <!-- PASO 2: SERVICIOS -->
+    <div class="wizard-step" data-step="2">
+      <div class="step-header">
+        <h2 class="step-title">Servicios Adicionales</h2>
+        <p class="step-subtitle">Complementa tu solución con servicios premium</p>
+      </div>
+
+      <div class="services-section">
+        <div class="services-intro">
+          <p>Selecciona los servicios que mejor se adapten a tus necesidades. Se cobran mensualmente.</p>
         </div>
-        <div>
-          <div class="product-category-title">Servidores</div>
-          <span class="product-category-sub">Infraestructura centralizada</span>
+
+        <div class="services-grid">
+          <label class="service-card">
+            <input type="checkbox" class="service-check" data-name="Soporte Técnico Premium" data-price="150000" onchange="updateSidebar()">
+            <div class="service-details">
+              <div class="service-name">Soporte Técnico Premium</div>
+              <div class="service-description">Asistencia personalizada 24/7</div>
+              <div class="service-price">$150.000</div>
+            </div>
+          </label>
+
+          <label class="service-card">
+            <input type="checkbox" class="service-check" data-name="Monitoreo 24/7" data-price="180000" onchange="updateSidebar()">
+            <div class="service-details">
+              <div class="service-name">Monitoreo 24/7</div>
+              <div class="service-description">Vigilancia continua de sistemas</div>
+              <div class="service-price">$180.000</div>
+            </div>
+          </label>
+
+          <label class="service-card">
+            <input type="checkbox" class="service-check" data-name="Licencias Microsoft" data-price="200000" onchange="updateSidebar()">
+            <div class="service-details">
+              <div class="service-name">Licencias Microsoft</div>
+              <div class="service-description">Office 365 + Windows Enterprise</div>
+              <div class="service-price">$200.000</div>
+            </div>
+          </label>
+
+          <label class="service-card">
+            <input type="checkbox" class="service-check" data-name="Seguros de Activos" data-price="220000" onchange="updateSidebar()">
+            <div class="service-details">
+              <div class="service-name">Seguros de Activos</div>
+              <div class="service-description">Cobertura contra robo y daño</div>
+              <div class="service-price">$220.000</div>
+            </div>
+          </label>
+
+          <label class="service-card">
+            <input type="checkbox" class="service-check" data-name="Backup & Replicación" data-price="250000" onchange="updateSidebar()">
+            <div class="service-details">
+              <div class="service-name">Backup & Replicación</div>
+              <div class="service-description">Copias automáticas en nube</div>
+              <div class="service-price">$250.000</div>
+            </div>
+          </label>
+
+          <label class="service-card">
+            <input type="checkbox" class="service-check" data-name="Mantenimiento Preventivo" data-price="120000" onchange="updateSidebar()">
+            <div class="service-details">
+              <div class="service-name">Mantenimiento Preventivo</div>
+              <div class="service-description">Chequeos y actualizaciones regulares</div>
+              <div class="service-price">$120.000</div>
+            </div>
+          </label>
         </div>
       </div>
-      <div class="product-items">
-        <div class="product-item" onclick="addProduct(this, 'Servidor Dell PowerEdge R450', '2 x Xeon · 32GB RAM', 3500000)">
-          <div class="product-item-info">
-            <div class="product-item-name">Dell PowerEdge R450</div>
-            <div class="product-item-spec">2 x Intel Xeon · 32GB RAM · 1TB SSD</div>
+    </div>
+
+    <!-- PASO 3: INFORMACIÓN -->
+    <div class="wizard-step" data-step="3">
+      <div class="step-header">
+        <h2 class="step-title">Información de Contacto</h2>
+        <p class="step-subtitle">Completa tus datos para procesar la cotización</p>
+      </div>
+
+      <div class="form-section">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Empresa</label>
+            <input type="text" class="form-input" placeholder="Nombre de tu empresa" id="empresa">
           </div>
-          <div class="product-item-qty">
-            <button onclick="event.stopPropagation(); decreaseQty(event.currentTarget.parentElement)">−</button>
-            <span class="qty-value">0</span>
-            <button onclick="event.stopPropagation(); increaseQty(event.currentTarget.parentElement)">+</button>
+          <div class="form-group">
+            <label class="form-label">Región</label>
+            <input type="text" class="form-input" placeholder="Tu región" id="region">
           </div>
-        </div>
-        <div class="product-item" onclick="addProduct(this, 'Servidor HP ProLiant DL380', '2 x Xeon · 64GB RAM', 4200000)">
-          <div class="product-item-info">
-            <div class="product-item-name">HP ProLiant DL380</div>
-            <div class="product-item-spec">2 x Intel Xeon · 64GB RAM · 2TB SSD</div>
+          <div class="form-group">
+            <label class="form-label">Ciudad</label>
+            <input type="text" class="form-input" placeholder="Tu ciudad" id="ciudad">
           </div>
-          <div class="product-item-qty">
-            <button onclick="event.stopPropagation(); decreaseQty(event.currentTarget.parentElement)">−</button>
-            <span class="qty-value">0</span>
-            <button onclick="event.stopPropagation(); increaseQty(event.currentTarget.parentElement)">+</button>
+          <div class="form-group">
+            <label class="form-label">Dirección</label>
+            <input type="text" class="form-input" placeholder="Dirección completa" id="direccion">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contacto Principal</label>
+            <input type="text" class="form-input" placeholder="Nombre del contacto" id="contacto">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input type="tel" class="form-input" placeholder="+56 9 XXXX XXXX" id="telefono">
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="correo@empresa.com" id="email">
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label">Notas Adicionales</label>
+            <textarea class="form-textarea" placeholder="Cuéntanos más sobre tu situación (opcional)" id="notas"></textarea>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- IMPRESORAS -->
-    <div class="product-category">
-      <div class="product-category-header">
-        <div class="product-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <polyline points="6 9 6 2 18 2 18 9"/>
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-            <rect x="6" y="14" width="12" height="8"/>
-          </svg>
-        </div>
-        <div>
-          <div class="product-category-title">Impresoras</div>
-          <span class="product-category-sub">Soluciones de impresión</span>
-        </div>
+    <!-- PASO 4: RESUMEN -->
+    <div class="wizard-step" data-step="4">
+      <div class="step-header">
+        <h2 class="step-title">Resumen de tu Configuración</h2>
+        <p class="step-subtitle">Verifica todos los detalles antes de enviar</p>
       </div>
-      <div class="product-items">
-        <div class="product-item" onclick="addProduct(this, 'HP LaserJet Pro M404n', 'BN 40ppm', 280000)">
-          <div class="product-item-info">
-            <div class="product-item-name">HP LaserJet Pro M404n</div>
-            <div class="product-item-spec">Blanco y Negro · 40ppm</div>
-          </div>
-          <div class="product-item-qty">
-            <button onclick="event.stopPropagation(); decreaseQty(event.currentTarget.parentElement)">−</button>
-            <span class="qty-value">0</span>
-            <button onclick="event.stopPropagation(); increaseQty(event.currentTarget.parentElement)">+</button>
-          </div>
+
+      <div class="summary-section">
+        <div class="summary-header">
+          <h3>Productos Seleccionados</h3>
         </div>
-        <div class="product-item" onclick="addProduct(this, 'HP Color LaserJet Enterprise', 'Color 33ppm', 680000)">
-          <div class="product-item-info">
-            <div class="product-item-name">HP Color LaserJet Enterprise</div>
-            <div class="product-item-spec">A Color · 33ppm · Multifuncional</div>
+        <div class="summary-items" id="summaryEquipos"></div>
+        
+        <div class="summary-header" style="margin-top: 24px;">
+          <h3>Servicios Contratados</h3>
+        </div>
+        <div class="summary-items" id="summaryServicios"></div>
+
+        <div class="totales-section">
+          <div class="total-row">
+            <span class="total-label">Subtotal Productos:</span>
+            <span class="total-value">$<span id="summarySubtotalEq">0</span></span>
           </div>
-          <div class="product-item-qty">
-            <button onclick="event.stopPropagation(); decreaseQty(event.currentTarget.parentElement)">−</button>
-            <span class="qty-value">0</span>
-            <button onclick="event.stopPropagation(); increaseQty(event.currentTarget.parentElement)">+</button>
+          <div class="total-row">
+            <span class="total-label">Subtotal Servicios:</span>
+            <span class="total-value">$<span id="summarySubtotalSvc">0</span></span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">Total Mensual:</span>
+            <span class="total-value" style="color: var(--gold); font-size: 16px;">$<span id="summaryTotal">0</span></span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">Costo Mensual (Arriendo 24 meses):</span>
+            <span class="total-value" style="color: var(--gold); font-size: 16px;">$<span id="summaryCuota">0</span></span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SERVICIOS ADICIONALES -->
-    <div class="services-category">
-      <div class="services-title">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 3v18M3 12h18"/>
-        </svg>
-        Servicios Adicionales
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="config-sidebar">
+    <div class="sidebar-sticky">
+      
+      <div class="sidebar-section">
+        <h4>Resumen</h4>
+        <div class="sidebar-item">
+          <span class="sidebar-item-label">Productos:</span>
+          <span class="sidebar-item-value"><span id="countEquipos">0</span> unidades</span>
+        </div>
+        <div class="sidebar-item">
+          <span class="sidebar-item-label">Servicios:</span>
+          <span class="sidebar-item-value"><span id="countServicios">0</span> activos</span>
+        </div>
       </div>
-      <div class="services-grid">
-        <label class="service-checkbox">
-          <input type="checkbox" onchange="updateResumen()">
-          <div class="service-info">
-            <div class="service-name">Instalación Profesional</div>
-            <div class="service-desc">Despliegue, instalación de SO y configuración inicial</div>
-          </div>
-        </label>
-        <label class="service-checkbox">
-          <input type="checkbox" onchange="updateResumen()">
-          <div class="service-info">
-            <div class="service-name">Soporte Técnico Gold</div>
-            <div class="service-desc">Respuesta en 4 horas · Terreno incluido</div>
-          </div>
-        </label>
-        <label class="service-checkbox">
-          <input type="checkbox" onchange="updateResumen()">
-          <div class="service-info">
-            <div class="service-name">Monitoreo 24/7</div>
-            <div class="service-desc">Vigilancia continua de sistemas e infraestructura</div>
-          </div>
-        </label>
-        <label class="service-checkbox">
-          <input type="checkbox" onchange="updateResumen()">
-          <div class="service-info">
-            <div class="service-name">Licencias Microsoft</div>
-            <div class="service-desc">Office 365 + Windows Enterprise</div>
-          </div>
-        </label>
-        <label class="service-checkbox">
-          <input type="checkbox" onchange="updateResumen()">
-          <div class="service-info">
-            <div class="service-name">Seguros de Activos</div>
-            <div class="service-desc">Cobertura contra robo, daño y pérdida</div>
-          </div>
-        </label>
-        <label class="service-checkbox">
-          <input type="checkbox" onchange="updateResumen()">
-          <div class="service-info">
-            <div class="service-name">Backup & Replicación</div>
-            <div class="service-desc">Copias automáticas en nube con redundancia</div>
-          </div>
-        </label>
+
+      <div class="sidebar-section">
+        <h4>Productos Seleccionados</h4>
+        <div id="productsListSidebar" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
+          <div style="text-align: center; color: var(--white-60); font-size: 12px; padding: 8px;">Sin productos aún</div>
+        </div>
       </div>
+
+      <div class="sidebar-section">
+        <h4>Costos</h4>
+        <div class="sidebar-item">
+          <span class="sidebar-item-label">Productos:</span>
+          <span class="sidebar-item-value">$<span id="totalEquipos">0</span></span>
+        </div>
+        <div class="sidebar-item">
+          <span class="sidebar-item-label">Servicios:</span>
+          <span class="sidebar-item-value">$<span id="totalServicios">0</span></span>
+        </div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-item" style="font-weight: 700;">
+          <span class="sidebar-item-label">Total:</span>
+          <span class="sidebar-item-value" style="color: var(--gold);">$<span id="totalGeneral">0</span></span>
+        </div>
+      </div>
+
+      <div class="sidebar-total">
+        <div class="sidebar-total-label">Cuota Mensual</div>
+        <div class="sidebar-total-amount">$<span id="cuotaMensual">0</span></div>
+        <div class="sidebar-total-period">(24 meses)</div>
+      </div>
+
     </div>
   </div>
 
-  <!-- RESUMEN LATERAL -->
-  <div class="config-resumen">
-    <div class="resumen-title">Resumen de Configuración</div>
-    
-    <div class="resumen-items" id="resumenItems">
-      <div class="empty-message">
-        Selecciona productos para ver el resumen
-      </div>
-    </div>
-
-    <div class="resumen-divider"></div>
-
-    <div class="resumen-totales">
-      <div class="resumen-total-item">
-        <span class="resumen-total-label">Subtotal (productos)</span>
-        <span class="resumen-total-value">$<span id="subtotalProductos">0</span></span>
-      </div>
-      <div class="resumen-total-item">
-        <span class="resumen-total-label">Servicios adicionales</span>
-        <span class="resumen-total-value">+$<span id="subtotalServicios">0</span></span>
-      </div>
-    </div>
-
-    <div class="resumen-divider"></div>
-
-    <div class="resumen-total-final">
-      <div class="resumen-total-label-final">Total Mensual</div>
-      <div class="resumen-total-price">$<span id="totalFinal">0</span> <span>CLP</span></div>
-    </div>
-
-    <div class="resumen-actions">
-      <button class="btn-cotizar" onclick="solicitarCotizacion()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6l-4-4z"/>
-          <path d="M9 2v4h4M6 9h4M6 12h2"/>
-          <circle cx="17" cy="17" r="4"/>
-          <path d="M17 15v2l1 1"/>
-        </svg>
-        Solicitar Cotización
-      </button>
-      <a href="index.html" class="btn-volver">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        Volver a inicio
-      </a>
-    </div>
-  </div>
 </div>
 
-<!-- SCRIPT EXTERNO -->
+<!-- BOTONES DE NAVEGACIÓN -->
+<div class="step-actions" style="padding: 0 40px 60px 40px; max-width: 1400px; margin: 0 auto;">
+  <button class="btn-prev" id="btnPrev" onclick="prevStep()" style="display:none;">← Atrás</button>
+  <button class="btn-next" id="btnNext" onclick="nextStep()">Siguiente →</button>
+</div>
+
+<!-- SCRIPT -->
 <script src="/assets/js/configurador.js"></script>
 
 </body>
