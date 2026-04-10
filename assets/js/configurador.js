@@ -1,14 +1,12 @@
 /* ═══════════════════════════════════════════════
    configurador.js
-   Wizard de configuración de soluciones (4 pasos)
 ═══════════════════════════════════════════════ */
 
-import { supabaseClient } from './supabase.js'; // 👈 IMPORTANTE
+import { supabaseClient } from './supabase.js';
 
 let currentStep = 1;
 const totalSteps = 4;
 
-// Estado global
 const state = {
   equipos: {},
   servicios: {},
@@ -21,7 +19,6 @@ const state = {
 
 function nextStep() {
   if (!validateStep(currentStep)) return;
-
   if (currentStep < totalSteps) {
     currentStep++;
     updateStepDisplay();
@@ -46,8 +43,6 @@ function updateStepDisplay() {
   updateButtons();
 
   if (currentStep === 4) generateFinalSummary();
-
-  window.scrollTo(0, 0);
 }
 
 function updateProgressBar() {
@@ -81,7 +76,6 @@ function updateButtons() {
 function validateStep(step) {
   if (step === 1) {
     let totalQty = 0;
-
     document.querySelectorAll('.qty-value').forEach(el => {
       totalQty += parseInt(el.textContent) || 0;
     });
@@ -95,7 +89,6 @@ function validateStep(step) {
   }
 
   if (step === 2) collectServicios();
-
   if (step === 3 && !validateForm()) return false;
 
   return true;
@@ -146,6 +139,13 @@ function decrementQty(event) {
   }
 }
 
+// 👇 IMPORTANTE (para evitar error)
+function toggleProduct() {}
+
+// ═════════════════════════════════════════
+// DATA
+// ═════════════════════════════════════════
+
 function collectEquipos() {
   state.equipos = {};
 
@@ -159,10 +159,6 @@ function collectEquipos() {
     }
   });
 }
-
-// ═════════════════════════════════════════
-// SERVICIOS
-// ═════════════════════════════════════════
 
 function collectServicios() {
   state.servicios = {};
@@ -204,7 +200,7 @@ function generateFinalSummary() {
 // ═════════════════════════════════════════
 
 async function guardarCotizacionSupabase(data) {
-  console.log('📦 DATA A ENVIAR:', data);
+  console.log('📦 DATA:', data);
 
   const { data: result, error } = await supabaseClient
     .from('cotizaciones')
@@ -212,12 +208,11 @@ async function guardarCotizacionSupabase(data) {
     .select();
 
   if (error) {
-    console.error('🔥 ERROR SUPABASE:', error);
+    console.error(error);
     alert(JSON.stringify(error));
     throw error;
   }
 
-  console.log('✅ GUARDADO:', result);
   return result;
 }
 
@@ -267,6 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSidebar();
 });
 
+// 👇 EXPONER FUNCIONES AL HTML
 window.toggleProduct = toggleProduct;
 window.incrementQty = incrementQty;
 window.decrementQty = decrementQty;
