@@ -290,35 +290,52 @@
         <p class="step-subtitle">Verifica todos los detalles antes de enviar</p>
       </div>
 
-      <div class="summary-section">
-        <div class="summary-header">
-          <h3>Productos Seleccionados</h3>
-        </div>
-        <div class="summary-items" id="summaryEquipos"></div>
-        
-        <div class="summary-header" style="margin-top: 24px;">
-          <h3>Servicios Contratados</h3>
-        </div>
-        <div class="summary-items" id="summaryServicios"></div>
+      <div class="resumen-layout">
 
-        <div class="totales-section">
-          <div class="total-row">
-            <span class="total-label">Subtotal Productos:</span>
-            <span class="total-value">$<span id="summarySubtotalEq">0</span></span>
+        <!-- Productos -->
+        <div class="resumen-card">
+          <div class="resumen-card-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h3>Productos Seleccionados</h3>
           </div>
-          <div class="total-row">
-            <span class="total-label">Subtotal Servicios:</span>
-            <span class="total-value">$<span id="summarySubtotalSvc">0</span></span>
+          <div class="resumen-card-body" id="summaryEquipos"></div>
+        </div>
+
+        <!-- Servicios -->
+        <div class="resumen-card">
+          <div class="resumen-card-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h3>Servicios Contratados</h3>
           </div>
-          <div class="total-row">
-            <span class="total-label">Total Mensual:</span>
-            <span class="total-value" style="color: var(--gold); font-size: 16px;">$<span id="summaryTotal">0</span></span>
+          <div class="resumen-card-body" id="summaryServicios"></div>
+        </div>
+
+        <!-- Contacto (inyectado por JS) -->
+        <div id="summaryInfo"></div>
+
+        <!-- Totales -->
+        <div class="resumen-card resumen-card--totales">
+          <div class="resumen-totales-grid">
+            <div class="resumen-total-row">
+              <span class="resumen-total-label">Subtotal Productos</span>
+              <span class="resumen-total-val">$<span id="summarySubtotalEq">0</span></span>
+            </div>
+            <div class="resumen-total-row">
+              <span class="resumen-total-label">Subtotal Servicios</span>
+              <span class="resumen-total-val">$<span id="summarySubtotalSvc">0</span></span>
+            </div>
+            <div class="resumen-total-divider"></div>
+            <div class="resumen-total-row resumen-total-row--highlight">
+              <span class="resumen-total-label">Total</span>
+              <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
+            </div>
           </div>
-          <div class="total-row">
-            <span class="total-label">Costo Mensual (Arriendo 24 meses):</span>
-            <span class="total-value" style="color: var(--gold); font-size: 16px;">$<span id="summaryCuota">0</span></span>
+          <div class="resumen-cuota-box">
+            <span class="resumen-cuota-label">Cuota mensual arriendo <span>24 meses</span></span>
+            <span class="resumen-cuota-price">$<span id="summaryCuota">0</span></span>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -379,6 +396,42 @@
 <div class="step-actions" style="padding: 0 40px 60px 40px; max-width: 1400px; margin: 0 auto;">
   <button class="btn-prev" id="btnPrev" onclick="prevStep()" style="display:none;">← Atrás</button>
   <button class="btn-next" id="btnNext" onclick="nextStep()">Siguiente →</button>
+</div>
+
+<!-- MODAL COTIZACIÓN -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox">
+
+    <!-- ÉXITO -->
+    <div class="modal-content" id="modalSuccess">
+      <div class="modal-icon modal-icon--success">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 class="modal-title">¡Cotización Enviada!</h2>
+      <p class="modal-text">Tu solicitud fue recibida con éxito. Nuestro equipo se pondrá en contacto contigo a la brevedad para revisar los detalles de tu solución.</p>
+      <div class="modal-detail">
+        <span class="modal-detail-label">Empresa:</span>
+        <span class="modal-detail-value" id="modalEmpresa">—</span>
+        <span class="modal-detail-label">Email:</span>
+        <span class="modal-detail-value" id="modalEmail">—</span>
+      </div>
+      <button class="modal-btn modal-btn--primary" onclick="cerrarModal()">Volver al inicio</button>
+    </div>
+
+    <!-- ERROR -->
+    <div class="modal-content" id="modalError" style="display:none;">
+      <div class="modal-icon modal-icon--error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <h2 class="modal-title">Error al Enviar</h2>
+      <p class="modal-text">Hubo un problema al procesar tu cotización. Por favor intenta nuevamente o contáctanos directamente.</p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn--secondary" onclick="cerrarModal()">Cerrar</button>
+        <a class="modal-btn modal-btn--primary" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- SCRIPT -->

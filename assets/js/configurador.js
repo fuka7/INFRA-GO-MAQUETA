@@ -44,6 +44,9 @@ function updateStepDisplay() {
   updateProgressBar();
   updateButtons();
 
+  const sidebar = document.querySelector('.config-sidebar');
+  if (sidebar) sidebar.style.display = currentStep === 4 ? 'none' : '';
+
   if (currentStep === 4) generateFinalSummary();
 }
 
@@ -259,6 +262,77 @@ function updateSidebar() {
 function generateFinalSummary() {
   collectEquipos();
   collectServicios();
+
+  const fmt = n => n.toLocaleString('es-CL');
+
+  // ── Productos ──────────────────────────────────────────
+  const summaryEquipos = document.getElementById('summaryEquipos');
+  const eqEntries = Object.entries(state.equipos);
+  let totalEq = 0;
+  if (eqEntries.length === 0) {
+    summaryEquipos.innerHTML = '<p class="resumen-empty">Sin productos seleccionados</p>';
+  } else {
+    summaryEquipos.innerHTML = eqEntries.map(([name, v]) => {
+      const sub = v.qty * v.price;
+      totalEq += sub;
+      return `<div class="resumen-line-item">
+        <div class="resumen-line-info">
+          <span class="resumen-line-name">${name}</span>
+          <span class="resumen-line-qty">× ${v.qty} unid.</span>
+        </div>
+        <span class="resumen-line-price">$${fmt(sub)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Servicios ──────────────────────────────────────────
+  const summaryServicios = document.getElementById('summaryServicios');
+  const svcEntries = Object.entries(state.servicios);
+  let totalSvc = 0;
+  if (svcEntries.length === 0) {
+    summaryServicios.innerHTML = '<p class="resumen-empty">Sin servicios seleccionados</p>';
+  } else {
+    summaryServicios.innerHTML = svcEntries.map(([name, price]) => {
+      totalSvc += price;
+      return `<div class="resumen-line-item">
+        <div class="resumen-line-info">
+          <span class="resumen-line-name">${name}</span>
+        </div>
+        <span class="resumen-line-price">$${fmt(price)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Totales ────────────────────────────────────────────
+  const total = totalEq + totalSvc;
+  document.getElementById('summarySubtotalEq').textContent  = fmt(totalEq);
+  document.getElementById('summarySubtotalSvc').textContent = fmt(totalSvc);
+  document.getElementById('summaryTotal').textContent       = fmt(total);
+  document.getElementById('summaryCuota').textContent       = fmt(Math.round(total / 24));
+
+  // ── Información de contacto ────────────────────────────
+  const f = state.formulario;
+  const infoSection = document.getElementById('summaryInfo');
+  infoSection.innerHTML = `
+    <div class="resumen-card">
+      <div class="resumen-card-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <h3>Información de Contacto</h3>
+      </div>
+      <div class="resumen-card-body">
+        <div class="resumen-contact-grid">
+          ${f.empresa   ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Empresa</span><span class="resumen-contact-value">${f.empresa}</span></div>` : ''}
+          ${f.contacto  ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Contacto</span><span class="resumen-contact-value">${f.contacto}</span></div>` : ''}
+          ${f.email     ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Email</span><span class="resumen-contact-value">${f.email}</span></div>` : ''}
+          ${f.telefono  ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Teléfono</span><span class="resumen-contact-value">${f.telefono}</span></div>` : ''}
+          ${f.region    ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Región</span><span class="resumen-contact-value">${f.region}</span></div>` : ''}
+          ${f.ciudad    ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Ciudad</span><span class="resumen-contact-value">${f.ciudad}</span></div>` : ''}
+          ${f.direccion ? `<div class="resumen-contact-field resumen-contact-full"><span class="resumen-contact-label">Dirección</span><span class="resumen-contact-value">${f.direccion}</span></div>` : ''}
+          ${f.notas     ? `<div class="resumen-contact-field resumen-contact-full"><span class="resumen-contact-label">Notas adicionales</span><span class="resumen-contact-value">${f.notas}</span></div>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 // ═════════════════════════════════════════
@@ -310,11 +384,16 @@ function solicitarCotizacion() {
 
   guardarCotizacionSupabase(data)
     .then(() => {
-      alert('✅ Cotización guardada');
-      location.reload();
+      document.getElementById('modalEmpresa').textContent = state.formulario.empresa || '—';
+      document.getElementById('modalEmail').textContent   = state.formulario.email   || '—';
+      document.getElementById('modalSuccess').style.display = '';
+      document.getElementById('modalError').style.display   = 'none';
+      abrirModal();
     })
     .catch(() => {
-      alert('❌ Error al guardar');
+      document.getElementById('modalSuccess').style.display = 'none';
+      document.getElementById('modalError').style.display   = '';
+      abrirModal();
     });
 }
 
@@ -330,6 +409,24 @@ document.addEventListener('DOMContentLoaded', () => {
     checkbox.addEventListener('change', updateSidebar);
   });
 });
+
+// ═════════════════════════════════════════
+// MODAL
+// ═════════════════════════════════════════
+
+function abrirModal() {
+  document.getElementById('modalOverlay').classList.add('modal-visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarModal() {
+  document.getElementById('modalOverlay').classList.remove('modal-visible');
+  document.body.style.overflow = '';
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  location.reload();
+}
+
+window.cerrarModal = cerrarModal;
 
 // 👇 EXPONER FUNCIONES AL HTML
 window.toggleProduct = toggleProduct;
