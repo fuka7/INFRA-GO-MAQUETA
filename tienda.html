@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda — InfraGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/tienda.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span class="nav-logo-text">Infra<span class="nav-logo-go">Go</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#hero">INICIO</a></li>
+    <li><a href="index.html#quienes-somos">QUIÉNES SOMOS</a></li>
+    <li><a href="tienda.html" class="nav-active">TIENDA</a></li>
+    <li><a href="index.html#planes-soluciones">PLANES</a></li>
+    <li><a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a></li>
+  </ul>
+</nav>
+
+<!-- HEADER -->
+<div class="tienda-header">
+  <div class="tienda-header-content">
+    <div class="tienda-header-text">
+      <div class="tienda-breadcrumb">
+        <a href="index.html">Inicio</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        <span>Tienda</span>
+      </div>
+      <h1>Tienda InfraGo</h1>
+      <p>Hardware empresarial en arriendo mensual. Soporte técnico y mantenimiento incluidos en cada equipo.</p>
+    </div>
+    <div class="tienda-header-stats">
+      <div class="tienda-stat">
+        <span class="tienda-stat-num">+50</span>
+        <span class="tienda-stat-label">Productos disponibles</span>
+      </div>
+      <div class="tienda-stat">
+        <span class="tienda-stat-num">24/7</span>
+        <span class="tienda-stat-label">Soporte incluido</span>
+      </div>
+      <div class="tienda-stat">
+        <span class="tienda-stat-num">48h</span>
+        <span class="tienda-stat-label">Entrega Santiago</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="tienda-layout">
+
+  <!-- SIDEBAR FILTROS -->
+  <aside class="tienda-sidebar">
+    <div class="filtro-section">
+      <div class="filtro-title">Categoría</div>
+      <div class="filtro-options" id="filtroCategorias">
+        <label class="filtro-check active" data-cat="todos">
+          <input type="radio" name="categoria" value="todos" checked>
+          <span class="filtro-check-box"></span>
+          Todos los productos
+        </label>
+        <label class="filtro-check" data-cat="notebooks">
+          <input type="radio" name="categoria" value="notebooks">
+          <span class="filtro-check-box"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Notebooks
+        </label>
+        <label class="filtro-check" data-cat="servidores">
+          <input type="radio" name="categoria" value="servidores">
+          <span class="filtro-check-box"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg>
+          Servidores
+        </label>
+        <label class="filtro-check" data-cat="impresoras">
+          <input type="radio" name="categoria" value="impresoras">
+          <span class="filtro-check-box"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Impresoras
+        </label>
+        <label class="filtro-check" data-cat="monitores">
+          <input type="radio" name="categoria" value="monitores">
+          <span class="filtro-check-box"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Monitores
+        </label>
+        <label class="filtro-check" data-cat="redes">
+          <input type="radio" name="categoria" value="redes">
+          <span class="filtro-check-box"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v3M8.5 17l3.5-6M15.5 17L12 11"/></svg>
+          Redes
+        </label>
+      </div>
+    </div>
+
+    <div class="filtro-section">
+      <div class="filtro-title">Marca</div>
+      <div class="filtro-options" id="filtroMarcas">
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="HP" checked>
+          <span class="filtro-check-box"></span>
+          HP
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Dell" checked>
+          <span class="filtro-check-box"></span>
+          Dell
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Lenovo" checked>
+          <span class="filtro-check-box"></span>
+          Lenovo
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Apple" checked>
+          <span class="filtro-check-box"></span>
+          Apple
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Cisco" checked>
+          <span class="filtro-check-box"></span>
+          Cisco
+        </label>
+      </div>
+    </div>
+
+    <div class="filtro-section">
+      <div class="filtro-title">Precio mensual</div>
+      <div class="filtro-range-labels">
+        <span id="rangeMin">$0</span>
+        <span id="rangeMax">$200.000</span>
+      </div>
+      <input type="range" class="filtro-range" id="precioRange" min="0" max="200000" step="5000" value="200000"
+        oninput="filterByPrice(this.value)">
+    </div>
+
+    <div class="filtro-section">
+      <div class="filtro-title">Ordenar por</div>
+      <select class="filtro-select" id="ordenSelect" onchange="sortProducts()">
+        <option value="relevancia">Relevancia</option>
+        <option value="precio-asc">Precio: menor a mayor</option>
+        <option value="precio-desc">Precio: mayor a menor</option>
+        <option value="nombre">Nombre A-Z</option>
+      </select>
+    </div>
+
+    <a href="configurador.html" class="filtro-cta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Configurar solución
+    </a>
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="tienda-main">
+
+    <!-- BARRA SUPERIOR -->
+    <div class="tienda-topbar">
+      <div class="tienda-search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" class="tienda-search" id="searchInput" placeholder="Buscar productos..." oninput="searchProducts()">
+      </div>
+      <div class="tienda-topbar-right">
+        <span class="tienda-count" id="productCount">18 productos</span>
+        <div class="tienda-view-btns">
+          <button class="tienda-view-btn active" id="viewGrid" onclick="setView('grid')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </button>
+          <button class="tienda-view-btn" id="viewList" onclick="setView('list')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTROS ACTIVOS -->
+    <div class="tienda-active-filters" id="activeFilters"></div>
+
+    <!-- GRID DE PRODUCTOS -->
+    <div class="productos-grid" id="productosGrid">
+      <!-- Notebooks -->
+      <div class="prod-card" data-cat="notebooks" data-marca="HP" data-precio="18750" data-nombre="HP EliteBook 640">
+        <div class="prod-badge prod-badge--hot">Más vendido</div>
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">HP</div>
+          <div class="prod-name">EliteBook 640 G10</div>
+          <div class="prod-specs-list">
+            <span>Intel Core i5-1335U</span>
+            <span>16GB DDR4</span>
+            <span>512GB SSD NVMe</span>
+            <span>14" FHD</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$18.750</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="notebooks" data-marca="HP" data-precio="22500" data-nombre="HP EliteBook 840">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">HP</div>
+          <div class="prod-name">EliteBook 840 G10</div>
+          <div class="prod-specs-list">
+            <span>Intel Core i7-1355U</span>
+            <span>16GB DDR5</span>
+            <span>512GB SSD NVMe</span>
+            <span>14" FHD IPS</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$22.500</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="notebooks" data-marca="Dell" data-precio="21667" data-nombre="Dell Inspiron 15">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Dell</div>
+          <div class="prod-name">Inspiron 15 3530</div>
+          <div class="prod-specs-list">
+            <span>Intel Core i7-1355U</span>
+            <span>16GB DDR4</span>
+            <span>512GB SSD</span>
+            <span>15.6" FHD</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$21.667</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="notebooks" data-marca="Dell" data-precio="27083" data-nombre="Dell Latitude 5540">
+        <div class="prod-badge prod-badge--new">Nuevo</div>
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Dell</div>
+          <div class="prod-name">Latitude 5540</div>
+          <div class="prod-specs-list">
+            <span>Intel Core i7-1365U</span>
+            <span>16GB DDR4</span>
+            <span>256GB SSD</span>
+            <span>15.6" FHD</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$27.083</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="notebooks" data-marca="Lenovo" data-precio="19583" data-nombre="Lenovo ThinkPad E14">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Lenovo</div>
+          <div class="prod-name">ThinkPad E14 Gen 5</div>
+          <div class="prod-specs-list">
+            <span>AMD Ryzen 5 7530U</span>
+            <span>16GB DDR4</span>
+            <span>512GB SSD</span>
+            <span>14" FHD IPS</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$19.583</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="notebooks" data-marca="Apple" data-precio="50000" data-nombre="MacBook Pro 14">
+        <div class="prod-badge prod-badge--premium">Premium</div>
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Apple</div>
+          <div class="prod-name">MacBook Pro 14"</div>
+          <div class="prod-specs-list">
+            <span>Apple M3 Pro</span>
+            <span>18GB RAM</span>
+            <span>512GB SSD</span>
+            <span>14" Liquid Retina XDR</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$50.000</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servidores -->
+      <div class="prod-card" data-cat="servidores" data-marca="Dell" data-precio="104167" data-nombre="Dell PowerEdge R650">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="6" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="32" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="58" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="18" cy="16" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="68" r="3" fill="rgba(255,255,255,0.2)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Dell</div>
+          <div class="prod-name">PowerEdge R650</div>
+          <div class="prod-specs-list">
+            <span>Intel Xeon Silver 4314</span>
+            <span>64GB DDR4 ECC</span>
+            <span>1TB SSD RAID</span>
+            <span>1U Rack</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$104.167</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="servidores" data-marca="HP" data-precio="133333" data-nombre="HP ProLiant DL380">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="6" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="32" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="58" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="18" cy="16" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="68" r="3" fill="rgba(34,197,94,0.7)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">HP</div>
+          <div class="prod-name">ProLiant DL380 Gen10</div>
+          <div class="prod-specs-list">
+            <span>Intel Xeon Gold 5218</span>
+            <span>128GB DDR4 ECC</span>
+            <span>2TB SSD RAID</span>
+            <span>2U Rack</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$133.333</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="servidores" data-marca="Dell" data-precio="62500" data-nombre="Dell PowerEdge T350">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="30" y="4" width="60" height="76" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="38" y="12" width="44" height="28" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><circle cx="60" cy="56" r="8" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Dell</div>
+          <div class="prod-name">PowerEdge T350</div>
+          <div class="prod-specs-list">
+            <span>Intel Xeon E-2356G</span>
+            <span>32GB DDR4 ECC</span>
+            <span>1TB SATA</span>
+            <span>Torre</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$62.500</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impresoras -->
+      <div class="prod-card" data-cat="impresoras" data-marca="HP" data-precio="14583" data-nombre="HP LaserJet M110w">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="20" width="80" height="44" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="30" y="8" width="60" height="18" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="30" y="64" width="60" height="12" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="38" y="32" width="44" height="3" rx="1.5" fill="rgba(59,130,246,0.3)"/><circle cx="90" cy="33.5" r="3" fill="rgba(34,197,94,0.7)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">HP</div>
+          <div class="prod-name">LaserJet M110w</div>
+          <div class="prod-specs-list">
+            <span>Impresión B/N</span>
+            <span>21 ppm</span>
+            <span>Wi-Fi + USB</span>
+            <span>Tóner incluido</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$14.583</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="impresoras" data-marca="HP" data-precio="20833" data-nombre="HP LaserJet MFP M236sdw">
+        <div class="prod-badge prod-badge--hot">Popular</div>
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="20" width="80" height="44" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="30" y="8" width="60" height="18" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="30" y="64" width="60" height="12" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="38" y="32" width="44" height="3" rx="1.5" fill="rgba(59,130,246,0.3)"/><circle cx="90" cy="33.5" r="3" fill="rgba(34,197,94,0.7)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">HP</div>
+          <div class="prod-name">LaserJet MFP M236sdw</div>
+          <div class="prod-specs-list">
+            <span>Impresión / Copia / Scan</span>
+            <span>29 ppm</span>
+            <span>Wi-Fi + LAN + USB</span>
+            <span>Tóner incluido</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$20.833</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monitores -->
+      <div class="prod-card" data-cat="monitores" data-marca="Dell" data-precio="10417" data-nombre="Dell P2423D">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="18" y="6" width="84" height="56" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="26" y="14" width="68" height="40" rx="1" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="50" y="62" width="20" height="10" rx="1" fill="rgba(255,255,255,0.08)"/><rect x="38" y="72" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Dell</div>
+          <div class="prod-name">Monitor P2423D</div>
+          <div class="prod-specs-list">
+            <span>23.8" QHD 2560×1440</span>
+            <span>Panel IPS</span>
+            <span>USB-C + HDMI + DP</span>
+            <span>Ajuste de altura</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$10.417</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="monitores" data-marca="HP" data-precio="8333" data-nombre="HP M27fw">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="18" y="6" width="84" height="56" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="26" y="14" width="68" height="40" rx="1" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="50" y="62" width="20" height="10" rx="1" fill="rgba(255,255,255,0.08)"/><rect x="38" y="72" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">HP</div>
+          <div class="prod-name">Monitor M27fw</div>
+          <div class="prod-specs-list">
+            <span>27" FHD 1920×1080</span>
+            <span>Panel IPS</span>
+            <span>HDMI + VGA</span>
+            <span>Sin marcos laterales</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$8.333</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Redes -->
+      <div class="prod-card" data-cat="redes" data-marca="Cisco" data-precio="25000" data-nombre="Cisco Catalyst 2960">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="28" width="108" height="28" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><g><rect x="14" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="24" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="34" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="44" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/></g><circle cx="100" cy="42" r="4" fill="rgba(34,197,94,0.7)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Cisco</div>
+          <div class="prod-name">Catalyst 2960-X 24</div>
+          <div class="prod-specs-list">
+            <span>24 puertos GbE</span>
+            <span>4 uplinks SFP+</span>
+            <span>PoE+ 370W</span>
+            <span>Gestionable</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$25.000</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prod-card" data-cat="redes" data-marca="Cisco" data-precio="16667" data-nombre="Cisco RV340 Router">
+        <div class="prod-img">
+          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="28" width="80" height="28" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><path d="M60 14 L60 28" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M40 10 L60 14 L80 10" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-linecap="round"/><circle cx="100" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="92" cy="42" r="3" fill="rgba(240,165,0,0.7)"/></svg>
+        </div>
+        <div class="prod-info">
+          <div class="prod-brand">Cisco</div>
+          <div class="prod-name">RV340 Dual WAN</div>
+          <div class="prod-specs-list">
+            <span>Dual WAN Gigabit</span>
+            <span>4 puertos LAN</span>
+            <span>VPN IPSec/SSL</span>
+            <span>Firewall integrado</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="prod-price-from">Desde</span>
+              <span class="prod-price-val">$16.667</span>
+              <span class="prod-price-period">/mes</span>
+            </div>
+            <a href="configurador.html" class="prod-btn">Cotizar</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIN RESULTADOS -->
+    <div class="tienda-empty" id="tiendaEmpty" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <h3>Sin resultados</h3>
+      <p>Prueba con otros filtros o términos de búsqueda</p>
+      <button onclick="resetFilters()">Limpiar filtros</button>
+    </div>
+
+  </main>
+</div>
+
+<!-- CTA BANNER -->
+<div class="tienda-cta-banner">
+  <div class="tienda-cta-content">
+    <div>
+      <h3>¿No encuentras lo que buscas?</h3>
+      <p>Cotiza una solución personalizada con nuestro configurador o habla con un experto.</p>
+    </div>
+    <div class="tienda-cta-actions">
+      <a href="configurador.html" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Ir al configurador
+      </a>
+      <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="btn-outline" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Hablar con experto
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
+        <path d="M4 17L12 8L20 17L12 26Z" fill="#1a4fa0"/>
+        <path d="M14 17L22 8L30 17L22 26Z" fill="#2563c4" opacity="0.8"/>
+        <path d="M9 17L17 8L25 17L17 26Z" fill="#3b82f6" opacity="0.6"/>
+      </svg>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;">InfraGo</span>
+    </div>
+    <p>Operación TI inteligente. Sin fricción. Una empresa de TIC Manager's.</p>
+  </div>
+
+  <div class="footer-col">
+    <h4>Soluciones</h4>
+    <ul>
+      <li><a href="#">Notebooks</a></li>
+      <li><a href="#">Servidores y Redes</a></li>
+      <li><a href="#">Impresión</a></li>
+      <li><a href="#">Soluciones de Oficina</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Empresa</h4>
+    <ul>
+      <li><a href="#">Quiénes somos</a></li>
+      <li><a href="#">Planes</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Agendar Demo</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Contacto</h4>
+    <ul>
+      <li><a href="#"><span class="__cf_email__" data-cfemail="c2a1adacb6a3a1b6ad82abaca4b0a3a5adeca1ae">[email&#160;protected]</span></a></li>
+      <li><a href="#">+56 2 xxxx xxxx</a></li>
+      <li><a href="#">Providencia 1208, Of. 307</a></li>
+      <li><a href="#">Soporte</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <p>© 2026 InfraGo SpA. Todos los derechos reservados. Una empresa de TIC Manager's.</p>
+  <div class="footer-socials">
+    <a href="#">LinkedIn</a>
+    <a href="#">Instagram</a>
+    <a href="#">Facebook</a>
+    <a href="#">Términos</a>
+    <a href="#">Privacidad</a>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ═══════════════════════════════════════════
+   TIENDA JS
+═══════════════════════════════════════════ */
+
+let currentView = 'grid';
+let currentCat  = 'todos';
+let currentMax  = 200000;
+let currentSearch = '';
+let currentOrder = 'relevancia';
+
+// Filtro por categoría
+document.querySelectorAll('#filtroCategorias input').forEach(radio => {
+  radio.addEventListener('change', () => {
+    currentCat = radio.value;
+    document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
+    radio.closest('.filtro-check').classList.add('active');
+    applyFilters();
+  });
+});
+
+// Filtro por marca
+document.querySelectorAll('#filtroMarcas input').forEach(cb => {
+  cb.addEventListener('change', applyFilters);
+});
+
+function filterByPrice(val) {
+  currentMax = parseInt(val);
+  document.getElementById('rangeMax').textContent = '$' + parseInt(val).toLocaleString('es-CL');
+  applyFilters();
+}
+
+function searchProducts() {
+  currentSearch = document.getElementById('searchInput').value.toLowerCase();
+  applyFilters();
+}
+
+function sortProducts() {
+  currentOrder = document.getElementById('ordenSelect').value;
+  applyFilters();
+}
+
+function applyFilters() {
+  const marcasActivas = [...document.querySelectorAll('#filtroMarcas input:checked')].map(c => c.value);
+  let cards = [...document.querySelectorAll('.prod-card')];
+
+  cards.forEach(card => {
+    const cat    = card.dataset.cat;
+    const marca  = card.dataset.marca;
+    const precio = parseInt(card.dataset.precio);
+    const nombre = card.dataset.nombre.toLowerCase();
+
+    const catOk    = currentCat === 'todos' || cat === currentCat;
+    const marcaOk  = marcasActivas.includes(marca);
+    const precioOk = precio <= currentMax;
+    const searchOk = nombre.includes(currentSearch);
+
+    card.style.display = (catOk && marcaOk && precioOk && searchOk) ? '' : 'none';
+  });
+
+  // Ordenar
+  const grid = document.getElementById('productosGrid');
+  const visible = cards.filter(c => c.style.display !== 'none');
+
+  if (currentOrder === 'precio-asc') {
+    visible.sort((a, b) => parseInt(a.dataset.precio) - parseInt(b.dataset.precio));
+  } else if (currentOrder === 'precio-desc') {
+    visible.sort((a, b) => parseInt(b.dataset.precio) - parseInt(a.dataset.precio));
+  } else if (currentOrder === 'nombre') {
+    visible.sort((a, b) => a.dataset.nombre.localeCompare(b.dataset.nombre));
+  }
+
+  visible.forEach(card => grid.appendChild(card));
+
+  // Contador
+  const count = visible.length;
+  document.getElementById('productCount').textContent = count + ' producto' + (count !== 1 ? 's' : '');
+
+  // Estado vacío
+  document.getElementById('tiendaEmpty').style.display = count === 0 ? 'flex' : 'none';
+  document.getElementById('productosGrid').style.display = count === 0 ? 'none' : '';
+
+  updateActiveFilters();
+}
+
+// Array global para guardar closures — evita serializar funciones en onclick
+const _filterClears = [];
+
+function clearActiveFilter(i) {
+  if (_filterClears[i]) _filterClears[i]();
+}
+
+function updateActiveFilters() {
+  const container = document.getElementById('activeFilters');
+  const tags = [];
+
+  if (currentCat !== 'todos') tags.push({
+    label: currentCat,
+    clear: () => {
+      currentCat = 'todos';
+      document.querySelector('#filtroCategorias input[value="todos"]').checked = true;
+      document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
+      document.querySelector('.filtro-check[data-cat="todos"]').classList.add('active');
+      applyFilters();
+    }
+  });
+
+  if (currentSearch) tags.push({
+    label: `"${currentSearch}"`,
+    clear: () => {
+      currentSearch = '';
+      document.getElementById('searchInput').value = '';
+      applyFilters();
+    }
+  });
+
+  if (currentMax < 200000) tags.push({
+    label: `Hasta $${currentMax.toLocaleString('es-CL')}`,
+    clear: () => {
+      currentMax = 200000;
+      document.getElementById('precioRange').value = 200000;
+      document.getElementById('rangeMax').textContent = '$200.000';
+      applyFilters();
+    }
+  });
+
+  _filterClears.length = 0;
+  tags.forEach((t, i) => { _filterClears[i] = t.clear; });
+
+  container.innerHTML = tags.map((t, i) =>
+    `<span class="active-filter-tag">${t.label} <button onclick="clearActiveFilter(${i})">&times;</button></span>`
+  ).join('');
+}
+
+function resetFilters() {
+  currentCat = 'todos';
+  currentSearch = '';
+  currentMax = 200000;
+  document.querySelector('#filtroCategorias input[value="todos"]').checked = true;
+  document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
+  document.querySelector('.filtro-check[data-cat="todos"]').classList.add('active');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('precioRange').value = 200000;
+  document.getElementById('rangeMax').textContent = '$200.000';
+  document.querySelectorAll('#filtroMarcas input').forEach(c => c.checked = true);
+  applyFilters();
+}
+
+function setView(v) {
+  currentView = v;
+  const grid = document.getElementById('productosGrid');
+  grid.className = v === 'list' ? 'productos-list' : 'productos-grid';
+  document.getElementById('viewGrid').classList.toggle('active', v === 'grid');
+  document.getElementById('viewList').classList.toggle('active', v === 'list');
+}
+
+// Init: leer ?cat= de URL
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if (cat) {
+    const radio = document.querySelector(`#filtroCategorias input[value="${cat}"]`);
+    if (radio) {
+      radio.checked = true;
+      currentCat = cat;
+      document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
+      radio.closest('.filtro-check').classList.add('active');
+      applyFilters();
+    }
+  }
+});
+</script>
+
+</body>
+</html>
