@@ -22,6 +22,7 @@ function nextStep() {
   if (currentStep < totalSteps) {
     currentStep++;
     updateStepDisplay();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
@@ -29,6 +30,7 @@ function prevStep() {
   if (currentStep > 1) {
     currentStep--;
     updateStepDisplay();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
@@ -48,6 +50,11 @@ function updateStepDisplay() {
 function updateProgressBar() {
   const progress = (currentStep / totalSteps) * 100;
   document.getElementById('progressBar').style.width = progress + '%';
+
+  document.querySelectorAll('.progress-step').forEach(step => {
+    const n = parseInt(step.dataset.step);
+    step.classList.toggle('active', n <= currentStep);
+  });
 }
 
 function updateButtons() {
@@ -175,15 +182,74 @@ function collectServicios() {
 // ═════════════════════════════════════════
 
 function updateSidebar() {
-  let total = 0;
+  let totalEq = 0;
+  let totalQty = 0;
+  const selectedProducts = [];
 
   document.querySelectorAll('.product-item').forEach(item => {
     const qty = parseInt(item.querySelector('.qty-value').textContent) || 0;
     const price = parseInt(item.dataset.price);
-    total += qty * price;
+    const name = item.dataset.name;
+    if (qty > 0) {
+      totalEq += qty * price;
+      totalQty += qty;
+      selectedProducts.push({ name, qty });
+    }
   });
 
+  let totalSvc = 0;
+  let countSvc = 0;
+  const selectedServices = [];
+  document.querySelectorAll('.service-check:checked').forEach(el => {
+    totalSvc += parseInt(el.dataset.price) || 0;
+    countSvc++;
+    selectedServices.push(el.dataset.name);
+  });
+
+  const total = totalEq + totalSvc;
+  const cuota = Math.round(total / 24);
+
+  // Contadores
+  document.getElementById('countEquipos').textContent = totalQty;
+  document.getElementById('countServicios').textContent = countSvc;
+
+  // Costos
+  document.getElementById('totalEquipos').textContent = totalEq.toLocaleString('es-CL');
+  document.getElementById('totalServicios').textContent = totalSvc.toLocaleString('es-CL');
   document.getElementById('totalGeneral').textContent = total.toLocaleString('es-CL');
+  document.getElementById('cuotaMensual').textContent = cuota.toLocaleString('es-CL');
+
+  // Lista productos en sidebar
+  const list = document.getElementById('productsListSidebar');
+  if (selectedProducts.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:var(--white-60);font-size:12px;padding:8px;">Sin productos aún</div>';
+  } else {
+    list.innerHTML = selectedProducts.map(p =>
+      `<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;gap:8px;">`+
+      `<span style="color:var(--white-80);flex:1;line-height:1.3;">${p.name}</span>`+
+      `<span style="color:var(--gold);white-space:nowrap;font-weight:600;">×${p.qty}</span>`+
+      `</div>`
+    ).join('');
+  }
+
+  // Lista servicios en sidebar
+  let svcList = document.getElementById('servicesListSidebar');
+  if (!svcList) {
+    const prodSection = document.getElementById('productsListSidebar').closest('.sidebar-section');
+    const newSection = document.createElement('div');
+    newSection.className = 'sidebar-section';
+    newSection.innerHTML = '<h4>Servicios Seleccionados</h4>'
+      + '<div id="servicesListSidebar" style="display:flex;flex-direction:column;gap:8px;max-height:150px;overflow-y:auto;"></div>';
+    prodSection.parentNode.insertBefore(newSection, prodSection.nextSibling);
+    svcList = document.getElementById('servicesListSidebar');
+  }
+  if (selectedServices.length === 0) {
+    svcList.innerHTML = '<div style="text-align:center;color:var(--white-60);font-size:12px;padding:8px;">Sin servicios aún</div>';
+  } else {
+    svcList.innerHTML = selectedServices.map(name =>
+      `<div style="font-size:12px;color:var(--white-80);line-height:1.3;">${name}</div>`
+    ).join('');
+  }
 }
 
 // ═════════════════════════════════════════
