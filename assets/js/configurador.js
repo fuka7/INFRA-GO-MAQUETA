@@ -269,3 +269,4 @@ window.decrementQty = decrementQty;
 window.nextStep = nextStep;
 window.prevStep = prevStep;
 window.solicitarCotizacion = solicitarCotizacion;
+window.updateSidebar = updateSidebar;
