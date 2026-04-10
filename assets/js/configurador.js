@@ -353,35 +353,87 @@ function solicitarCotizacion() {
     return;
   }
 
-  // Construir datos para envío
+  // Mostrar loading
+  const btnNext = document.getElementById('btnNext');
+  const btnOriginalText = btnNext.textContent;
+  btnNext.textContent = '⏳ Guardando cotización...';
+  btnNext.disabled = true;
+
+  // Calcular totales
+  let totalEquiposCost = 0;
+  Object.values(state.equipos).forEach(equipo => {
+    totalEquiposCost += equipo.qty * equipo.price;
+  });
+
+  let totalServicesCost = 0;
+  Object.values(state.servicios).forEach(price => {
+    totalServicesCost += price;
+  });
+
+  // Construir datos para Supabase
   const cotizacionData = {
-    equipos: state.equipos,
+    empresa: state.formulario.empresa,
+    region: state.formulario.region,
+    ciudad: state.formulario.ciudad,
+    direccion: state.formulario.direccion,
+    contacto: state.formulario.contacto,
+    telefono: state.formulario.telefono,
+    email: state.formulario.email,
+    notas: state.formulario.notas || null,
+    productos: state.equipos,
     servicios: state.servicios,
-    formulario: state.formulario,
-    timestamp: new Date().toLocaleString('es-CL'),
+    total_productos: totalEquiposCost,
+    total_servicios: totalServicesCost,
+    total_general: totalEquiposCost + totalServicesCost,
     url: window.location.href
   };
 
-  // Log para debugging
-  console.log('Cotización solicitada:', cotizacionData);
-  
-  // Aquí puedes integrar con un backend: fetch('/api/cotizaciones', { method: 'POST', body: JSON.stringify(cotizacionData) })
-  
-  // Por ahora, mostrar resumen
-  const equiposText = Object.entries(state.equipos)
-    .map(([nombre, data]) => `• ${nombre} x${data.qty}`)
-    .join('\n');
+  // Guardar en Supabase
+  guardarCotizacionSupabase(cotizacionData)
+    .then(() => {
+      // Éxito
+      btnNext.textContent = '✅ ¡Cotización guardada!';
+      
+      const equiposText = Object.entries(state.equipos)
+        .map(([nombre, data]) => `• ${nombre} x${data.qty}`)
+        .join('\n');
 
-  const serviciosText = Object.keys(state.servicios).length > 0
-    ? '\n\nServicios:\n' + Object.keys(state.servicios).map(s => `• ${s}`).join('\n')
-    : '';
+      const serviciosText = Object.keys(state.servicios).length > 0
+        ? '\n\nServicios:\n' + Object.keys(state.servicios).map(s => `• ${s}`).join('\n')
+        : '';
 
-  alert(`✅ ¡Cotización solicitada con éxito!\n\nEquipos:\n${equiposText}${serviciosText}\n\nNos pondremos en contacto a ${state.formulario.email} pronto.`);
-  
-  // Redirigir a inicio después de 2 segundos
-  setTimeout(() => {
-    window.location.href = 'index.html';
-  }, 2000);
+      alert(`✅ ¡Cotización solicitada con éxito!\n\nEquipos:\n${equiposText}${serviciosText}\n\nNos pondremos en contacto a ${state.formulario.email} pronto.`);
+      
+      // Redirigir después de 2 segundos
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
+    })
+    .catch(error => {
+      // Error
+      console.error('Error guardando cotización:', error);
+      btnNext.textContent = btnOriginalText;
+      btnNext.disabled = false;
+      alert('❌ Error al guardar la cotización. Intenta de nuevo.');
+    });
+}
+
+// Función para guardar en Supabase
+async function guardarCotizacionSupabase(data) {
+  // Verificar que Supabase está configurado
+  if (typeof supabaseClient === 'undefined') {
+    throw new Error('Supabase no está configurado. Verifica config.js');
+  }
+
+  const { data: result, error } = await supabaseClient
+    .from('cotizaciones')
+    .insert([data]);
+
+  if (error) {
+    throw error;
+  }
+
+  return result;
 }
 
 // ═════════════════════════════════════════
