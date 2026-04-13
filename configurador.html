@@ -22,8 +22,7 @@
   <ul class="nav-links">
     <li><a href="index.html#hero">INICIO</a></li>
     <li><a href="index.html#quienes-somos">QUIÉNES SOMOS</a></li>
-    <li><a href="index.html#incluye">COMPUTADORES</a></li>
-    <li><a href="index.html#incluye">SERVIDORES</a></li>
+    <li><a href="tienda.html">TIENDA</a></li>
     <li><a href="index.html#planes-soluciones">PLANES</a></li>
     <li><a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a></li>
   </ul>
@@ -36,8 +35,7 @@
 <div class="nav-mobile-menu" id="navMobileMenu">
   <a href="index.html#hero">Inicio</a>
   <a href="index.html#quienes-somos">Quiénes somos</a>
-  <a href="index.html#incluye">Computadores</a>
-  <a href="index.html#incluye">Servidores</a>
+  <a href="tienda.html">Tienda</a>
   <a href="index.html#planes-soluciones">Planes</a>
   <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a>
 </div>
@@ -893,6 +891,47 @@
 </div>
 
 <script type="module" src="/assets/js/configurador.js"></script>
+
+<script>
+/* ── HAMBURGER MENU ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector('.nav-hamburger');
+  const menu = document.getElementById('navMobileMenu');
+  const overlay = document.getElementById('navMobileOverlay');
+
+  if (!btn || !menu) return;
+
+  function openMenu() {
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    menu.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    btn.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  if (overlay) overlay.addEventListener('click', closeMenu);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && btn.classList.contains('open')) closeMenu();
+  });
+});
+</script>
 
 </body>
 </html>
