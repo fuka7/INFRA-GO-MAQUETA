@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/assets/css/modals-how.css">
 <link rel="stylesheet" href="/assets/css/tienda.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
+<link rel="stylesheet" href="/assets/css/navbar-mobile.css">
 </head>
 <body>
 
@@ -31,14 +32,15 @@
   </button>
 </nav>
 
-<!-- MENÚ MOBILE -->
-<nav class="nav-mobile-menu" id="navMobileMenu">
+<!-- MENÚ MOBILE — div, NO nav, para evitar herencia de estilos nav{} -->
+<div class="nav-mobile-overlay" id="navMobileOverlay"></div>
+<div class="nav-mobile-menu" id="navMobileMenu">
   <a href="#hero">Inicio</a>
   <a href="#quienes-somos">Quiénes somos</a>
   <a href="tienda.html">Tienda</a>
   <a href="#planes-soluciones">Planes</a>
   <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a>
-</nav>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="hero">
@@ -1553,6 +1555,48 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     });
+  });
+});
+</script>
+<script>
+/* Hamburger menu — navbar-mobile.css */
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector('.nav-hamburger');
+  const menu = document.getElementById('navMobileMenu');
+  const overlay = document.getElementById('navMobileOverlay');
+  if (!btn || !menu) return;
+
+  function openMenu() {
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    menu.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    btn.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  // Cerrar al hacer click en un link
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // Cerrar al hacer click en el overlay
+  if (overlay) overlay.addEventListener('click', closeMenu);
+
+  // Cerrar con Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
   });
 });
 </script>
