@@ -326,7 +326,7 @@
   .tienda-stat-num { font-size: 22px; }
 
   /* Configurador */
-  .configurador-header { padding: 32px 16px; }
+  .configurador-header { padding: 92px 16px 32px; }
   .configurador-header h1 { font-size: 28px; }
   .progress-steps { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .progress-container { padding: 16px; }

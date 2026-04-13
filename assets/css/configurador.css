@@ -1022,7 +1022,7 @@ body {
 
 @media (max-width: 768px) {
   .configurador-header {
-    padding: 40px 24px;
+    padding: 100px 24px 40px;
   }
 
   .configurador-header h1 {
