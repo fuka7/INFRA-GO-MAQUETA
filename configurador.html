@@ -32,7 +32,6 @@
   </button>
 </nav>
 
-<!-- MENÚ MOBILE — div, NO nav, para evitar herencia de estilos nav{} -->
 <div class="nav-mobile-overlay" id="navMobileOverlay"></div>
 <div class="nav-mobile-menu" id="navMobileMenu">
   <a href="index.html#hero">Inicio</a>
@@ -43,10 +42,10 @@
   <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a>
 </div>
 
-<!-- HEADER CONFIGURADOR -->
+<!-- HEADER -->
 <div class="configurador-header">
   <h1>Configurador de Solución</h1>
-  <p class="configurador-subtitle">Configura tu solución completa en 4 sencillos pasos</p>
+  <p class="configurador-subtitle">Arma tu solución completa en 4 sencillos pasos</p>
 </div>
 
 <!-- PROGRESS BAR -->
@@ -57,374 +56,820 @@
   <div class="progress-steps">
     <div class="progress-step active" data-step="1">
       <div class="progress-step-number">1</div>
-      <div class="progress-step-label">Productos</div>
+      <div class="progress-step-label">Productos & Servicios</div>
     </div>
     <div class="progress-step" data-step="2">
       <div class="progress-step-number">2</div>
-      <div class="progress-step-label">Servicios</div>
+      <div class="progress-step-label">Información</div>
     </div>
     <div class="progress-step" data-step="3">
       <div class="progress-step-number">3</div>
-      <div class="progress-step-label">Información</div>
+      <div class="progress-step-label">Resumen</div>
     </div>
     <div class="progress-step" data-step="4">
       <div class="progress-step-number">4</div>
-      <div class="progress-step-label">Resumen</div>
+      <div class="progress-step-label">Financiamiento</div>
     </div>
   </div>
 </div>
 
 <!-- CONTENIDO PRINCIPAL -->
 <div class="config-wrapper">
-  
-  <!-- CONTENIDO DE PASOS -->
-  <div class="config-content">
 
-    <!-- PASO 1: PRODUCTOS -->
-    <div class="wizard-step active" data-step="1">
-      <div class="step-header">
-        <h2 class="step-title">Selecciona tus Productos</h2>
-        <p class="step-subtitle">Elige los productos que necesitas para tu solución</p>
+  <!-- ════════════════════════════
+       PASO 1: PRODUCTOS + SERVICIOS
+  ════════════════════════════ -->
+  <div class="wizard-step active" data-step="1">
+    <div class="step-header">
+      <h2 class="step-title">Selecciona Productos y Servicios</h2>
+      <p class="step-subtitle">Elige los productos del catálogo — cada uno puede llevar un servicio asociado</p>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filtros-bar">
+      <div class="filtros-row">
+        <span class="filtros-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Marca:
+        </span>
+        <div class="filtros-chips" id="filtrosMarca">
+          <button class="chip active" data-filtro="marca" data-val="todos" onclick="setFiltro(this,'marca')">Todas</button>
+          <button class="chip" data-filtro="marca" data-val="HP" onclick="setFiltro(this,'marca')">HP</button>
+          <button class="chip" data-filtro="marca" data-val="Dell" onclick="setFiltro(this,'marca')">Dell</button>
+          <button class="chip" data-filtro="marca" data-val="Lenovo" onclick="setFiltro(this,'marca')">Lenovo</button>
+          <button class="chip" data-filtro="marca" data-val="Apple" onclick="setFiltro(this,'marca')">Apple</button>
+          <button class="chip" data-filtro="marca" data-val="Brother" onclick="setFiltro(this,'marca')">Brother</button>
+          <button class="chip" data-filtro="marca" data-val="Cisco" onclick="setFiltro(this,'marca')">Cisco</button>
+          <button class="chip" data-filtro="marca" data-val="Fortinet" onclick="setFiltro(this,'marca')">Fortinet</button>
+          <button class="chip" data-filtro="marca" data-val="Ubiquiti" onclick="setFiltro(this,'marca')">Ubiquiti</button>
+          <button class="chip" data-filtro="marca" data-val="Synology" onclick="setFiltro(this,'marca')">Synology</button>
+          <button class="chip" data-filtro="marca" data-val="QNAP" onclick="setFiltro(this,'marca')">QNAP</button>
+          <button class="chip" data-filtro="marca" data-val="Canon" onclick="setFiltro(this,'marca')">Canon</button>
+        </div>
       </div>
+      <div class="filtros-row">
+        <span class="filtros-label">Tipo:</span>
+        <div class="filtros-chips" id="filtrosTipo">
+          <button class="chip chip--type active" data-filtro="tipo" data-val="todos" onclick="setFiltro(this,'tipo')">Todos</button>
+          <button class="chip chip--type" data-filtro="tipo" data-val="notebook" onclick="setFiltro(this,'tipo')">Notebooks</button>
+          <button class="chip chip--type" data-filtro="tipo" data-val="servidor" onclick="setFiltro(this,'tipo')">Servidores</button>
+          <button class="chip chip--type" data-filtro="tipo" data-val="impresora" onclick="setFiltro(this,'tipo')">Impresoras</button>
+          <button class="chip chip--type" data-filtro="tipo" data-val="networking" onclick="setFiltro(this,'tipo')">Networking</button>
+          <button class="chip chip--type" data-filtro="tipo" data-val="storage" onclick="setFiltro(this,'tipo')">Almacenamiento</button>
+        </div>
+        <div class="filtros-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchProductos" placeholder="Buscar..." oninput="aplicarFiltros()">
+        </div>
+      </div>
+    </div>
+
+    <!-- CATÁLOGO -->
+    <div id="catalogoProductos">
 
       <!-- Notebooks -->
-      <div class="product-category">
-        <div class="category-header">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
+      <div class="product-category open" id="cat-notebooks" data-tipo="notebook">
+        <div class="category-header" onclick="toggleCategory('cat-notebooks')">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           <h3>Notebooks</h3>
+          <span class="cat-badge" id="badge-notebooks"></span>
+          <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="product-list">
-          <div class="product-item" data-name="HP EliteBook 640" data-specs="Intel Core i5 · 16GB RAM · 512GB SSD" data-price="450000" onclick="toggleProduct(this)">
-            <div class="product-details">
-              <div class="product-name">HP EliteBook 640</div>
-              <div class="product-specs">Intel Core i5 · 16GB RAM · 512GB SSD</div>
+        <div class="product-body">
+          <div class="product-list">
+
+            <div class="product-item" data-marca="HP" data-tipo="notebook" data-name="HP EliteBook 640" data-specs="Intel Core i5 · 16GB RAM · 512GB SSD" data-price="450000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">HP EliteBook 640</div>
+                  <div class="product-specs">Intel Core i5 · 16GB RAM · 512GB SSD</div>
+                </div>
+                <div class="product-price-tag">$450.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="HP EliteBook 640" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="80000">Instalación y configuración — $80.000</option>
+                  <option value="soporte" data-price="35000">Soporte técnico mensual — $35.000/mes</option>
+                  <option value="garantia" data-price="45000">Garantía extendida 3 años — $45.000/año</option>
+                  <option value="migracion" data-price="60000">Migración de datos — $60.000</option>
+                </select>
+              </div>
             </div>
-            <div class="product-qty-control">
-              <button type="button" onclick="decrementQty(event)">−</button>
-              <span class="qty-value">0</span>
-              <button type="button" onclick="incrementQty(event)">+</button>
+
+            <div class="product-item" data-marca="Dell" data-tipo="notebook" data-name="Dell Inspiron 15" data-specs="Intel Core i7 · 16GB RAM · 512GB SSD" data-price="520000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Dell Inspiron 15</div>
+                  <div class="product-specs">Intel Core i7 · 16GB RAM · 512GB SSD</div>
+                </div>
+                <div class="product-price-tag">$520.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Dell Inspiron 15" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="80000">Instalación y configuración — $80.000</option>
+                  <option value="soporte" data-price="35000">Soporte técnico mensual — $35.000/mes</option>
+                  <option value="garantia" data-price="45000">Garantía extendida 3 años — $45.000/año</option>
+                  <option value="migracion" data-price="60000">Migración de datos — $60.000</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="product-item" data-name="Dell Inspiron 15" data-specs="Intel Core i7 · 16GB RAM · 512GB SSD" data-price="520000" onclick="toggleProduct(this)">
-            <div class="product-details">
-              <div class="product-name">Dell Inspiron 15</div>
-              <div class="product-specs">Intel Core i7 · 16GB RAM · 512GB SSD</div>
+
+            <div class="product-item" data-marca="Apple" data-tipo="notebook" data-name="MacBook Pro 14" data-specs="Apple M3 · 16GB RAM · 512GB SSD" data-price="1200000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">MacBook Pro 14</div>
+                  <div class="product-specs">Apple M3 · 16GB RAM · 512GB SSD</div>
+                </div>
+                <div class="product-price-tag">$1.200.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="MacBook Pro 14" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="80000">Instalación y configuración — $80.000</option>
+                  <option value="soporte" data-price="35000">Soporte técnico mensual — $35.000/mes</option>
+                  <option value="migracion" data-price="60000">Migración de datos — $60.000</option>
+                </select>
+              </div>
             </div>
-            <div class="product-qty-control">
-              <button type="button" onclick="decrementQty(event)">−</button>
-              <span class="qty-value">0</span>
-              <button type="button" onclick="incrementQty(event)">+</button>
+
+            <div class="product-item" data-marca="Lenovo" data-tipo="notebook" data-name="Lenovo ThinkPad E14" data-specs="AMD Ryzen 5 · 16GB RAM · 512GB SSD" data-price="480000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Lenovo ThinkPad E14</div>
+                  <div class="product-specs">AMD Ryzen 5 · 16GB RAM · 512GB SSD</div>
+                </div>
+                <div class="product-price-tag">$480.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Lenovo ThinkPad E14" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="80000">Instalación y configuración — $80.000</option>
+                  <option value="soporte" data-price="35000">Soporte técnico mensual — $35.000/mes</option>
+                  <option value="garantia" data-price="45000">Garantía extendida 3 años — $45.000/año</option>
+                  <option value="migracion" data-price="60000">Migración de datos — $60.000</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="product-item" data-name="MacBook Pro 14" data-specs="Apple M3 · 16GB RAM · 512GB SSD" data-price="1200000" onclick="toggleProduct(this)">
-            <div class="product-details">
-              <div class="product-name">MacBook Pro 14</div>
-              <div class="product-specs">Apple M3 · 16GB RAM · 512GB SSD</div>
-            </div>
-            <div class="product-qty-control">
-              <button type="button" onclick="decrementQty(event)">−</button>
-              <span class="qty-value">0</span>
-              <button type="button" onclick="incrementQty(event)">+</button>
-            </div>
+
           </div>
         </div>
       </div>
 
       <!-- Servidores -->
-      <div class="product-category">
-        <div class="category-header">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" /><line x1="6" y1="6" x2="18" y2="6" /><rect x="2" y="14" width="20" height="8" rx="2" /><line x1="6" y1="18" x2="18" y2="18" /></svg>
+      <div class="product-category" id="cat-servidores" data-tipo="servidor">
+        <div class="category-header" onclick="toggleCategory('cat-servidores')">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="18" y2="6"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="18" x2="18" y2="18"/></svg>
           <h3>Servidores</h3>
+          <span class="cat-badge" id="badge-servidores"></span>
+          <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="product-list">
-          <div class="product-item" data-name="Server Dell PowerEdge R650" data-specs="Intel Xeon · 64GB RAM · 1TB SSD" data-price="2500000" onclick="toggleProduct(this)">
-            <div class="product-details">
-              <div class="product-name">Dell PowerEdge R650</div>
-              <div class="product-specs">Intel Xeon · 64GB RAM · 1TB SSD</div>
+        <div class="product-body">
+          <div class="product-list">
+
+            <div class="product-item" data-marca="Dell" data-tipo="servidor" data-name="Dell PowerEdge R650" data-specs="Intel Xeon · 64GB RAM · 1TB SSD" data-price="2500000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Dell PowerEdge R650</div>
+                  <div class="product-specs">Intel Xeon · 64GB RAM · 1TB SSD</div>
+                </div>
+                <div class="product-price-tag">$2.500.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Dell PowerEdge R650" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="150000">Instalación rack y configuración — $150.000</option>
+                  <option value="soporte" data-price="120000">Soporte Premium mensual — $120.000/mes</option>
+                  <option value="monitoreo" data-price="80000">Monitoreo 24/7 — $80.000/mes</option>
+                  <option value="backup" data-price="200000">Backup & Replicación — $200.000/mes</option>
+                </select>
+              </div>
             </div>
-            <div class="product-qty-control">
-              <button type="button" onclick="decrementQty(event)">−</button>
-              <span class="qty-value">0</span>
-              <button type="button" onclick="incrementQty(event)">+</button>
+
+            <div class="product-item" data-marca="HP" data-tipo="servidor" data-name="HP ProLiant DL380" data-specs="Intel Xeon · 128GB RAM · 2TB SSD" data-price="3200000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">HP ProLiant DL380</div>
+                  <div class="product-specs">Intel Xeon · 128GB RAM · 2TB SSD</div>
+                </div>
+                <div class="product-price-tag">$3.200.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="HP ProLiant DL380" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="150000">Instalación rack y configuración — $150.000</option>
+                  <option value="soporte" data-price="120000">Soporte Premium mensual — $120.000/mes</option>
+                  <option value="monitoreo" data-price="80000">Monitoreo 24/7 — $80.000/mes</option>
+                  <option value="backup" data-price="200000">Backup & Replicación — $200.000/mes</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="product-item" data-name="Server HP ProLiant DL380" data-specs="Intel Xeon · 128GB RAM · 2TB SSD" data-price="3200000" onclick="toggleProduct(this)">
-            <div class="product-details">
-              <div class="product-name">HP ProLiant DL380</div>
-              <div class="product-specs">Intel Xeon · 128GB RAM · 2TB SSD</div>
+
+            <div class="product-item" data-marca="Lenovo" data-tipo="servidor" data-name="Lenovo ThinkSystem SR650" data-specs="Intel Xeon · 96GB RAM · 1.5TB SSD" data-price="2800000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Lenovo ThinkSystem SR650</div>
+                  <div class="product-specs">Intel Xeon · 96GB RAM · 1.5TB SSD</div>
+                </div>
+                <div class="product-price-tag">$2.800.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Lenovo ThinkSystem SR650" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="150000">Instalación rack y configuración — $150.000</option>
+                  <option value="soporte" data-price="120000">Soporte Premium mensual — $120.000/mes</option>
+                  <option value="monitoreo" data-price="80000">Monitoreo 24/7 — $80.000/mes</option>
+                  <option value="backup" data-price="200000">Backup & Replicación — $200.000/mes</option>
+                </select>
+              </div>
             </div>
-            <div class="product-qty-control">
-              <button type="button" onclick="decrementQty(event)">−</button>
-              <span class="qty-value">0</span>
-              <button type="button" onclick="incrementQty(event)">+</button>
-            </div>
+
           </div>
         </div>
       </div>
 
       <!-- Impresoras -->
-      <div class="product-category">
-        <div class="category-header">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z" /><line x1="8" y1="13" x2="16" y2="13" /></svg>
+      <div class="product-category" id="cat-impresoras" data-tipo="impresora">
+        <div class="category-header" onclick="toggleCategory('cat-impresoras')">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>
           <h3>Impresoras</h3>
+          <span class="cat-badge" id="badge-impresoras"></span>
+          <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="product-list">
-          <div class="product-item" data-name="Impresora HP LaserJet M110w" data-specs="Impresión B/N · Red + Wi-Fi" data-price="350000" onclick="toggleProduct(this)">
-            <div class="product-details">
-              <div class="product-name">HP LaserJet M110w</div>
-              <div class="product-specs">Impresión B/N · Red + Wi-Fi</div>
+        <div class="product-body">
+          <div class="product-list">
+
+            <div class="product-item" data-marca="HP" data-tipo="impresora" data-name="HP LaserJet M110w" data-specs="Impresión B/N · Red + Wi-Fi" data-price="350000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">HP LaserJet M110w</div>
+                  <div class="product-specs">Impresión B/N · Red + Wi-Fi</div>
+                </div>
+                <div class="product-price-tag">$350.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="HP LaserJet M110w" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="40000">Instalación y configuración red — $40.000</option>
+                  <option value="mantenimiento" data-price="25000">Mantenimiento preventivo mensual — $25.000/mes</option>
+                  <option value="toner" data-price="15000">Servicio tóner incluido — $15.000/mes</option>
+                </select>
+              </div>
             </div>
-            <div class="product-qty-control">
-              <button type="button" onclick="decrementQty(event)">−</button>
-              <span class="qty-value">0</span>
-              <button type="button" onclick="incrementQty(event)">+</button>
+
+            <div class="product-item" data-marca="Canon" data-tipo="impresora" data-name="Canon PIXMA G3160" data-specs="Impresión Color · Wi-Fi · Ecotank" data-price="290000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Canon PIXMA G3160</div>
+                  <div class="product-specs">Impresión Color · Wi-Fi · Ecotank</div>
+                </div>
+                <div class="product-price-tag">$290.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Canon PIXMA G3160" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="40000">Instalación y configuración red — $40.000</option>
+                  <option value="mantenimiento" data-price="25000">Mantenimiento preventivo mensual — $25.000/mes</option>
+                </select>
+              </div>
             </div>
+
+            <div class="product-item" data-marca="Brother" data-tipo="impresora" data-name="Brother MFC-L6915DW" data-specs="Impresión/Escaneo/Fax · Red + Wi-Fi" data-price="720000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Brother MFC-L6915DW</div>
+                  <div class="product-specs">Impresión/Escaneo/Fax · Red + Wi-Fi</div>
+                </div>
+                <div class="product-price-tag">$720.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Brother MFC-L6915DW" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="50000">Instalación y configuración red — $50.000</option>
+                  <option value="mantenimiento" data-price="30000">Mantenimiento preventivo mensual — $30.000/mes</option>
+                  <option value="toner" data-price="20000">Servicio tóner incluido — $20.000/mes</option>
+                </select>
+              </div>
+            </div>
+
           </div>
+        </div>
+      </div>
+
+      <!-- Networking -->
+      <div class="product-category" id="cat-networking" data-tipo="networking">
+        <div class="category-header" onclick="toggleCategory('cat-networking')">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+          <h3>Networking</h3>
+          <span class="cat-badge" id="badge-networking"></span>
+          <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="product-body">
+          <div class="product-list">
+
+            <div class="product-item" data-marca="Cisco" data-tipo="networking" data-name="Switch Cisco 24 puertos" data-specs="Gigabit Managed · PoE+ · 24P" data-price="680000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Switch Cisco 24 puertos</div>
+                  <div class="product-specs">Gigabit Managed · PoE+ · 24P</div>
+                </div>
+                <div class="product-price-tag">$680.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Switch Cisco 24p" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="90000">Instalación y cableado — $90.000</option>
+                  <option value="configuracion" data-price="120000">Configuración VLANs y QoS — $120.000</option>
+                  <option value="monitoreo" data-price="60000">Monitoreo de red mensual — $60.000/mes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="product-item" data-marca="Fortinet" data-tipo="networking" data-name="Fortinet FortiGate 60F" data-specs="Firewall UTM · 10 Gbps · VPN" data-price="1100000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Fortinet FortiGate 60F</div>
+                  <div class="product-specs">Firewall UTM · 10 Gbps · VPN</div>
+                </div>
+                <div class="product-price-tag">$1.100.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="FortiGate 60F" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="150000">Instalación y configuración firewall — $150.000</option>
+                  <option value="licencia" data-price="180000">Licencia FortiCare anual — $180.000/año</option>
+                  <option value="monitoreo" data-price="90000">Monitoreo de seguridad mensual — $90.000/mes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="product-item" data-marca="Ubiquiti" data-tipo="networking" data-name="Ubiquiti UniFi U6" data-specs="Wi-Fi 6 · 2.4/5 GHz · PoE" data-price="220000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Ubiquiti UniFi U6</div>
+                  <div class="product-specs">Wi-Fi 6 · 2.4/5 GHz · PoE</div>
+                </div>
+                <div class="product-price-tag">$220.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="UniFi U6" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="50000">Instalación y configuración AP — $50.000</option>
+                  <option value="soporte" data-price="30000">Soporte red inalámbrica mensual — $30.000/mes</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Almacenamiento -->
+      <div class="product-category" id="cat-storage" data-tipo="storage">
+        <div class="category-header" onclick="toggleCategory('cat-storage')">
+          <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          <h3>Almacenamiento NAS</h3>
+          <span class="cat-badge" id="badge-storage"></span>
+          <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="product-body">
+          <div class="product-list">
+
+            <div class="product-item" data-marca="Synology" data-tipo="storage" data-name="Synology DS923+" data-specs="NAS 4-bay · AMD Ryzen · 4GB RAM" data-price="950000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">Synology DS923+</div>
+                  <div class="product-specs">NAS 4-bay · AMD Ryzen · 4GB RAM</div>
+                </div>
+                <div class="product-price-tag">$950.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="Synology DS923+" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="100000">Instalación y configuración NAS — $100.000</option>
+                  <option value="backup" data-price="150000">Configuración backup automático — $150.000</option>
+                  <option value="soporte" data-price="60000">Soporte administración mensual — $60.000/mes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="product-item" data-marca="QNAP" data-tipo="storage" data-name="QNAP TS-464" data-specs="NAS 4-bay · Intel N5105 · 8GB RAM" data-price="870000">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">QNAP TS-464</div>
+                  <div class="product-specs">NAS 4-bay · Intel N5105 · 8GB RAM</div>
+                </div>
+                <div class="product-price-tag">$870.000</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="QNAP TS-464" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  <option value="instalacion" data-price="100000">Instalación y configuración NAS — $100.000</option>
+                  <option value="backup" data-price="150000">Configuración backup automático — $150.000</option>
+                  <option value="soporte" data-price="60000">Soporte administración mensual — $60.000/mes</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /catalogoProductos -->
+
+    <!-- Sin resultados -->
+    <div id="sinResultados" style="display:none;" class="sin-resultados">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <p>No se encontraron productos con los filtros seleccionados</p>
+      <button class="chip active" onclick="resetFiltros()">Limpiar filtros</button>
+    </div>
+
+  </div><!-- /wizard-step 1 -->
+
+  <!-- ════════════════════════════
+       PASO 2: INFORMACIÓN
+  ════════════════════════════ -->
+  <div class="wizard-step" data-step="2">
+    <div class="step-header">
+      <h2 class="step-title">Información de Contacto</h2>
+      <p class="step-subtitle">Completa los datos de tu empresa para procesar la cotización</p>
+    </div>
+
+    <div class="form-section">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Empresa *</label>
+          <input type="text" class="form-input" placeholder="Nombre de tu empresa" id="empresa">
+          <span class="form-error-msg" id="err-empresa">Campo requerido</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">RUT Empresa *</label>
+          <input type="text" class="form-input" placeholder="12.345.678-9" id="rut" oninput="formatRut(this)">
+          <span class="rut-helper" id="rut-helper"></span>
+          <span class="form-error-msg" id="err-rut">Ingresa un RUT válido</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Región *</label>
+          <div class="form-group-select">
+            <select class="form-select" id="region" onchange="loadCiudades()">
+              <option value="">Selecciona región</option>
+              <option>Región Metropolitana</option><option>Valparaíso</option><option>Biobío</option>
+              <option>Araucanía</option><option>Los Lagos</option><option>O'Higgins</option>
+              <option>Maule</option><option>Coquimbo</option><option>Antofagasta</option>
+              <option>Atacama</option><option>Tarapacá</option><option>Arica y Parinacota</option>
+              <option>Los Ríos</option><option>Aysén</option><option>Magallanes</option>
+            </select>
+          </div>
+          <span class="form-error-msg" id="err-region">Selecciona una región</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ciudad</label>
+          <input type="text" class="form-input" placeholder="Tu ciudad" id="ciudad">
+        </div>
+        <div class="form-group full-width">
+          <label class="form-label">Dirección</label>
+          <input type="text" class="form-input" placeholder="Calle, número, piso/oficina" id="direccion">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contacto Principal *</label>
+          <input type="text" class="form-input" placeholder="Nombre completo" id="contacto">
+          <span class="form-error-msg" id="err-contacto">Campo requerido</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cargo</label>
+          <input type="text" class="form-input" placeholder="Ej: Gerente TI, Dueño" id="cargo">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono *</label>
+          <input type="tel" class="form-input" placeholder="+56 9 XXXX XXXX" id="telefono">
+          <span class="form-error-msg" id="err-telefono">Ingresa un teléfono válido</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-input" placeholder="correo@empresa.com" id="email">
+          <span class="form-error-msg" id="err-email">Ingresa un email válido</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nº de empleados</label>
+          <div class="form-group-select">
+            <select class="form-select" id="empleados">
+              <option value="">Seleccionar</option>
+              <option>1–10</option><option>11–50</option><option>51–200</option><option>201–500</option><option>500+</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rubro</label>
+          <div class="form-group-select">
+            <select class="form-select" id="rubro">
+              <option value="">Seleccionar</option>
+              <option>Retail / Comercio</option><option>Salud</option><option>Educación</option>
+              <option>Servicios Financieros</option><option>Construcción</option><option>Tecnología</option>
+              <option>Manufactura</option><option>Gobierno / Público</option><option>Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full-width">
+          <label class="form-label">Notas Adicionales</label>
+          <textarea class="form-textarea" placeholder="Cuéntanos más sobre tu situación, requerimientos especiales o consultas (opcional)" id="notas" style="min-height:90px;resize:vertical;width:100%;box-sizing:border-box;"></textarea>
         </div>
       </div>
     </div>
-
-    <!-- PASO 2: SERVICIOS -->
-    <div class="wizard-step" data-step="2">
-      <div class="step-header">
-        <h2 class="step-title">Servicios Adicionales</h2>
-        <p class="step-subtitle">Complementa tu solución con servicios premium</p>
-      </div>
-
-      <div class="services-section">
-        <div class="services-intro">
-          <p>Selecciona los servicios que mejor se adapten a tus necesidades. Se cobran mensualmente.</p>
-        </div>
-
-        <div class="services-grid">
-          <label class="service-card">
-            <input type="checkbox" class="service-check" data-name="Soporte Técnico Premium" data-price="150000">
-            <div class="service-details">
-              <div class="service-name">Soporte Técnico Premium</div>
-              <div class="service-description">Asistencia personalizada 24/7</div>
-              <div class="service-price">$150.000</div>
-            </div>
-          </label>
-
-          <label class="service-card">
-            <input type="checkbox" class="service-check" data-name="Monitoreo 24/7" data-price="180000">
-            <div class="service-details">
-              <div class="service-name">Monitoreo 24/7</div>
-              <div class="service-description">Vigilancia continua de sistemas</div>
-              <div class="service-price">$180.000</div>
-            </div>
-          </label>
-
-          <label class="service-card">
-            <input type="checkbox" class="service-check" data-name="Licencias Microsoft" data-price="200000">
-            <div class="service-details">
-              <div class="service-name">Licencias Microsoft</div>
-              <div class="service-description">Office 365 + Windows Enterprise</div>
-              <div class="service-price">$200.000</div>
-            </div>
-          </label>
-
-          <label class="service-card">
-            <input type="checkbox" class="service-check" data-name="Seguros de Activos" data-price="220000">
-            <div class="service-details">
-              <div class="service-name">Seguros de Activos</div>
-              <div class="service-description">Cobertura contra robo y daño</div>
-              <div class="service-price">$220.000</div>
-            </div>
-          </label>
-
-          <label class="service-card">
-            <input type="checkbox" class="service-check" data-name="Backup & Replicación" data-price="250000">
-            <div class="service-details">
-              <div class="service-name">Backup & Replicación</div>
-              <div class="service-description">Copias automáticas en nube</div>
-              <div class="service-price">$250.000</div>
-            </div>
-          </label>
-
-          <label class="service-card">
-            <input type="checkbox" class="service-check" data-name="Mantenimiento Preventivo" data-price="120000">
-            <div class="service-details">
-              <div class="service-name">Mantenimiento Preventivo</div>
-              <div class="service-description">Chequeos y actualizaciones regulares</div>
-              <div class="service-price">$120.000</div>
-            </div>
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 3: INFORMACIÓN -->
-    <div class="wizard-step" data-step="3">
-      <div class="step-header">
-        <h2 class="step-title">Información de Contacto</h2>
-        <p class="step-subtitle">Completa tus datos para procesar la cotización</p>
-      </div>
-
-      <div class="form-section">
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Empresa</label>
-            <input type="text" class="form-input" placeholder="Nombre de tu empresa" id="empresa">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Región</label>
-            <input type="text" class="form-input" placeholder="Tu región" id="region">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Ciudad</label>
-            <input type="text" class="form-input" placeholder="Tu ciudad" id="ciudad">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Dirección</label>
-            <input type="text" class="form-input" placeholder="Dirección completa" id="direccion">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Contacto Principal</label>
-            <input type="text" class="form-input" placeholder="Nombre del contacto" id="contacto">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Teléfono</label>
-            <input type="tel" class="form-input" placeholder="+56 9 XXXX XXXX" id="telefono">
-          </div>
-          <div class="form-group full-width">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-input" placeholder="correo@empresa.com" id="email">
-          </div>
-          <div class="form-group full-width">
-            <label class="form-label">Notas Adicionales</label>
-            <textarea class="form-textarea" placeholder="Cuéntanos más sobre tu situación (opcional)" id="notas"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PASO 4: RESUMEN -->
-    <div class="wizard-step" data-step="4">
-      <div class="step-header">
-        <h2 class="step-title">Resumen de tu Configuración</h2>
-        <p class="step-subtitle">Verifica todos los detalles antes de enviar</p>
-      </div>
-
-      <div class="resumen-layout">
-
-        <!-- Productos -->
-        <div class="resumen-card">
-          <div class="resumen-card-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            <h3>Productos Seleccionados</h3>
-          </div>
-          <div class="resumen-card-body" id="summaryEquipos"></div>
-        </div>
-
-        <!-- Servicios -->
-        <div class="resumen-card">
-          <div class="resumen-card-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <h3>Servicios Contratados</h3>
-          </div>
-          <div class="resumen-card-body" id="summaryServicios"></div>
-        </div>
-
-        <!-- Contacto (inyectado por JS) -->
-        <div id="summaryInfo"></div>
-
-        <!-- Totales -->
-        <div class="resumen-card resumen-card--totales">
-          <div class="resumen-totales-grid">
-            <div class="resumen-total-row">
-              <span class="resumen-total-label">Subtotal Productos</span>
-              <span class="resumen-total-val">$<span id="summarySubtotalEq">0</span></span>
-            </div>
-            <div class="resumen-total-row">
-              <span class="resumen-total-label">Subtotal Servicios</span>
-              <span class="resumen-total-val">$<span id="summarySubtotalSvc">0</span></span>
-            </div>
-            <div class="resumen-total-divider"></div>
-            <div class="resumen-total-row resumen-total-row--highlight">
-              <span class="resumen-total-label">Total</span>
-              <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
-            </div>
-          </div>
-          <div class="resumen-cuota-box">
-            <span class="resumen-cuota-label">Cuota mensual arriendo <span>24 meses</span></span>
-            <span class="resumen-cuota-price">$<span id="summaryCuota">0</span></span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
   </div>
 
-  <!-- SIDEBAR -->
-  <div class="config-sidebar">
-    <div class="sidebar-sticky">
-      
-      <div class="sidebar-section">
-        <h4>Resumen</h4>
-        <div class="sidebar-item">
-          <span class="sidebar-item-label">Productos:</span>
-          <span class="sidebar-item-value"><span id="countEquipos">0</span> unidades</span>
+  <!-- ════════════════════════════
+       PASO 3: RESUMEN
+  ════════════════════════════ -->
+  <div class="wizard-step" data-step="3">
+    <div class="step-header">
+      <h2 class="step-title">Resumen y Ahorros</h2>
+      <p class="step-subtitle">Detalle completo de tu cotización con descuentos aplicados</p>
+    </div>
+
+    <div class="resumen-layout">
+      <div class="resumen-ahorro-banner" id="ahorrosBanner" style="display:none;">
+        <div class="ahorro-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <div class="sidebar-item">
-          <span class="sidebar-item-label">Servicios:</span>
-          <span class="sidebar-item-value"><span id="countServicios">0</span> activos</span>
+        <div class="ahorro-text">
+          <h4>¡Estás ahorrando con InfraGo!</h4>
+          <p>Comprando vs. precio de lista individual + servicios separados</p>
+        </div>
+        <div class="ahorro-amount">
+          <div class="amount-val" id="ahorroTotal">$0</div>
+          <div class="amount-label">ahorro total estimado</div>
         </div>
       </div>
 
-      <div class="sidebar-section">
-        <h4>Productos Seleccionados</h4>
-        <div id="productsListSidebar" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;">
-          <div style="text-align: center; color: var(--white-60); font-size: 12px; padding: 8px;">Sin productos aún</div>
+      <div class="resumen-card">
+        <div class="resumen-card-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <h3>Productos y Servicios Seleccionados</h3>
         </div>
+        <div class="resumen-card-body" id="summaryEquipos"></div>
       </div>
 
-      <div class="sidebar-section">
-        <h4>Costos</h4>
-        <div class="sidebar-item">
-          <span class="sidebar-item-label">Productos:</span>
-          <span class="sidebar-item-value">$<span id="totalEquipos">0</span></span>
+      <div id="summaryInfo"></div>
+
+      <div class="resumen-card resumen-card--totales">
+        <div class="resumen-totales-grid">
+          <div class="resumen-total-row">
+            <span class="resumen-total-label">Subtotal Productos</span>
+            <span class="resumen-total-val">$<span id="summarySubtotalEq">0</span></span>
+          </div>
+          <div class="resumen-total-row">
+            <span class="resumen-total-label">Subtotal Servicios / mes</span>
+            <span class="resumen-total-val">$<span id="summarySubtotalSvc">0</span></span>
+          </div>
+          <div class="resumen-dcto-row" id="dctoRow" style="display:none;">
+            <span class="resumen-total-label" style="color:#22c55e;">Descuento por volumen (<span id="dctoLabel">0</span>%)</span>
+            <span style="color:#22c55e;">−$<span id="dctoMonto">0</span></span>
+          </div>
+          <div class="resumen-total-divider"></div>
+          <div class="resumen-total-row resumen-total-row--highlight">
+            <span class="resumen-total-label">Total Productos</span>
+            <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
+          </div>
         </div>
-        <div class="sidebar-item">
-          <span class="sidebar-item-label">Servicios:</span>
-          <span class="sidebar-item-value">$<span id="totalServicios">0</span></span>
-        </div>
-        <div class="sidebar-divider"></div>
-        <div class="sidebar-item" style="font-weight: 700;">
-          <span class="sidebar-item-label">Total:</span>
-          <span class="sidebar-item-value" style="color: var(--gold);">$<span id="totalGeneral">0</span></span>
+        <div class="resumen-cuota-box">
+          <span class="resumen-cuota-label">Cuota mensual arriendo <span id="plazoLabelSummary">24 meses</span></span>
+          <span class="resumen-cuota-price">$<span id="summaryCuota">0</span></span>
         </div>
       </div>
-
-      <div class="sidebar-total">
-        <div class="sidebar-total-label">Cuota Mensual</div>
-        <div class="sidebar-total-amount">$<span id="cuotaMensual">0</span></div>
-        <div class="sidebar-total-period">(24 meses)</div>
-      </div>
-
     </div>
   </div>
 
-</div>
+  <!-- ════════════════════════════
+       PASO 4: FINANCIAMIENTO
+  ════════════════════════════ -->
+  <div class="wizard-step" data-step="4">
+    <div class="step-header">
+      <h2 class="step-title">Simulador de Financiamiento</h2>
+      <p class="step-subtitle">Elige el plazo y la tasa para ver tus cuotas proyectadas</p>
+    </div>
 
-<!-- BOTONES DE NAVEGACIÓN -->
-<div class="step-actions" style="padding: 0 40px 60px 40px; max-width: 1400px; margin: 0 auto;">
-  <button class="btn-prev" id="btnPrev" onclick="prevStep()" style="display:none;">← Atrás</button>
-  <button class="btn-next" id="btnNext" onclick="nextStep()">Siguiente →</button>
+    <div class="simulador-section">
+      <div class="simulador-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <h3>Simulador de Cuotas</h3>
+      </div>
+      <div class="simulador-body">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding:16px;background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.08);">
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--white-40);margin-bottom:4px;">Monto a financiar</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--white);">$<span id="montoFinanciar">0</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--white-40);margin-bottom:4px;">+ Servicios mensuales</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--gold);">$<span id="serviciosMensualesSim">0</span>/mes</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--white-60);margin-bottom:12px;">Plazo de financiamiento</div>
+          <div class="sim-plazo-grid">
+            <button class="sim-plazo-btn" onclick="setPlazo(12, this)">12 meses<span>cuota más alta</span></button>
+            <button class="sim-plazo-btn active" onclick="setPlazo(24, this)">24 meses<span>recomendado</span></button>
+            <button class="sim-plazo-btn" onclick="setPlazo(36, this)">36 meses<span>equilibrado</span></button>
+            <button class="sim-plazo-btn" onclick="setPlazo(48, this)">48 meses<span>cuota más baja</span></button>
+          </div>
+        </div>
+
+        <div class="sim-tasa-row">
+          <label>Tasa de interés anual</label>
+          <input type="range" class="sim-tasa-slider" min="6" max="24" step="0.5" value="12" oninput="updateTasa(this.value)">
+          <span class="sim-tasa-val" id="tasaVal">12%</span>
+        </div>
+
+        <div class="sim-results">
+          <div class="sim-result-card highlight">
+            <div class="sim-result-label">Cuota total mensual</div>
+            <div class="sim-result-val" id="simCuota">$0</div>
+            <div class="sim-result-sub">producto + servicios</div>
+          </div>
+          <div class="sim-result-card">
+            <div class="sim-result-label">Total a pagar</div>
+            <div class="sim-result-val" id="simTotal">$0</div>
+            <div class="sim-result-sub">durante el plazo</div>
+          </div>
+          <div class="sim-result-card">
+            <div class="sim-result-label">Intereses totales</div>
+            <div class="sim-result-val" id="simIntereses">$0</div>
+            <div class="sim-result-sub">costo financiero</div>
+          </div>
+        </div>
+
+        <button class="sim-toggle-table" id="btnToggleTabla" onclick="toggleTablaAmort()">▼ Ver tabla de amortización</button>
+        <div id="tablaAmortWrap" style="display:none;margin-top:16px;">
+          <div class="sim-table-wrap">
+            <table class="sim-table">
+              <thead><tr><th>Mes</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead>
+              <tbody id="tablaAmortBody"></tbody>
+              <tfoot>
+                <tr><td>Total</td><td id="tfoot-cuota">—</td><td id="tfoot-capital">—</td><td id="tfoot-interes">—</td><td>—</td></tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(240,120,0,0.4);">
+          <p style="margin:0;font-size:12px;color:var(--white-40);line-height:1.6;">* La simulación es referencial. Las condiciones reales dependen de la evaluación crediticia y serán confirmadas por nuestro equipo. Tasas sujetas a cambio.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(240,120,0,0.1),rgba(240,120,0,0.04));border:1px solid rgba(240,120,0,0.2);border-radius:14px;padding:28px;text-align:center;margin-top:20px;">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--white);margin:0 0 8px;">¿Todo listo para cotizar?</h3>
+      <p style="font-size:13px;color:var(--white-60);margin:0 0 20px;">Revisaremos tu configuración y te contactaremos con una propuesta personalizada.</p>
+      <button class="btn-cotizar" id="btnCotizar" onclick="enviarCotizacion()">Enviar Cotización →</button>
+    </div>
+
+  </div><!-- /wizard-step 4 -->
+
+  <!-- BOTONES DE NAVEGACIÓN -->
+  <div class="step-actions">
+    <button class="btn-prev" id="btnPrev" onclick="prevStep()" style="display:none;">← Atrás</button>
+    <button class="btn-next" id="btnNext" onclick="nextStep()">Siguiente →</button>
+  </div>
+
+</div><!-- /config-wrapper -->
+
+<!-- RESUMEN STICKY BOTTOM -->
+<div class="sticky-resumen" id="stickyResumen">
+  <div class="sticky-resumen-inner">
+    <div class="sticky-col">
+      <span class="sticky-label">Productos</span>
+      <span class="sticky-val"><span id="countEquipos">0</span> uds</span>
+    </div>
+    <div class="sticky-divider"></div>
+    <div class="sticky-col">
+      <span class="sticky-label">Servicios</span>
+      <span class="sticky-val"><span id="countServicios">0</span> activos</span>
+    </div>
+    <div class="sticky-divider"></div>
+    <div class="sticky-col">
+      <span class="sticky-label">Total equipos</span>
+      <span class="sticky-val sticky-val--price">$<span id="totalGeneral">0</span></span>
+    </div>
+    <div class="sticky-divider"></div>
+    <div class="sticky-col">
+      <span class="sticky-label">Servicios /mes</span>
+      <span class="sticky-val sticky-val--price">$<span id="totalServicios">0</span></span>
+    </div>
+    <div class="sticky-divider"></div>
+    <div class="sticky-col sticky-col--cuota">
+      <span class="sticky-label">Cuota mensual est.</span>
+      <span class="sticky-cuota">$<span id="cuotaMensual">0</span></span>
+      <span class="sticky-plazo">(<span id="plazoSidebarLabel">24</span> meses)</span>
+    </div>
+    <!-- Elementos ocultos requeridos por el JS -->
+    <span id="totalEquipos" style="display:none;">0</span>
+    <div id="productsListSidebar" style="display:none;"></div>
+  </div>
 </div>
 
 <!-- MODAL COTIZACIÓN -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box" id="modalBox">
-
-    <!-- ÉXITO -->
     <div class="modal-content" id="modalSuccess">
       <div class="modal-icon modal-icon--success">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <h2 class="modal-title">¡Cotización Enviada!</h2>
-      <p class="modal-text">Tu solicitud fue recibida con éxito. Nuestro equipo se pondrá en contacto contigo a la brevedad para revisar los detalles de tu solución.</p>
+      <p class="modal-text">Tu solicitud fue recibida con éxito. Nuestro equipo se pondrá en contacto contigo a la brevedad.</p>
       <div class="modal-detail">
         <span class="modal-detail-label">Empresa:</span>
         <span class="modal-detail-value" id="modalEmpresa">—</span>
@@ -433,8 +878,6 @@
       </div>
       <button class="modal-btn modal-btn--primary" onclick="cerrarModal()">Volver al inicio</button>
     </div>
-
-    <!-- ERROR -->
     <div class="modal-content" id="modalError" style="display:none;">
       <div class="modal-icon modal-icon--error">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -446,48 +889,10 @@
         <a class="modal-btn modal-btn--primary" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- SCRIPT -->
 <script type="module" src="/assets/js/configurador.js"></script>
-<script>
-/* ── HAMBURGER MENU ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.querySelector('.nav-hamburger');
-  const menu = document.getElementById('navMobileMenu');
-  const overlay = document.getElementById('navMobileOverlay');
-
-  if (!btn || !menu) return;
-
-  function openMenu() {
-    btn.classList.add('open');
-    btn.setAttribute('aria-expanded', 'true');
-    menu.classList.add('open');
-    if (overlay) overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeMenu() {
-    btn.classList.remove('open');
-    btn.setAttribute('aria-expanded', 'false');
-    menu.classList.remove('open');
-    if (overlay) overlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  btn.addEventListener('click', () => {
-    btn.classList.contains('open') ? closeMenu() : openMenu();
-  });
-
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-  if (overlay) overlay.addEventListener('click', closeMenu);
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && btn.classList.contains('open')) closeMenu();
-  });
-});
-</script>
 
 </body>
 </html>

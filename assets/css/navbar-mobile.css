@@ -13,7 +13,7 @@
   width: 40px;
   height: 40px;
   background: none;
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(17,17,17,0.15);
   border-radius: 8px;
   cursor: pointer;
   padding: 8px;
@@ -22,14 +22,14 @@
 }
 
 .nav-hamburger:hover {
-  border-color: rgba(255,255,255,0.35);
+  border-color: rgba(17,17,17,0.35);
 }
 
 .nav-hamburger span {
   display: block;
   width: 100%;
   height: 2px;
-  background: #ffffff;
+  background: #111111;
   border-radius: 2px;
   transition: transform 0.25s ease, opacity 0.2s;
 }
@@ -56,15 +56,15 @@
   right: 0;
   z-index: 9999;
 
-  /* Fondo sólido — crítico para no mostrar el hero debajo */
-  background-color: #000814;
+  /* Fondo sólido blanco */
+  background-color: #ffffff;
   background-image: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 
   /* Bordes y sombra */
-  border-bottom: 2px solid rgba(240, 165, 0, 0.3);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border-bottom: 2px solid rgba(232, 146, 10, 0.3);
+  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.1);
 
   /* Layout */
   display: flex;
@@ -91,7 +91,7 @@
 /* Links del menú */
 .nav-mobile-menu a {
   display: block;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(17, 17, 17, 0.65);
   text-decoration: none;
   font-family: 'Barlow', sans-serif;
   font-size: 15px;
@@ -110,8 +110,8 @@
 }
 
 .nav-mobile-menu a:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  background: rgba(17, 17, 17, 0.05);
+  color: #111111;
 }
 
 /* Botón CTA dentro del menú */
@@ -119,8 +119,8 @@
   display: block;
   margin-top: 12px;
   text-align: center;
-  background: #f0a500 !important;
-  color: #060e1e !important;
+  background: #e8920a !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   border-radius: 8px;
   padding: 14px 20px !important;
@@ -129,8 +129,8 @@
 }
 
 .nav-mobile-menu .nav-cta:hover {
-  background: #f5b800 !important;
-  color: #060e1e !important;
+  background: #f0a500 !important;
+  color: #ffffff !important;
 }
 
 /* ── OVERLAY oscuro detrás del menú (opcional) ── */
@@ -139,7 +139,7 @@
   position: fixed;
   inset: 0;
   top: 68px;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(17, 17, 17, 0.35);
   z-index: 9998;
 }
 
