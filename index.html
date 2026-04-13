@@ -65,8 +65,8 @@
     </p>
 
     <div class="hero-actions">
-      <a href="configurador.html" class="btn-primary" onclick="openQuoter(); return false;">
-        Cotizar solución en 3 minutos
+      <a href="configurador.html" class="btn-primary">
+        Solicitar Cotización
       </a>
     </div>
   </div>
@@ -460,13 +460,13 @@
     </div>
 
     <div class="how-modal-actions">
-      <button class="btn-primary" onclick="openQuoter(); closeHowModal('step3')">
+      <a href="configurador.html" class="btn-primary" onclick="closeHowModal('step3')">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6l-4-4z"/>
           <path d="M9 2v4h4M6 9h4M6 12h2"/>
         </svg>
         Cotizar Mi Solución
-      </button>
+      </a>
     </div>
   </div>
 </div>
@@ -1148,7 +1148,7 @@
 </div>
 
 <!-- STICKY EXPERT BUTTON -->
-<a href="#" class="sticky-expert" onclick="openQuoter(); return false;">
+<a href="configurador.html" class="sticky-expert">
   <div class="sticky-btn">
     <span class="sticky-dot"></span>
     Cotizar ahora
@@ -1226,135 +1226,6 @@
         <polygon points="22 2 15 22 11 13 2 9 22 2"/>
       </svg>
     </button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     MODAL COTIZADOR IA
-══════════════════════════════════════ -->
-<div class="modal-overlay" id="quoterModal" onclick="if(event.target===this) closeQuoter()">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-header-left">
-        <div class="modal-header-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6l-4-4z"/>
-            <path d="M9 2v4h4M6 9h4M6 12h2"/>
-            <circle cx="17" cy="17" r="4"/>
-            <path d="M17 15v2l1 1"/>
-          </svg>
-        </div>
-        <div>
-          <div class="modal-header-title">Cotizador Inteligente</div>
-          <div class="modal-header-sub">Powered by IA · Respuesta en segundos</div>
-        </div>
-      </div>
-      <button class="modal-close" onclick="closeQuoter()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-
-    <div class="modal-body">
-      <!-- Tipo de solución -->
-      <label class="quote-textarea-label" style="margin-bottom:12px;">¿Qué tipo de solución buscas?</label>
-      <div class="quote-type-grid" id="quoteTypeGrid">
-        <button class="quote-type-btn active" onclick="selectType(this, 'notebooks')" data-type="notebooks">
-          <div class="quote-type-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="2" y="3" width="20" height="14" rx="2"/>
-              <path d="M8 21h8M12 17v4"/>
-            </svg>
-          </div>
-          <div>
-            <span class="quote-type-label">Notebooks</span>
-            <span class="quote-type-sub">Cómputo personal</span>
-          </div>
-        </button>
-        <button class="quote-type-btn" onclick="selectType(this, 'servidores')" data-type="servidores">
-          <div class="quote-type-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="2" y="2" width="20" height="8" rx="2"/>
-              <rect x="2" y="14" width="20" height="8" rx="2"/>
-              <path d="M6 6h.01M6 18h.01"/>
-            </svg>
-          </div>
-          <div>
-            <span class="quote-type-label">Servidores</span>
-            <span class="quote-type-sub">Infraestructura centralizada</span>
-          </div>
-        </button>
-        <button class="quote-type-btn" onclick="selectType(this, 'impresion')" data-type="impresion">
-          <div class="quote-type-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <polyline points="6 9 6 2 18 2 18 9"/>
-              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-              <rect x="6" y="14" width="12" height="8"/>
-            </svg>
-          </div>
-          <div>
-            <span class="quote-type-label">Impresión</span>
-            <span class="quote-type-sub">Multifuncionales HP</span>
-          </div>
-        </button>
-        <button class="quote-type-btn" onclick="selectType(this, 'completo')" data-type="completo">
-          <div class="quote-type-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="2" y="7" width="20" height="14" rx="2"/>
-              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-              <line x1="12" y1="12" x2="12" y2="16"/>
-              <line x1="10" y1="14" x2="14" y2="14"/>
-            </svg>
-          </div>
-          <div>
-            <span class="quote-type-label">Solución Completa</span>
-            <span class="quote-type-sub">Todo integrado</span>
-          </div>
-        </button>
-      </div>
-
-      <!-- Cantidades -->
-      <div class="quote-sliders">
-        <div class="quote-slider-item">
-          <label>
-            Equipos / unidades
-            <span id="sliderEquiposVal">10</span>
-          </label>
-          <input type="range" class="quote-slider" id="sliderEquipos" min="1" max="100" value="10"
-            oninput="document.getElementById('sliderEquiposVal').textContent=this.value">
-        </div>
-        <div class="quote-slider-item">
-          <label>
-            Meses de contrato
-            <span id="sliderMesesVal">24</span>
-          </label>
-          <input type="range" class="quote-slider" id="sliderMeses" min="6" max="60" step="6" value="24"
-            oninput="document.getElementById('sliderMesesVal').textContent=this.value">
-        </div>
-      </div>
-
-      <!-- Descripción libre -->
-      <label class="quote-textarea-label">Cuéntanos más sobre tu empresa o necesidad</label>
-      <textarea
-        class="quote-textarea"
-        id="quoteDescription"
-        placeholder="Ej: Somos una empresa de 30 personas en Santiago, necesitamos equipos para trabajo remoto con soporte técnico incluido y buena seguridad..."
-      ></textarea>
-
-      <!-- Botón -->
-      <button class="quote-btn-generate" id="quoteBtnGenerate" onclick="generateQuote()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-        </svg>
-        Generar cotización con IA
-      </button>
-
-      <!-- Resultado -->
-      <div class="quote-result" id="quoteResult" style="display:none;">
-        <div id="quoteResultContent"></div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -1445,71 +1316,6 @@ function escapeHtml(t) {
 }
 
 /* ════════════════════════════════════════════
-   COTIZADOR IA
-════════════════════════════════════════════ */
-let selectedType = 'notebooks';
-
-function openQuoter()  { document.getElementById('quoterModal').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeQuoter() { document.getElementById('quoterModal').classList.remove('open'); document.body.style.overflow=''; }
-
-function selectType(btn, type) {
-  selectedType = type;
-  document.querySelectorAll('.quote-type-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-async function generateQuote() {
-  const equipos     = document.getElementById('sliderEquipos').value;
-  const meses       = document.getElementById('sliderMeses').value;
-  const descripcion = document.getElementById('quoteDescription').value.trim();
-  const btn         = document.getElementById('quoteBtnGenerate');
-  const result      = document.getElementById('quoteResult');
-  const content     = document.getElementById('quoteResultContent');
-
-  btn.disabled  = true;
-  btn.innerHTML = '<div style="display:flex;align-items:center;gap:8px;"><div class="chat-typing-dots" style="background:none;border:none;padding:0;"><span style="background:var(--navy)"></span><span style="background:var(--navy)"></span><span style="background:var(--navy)"></span></div>Analizando con IA...</div>';
-  result.style.display = 'block';
-  content.innerHTML = '<div class="quote-result-loading"><div class="chat-typing-dots"><span></span><span></span><span></span></div>Generando cotizacion inteligente...</div>';
-
-  try {
-    const res  = await fetch(API_BASE + '/api/quote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: selectedType, equipos, meses, descripcion }),
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      content.innerHTML = '<div class="quote-result-text"><p>' + (data.error || 'Error al generar.') + '</p><br><p><strong>Contacto:</strong> contacto@infrago.cl</p></div>';
-    } else {
-      const fu = Number(data.precioUnitario).toLocaleString('es-CL');
-      const ft = Number(data.precioTotal).toLocaleString('es-CL');
-      content.innerHTML =
-        '<div class="quote-result-text">' +
-        '<p>' + data.resumen + '</p><br>' +
-        '<p><strong>Equipamiento:</strong> ' + data.equipamiento + '</p><br>' +
-        '<p><strong>Servicios:</strong> <em>' + data.servicios + '</em></p><br>' +
-        '<p><strong>Financiamiento:</strong> ' + data.financiamiento + '</p><br>' +
-        '<p><strong>SLA:</strong> ' + data.sla + '</p>' +
-        '</div>' +
-        '<div class="quote-result-price">' +
-        '<div><div class="quote-price-label">Total mensual estimado</div><div style="font-size:11px;color:var(--white-30);margin-top:2px;">$' + fu + ' CLP/unidad x ' + equipos + ' equipos</div></div>' +
-        '<div class="quote-price-value">$' + ft + ' <span>CLP/mes</span></div>' +
-        '</div>' +
-        '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">' +
-        '<a href="configurador.html" class="btn-primary" style="flex:1;min-width:160px;justify-content:center;" onclick="closeQuoter()"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>Ir al configurador</a>' +
-        '<button class="btn-outline" style="flex:1;min-width:160px;justify-content:center;" onclick="closeQuoter();toggleChat()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Hablar con experto</button>' +
-        '</div>';
-    }
-  } catch(e) {
-    content.innerHTML = '<div class="quote-result-text"><p>Problema de conexion.</p><br><p>contacto@infrago.cl | +56 2 xxxx xxxx</p></div>';
-  } finally {
-    btn.disabled  = false;
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Generar cotización con IA';
-  }
-}
-
-/* ════════════════════════════════════════════
    ANIMACIONES DE ENTRADA (SCROLL)
 ════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1527,11 +1333,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ════════════════════════════════════════════
-   CERRAR MODAL CON ESC
+   CERRAR MODALES CON ESC
 ════════════════════════════════════════════ */
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    closeQuoter();
+    // cerrar modales "cómo funciona" si están abiertos
   }
 });
 </script>
