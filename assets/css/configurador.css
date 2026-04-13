@@ -14,7 +14,7 @@ body {
 
 .configurador-header {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
-  padding: 60px 40px;
+  padding: 128px 40px 60px;
   text-align: center;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   margin-bottom: 40px;

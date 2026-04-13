@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="stylesheet" href="/assets/css/configurador.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+  <link rel="stylesheet" href="/assets/css/navbar-mobile.css">
 </head>
 <body>
 
@@ -25,7 +27,21 @@
     <li><a href="index.html#planes-soluciones">PLANES</a></li>
     <li><a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a></li>
   </ul>
+  <button class="nav-hamburger" aria-label="Menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MENÚ MOBILE — div, NO nav, para evitar herencia de estilos nav{} -->
+<div class="nav-mobile-overlay" id="navMobileOverlay"></div>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="index.html#hero">Inicio</a>
+  <a href="index.html#quienes-somos">Quiénes somos</a>
+  <a href="index.html#incluye">Computadores</a>
+  <a href="index.html#incluye">Servidores</a>
+  <a href="index.html#planes-soluciones">Planes</a>
+  <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a>
+</div>
 
 <!-- HEADER CONFIGURADOR -->
 <div class="configurador-header">
@@ -436,6 +452,42 @@
 
 <!-- SCRIPT -->
 <script type="module" src="/assets/js/configurador.js"></script>
+<script>
+/* ── HAMBURGER MENU ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector('.nav-hamburger');
+  const menu = document.getElementById('navMobileMenu');
+  const overlay = document.getElementById('navMobileOverlay');
+
+  if (!btn || !menu) return;
+
+  function openMenu() {
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    menu.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    btn.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  if (overlay) overlay.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && btn.classList.contains('open')) closeMenu();
+  });
+});
+</script>
 
 </body>
 </html>
