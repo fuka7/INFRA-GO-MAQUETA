@@ -10,35 +10,10 @@
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="stylesheet" href="/assets/css/tienda.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
-<link rel="stylesheet" href="/assets/css/navbar-mobile.css"></head>
+<link rel="stylesheet" href="/assets/css/navbar.css">
+<link rel="stylesheet" href="/assets/css/footer.css">
+</head>
 <body>
-
-<!-- NAVBAR -->
-<nav>
-  <a class="nav-logo" href="#">
-    <span class="nav-logo-text">Infra<span class="nav-logo-go">Go</span></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#hero">INICIO</a></li>
-    <li><a href="#quienes-somos">QUIÉNES SOMOS</a></li>
-    <li><a href="tienda.html">TIENDA</a></li>
-    <li><a href="#planes-soluciones">PLANES</a></li>
-    <li><a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a></li>
-  </ul>
-  <button class="nav-hamburger" aria-label="Menú" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- MENÚ MOBILE -->
-<div class="nav-mobile-overlay" id="navMobileOverlay"></div>
-<div class="nav-mobile-menu" id="navMobileMenu">
-  <a href="#hero">Inicio</a>
-  <a href="#quienes-somos">Quiénes somos</a>
-  <a href="tienda.html">Tienda</a>
-  <a href="#planes-soluciones">Planes</a>
-  <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="nav-cta" target="_blank">Agendar reunión</a>
-</div>
 
 <!-- HERO -->
 <section class="hero" id="hero">
@@ -929,70 +904,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-brand">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
-        <path d="M4 17L12 8L20 17L12 26Z" fill="#1a4fa0"/>
-        <path d="M14 17L22 8L30 17L22 26Z" fill="#2563c4" opacity="0.8"/>
-        <path d="M9 17L17 8L25 17L17 26Z" fill="#3b82f6" opacity="0.6"/>
-      </svg>
-      <span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;">InfraGo</span>
-    </div>
-    <p>Operación TI inteligente. Sin fricción. Una empresa de TIC Manager's.</p>
-  </div>
-
-  <div class="footer-col">
-    <h4>Soluciones</h4>
-    <ul>
-      <li><a href="#">Notebooks</a></li>
-      <li><a href="#">Servidores y Redes</a></li>
-      <li><a href="#">Impresión</a></li>
-      <li><a href="#">Soluciones de Oficina</a></li>
-    </ul>
-  </div>
-
-  <div class="footer-col">
-    <h4>Empresa</h4>
-    <ul>
-      <li><a href="#">Quiénes somos</a></li>
-      <li><a href="#">Planes</a></li>
-      <li><a href="#">Blog</a></li>
-      <li><a href="#">Agendar Demo</a></li>
-    </ul>
-  </div>
-
-  <div class="footer-col">
-    <h4>Contacto</h4>
-    <ul>
-      <li><a href="#"><span class="__cf_email__" data-cfemail="c2a1adacb6a3a1b6ad82abaca4b0a3a5adeca1ae">[email&#160;protected]</span></a></li>
-      <li><a href="#">+56 2 xxxx xxxx</a></li>
-      <li><a href="#">Providencia 1208, Of. 307</a></li>
-      <li><a href="#">Soporte</a></li>
-    </ul>
-  </div>
-</footer>
-
-<div class="footer-bottom">
-  <p>© 2026 InfraGo SpA. Todos los derechos reservados. Una empresa de TIC Manager's.</p>
-  <div class="footer-socials">
-    <a href="#">LinkedIn</a>
-    <a href="#">Instagram</a>
-    <a href="#">Facebook</a>
-    <a href="#">Términos</a>
-    <a href="#">Privacidad</a>
-  </div>
-</div>
-
-<!-- STICKY EXPERT BUTTON -->
-<a href="configurador.html" class="sticky-expert">
-  <div class="sticky-btn">
-    <span class="sticky-dot"></span>
-    Cotizar ahora
-  </div>
-</a>
-
 <!-- ══════════════════════════════════════
      SCRIPTS
 ══════════════════════════════════════ -->
@@ -1032,50 +943,10 @@ document.addEventListener('keydown', (e) => {
 });
 </script>
 
-<script>
-/* ── HAMBURGER MENU ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.querySelector('.nav-hamburger');
-  const menu = document.getElementById('navMobileMenu');
-  const overlay = document.getElementById('navMobileOverlay');
-  
-  if (!btn || !menu) return;
-
-  function openMenu() {
-    btn.classList.add('open');
-    btn.setAttribute('aria-expanded', 'true');
-    menu.classList.add('open');
-    if (overlay) overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeMenu() {
-    btn.classList.remove('open');
-    btn.setAttribute('aria-expanded', 'false');
-    menu.classList.remove('open');
-    if (overlay) overlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  // Click en botón hamburguesa
-  btn.addEventListener('click', () => {
-    btn.classList.contains('open') ? closeMenu() : openMenu();
-  });
-
-  // Cerrar al hacer click en un link
-  menu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', closeMenu);
-  });
-
-  // Cerrar al hacer click en el overlay
-  if (overlay) overlay.addEventListener('click', closeMenu);
-
-  // Cerrar con Escape
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && btn.classList.contains('open')) closeMenu();
-  });
-});
 </script>
-</script>
+
+<!-- ── INCLUDES: navbar + footer automáticos ── -->
+<script src="/assets/js/includes.js"></script>
+
 </body>
 </html>

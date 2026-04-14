@@ -1,8 +1,87 @@
 /* ═══════════════════════════════════════════════
-   navbar-mobile.css
-   Menú hamburguesa mobile — InfraGo
+   navbar.css — InfraGo
+   Estilos de navbar desktop + mobile
    © 2026 InfraGo SpA / TIC Manager's
 ═══════════════════════════════════════════════ */
+
+/* ── NAVBAR DESKTOP ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 201;
+  background: rgba(5, 18, 55, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 48px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.nav-logo-icon { width: 34px; height: 34px; }
+
+.nav-logo-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.nav-logo-go { color: var(--gold); }
+
+.nav-logo-sub {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  display: block;
+  margin-top: -3px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: #ffffff; }
+
+.nav-cta {
+  background: var(--gold);
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  padding: 10px 24px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  transition: background 0.2s, transform 0.15s !important;
+}
+
+.nav-cta:hover {
+  background: var(--gold-bright) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
 
 /* ── BOTÓN HAMBURGUESA ── */
 .nav-hamburger {
@@ -21,9 +100,7 @@
   flex-shrink: 0;
 }
 
-.nav-hamburger:hover {
-  border-color: rgba(255,255,255,0.45);
-}
+.nav-hamburger:hover { border-color: rgba(255,255,255,0.45); }
 
 .nav-hamburger span {
   display: block;
@@ -34,45 +111,27 @@
   transition: transform 0.25s ease, opacity 0.2s;
 }
 
-/* Estado abierto — X animada */
-.nav-hamburger.open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-.nav-hamburger.open span:nth-child(2) {
-  opacity: 0;
-  transform: scaleX(0);
-}
-.nav-hamburger.open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
+/* Animación X al abrir */
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ── DRAWER MOBILE ── */
-/* Usar div, NO nav, para evitar herencia de estilos del selector nav{} */
 .nav-mobile-menu {
-  /* Posicionamiento */
   position: fixed;
   top: 68px;
-  left: 0;
-  right: 0;
+  left: 0; right: 0;
   z-index: 9999;
-
-  /* Fondo sólido blanco */
   background-color: #ffffff;
   background-image: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-
-  /* Bordes y sombra */
-  border-bottom: 2px solid rgba(232, 146, 10, 0.3);
-  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.1);
-
-  /* Layout */
+  border-bottom: 2px solid rgba(232,146,10,0.3);
+  box-shadow: 0 8px 24px rgba(17,17,17,0.1);
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: 12px 16px 24px;
-
-  /* Animación entrada */
   transform: translateY(-120%);
   opacity: 0;
   pointer-events: none;
@@ -80,7 +139,6 @@
   visibility: hidden;
 }
 
-/* Estado abierto */
 .nav-mobile-menu.open {
   transform: translateY(0);
   opacity: 1;
@@ -88,10 +146,9 @@
   visibility: visible;
 }
 
-/* Links del menú */
 .nav-mobile-menu a {
   display: block;
-  color: rgba(17, 17, 17, 0.65);
+  color: rgba(17,17,17,0.65);
   text-decoration: none;
   font-family: 'Barlow', sans-serif;
   font-size: 15px;
@@ -101,7 +158,6 @@
   padding: 13px 16px;
   border-radius: 8px;
   transition: background 0.15s, color 0.15s;
-  /* Resetear cualquier herencia */
   background: none;
   border: none;
   height: auto;
@@ -110,11 +166,10 @@
 }
 
 .nav-mobile-menu a:hover {
-  background: rgba(17, 17, 17, 0.05);
+  background: rgba(17,17,17,0.05);
   color: #111111;
 }
 
-/* Botón CTA dentro del menú */
 .nav-mobile-menu .nav-cta {
   display: block;
   margin-top: 12px;
@@ -133,31 +188,28 @@
   color: #ffffff !important;
 }
 
-/* ── OVERLAY oscuro detrás del menú (opcional) ── */
+/* ── OVERLAY ── */
 .nav-mobile-overlay {
   display: none;
   position: fixed;
   inset: 0;
   top: 68px;
-  background: rgba(17, 17, 17, 0.35);
+  background: rgba(17,17,17,0.35);
   z-index: 9998;
 }
 
-.nav-mobile-overlay.open {
-  display: block;
-}
+.nav-mobile-overlay.open { display: block; }
 
-/* ── MOSTRAR HAMBURGUESA SEGÚN BREAKPOINT ── */
+/* ── BREAKPOINTS ── */
 @media (max-width: 1024px) {
   .nav-hamburger { display: flex; }
-
-  /* Ajustar top del drawer al alto del nav en tablet */
+  .nav-links { display: none; }
   .nav-mobile-menu { top: 68px; }
   .nav-mobile-overlay { top: 68px; }
 }
 
 @media (max-width: 768px) {
-  /* Ajustar top al nav más pequeño en móvil (60px) */
+  nav { padding: 0 20px; height: 60px; }
   .nav-mobile-menu { top: 60px; }
   .nav-mobile-overlay { top: 60px; }
 }
