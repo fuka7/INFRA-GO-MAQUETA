@@ -1,28 +1,12 @@
-(function(){
-  if(!window.chatbase || window.chatbase("getState") !== "initialized"){
-    window.chatbase = (...arguments) => {
-      if(!window.chatbase.q){ window.chatbase.q = [] }
-      window.chatbase.q.push(arguments)
-    };
-    window.chatbase = new Proxy(window.chatbase, {
-      get(target, prop){
-        if(prop === "q"){ return target.q }
-        return (...args) => target(prop, ...args)
-      }
-    });
-  }
+(function() {
+  const script = document.createElement('script');
+  script.src = 'https://assistloop.ai/assistloop-widget.js';
 
-  const onLoad = function(){
-    const script = document.createElement("script");
-    script.src = "https://www.chatbase.co/embed.min.js";
-    script.id = "2Kg2ub_sZzMXzVC_rmvUl";
-    script.domain = "www.chatbase.co";
-    document.body.appendChild(script);
+  script.onload = function() {
+    AssistLoopWidget.init({
+      agentId: "5c9abdaa-257f-4d67-8ea5-8d4c52f3d4e4"
+    });
   };
 
-  if(document.readyState === "complete"){
-    onLoad();
-  } else {
-    window.addEventListener("load", onLoad);
-  }
+  document.head.appendChild(script);
 })();
