@@ -1,10 +1,6 @@
 /* ═══════════════════════════════════════════════
-   configurador.js  —  CORREGIDO
+   configurador.js 
 ═══════════════════════════════════════════════ */
-
-// ─── IMPORTANTE: Ya no usamos import estático.
-// Supabase se carga dinámicamente para no romper
-// el script cuando se usa sin bundler.
 let supabaseClient = null;
 
 async function initSupabase() {
@@ -22,12 +18,32 @@ async function initSupabase() {
 // ═════════════════════════════════════════
 let tipoCambio = 900;
 
+async function fetchDolarTIC() {
+  const input = document.getElementById('tipoCambio');
+  const note  = document.getElementById('dolarNote');
+  try {
+    const res  = await fetch('https://mindicador.cl/api/dolar');
+    const data = await res.json();
+    const raw  = data?.serie?.[0]?.valor;
+    if (raw && raw > 0) {
+      tipoCambio = Math.round(raw) + 5; // BCCh + $5 TIC
+      if (input) input.value = tipoCambio;
+      if (note)  note.textContent = `Tipo de cambio actualizado: $${tipoCambio.toLocaleString('es-CL')} CLP/USD`;
+      renderizarPreciosUSD();
+      updateSidebar();
+    } else throw new Error('sin valor');
+  } catch {
+    if (note) note.textContent = 'No se pudo obtener el tipo de cambio. Ingréselo manualmente.';
+  }
+}
+
 function actualizarTipoCambio(val) {
   const v = parseInt(val);
   if (!isNaN(v) && v > 0) {
     tipoCambio = v;
     renderizarPreciosUSD();
     updateSidebar();
+    actualizarDescuento();
   }
 }
 
@@ -51,6 +67,45 @@ function renderizarPreciosUSD() {
     }
   });
 }
+
+// ═════════════════════════════════════════
+// DESCUENTOS POR VOLUMEN
+// ═════════════════════════════════════════
+const DCTO_TRAMOS = [
+  { min:10, max:19, pct:1 },
+  { min:20, max:29, pct:2 },
+  { min:30, max:39, pct:3 },
+  { min:40, max:49, pct:4 },
+  { min:50, max:9999, pct:5 },
+];
+
+function actualizarDescuento() {
+  let totalQty = 0;
+  document.querySelectorAll('.qty-value').forEach(el => {
+    totalQty += parseInt(el.textContent) || 0;
+  });
+
+  // Resaltar fila activa
+  document.querySelectorAll('.dcto-row').forEach(row => {
+    const min = parseInt(row.dataset.min);
+    const max = parseInt(row.dataset.max);
+    row.classList.toggle('dcto-active', totalQty >= min && totalQty <= max);
+  });
+
+  // Mostrar descuento aplicado
+  const tramo = DCTO_TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
+  const dctoEl   = document.getElementById('dctoAplicado');
+  const dctoVal  = document.getElementById('dctoAplicadoVal');
+  if (dctoEl && dctoVal) {
+    if (tramo) {
+      dctoEl.style.display = 'flex';
+      dctoVal.textContent  = tramo.pct + '%';
+    } else {
+      dctoEl.style.display = 'none';
+    }
+  }
+}
+
 
 let currentStep = 1;
 const totalSteps = 4;
@@ -209,6 +264,7 @@ function incrementQty(event) {
   const cat = event.currentTarget.closest('.product-category');
   updateCatBadge(cat);
   updateSidebar();
+  actualizarDescuento();
 }
 
 function decrementQty(event) {
@@ -221,6 +277,7 @@ function decrementQty(event) {
     const cat = event.currentTarget.closest('.product-category');
     updateCatBadge(cat);
     updateSidebar();
+    actualizarDescuento();
   }
 }
 
@@ -265,61 +322,94 @@ function collectServicios() {
 // ═════════════════════════════════════════
 
 function updateSidebar() {
-  let totalEq  = 0;
+  let totalEqCLP = 0;
   let totalQty = 0;
   const selectedProducts = [];
 
   document.querySelectorAll('.product-item').forEach(item => {
-    const qty   = parseInt(item.querySelector('.qty-value').textContent) || 0;
-    const price = parseInt(item.dataset.price);
-    const name  = item.dataset.name;
+    const qty = parseInt(item.querySelector('.qty-value').textContent) || 0;
+    const priceCLP = parseInt(item.dataset.price) || 0;
+    const name = item.dataset.name;
+
     if (qty > 0) {
-      totalEq  += qty * price;
       totalQty += qty;
+
+      // 🔥 precio afectado por dólar (si quieres lógica USD real)
+      const priceUSD = priceCLP / tipoCambio;
+      const priceFinal = priceUSD * tipoCambio; // puedes cambiar lógica aquí
+
+      totalEqCLP += qty * priceFinal;
+
       selectedProducts.push({ name, qty });
     }
   });
 
+  // ─────────────────────────────
+  // SERVICIOS
+  // ─────────────────────────────
   let totalSvc = 0;
   let countSvc = 0;
-  const selectedServices = [];
 
   document.querySelectorAll('.service-check').forEach(el => {
     const selectedOption = el.options ? el.options[el.selectedIndex] : null;
     if (!selectedOption || !selectedOption.value) return;
+
     const price = parseInt(selectedOption.dataset.price) || 0;
     if (price === 0) return;
+
     totalSvc += price;
     countSvc++;
-    const prefix = el.dataset.namePrefix || el.dataset.name || 'Servicio';
-    selectedServices.push(`${prefix} — ${selectedOption.text.split('—')[0].trim()}`);
   });
 
-  const total = totalEq;
-  const cuota = Math.round(total / 24);
+  // ─────────────────────────────
+  // DESCUENTO
+  // ─────────────────────────────
+  const pctDcto = obtenerPctDescuento(totalQty);
+  const descuento = totalEqCLP * (pctDcto / 100);
 
-  // Contadores
-  const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const totalEquiposConDcto = totalEqCLP - descuento;
 
-  setTxt('countEquipos',   totalQty);
+  // ─────────────────────────────
+  // TOTALES
+  // ─────────────────────────────
+  const totalGeneral = totalEquiposConDcto + totalSvc;
+  const cuota = Math.round(totalGeneral / simPlazo);
+
+  // ─────────────────────────────
+  // UI
+  // ─────────────────────────────
+  const setTxt = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setTxt('countEquipos', totalQty);
   setTxt('countServicios', countSvc);
-  setTxt('totalEquipos',   totalEq.toLocaleString('es-CL'));
+
+  setTxt('totalEquipos', totalEquiposConDcto.toLocaleString('es-CL'));
   setTxt('totalServicios', totalSvc.toLocaleString('es-CL'));
-  setTxt('totalGeneral',   total.toLocaleString('es-CL'));
-  setTxt('cuotaMensual',   cuota.toLocaleString('es-CL'));
+  setTxt('totalGeneral', totalGeneral.toLocaleString('es-CL'));
+  setTxt('cuotaMensual', cuota.toLocaleString('es-CL'));
+
+  // 🔥 NUEVO
+  setTxt('ahorroTotal', descuento.toLocaleString('es-CL'));
+  setTxt('descuentoPct', pctDcto + '%');
+
   setTxt('plazoSidebarLabel', simPlazo);
 
-  // Lista productos en sidebar
+  // ─────────────────────────────
+  // LISTA PRODUCTOS
+  // ─────────────────────────────
   const list = document.getElementById('productsListSidebar');
   if (list) {
     if (selectedProducts.length === 0) {
       list.innerHTML = '<div style="text-align:center;color:var(--white-60);font-size:12px;padding:8px;">Sin productos aún</div>';
     } else {
       list.innerHTML = selectedProducts.map(p =>
-        `<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;gap:8px;">` +
-        `<span style="color:var(--white-80);flex:1;line-height:1.3;">${p.name}</span>` +
-        `<span style="color:var(--gold);white-space:nowrap;font-weight:600;">×${p.qty}</span>` +
-        `</div>`
+        `<div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span>${p.name}</span>
+          <span style="color:var(--gold)">×${p.qty}</span>
+        </div>`
       ).join('');
     }
   }
@@ -722,6 +812,8 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSidebar();
   actualizarConteos();
   renderizarPreciosUSD();
+  actualizarDescuento();
+  fetchDolarTIC();
 
   document.querySelectorAll('.service-check').forEach(el => {
     el.addEventListener('change', updateSidebar);
@@ -750,3 +842,524 @@ window.updateTasa           = updateTasa;
 window.toggleTablaAmort     = toggleTablaAmort;
 window.actualizarTipoCambio = actualizarTipoCambio;
 window.cambiarDolar         = cambiarDolar;
+window.actualizarDescuento  = actualizarDescuento;
+/* ─────────────────────────────────────────────
+   TRAMOS DE DESCUENTO (igual que el JS original)
+───────────────────────────────────────────────*/
+const TABLA_DCTO_TRAMOS = [
+  { min: 10, max: 19, pct: 1 },
+  { min: 20, max: 29, pct: 2 },
+  { min: 30, max: 39, pct: 3 },
+  { min: 40, max: 49, pct: 4 },
+  { min: 50, max: 9999, pct: 5 },
+];
+ 
+function obtenerPctDescuento(totalQty) {
+  const tramo = TABLA_DCTO_TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
+  return tramo ? tramo.pct : 0;
+}
+ 
+/* ─────────────────────────────────────────────
+   CATEGORÍAS: definición para la nueva tabla
+   (sincroniza con las del HTML original)
+───────────────────────────────────────────────*/
+const CATALOG_CATEGORIES = [
+  {
+    id: 'tab-notebooks',
+    tipo: 'notebook',
+    label: 'Notebooks',
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
+  },
+  {
+    id: 'tab-servidores',
+    tipo: 'servidor',
+    label: 'Servidores',
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>`,
+  },
+  {
+    id: 'tab-impresoras',
+    tipo: 'impresora',
+    label: 'Impresoras',
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>`,
+  },
+  {
+    id: 'tab-networking',
+    tipo: 'networking',
+    label: 'Networking',
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>`,
+  },
+  {
+    id: 'tab-storage',
+    tipo: 'storage',
+    label: 'Almacenamiento',
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+  },
+];
+ 
+/* ─────────────────────────────────────────────
+   CONSTRUIR LA TABLA A PARTIR DEL HTML ORIGINAL
+───────────────────────────────────────────────*/
+function buildCatalogTable() {
+  const catalogoDiv = document.getElementById('catalogoProductos');
+  if (!catalogoDiv) return;
+ 
+  // Contenedor KPI encima de la tabla
+  const kpiBanner = document.createElement('div');
+  kpiBanner.className = 'catalogo-kpi-banner';
+  kpiBanner.id = 'tablaKpiBanner';
+  kpiBanner.innerHTML = `
+    <div class="kpi-item">
+      <span class="kpi-label">Unidades</span>
+      <span class="kpi-value" id="kpiUnidades">0</span>
+    </div>
+    <div class="kpi-item">
+      <span class="kpi-label">Subtotal lista</span>
+      <span class="kpi-value kpi-value--orange" id="kpiSubtotalLista">$0</span>
+    </div>
+    <div class="kpi-item">
+      <span class="kpi-label">Descuento</span>
+      <span class="kpi-value kpi-value--green" id="kpiDcto">0%</span>
+    </div>
+    <div class="kpi-item">
+      <span class="kpi-label">Ahorro total $</span>
+      <span class="kpi-value kpi-value--green" id="kpiAhorro">$0</span>
+    </div>
+  `;
+  catalogoDiv.parentNode.insertBefore(kpiBanner, catalogoDiv);
+ 
+  // Para cada categoría definida, construir su tabla
+  CATALOG_CATEGORIES.forEach((cat, catIdx) => {
+    // Obtener los product-item del accordion original
+    const originalCat = catalogoDiv.querySelector(`.product-category[data-tipo="${cat.tipo}"]`);
+    if (!originalCat) return;
+ 
+    const items = originalCat.querySelectorAll('.product-item');
+    if (items.length === 0) return;
+ 
+    // Wrapper de la tabla
+    const wrap = document.createElement('div');
+    wrap.className = 'catalog-table-wrap' + (catIdx === 0 ? ' open' : '');
+    wrap.id = `tablewrap-${cat.tipo}`;
+    wrap.dataset.tipo = cat.tipo;
+ 
+    // Header colapsable
+    wrap.innerHTML = `
+      <div class="catalog-table-header" onclick="toggleTableCat('tablewrap-${cat.tipo}')">
+        ${cat.icon}
+        <h3>${cat.label}</h3>
+        <span class="cat-badge" id="tablebadge-${cat.tipo}"></span>
+        <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="catalog-table-body">
+        <div class="cat-col-headers">
+          <span class="cat-col-label">Producto</span>
+          <span class="cat-col-label right">P. Lista</span>
+          <span class="cat-col-label center">Cantidad</span>
+          <span class="cat-col-label right">P. c/dto.</span>
+          <span class="cat-col-label right">Subtotal</span>
+          <span class="cat-col-label right">Ahorro $</span>
+        </div>
+        <div class="product-rows" id="rows-${cat.tipo}"></div>
+      </div>
+    `;
+ 
+    catalogoDiv.parentNode.insertBefore(wrap, catalogoDiv);
+ 
+    // Construir filas
+    const rowsContainer = wrap.querySelector(`#rows-${cat.tipo}`);
+ 
+    items.forEach(item => {
+      const name   = item.dataset.name  || '';
+      const specs  = item.dataset.specs || '';
+      const marca  = item.dataset.marca || '';
+      const price  = parseInt(item.dataset.price) || 0;
+      const usd    = Math.round(price / (window.tipoCambio || 900));
+ 
+      // Clonar el select de servicios
+      const origSelect = item.querySelector('.product-service-select');
+      const selectClone = origSelect ? origSelect.cloneNode(true) : null;
+      if (selectClone) {
+        selectClone.addEventListener('change', () => {
+          // Sincronizar con el select original
+          if (origSelect) origSelect.value = selectClone.value;
+          if (typeof window.updateSidebar === 'function') window.updateSidebar();
+        });
+      }
+ 
+      // Crear fila
+      const row = document.createElement('div');
+      row.className = 'product-row';
+      row.dataset.price = price;
+      row.dataset.name  = name;
+      row.dataset.marca = marca;
+      row.dataset.tipo  = cat.tipo;
+      row.dataset.specs = specs;
+ 
+      row.innerHTML = `
+        <div class="pr-info">
+          <div class="pr-name">${name}</div>
+          <div class="pr-specs">${specs}</div>
+          <span class="pr-marca-badge">${marca}</span>
+        </div>
+        <div class="pr-precio-lista">
+          <span class="precio-base" id="preciobase-${slugify(name)}">$${fmt(price)}</span>
+          <span class="precio-usd">≈ USD ${usd.toLocaleString('en-US')}</span>
+        </div>
+        <div class="pr-qty">
+          <button type="button" onclick="tablaDecrement(event)">−</button>
+          <span class="qty-value" id="qty-${slugify(name)}">0</span>
+          <button type="button" onclick="tablaIncrement(event)">+</button>
+        </div>
+        <div class="pr-precio-dto">
+          <span class="precio-dto-val sin-dto" id="preciodto-${slugify(name)}">$${fmt(price)}</span>
+          <span class="dto-badge oculto" id="dtobadge-${slugify(name)}"></span>
+        </div>
+        <div class="pr-subtotal">
+          <span class="subtotal-val inactive" id="subtotal-${slugify(name)}">—</span>
+        </div>
+        <div class="pr-ahorro">
+          <span class="ahorro-val cero" id="ahorro-${slugify(name)}">—</span>
+        </div>
+      `;
+ 
+      rowsContainer.appendChild(row);
+ 
+      // Fila de servicio
+      if (selectClone) {
+        const svcRow = document.createElement('div');
+        svcRow.className = 'product-service-row';
+        svcRow.id = `svcrow-${slugify(name)}`;
+        svcRow.innerHTML = `
+          <label class="product-service-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Servicio:
+          </label>
+        `;
+        svcRow.appendChild(selectClone);
+        rowsContainer.appendChild(svcRow);
+      }
+    });
+  });
+ 
+  // Ocultar el catalogoDiv original (los product-category ya se ocultan con CSS,
+  // pero ocultamos también el wrapper si queda vacío)
+  catalogoDiv.style.display = 'none';
+ 
+  // Primer render de precios
+  refreshTablePrices();
+}
+ 
+/* ─────────────────────────────────────────────
+   TOGGLE CATEGORÍA TABLA
+───────────────────────────────────────────────*/
+function toggleTableCat(id) {
+  document.getElementById(id)?.classList.toggle('open');
+}
+window.toggleTableCat = toggleTableCat;
+ 
+/* ─────────────────────────────────────────────
+   INCREMENTAR / DECREMENTAR EN TABLA
+───────────────────────────────────────────────*/
+function tablaIncrement(event) {
+  event.preventDefault();
+  const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
+  qtySpan.textContent = parseInt(qtySpan.textContent) + 1;
+ 
+  const row = event.currentTarget.closest('.product-row');
+  const name = row?.dataset.name;
+ 
+  // Sincronizar con el qty-value del accordion original
+  syncOriginalQty(name, parseInt(qtySpan.textContent));
+ 
+  toggleServiceRow(name, parseInt(qtySpan.textContent));
+  refreshTablePrices();
+  if (typeof window.updateSidebar     === 'function') window.updateSidebar();
+  if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
+ 
+  // Actualizar badge de categoría original
+  const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
+  if (origItem) {
+    const cat = origItem.closest('.product-category');
+    if (typeof window.updateCatBadge === 'function') window.updateCatBadge(cat);
+  }
+}
+ 
+function tablaDecrement(event) {
+  event.preventDefault();
+  const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
+  const current = parseInt(qtySpan.textContent);
+  if (current <= 0) return;
+ 
+  qtySpan.textContent = current - 1;
+ 
+  const row = event.currentTarget.closest('.product-row');
+  const name = row?.dataset.name;
+ 
+  syncOriginalQty(name, current - 1);
+  toggleServiceRow(name, current - 1);
+  refreshTablePrices();
+  if (typeof window.updateSidebar       === 'function') window.updateSidebar();
+  if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
+ 
+  const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
+  if (origItem) {
+    const cat = origItem.closest('.product-category');
+    if (typeof window.updateCatBadge === 'function') window.updateCatBadge(cat);
+  }
+}
+ 
+window.tablaIncrement = tablaIncrement;
+window.tablaDecrement = tablaDecrement;
+ 
+/* ─────────────────────────────────────────────
+   SINCRONIZAR QTY CON EL ACCORDION ORIGINAL
+   (para que collectEquipos() siga funcionando)
+───────────────────────────────────────────────*/
+function syncOriginalQty(name, qty) {
+  const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
+  if (!origItem) return;
+  const origQty = origItem.querySelector('.qty-value');
+  if (origQty) origQty.textContent = qty;
+}
+ 
+/* ─────────────────────────────────────────────
+   MOSTRAR / OCULTAR FILA DE SERVICIO
+───────────────────────────────────────────────*/
+function toggleServiceRow(name, qty) {
+  const svcRow = document.getElementById(`svcrow-${slugify(name)}`);
+  if (!svcRow) return;
+  if (qty > 0) {
+    svcRow.classList.add('visible');
+  } else {
+    svcRow.classList.remove('visible');
+    // Resetear select
+    const sel = svcRow.querySelector('select');
+    if (sel) {
+      sel.value = '';
+      // Sync original
+      const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
+      if (origItem) {
+        const origSel = origItem.querySelector('select');
+        if (origSel) origSel.value = '';
+      }
+    }
+  }
+}
+ 
+/* ─────────────────────────────────────────────
+   REFRESCAR PRECIOS EN TODA LA TABLA
+───────────────────────────────────────────────*/
+function refreshTablePrices() {
+  // 1. Calcular total de unidades para determinar % descuento
+  let totalQty = 0;
+  document.querySelectorAll('.product-row .qty-value').forEach(el => {
+    totalQty += parseInt(el.textContent) || 0;
+  });
+  const pct = obtenerPctDescuento(totalQty);
+ 
+  // 2. Variables de totales para KPI
+  let totalListaAcum = 0;
+  let totalAhorroAcum = 0;
+ 
+  // 3. Recorrer cada fila y actualizar celdas
+  document.querySelectorAll('.product-row').forEach(row => {
+    const price  = parseInt(row.dataset.price) || 0;
+    const name   = row.dataset.name;
+    const slug   = slugify(name);
+    const qty    = parseInt(row.querySelector('.qty-value')?.textContent) || 0;
+    const tc     = window.tipoCambio || 900;
+ 
+    const precioConDto = Math.round(price * (1 - pct / 100));
+    const subtotal     = qty * precioConDto;
+    const subtotalLista = qty * price;
+    const ahorroLinea  = subtotalLista - subtotal;
+ 
+    totalListaAcum  += subtotalLista;
+    totalAhorroAcum += ahorroLinea;
+ 
+    // Precio lista (tachar si hay dto)
+    const elBase = document.getElementById(`preciobase-${slug}`);
+    if (elBase) {
+      elBase.textContent = `$${fmt(price)}`;
+      if (pct > 0 && qty > 0) {
+        elBase.classList.add('tachado');
+      } else {
+        elBase.classList.remove('tachado');
+      }
+    }
+ 
+    // Precio con dto.
+    const elDto = document.getElementById(`preciodto-${slug}`);
+    const elDtoBadge = document.getElementById(`dtobadge-${slug}`);
+    if (elDto) {
+      elDto.textContent = `$${fmt(precioConDto)}`;
+      if (pct > 0) {
+        elDto.classList.remove('sin-dto');
+        if (elDtoBadge) {
+          elDtoBadge.textContent = `-${pct}%`;
+          elDtoBadge.classList.remove('oculto');
+        }
+      } else {
+        elDto.classList.add('sin-dto');
+        if (elDtoBadge) elDtoBadge.classList.add('oculto');
+      }
+    }
+ 
+    // Subtotal
+    const elSub = document.getElementById(`subtotal-${slug}`);
+    if (elSub) {
+      if (qty > 0) {
+        elSub.textContent = `$${fmt(subtotal)}`;
+        elSub.classList.remove('inactive');
+      } else {
+        elSub.textContent = '—';
+        elSub.classList.add('inactive');
+      }
+    }
+ 
+    // Ahorro por línea
+    const elAhorro = document.getElementById(`ahorro-${slug}`);
+    if (elAhorro) {
+      if (qty > 0 && ahorroLinea > 0) {
+        elAhorro.textContent = `$${fmt(ahorroLinea)}`;
+        elAhorro.classList.remove('cero');
+      } else if (qty > 0) {
+        elAhorro.textContent = '$0';
+        elAhorro.classList.add('cero');
+      } else {
+        elAhorro.textContent = '—';
+        elAhorro.classList.add('cero');
+      }
+    }
+ 
+    // Badge de categoría tabla
+    const wrap = row.closest('.catalog-table-wrap');
+    if (wrap) {
+      const tipo = wrap.dataset.tipo;
+      updateTableCatBadge(tipo);
+    }
+  });
+ 
+  // 4. Actualizar KPI banner
+  const kpiUnidades = document.getElementById('kpiUnidades');
+  const kpiSubLista = document.getElementById('kpiSubtotalLista');
+  const kpiDcto     = document.getElementById('kpiDcto');
+  const kpiAhorro   = document.getElementById('kpiAhorro');
+ 
+  if (kpiUnidades) kpiUnidades.textContent = totalQty;
+  if (kpiSubLista) kpiSubLista.textContent = `$${fmt(totalListaAcum)}`;
+  if (kpiDcto)     kpiDcto.textContent     = pct > 0 ? `${pct}%` : '0%';
+  if (kpiAhorro)   kpiAhorro.textContent   = `$${fmt(totalAhorroAcum)}`;
+ 
+  // 5. Actualizar también los precios USD
+  document.querySelectorAll('.product-row').forEach(row => {
+    const price = parseInt(row.dataset.price) || 0;
+    const tc    = window.tipoCambio || 900;
+    const usdEl = row.querySelector('.precio-usd');
+    if (usdEl) usdEl.textContent = `≈ USD ${Math.round(price / tc).toLocaleString('en-US')}`;
+  });
+}
+ 
+/* ─────────────────────────────────────────────
+   BADGE POR CATEGORÍA EN TABLA
+───────────────────────────────────────────────*/
+function updateTableCatBadge(tipo) {
+  let total = 0;
+  document.querySelectorAll(`.product-row[data-tipo="${tipo}"] .qty-value`).forEach(el => {
+    total += parseInt(el.textContent) || 0;
+  });
+  const badge = document.getElementById(`tablebadge-${tipo}`);
+  if (badge) {
+    badge.textContent = `${total} uds`;
+    badge.classList.toggle('visible', total > 0);
+  }
+}
+ 
+/* ─────────────────────────────────────────────
+   FILTROS: aplicar también a las filas de tabla
+───────────────────────────────────────────────*/
+const _originalAplicarFiltros = window.aplicarFiltros;
+window.aplicarFiltros = function () {
+  // Filtrar en el accordion original (para que la lógica original siga funcionando)
+  if (typeof _originalAplicarFiltros === 'function') _originalAplicarFiltros();
+ 
+  // Filtrar también en las filas de tabla
+  const q = (document.getElementById('searchProductos')?.value || '').toLowerCase();
+ 
+  // Leer filtro activo de marca y tipo desde los chips
+  const activeChipMarca = document.querySelector('#filtrosMarca .chip.active');
+  const activeChipTipo  = document.querySelector('#filtrosTipo .chip.active, #filtrosTipo .sidebar-menu-item.active');
+  const filtroMarca = activeChipMarca?.dataset?.val || 'todos';
+  const filtroTipo  = activeChipTipo?.dataset?.val  || 'todos';
+ 
+  document.querySelectorAll('.catalog-table-wrap').forEach(wrap => {
+    const catTipo = wrap.dataset.tipo;
+    const tipoOk  = filtroTipo === 'todos' || catTipo === filtroTipo;
+    let rowsVisible = 0;
+ 
+    wrap.querySelectorAll('.product-row').forEach(row => {
+      const marcaOk  = filtroMarca === 'todos' || (row.dataset.marca || '').toLowerCase().includes(filtroMarca.toLowerCase());
+      const searchOk = !q || (row.dataset.name  || '').toLowerCase().includes(q)
+                          || (row.dataset.specs || '').toLowerCase().includes(q)
+                          || (row.dataset.marca || '').toLowerCase().includes(q);
+ 
+      const visible = tipoOk && marcaOk && searchOk;
+      row.style.display = visible ? '' : 'none';
+ 
+      // También ocultar fila de servicio si el producto no es visible
+      const svcRow = document.getElementById(`svcrow-${slugify(row.dataset.name)}`);
+      if (svcRow) svcRow.style.display = visible ? '' : 'none';
+ 
+      if (visible) rowsVisible++;
+    });
+ 
+    wrap.style.display = rowsVisible > 0 ? '' : 'none';
+  });
+};
+ 
+/* ─────────────────────────────────────────────
+   PARCHE: refreshTablePrices cuando cambia el
+   descuento (llamada desde actualizarDescuento)
+───────────────────────────────────────────────*/
+const _originalActualizarDescuento = window.actualizarDescuento;
+window.actualizarDescuento = function () {
+  if (typeof _originalActualizarDescuento === 'function') _originalActualizarDescuento();
+  refreshTablePrices();
+};
+ 
+/* ─────────────────────────────────────────────
+   PARCHE: refreshTablePrices cuando cambia el
+   tipo de cambio (dólar TIC)
+───────────────────────────────────────────────*/
+const _origActualizarTipoCambio = window.actualizarTipoCambio;
+window.actualizarTipoCambio = function (val) {
+  if (typeof _origActualizarTipoCambio === 'function') _origActualizarTipoCambio(val);
+  refreshTablePrices();
+};
+ 
+/* ─────────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────────────*/
+function fmt(n) {
+  return n.toLocaleString('es-CL');
+}
+ 
+function slugify(str) {
+  return (str || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+ 
+/* ─────────────────────────────────────────────
+   INIT: esperar a que el DOM y el JS original
+   estén listos
+───────────────────────────────────────────────*/
+document.addEventListener('DOMContentLoaded', () => {
+  // Pequeño delay para asegurarnos que configurador.js terminó su DOMContentLoaded
+  setTimeout(() => {
+    buildCatalogTable();
+    refreshTablePrices();
+  }, 50);
+});

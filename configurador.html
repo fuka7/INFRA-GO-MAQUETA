@@ -58,6 +58,97 @@
       <p class="step-subtitle">Elige los productos del catálogo — cada uno puede llevar un servicio asociado</p>
     </div>
 
+    <!-- LAYOUT: SIDEBAR IZQUIERDA + CONTENIDO -->
+    <div class="paso1-layout">
+
+    <!-- ─── SIDEBAR IZQUIERDA ─── -->
+    <aside class="widgets-sidebar">
+
+      <!-- WIDGET: DÓLAR TIC -->
+      <div class="sidebar-widget widget-dolar">
+        <div class="widget-dolar-header">
+          <div class="widget-dolar-dot"></div>
+          <span class="widget-dolar-title">Dólar TIC</span>
+        </div>
+        <div class="widget-dolar-input-row">
+          <input type="number" id="tipoCambio" class="widget-dolar-input" value="900"
+                 oninput="actualizarTipoCambio(this.value)">
+          <div class="widget-dolar-spinner">
+            <button type="button" onclick="cambiarDolar(10)">▲</button>
+            <button type="button" onclick="cambiarDolar(-10)">▼</button>
+          </div>
+          <span class="widget-dolar-label">CLP/USD</span>
+        </div>
+        <p class="widget-dolar-note" id="dolarNote">Actualizando tipo de cambio...</p>
+        <p class="widget-dolar-source">Dólar observado BCCh + $5 TIC · Se actualiza al abrir</p>
+      </div>
+
+      <!-- WIDGET: DESCUENTOS POR VOLUMEN -->
+      <div class="sidebar-widget widget-descuentos">
+        <div class="widget-section-title">Descuentos por Volumen</div>
+        <div class="dcto-table">
+          <div class="dcto-row" data-min="10" data-max="19">
+            <span class="dcto-rango">10 – 19 uds</span>
+            <span class="dcto-pct">1% dto.</span>
+          </div>
+          <div class="dcto-row" data-min="20" data-max="29">
+            <span class="dcto-rango">20 – 29 uds</span>
+            <span class="dcto-pct">2% dto.</span>
+          </div>
+          <div class="dcto-row" data-min="30" data-max="39">
+            <span class="dcto-rango">30 – 39 uds</span>
+            <span class="dcto-pct">3% dto.</span>
+          </div>
+          <div class="dcto-row" data-min="40" data-max="49">
+            <span class="dcto-rango">40 – 49 uds</span>
+            <span class="dcto-pct">4% dto.</span>
+          </div>
+          <div class="dcto-row" data-min="50" data-max="9999">
+            <span class="dcto-rango">50 uds</span>
+            <span class="dcto-pct">5% dto.</span>
+          </div>
+        </div>
+        <div class="dcto-aplicado" id="dctoAplicado" style="display:none;">
+          <span class="dcto-aplicado-label">Descuento aplicado:</span>
+          <span class="dcto-aplicado-val" id="dctoAplicadoVal">0%</span>
+        </div>
+      </div>
+
+      <!-- WIDGET: +50 UNIDADES -->
+      <div class="sidebar-widget widget-mas50">
+        <div class="widget-mas50-title">+50 unidades</div>
+        <p class="widget-mas50-text">Propuesta personalizada, mejores condiciones y financiamiento a medida.</p>
+        <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" class="widget-mas50-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Hablar con ejecutivo
+        </a>
+      </div>
+
+      <!-- WIDGET: FINANCIAMIENTO CORPORATIVO -->
+      <div class="sidebar-widget widget-financiamiento">
+        <div class="widget-fin-header">
+          <div class="widget-dolar-dot"></div>
+          <span class="widget-section-title">Financiamiento Corporativo</span>
+        </div>
+        <div class="widget-fin-logos">
+          <div class="fin-logo-item fin-logo--santander">Santander</div>
+          <div class="fin-logo-item fin-logo--bci">BCI</div>
+          <div class="fin-logo-item fin-logo--bancochile">Banco de Chile</div>
+          <div class="fin-logo-item fin-logo--hp">HP Financial</div>
+        </div>
+        <p class="widget-fin-condiciones">Hasta 60 cuotas — tasa 0,85% mensual — CAE 10,69%.</p>
+        <p class="widget-fin-condiciones">Aprobación rápida con nuestros socios financieros.</p>
+        <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" class="widget-fin-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.44 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.86A16 16 0 0 0 16 16.95l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Contactar asesor financiero
+        </a>
+      </div>
+
+    </aside><!-- /widgets-sidebar -->
+
+    <!-- ─── CONTENIDO DERECHA ─── -->
+    <div class="paso1-content">
+
     <!-- FILTROS -->
     <div class="filtros-bar">
       <div class="filtros-row">
@@ -547,6 +638,9 @@
       <p>No se encontraron productos con los filtros seleccionados</p>
       <button class="chip active" onclick="resetFiltros()">Limpiar filtros</button>
     </div>
+
+    </div><!-- /paso1-content -->
+    </div><!-- /paso1-layout -->
 
   </div><!-- /wizard-step 1 -->
 
