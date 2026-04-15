@@ -111,7 +111,7 @@ body {
 .config-wrapper {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 48px 160px;
+  padding: 40px 48px 40px;
 }
 
 /* ─── WIZARD STEPS ───────────────────────────── */
@@ -319,15 +319,14 @@ body {
 .btn-cotizar:hover { box-shadow: 0 4px 20px var(--orange-glow); transform: translateY(-1px); }
 .btn-prev:disabled, .btn-next:disabled, .btn-cotizar:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ─── STICKY RESUMEN ─────────────────────────── */
+/* ─── RESUMEN BAR ────────────────────────────── */
 .sticky-resumen {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  z-index: 200;
   background: rgba(13, 30, 54, 0.97);
-  backdrop-filter: blur(12px);
   border-top: 2px solid var(--orange);
-  box-shadow: 0 -8px 32px rgba(0,0,0,0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
   padding: 14px 40px;
+  margin-top: 32px;
 }
 .sticky-resumen-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; }
 .sticky-col { display: flex; flex-direction: column; gap: 2px; padding: 0 24px; flex: 1; }

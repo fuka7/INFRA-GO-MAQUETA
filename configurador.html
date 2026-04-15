@@ -13,6 +13,32 @@
   <link rel="stylesheet" href="/assets/css/navbar.css">
   <link rel="stylesheet" href="/assets/css/footer.css">
   <link rel="stylesheet" href="/assets/css/catalogo.css">
+  <style>
+    /* Progress bar: fluye normal, NO sticky */
+    .progress-container {
+      position: static !important;
+      top: auto !important;
+      z-index: auto !important;
+    }
+
+    /* Barra de resumen: sticky justo debajo del navbar */
+    .sticky-resumen {
+      position: sticky !important;
+      top: 76px !important; /* 68px navbar + 8px de aire */
+      bottom: auto !important;
+      left: auto !important;
+      right: auto !important;
+      width: 100% !important;
+      margin: 16px 0 20px !important;
+      border-radius: 12px !important;
+      z-index: 98 !important;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
+    }
+
+    @media (max-width: 768px) {
+      .sticky-resumen { top: 68px !important; } /* navbar mobile = 60px + 8px */
+    }
+  </style>
 </head>
 <body>
 
@@ -190,6 +216,40 @@
         </div>
       </div>
     </div>
+
+    <!-- RESUMEN BAR -->
+    <div class="sticky-resumen" id="stickyResumen">
+      <div class="sticky-resumen-inner">
+        <div class="sticky-col">
+          <span class="sticky-label">Productos</span>
+          <span class="sticky-val"><span id="countEquipos">0</span> uds</span>
+        </div>
+        <div class="sticky-divider"></div>
+        <div class="sticky-col">
+          <span class="sticky-label">Servicios</span>
+          <span class="sticky-val"><span id="countServicios">0</span> activos</span>
+        </div>
+        <div class="sticky-divider"></div>
+        <div class="sticky-col">
+          <span class="sticky-label">Total equipos</span>
+          <span class="sticky-val sticky-val--price">$<span id="totalGeneral">0</span></span>
+        </div>
+        <div class="sticky-divider"></div>
+        <div class="sticky-col">
+          <span class="sticky-label">Servicios /mes</span>
+          <span class="sticky-val sticky-val--price">$<span id="totalServicios">0</span></span>
+        </div>
+        <div class="sticky-divider"></div>
+        <div class="sticky-col sticky-col--cuota">
+          <span class="sticky-label">Cuota mensual est.</span>
+          <span class="sticky-cuota">$<span id="cuotaMensual">0</span></span>
+          <span class="sticky-plazo">(<span id="plazoSidebarLabel">24</span> meses)</span>
+        </div>
+        <!-- Elementos ocultos requeridos por el JS -->
+        <span id="totalEquipos" style="display:none;">0</span>
+        <div id="productsListSidebar" style="display:none;"></div>
+      </div>
+    </div><!-- /sticky-resumen -->
 
     <!-- CATÁLOGO — generado dinámicamente desde catalogo.js -->
     <div id="catalogoProductos">
@@ -457,40 +517,6 @@
   </div>
 
 </div><!-- /config-wrapper -->
-
-<!-- RESUMEN STICKY BOTTOM -->
-<div class="sticky-resumen" id="stickyResumen">
-  <div class="sticky-resumen-inner">
-    <div class="sticky-col">
-      <span class="sticky-label">Productos</span>
-      <span class="sticky-val"><span id="countEquipos">0</span> uds</span>
-    </div>
-    <div class="sticky-divider"></div>
-    <div class="sticky-col">
-      <span class="sticky-label">Servicios</span>
-      <span class="sticky-val"><span id="countServicios">0</span> activos</span>
-    </div>
-    <div class="sticky-divider"></div>
-    <div class="sticky-col">
-      <span class="sticky-label">Total equipos</span>
-      <span class="sticky-val sticky-val--price">$<span id="totalGeneral">0</span></span>
-    </div>
-    <div class="sticky-divider"></div>
-    <div class="sticky-col">
-      <span class="sticky-label">Servicios /mes</span>
-      <span class="sticky-val sticky-val--price">$<span id="totalServicios">0</span></span>
-    </div>
-    <div class="sticky-divider"></div>
-    <div class="sticky-col sticky-col--cuota">
-      <span class="sticky-label">Cuota mensual est.</span>
-      <span class="sticky-cuota">$<span id="cuotaMensual">0</span></span>
-      <span class="sticky-plazo">(<span id="plazoSidebarLabel">24</span> meses)</span>
-    </div>
-    <!-- Elementos ocultos requeridos por el JS -->
-    <span id="totalEquipos" style="display:none;">0</span>
-    <div id="productsListSidebar" style="display:none;"></div>
-  </div>
-</div>
 
 <!-- MODAL COTIZACIÓN -->
 <div class="modal-overlay" id="modalOverlay">
