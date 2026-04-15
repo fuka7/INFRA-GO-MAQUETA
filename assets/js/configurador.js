@@ -27,6 +27,7 @@ async function fetchDolarTIC() {
     const raw  = data?.serie?.[0]?.valor;
     if (raw && raw > 0) {
       tipoCambio = Math.round(raw) + 5; // BCCh + $5 TIC
+      window.tipoCambio = tipoCambio;
       if (input) input.value = tipoCambio;
       if (note)  note.textContent = `Tipo de cambio actualizado: $${tipoCambio.toLocaleString('es-CL')} CLP/USD`;
       renderizarPreciosUSD();
@@ -41,6 +42,7 @@ function actualizarTipoCambio(val) {
   const v = parseInt(val);
   if (!isNaN(v) && v > 0) {
     tipoCambio = v;
+    window.tipoCambio = v;
     renderizarPreciosUSD();
     updateSidebar();
     actualizarDescuento();
@@ -50,9 +52,11 @@ function actualizarTipoCambio(val) {
 function cambiarDolar(delta) {
   const input = document.getElementById('tipoCambio');
   tipoCambio = Math.max(1, tipoCambio + delta);
+  window.tipoCambio = tipoCambio;
   if (input) input.value = tipoCambio;
   renderizarPreciosUSD();
   updateSidebar();
+  if (typeof refreshTablePrices === 'function') refreshTablePrices();
 }
 
 function renderizarPreciosUSD() {
@@ -81,9 +85,17 @@ const DCTO_TRAMOS = [
 
 function actualizarDescuento() {
   let totalQty = 0;
-  document.querySelectorAll('.qty-value').forEach(el => {
-    totalQty += parseInt(el.textContent) || 0;
-  });
+  // Contar solo desde la tabla (product-row) para evitar doble conteo
+  // con el accordion original que queda oculto en el DOM
+  const tableRows = document.querySelectorAll('.product-row .qty-value');
+  if (tableRows.length > 0) {
+    tableRows.forEach(el => { totalQty += parseInt(el.textContent) || 0; });
+  } else {
+    // Fallback: accordion original (cuando la tabla aún no se ha construido)
+    document.querySelectorAll('.product-item .qty-value').forEach(el => {
+      totalQty += parseInt(el.textContent) || 0;
+    });
+  }
 
   // Resaltar fila activa
   document.querySelectorAll('.dcto-row').forEach(row => {
@@ -304,6 +316,7 @@ function collectEquipos() {
 function collectServicios() {
   state.servicios = {};
 
+  // 1. Servicios asociados a productos (service-check selects)
   document.querySelectorAll('.service-check').forEach(el => {
     const selectedOption = el.options ? el.options[el.selectedIndex] : null;
     if (!selectedOption || !selectedOption.value) return;
@@ -314,6 +327,15 @@ function collectServicios() {
     const prefix = el.dataset.namePrefix || el.dataset.name || 'Servicio';
     const label  = `${prefix} — ${selectedOption.text.split('—')[0].trim()}`;
     state.servicios[label] = price;
+  });
+
+  // 2. Productos tipo servicio-tic desde la tabla
+  document.querySelectorAll('.product-row[data-tipo="servicio-tic"]').forEach(row => {
+    const qty = parseInt(row.querySelector('.qty-value')?.textContent) || 0;
+    if (qty <= 0) return;
+    const price = parseInt(row.dataset.price) || 0;
+    const name  = row.dataset.name || 'Servicio TIC';
+    state.servicios[name] = price * qty;
   });
 }
 
@@ -350,16 +372,35 @@ function updateSidebar() {
   let totalSvc = 0;
   let countSvc = 0;
 
+  // 1. Servicios asociados a productos (service-check selects)
   document.querySelectorAll('.service-check').forEach(el => {
     const selectedOption = el.options ? el.options[el.selectedIndex] : null;
     if (!selectedOption || !selectedOption.value) return;
-
     const price = parseInt(selectedOption.dataset.price) || 0;
     if (price === 0) return;
-
     totalSvc += price;
     countSvc++;
   });
+
+  // 2. Productos tipo servicio-tic desde la tabla
+  document.querySelectorAll('.product-row[data-tipo="servicio-tic"]').forEach(row => {
+    const qty = parseInt(row.querySelector('.qty-value')?.textContent) || 0;
+    if (qty <= 0) return;
+    const price = parseInt(row.dataset.price) || 0;
+    totalSvc += price * qty;
+    countSvc += qty;
+  });
+
+  // Fallback: accordion original (cuando la tabla aun no existe)
+  if (document.querySelectorAll('.product-row').length === 0) {
+    document.querySelectorAll('.product-item[data-tipo="servicio-tic"]').forEach(item => {
+      const qty = parseInt(item.querySelector('.qty-value')?.textContent) || 0;
+      if (qty <= 0) return;
+      const price = parseInt(item.dataset.price) || 0;
+      totalSvc += price * qty;
+      countSvc += qty;
+    });
+  }
 
   // ─────────────────────────────
   // DESCUENTO
@@ -720,14 +761,14 @@ function setFiltro(btn, tipo) {
     document.querySelectorAll('#filtrosMarca .chip').forEach(c => c.classList.remove('active'));
   } else {
     filtroTipo = btn.dataset.val;
-    document.querySelectorAll('#filtrosTipo .sidebar-menu-item').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('#filtrosTipo .chip').forEach(c => c.classList.remove('active'));
   }
   btn.classList.add('active');
   aplicarFiltros();
 }
 
 function actualizarConteos() {
-  const tipos = ['todos', 'notebook', 'servidor', 'impresora', 'networking', 'storage'];
+  const tipos = ['todos', 'notebook', 'servidor', 'impresora', 'networking', 'storage', 'servicio-tic'];
   tipos.forEach(tipo => {
     const el = document.getElementById('count-' + tipo);
     if (!el) return;
@@ -749,12 +790,12 @@ function aplicarFiltros() {
 
     let itemsVisibles = 0;
     cat.querySelectorAll('.product-item').forEach(item => {
-      const marca   = (item.dataset.marca || '').toLowerCase();
-      const nombre  = (item.dataset.name  || '').toLowerCase();
-      const specs   = (item.dataset.specs || '').toLowerCase();
+      const marca      = (item.dataset.marca      || '').toLowerCase();
+      const nombre     = (item.dataset.name       || '').toLowerCase();
+      const partNumber = (item.dataset.partnumber || '').toLowerCase();
 
       const marcaOk  = filtroMarca === 'todos' || marca.includes(filtroMarca.toLowerCase());
-      const searchOk = !q || nombre.includes(q) || specs.includes(q) || marca.includes(q);
+      const searchOk = !q || nombre.includes(q) || partNumber.includes(q) || marca.includes(q);
 
       const visible = tipoOk && marcaOk && searchOk;
       item.style.display = visible ? '' : 'none';
@@ -853,6 +894,10 @@ const CAT_CONFIG = {
     id: 'cat-storage',     label: 'Almacenamiento NAS',  open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
   },
+  'servicio-tic': {
+    id: 'cat-servicio-tic', label: 'Servicios TIC',       open: false,
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  },
 };
 
 const SVC_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
@@ -879,11 +924,11 @@ function renderCatalogo(catalogo) {
       ).join('\n');
 
       return `
-            <div class="product-item" data-marca="${prod.marca}" data-tipo="${prod.tipo}" data-name="${prod.name}" data-specs="${prod.specs}" data-price="${prod.price}">
+            <div class="product-item" data-marca="${prod.marca}" data-tipo="${prod.tipo}" data-name="${prod.name}" data-partNumber="${prod.partNumber}" data-price="${prod.price}">
               <div class="product-main">
                 <div class="product-details">
                   <div class="product-name">${prod.name}</div>
-                  <div class="product-specs">${prod.specs}</div>
+                  ${prod.tipo !== 'servicio-tic' ? `<div class="product-specs">${prod.partNumber}</div>` : ''}
                 </div>
                 <div class="product-price-tag">$${prod.price.toLocaleString('es-CL')}</div>
                 <div class="product-qty-control">
@@ -999,6 +1044,12 @@ const CATALOG_CATEGORIES = [
     label: 'Almacenamiento',
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
   },
+  {
+    id: 'tab-servicio-tic',
+    tipo: 'servicio-tic',
+    label: 'Servicios TIC',
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  },
 ];
  
 /* ─────────────────────────────────────────────
@@ -1051,9 +1102,9 @@ function buildCatalogTable() {
     const rowsContainer = wrap.querySelector(`#rows-${cat.tipo}`);
  
     items.forEach(item => {
-      const name   = item.dataset.name  || '';
-      const specs  = item.dataset.specs || '';
-      const marca  = item.dataset.marca || '';
+      const name       = item.dataset.name       || '';
+      const partNumber = item.dataset.partnumber || '';
+      const marca      = item.dataset.marca      || '';
       const price  = parseInt(item.dataset.price) || 0;
       const usd    = Math.round(price / (window.tipoCambio || 900));
  
@@ -1075,12 +1126,12 @@ function buildCatalogTable() {
       row.dataset.name  = name;
       row.dataset.marca = marca;
       row.dataset.tipo  = cat.tipo;
-      row.dataset.specs = specs;
+      row.dataset.partNumber = partNumber;
  
       row.innerHTML = `
         <div class="pr-info">
           <div class="pr-name">${name}</div>
-          <div class="pr-specs">${specs}</div>
+          ${cat.tipo !== 'servicio-tic' ? `<div class="pr-specs">${partNumber}</div>` : ''}
           <span class="pr-marca-badge">${marca}</span>
         </div>
         <div class="pr-precio-lista">
@@ -1105,21 +1156,6 @@ function buildCatalogTable() {
       `;
  
       rowsContainer.appendChild(row);
- 
-      // Fila de servicio
-      if (selectClone) {
-        const svcRow = document.createElement('div');
-        svcRow.className = 'product-service-row';
-        svcRow.id = `svcrow-${slugify(name)}`;
-        svcRow.innerHTML = `
-          <label class="product-service-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Servicio:
-          </label>
-        `;
-        svcRow.appendChild(selectClone);
-        rowsContainer.appendChild(svcRow);
-      }
     });
   });
  
@@ -1153,7 +1189,6 @@ function tablaIncrement(event) {
   // Sincronizar con el qty-value del accordion original
   syncOriginalQty(name, parseInt(qtySpan.textContent));
  
-  toggleServiceRow(name, parseInt(qtySpan.textContent));
   refreshTablePrices();
   if (typeof window.updateSidebar     === 'function') window.updateSidebar();
   if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
@@ -1178,7 +1213,6 @@ function tablaDecrement(event) {
   const name = row?.dataset.name;
  
   syncOriginalQty(name, current - 1);
-  toggleServiceRow(name, current - 1);
   refreshTablePrices();
   if (typeof window.updateSidebar       === 'function') window.updateSidebar();
   if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
@@ -1371,9 +1405,9 @@ window.aplicarFiltros = function () {
  
     wrap.querySelectorAll('.product-row').forEach(row => {
       const marcaOk  = filtroMarca === 'todos' || (row.dataset.marca || '').toLowerCase().includes(filtroMarca.toLowerCase());
-      const searchOk = !q || (row.dataset.name  || '').toLowerCase().includes(q)
-                          || (row.dataset.specs || '').toLowerCase().includes(q)
-                          || (row.dataset.marca || '').toLowerCase().includes(q);
+      const searchOk = !q || (row.dataset.name       || '').toLowerCase().includes(q)
+                          || (row.dataset.partnumber || '').toLowerCase().includes(q)
+                          || (row.dataset.marca      || '').toLowerCase().includes(q);
  
       const visible = tipoOk && marcaOk && searchOk;
       row.style.display = visible ? '' : 'none';

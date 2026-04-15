@@ -7,22 +7,22 @@
 
    ESTRUCTURA DE UN PRODUCTO:
    {
-     name:     "Nombre del producto",        // texto visible
-     marca:    "HP",                         // para filtro de marca
-     tipo:     "notebook",                   // para filtro de tipo (ver TIPOS)
-     specs:    "Especificaciones breves",    // subtítulo visible
-     price:    450000,                       // precio CLP (número, sin puntos)
-     servicios: [                            // servicios asociados (puede ser [])
+     name:       "Nombre del producto",        // texto visible
+     marca:      "HP",                         // para filtro de marca
+     tipo:       "notebook",                   // para filtro de tipo (ver TIPOS)
+     partNumber: "XX-XXXXX",                   // part number del producto
+     price:      450000,                       // precio CLP (número, sin puntos)
+     servicios: [                              // servicios asociados (puede ser [])
        { value: "instalacion", label: "Instalación y configuración", price: 80000, unidad: "" },
        { value: "soporte",     label: "Soporte técnico mensual",     price: 35000, unidad: "/mes" },
      ]
    }
 
    TIPOS VÁLIDOS (deben coincidir con los filtros del HTML):
-     notebook | servidor | impresora | networking | storage
+     notebook | servidor | impresora | networking | storage | servicio-tic
 
    MARCAS VÁLIDAS (deben coincidir con los chips de filtro del HTML):
-     HP | Dell | Lenovo | Apple | Brother | Cisco | Fortinet | Ubiquiti | Synology | QNAP | Canon
+     HP | Dell | Lenovo | Apple | Brother | Cisco | Fortinet | Ubiquiti | Synology | QNAP | Canon | TIC Managers
    ═══════════════════════════════════════════════════════════════ */
 
 const CATALOGO = [
@@ -31,11 +31,11 @@ const CATALOGO = [
      NOTEBOOKS
   ─────────────────────────────────────────── */
   {
-    name:  "HP EliteBook 640",
-    marca: "HP",
-    tipo:  "notebook",
-    specs: "Intel Core i5 · 16GB RAM · 512GB SSD",
-    price: 450000,
+    name:       "HP EliteBook 640",
+    marca:      "HP",
+    tipo:       "notebook",
+    partNumber: "80A19LT#ABM",
+    price:      450000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""     },
       { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes"  },
@@ -44,11 +44,11 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "Dell Inspiron 15",
-    marca: "Dell",
-    tipo:  "notebook",
-    specs: "Intel Core i7 · 16GB RAM · 512GB SSD",
-    price: 520000,
+    name:       "Dell Inspiron 15",
+    marca:      "Dell",
+    tipo:       "notebook",
+    partNumber: "I15-I7U512-BLK",
+    price:      520000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""     },
       { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes"  },
@@ -57,11 +57,11 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "MacBook Pro 14",
-    marca: "Apple",
-    tipo:  "notebook",
-    specs: "Apple M3 · 16GB RAM · 512GB SSD",
-    price: 1200000,
+    name:       "MacBook Pro 14",
+    marca:      "Apple",
+    tipo:       "notebook",
+    partNumber: "MRX33LL/A",
+    price:      1200000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""    },
       { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes" },
@@ -69,11 +69,11 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "Lenovo ThinkPad E14",
-    marca: "Lenovo",
-    tipo:  "notebook",
-    specs: "AMD Ryzen 5 · 16GB RAM · 512GB SSD",
-    price: 480000,
+    name:       "Lenovo ThinkPad E14",
+    marca:      "Lenovo",
+    tipo:       "notebook",
+    partNumber: "21JK0005CL",
+    price:      480000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""    },
       { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes" },
@@ -86,11 +86,11 @@ const CATALOGO = [
      SERVIDORES
   ─────────────────────────────────────────── */
   {
-    name:  "Dell PowerEdge R650",
-    marca: "Dell",
-    tipo:  "servidor",
-    specs: "Intel Xeon · 64GB RAM · 1TB SSD",
-    price: 2500000,
+    name:       "Dell PowerEdge R650",
+    marca:      "Dell",
+    tipo:       "servidor",
+    partNumber: "R650-XS-4314-64G",
+    price:      2500000,
     servicios: [
       { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: ""    },
       { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes" },
@@ -99,11 +99,11 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "HP ProLiant DL380",
-    marca: "HP",
-    tipo:  "servidor",
-    specs: "Intel Xeon · 128GB RAM · 2TB SSD",
-    price: 3200000,
+    name:       "HP ProLiant DL380",
+    marca:      "HP",
+    tipo:       "servidor",
+    partNumber: "P56963-B21",
+    price:      3200000,
     servicios: [
       { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: ""    },
       { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes" },
@@ -112,11 +112,11 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "Lenovo ThinkSystem SR650",
-    marca: "Lenovo",
-    tipo:  "servidor",
-    specs: "Intel Xeon · 96GB RAM · 1.5TB SSD",
-    price: 2800000,
+    name:       "Lenovo ThinkSystem SR650",
+    marca:      "Lenovo",
+    tipo:       "servidor",
+    partNumber: "7X06A0BWEA",
+    price:      2800000,
     servicios: [
       { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: ""    },
       { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes" },
@@ -129,11 +129,11 @@ const CATALOGO = [
      IMPRESORAS
   ─────────────────────────────────────────── */
   {
-    name:  "HP LaserJet M110w",
-    marca: "HP",
-    tipo:  "impresora",
-    specs: "Impresión B/N · Red + Wi-Fi",
-    price: 350000,
+    name:       "HP LaserJet M110w",
+    marca:      "HP",
+    tipo:       "impresora",
+    partNumber: "7MD66F#BGJ",
+    price:      350000,
     servicios: [
       { value: "instalacion",    label: "Instalación y configuración red",   price: 40000, unidad: ""    },
       { value: "mantenimiento",  label: "Mantenimiento preventivo mensual",  price: 25000, unidad: "/mes" },
@@ -141,22 +141,22 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "Canon PIXMA G3160",
-    marca: "Canon",
-    tipo:  "impresora",
-    specs: "Impresión Color · Wi-Fi · Ecotank",
-    price: 290000,
+    name:       "Canon PIXMA G3160",
+    marca:      "Canon",
+    tipo:       "impresora",
+    partNumber: "4468C002AA",
+    price:      290000,
     servicios: [
       { value: "instalacion",   label: "Instalación y configuración red",  price: 40000, unidad: ""    },
       { value: "mantenimiento", label: "Mantenimiento preventivo mensual", price: 25000, unidad: "/mes" },
     ],
   },
   {
-    name:  "Brother MFC-L6915DW",
-    marca: "Brother",
-    tipo:  "impresora",
-    specs: "Impresión/Escaneo/Fax · Red + Wi-Fi",
-    price: 720000,
+    name:       "Brother MFC-L6915DW",
+    marca:      "Brother",
+    tipo:       "impresora",
+    partNumber: "MFCL6915DW",
+    price:      720000,
     servicios: [
       { value: "instalacion",   label: "Instalación y configuración red",  price: 50000, unidad: ""    },
       { value: "mantenimiento", label: "Mantenimiento preventivo mensual", price: 30000, unidad: "/mes" },
@@ -168,11 +168,11 @@ const CATALOGO = [
      NETWORKING
   ─────────────────────────────────────────── */
   {
-    name:  "Switch Cisco 24 puertos",
-    marca: "Cisco",
-    tipo:  "networking",
-    specs: "Gigabit Managed · PoE+ · 24P",
-    price: 680000,
+    name:       "Switch Cisco 24 puertos",
+    marca:      "Cisco",
+    tipo:       "networking",
+    partNumber: "CBS350-24P-4G-CL",
+    price:      680000,
     servicios: [
       { value: "instalacion",   label: "Instalación y cableado",         price: 90000,  unidad: ""    },
       { value: "configuracion", label: "Configuración VLANs y QoS",      price: 120000, unidad: ""    },
@@ -180,11 +180,11 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "Fortinet FortiGate 60F",
-    marca: "Fortinet",
-    tipo:  "networking",
-    specs: "Firewall UTM · 10 Gbps · VPN",
-    price: 1100000,
+    name:       "Fortinet FortiGate 60F",
+    marca:      "Fortinet",
+    tipo:       "networking",
+    partNumber: "FG-60F",
+    price:      1100000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración firewall", price: 150000, unidad: ""    },
       { value: "licencia",    label: "Licencia FortiCare anual",             price: 180000, unidad: "/año" },
@@ -192,11 +192,11 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "Ubiquiti UniFi U6",
-    marca: "Ubiquiti",
-    tipo:  "networking",
-    specs: "Wi-Fi 6 · 2.4/5 GHz · PoE",
-    price: 220000,
+    name:       "Ubiquiti UniFi U6",
+    marca:      "Ubiquiti",
+    tipo:       "networking",
+    partNumber: "U6-LR",
+    price:      220000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración AP",    price: 50000, unidad: ""    },
       { value: "soporte",     label: "Soporte red inalámbrica mensual",   price: 30000, unidad: "/mes" },
@@ -207,11 +207,11 @@ const CATALOGO = [
      ALMACENAMIENTO (NAS)
   ─────────────────────────────────────────── */
   {
-    name:  "Synology DS923+",
-    marca: "Synology",
-    tipo:  "storage",
-    specs: "NAS 4-bay · AMD Ryzen · 4GB RAM",
-    price: 950000,
+    name:       "Synology DS923+",
+    marca:      "Synology",
+    tipo:       "storage",
+    partNumber: "DS923+",
+    price:      950000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración NAS",   price: 100000, unidad: ""    },
       { value: "backup",      label: "Configuración backup automático",   price: 150000, unidad: ""    },
@@ -219,16 +219,55 @@ const CATALOGO = [
     ],
   },
   {
-    name:  "QNAP TS-464",
-    marca: "QNAP",
-    tipo:  "storage",
-    specs: "NAS 4-bay · Intel N5105 · 8GB RAM",
-    price: 870000,
+    name:       "QNAP TS-464",
+    marca:      "QNAP",
+    tipo:       "storage",
+    partNumber: "TS-464-8G",
+    price:      870000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración NAS",  price: 100000, unidad: ""    },
       { value: "backup",      label: "Configuración backup automático",  price: 150000, unidad: ""    },
       { value: "soporte",     label: "Soporte administración mensual",   price: 60000,  unidad: "/mes" },
     ],
+  },
+
+  /* ──────────────────────────────────────────
+     SERVICIOS TIC
+  ─────────────────────────────────────────── */
+  {
+    name:       "TIC Managers Instalación equipos TI",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    price:      90000,
+    servicios: [],
+  },
+  {
+    name:       "TIC Managers Migración de datos",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    price:      75000,
+    servicios: [],
+  },
+  {
+    name:       "TIC Managers Mesa de ayuda (mensual)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    price:      85000,
+    servicios: [],
+  },
+  {
+    name:       "TIC Managers Soporte en terreno",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    price:      65000,
+    servicios: [],
+  },
+  {
+    name:       "TIC Managers Seguro equipos electrónicos",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    price:      18000,
+    servicios: [],
   },
 
 ];
