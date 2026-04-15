@@ -1,0 +1,250 @@
+/* ═══════════════════════════════════════════════
+   catalogo.css — InfraGo
+   Estilos del catálogo de productos y servicios:
+   filtros, tabla de categorías, filas de producto,
+   celdas de precio, servicios asociados.
+   © 2026 InfraGo SpA / TIC Manager's
+═══════════════════════════════════════════════ */
+
+/* ─── FILTROS BAR ────────────────────────────── */
+.filtros-bar {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.filtros-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filtros-label {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--c-text-3);
+  display: flex; align-items: center; gap: 5px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.filtros-label svg { width: 12px; height: 12px; color: var(--c-text-3); }
+.filtros-chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+.chip {
+  padding: 4px 12px; border-radius: 20px;
+  border: 1px solid var(--c-border); background: var(--c-surface-2);
+  color: var(--c-text-2); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; white-space: nowrap;
+}
+.chip:hover { background: var(--orange-dim); border-color: rgba(240,120,0,0.4); color: var(--orange); }
+.chip.active { background: var(--orange-dim); border-color: var(--orange); color: var(--orange); }
+.chip--type.active { background: var(--c-surface-2); border-color: var(--c-text-2); color: var(--c-text); }
+.filtros-search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--c-surface-2); border: 1px solid var(--c-border);
+  border-radius: 20px; padding: 5px 14px; margin-left: auto;
+}
+.filtros-search svg { width: 14px; height: 14px; color: var(--c-text-3); flex-shrink: 0; }
+.filtros-search input {
+  background: none; border: none; outline: none;
+  color: var(--c-text); font-size: 13px; width: 160px;
+}
+.filtros-search input::placeholder { color: var(--c-text-4); }
+
+/* ─── ACCORDION ORIGINAL (oculto) ───────────── */
+/* El JS renderiza las categorías en accordion .product-category,
+   pero la UI real usa la tabla generada por buildCatalogTable().
+   Estas reglas aseguran que el accordion nunca sea visible. */
+.product-category { display: none !important; }
+
+/* ─── CATEGORÍA: WRAPPER ─────────────────────── */
+.catalog-table-wrap {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  transition: border-color 0.25s;
+}
+.catalog-table-wrap.has-selection { border-color: rgba(240,120,0,0.4); }
+
+/* ─── CATEGORÍA: HEADER COLAPSABLE ──────────── */
+.catalog-table-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  background: linear-gradient(90deg, var(--orange-dim), transparent);
+  border-bottom: 1px solid var(--c-border-s);
+  cursor: pointer; user-select: none;
+  transition: background 0.2s;
+}
+.catalog-table-header:hover {
+  background: linear-gradient(90deg, rgba(240,120,0,0.09), rgba(240,120,0,0.02));
+}
+.catalog-table-header .cat-icon { width: 18px; height: 18px; color: var(--orange); flex-shrink: 0; }
+.catalog-table-header h3 { font-size: 14px; font-weight: 700; color: var(--c-text); margin: 0; flex: 1; }
+.catalog-table-header .cat-badge {
+  display: none;
+  font-size: 10px; font-weight: 700;
+  background: var(--orange-dim); color: var(--orange);
+  border: 1px solid rgba(240,120,0,0.3); border-radius: 20px; padding: 2px 9px;
+}
+.catalog-table-header .cat-badge.visible { display: inline-block; }
+.catalog-table-header .cat-chevron {
+  width: 15px; height: 15px; color: var(--c-text-3);
+  transition: transform 0.3s ease; flex-shrink: 0;
+}
+.catalog-table-wrap.open .cat-chevron { transform: rotate(180deg); }
+
+/* ─── CATEGORÍA: CUERPO COLAPSABLE ──────────── */
+.catalog-table-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+.catalog-table-wrap.open .catalog-table-body { max-height: 4000px; }
+
+/* ─── CABECERA DE COLUMNAS ───────────────────── */
+.cat-col-headers {
+  display: grid;
+  grid-template-columns: 1fr 90px 100px 90px 105px 95px;
+  padding: 7px 18px;
+  background: var(--c-surface-2);
+  border-bottom: 1px solid var(--c-border-s);
+}
+.cat-col-label {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--c-text-3);
+}
+.cat-col-label.right  { text-align: right; }
+.cat-col-label.center { text-align: center; }
+
+/* ─── FILA DE PRODUCTO ───────────────────────── */
+.product-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 100px 90px 105px 95px;
+  align-items: center;
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--c-border-s);
+  transition: background 0.15s;
+}
+.product-row:last-of-type { border-bottom: none; }
+.product-row:hover { background: rgba(240,120,0,0.025); }
+.product-row[style*="display:none"] { display: none !important; }
+
+/* ─── CELDA: NOMBRE / INFO ───────────────────── */
+.pr-info {}
+.pr-name { font-weight: 600; font-size: 13px; color: var(--c-text); line-height: 1.2; }
+.pr-specs { font-size: 11px; color: var(--c-text-3); margin-top: 2px; }
+.pr-marca-badge {
+  display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
+  background: var(--c-surface-2); border: 1px solid var(--c-border);
+  border-radius: 4px; padding: 1px 5px; color: var(--c-text-3); margin-top: 3px;
+}
+
+/* ─── CELDA: PRECIO LISTA ────────────────────── */
+.pr-precio-lista { text-align: right; padding-right: 4px; }
+.pr-precio-lista .precio-base {
+  font-size: 12px; font-weight: 600; color: var(--c-text-2); display: block;
+}
+.pr-precio-lista .precio-base.tachado {
+  text-decoration: line-through; color: var(--c-text-4); font-weight: 400;
+}
+.pr-precio-lista .precio-usd { font-size: 10px; color: var(--c-text-4); display: block; margin-top: 1px; }
+
+/* ─── CELDA: CANTIDAD ────────────────────────── */
+.pr-qty { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.pr-qty button {
+  width: 26px; height: 26px; border-radius: 6px;
+  border: 1px solid var(--c-border); background: var(--c-surface-2);
+  color: var(--orange); font-weight: 700; font-size: 15px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; line-height: 1;
+}
+.pr-qty button:hover { background: var(--orange-dim); border-color: var(--orange); }
+.qty-value {
+  font-weight: 700; font-size: 14px; color: var(--c-text);
+  min-width: 22px; text-align: center;
+}
+
+/* ─── CELDA: PRECIO CON DESCUENTO ────────────── */
+.pr-precio-dto { text-align: right; padding-right: 4px; }
+.pr-precio-dto .precio-dto-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 800; color: #16a34a; display: block;
+}
+.pr-precio-dto .precio-dto-val.sin-dto { color: var(--orange); }
+.pr-precio-dto .dto-badge {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  background: rgba(22,163,74,0.1); color: #16a34a;
+  border-radius: 20px; padding: 1px 6px; margin-top: 2px;
+}
+.pr-precio-dto .dto-badge.oculto { display: none; }
+
+/* ─── CELDA: SUBTOTAL ────────────────────────── */
+.pr-subtotal { text-align: right; padding-right: 4px; }
+.pr-subtotal .subtotal-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 800; color: var(--c-text); display: block;
+}
+.pr-subtotal .subtotal-val.inactive { color: var(--c-text-4); font-size: 12px; font-family: inherit; font-weight: 400; }
+
+/* ─── CELDA: AHORRO ──────────────────────────── */
+.pr-ahorro { text-align: right; }
+.pr-ahorro .ahorro-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 800; color: var(--orange); display: block;
+}
+.pr-ahorro .ahorro-val.cero { color: var(--c-text-4); font-size: 12px; font-family: inherit; font-weight: 400; }
+
+/* ─── FILA DE SERVICIO ASOCIADO ──────────────── */
+/* Aparece bajo cada producto cuando qty > 0 */
+.product-service-row {
+  display: none;
+  align-items: center; gap: 10px;
+  padding: 8px 18px 10px;
+  background: rgba(240,120,0,0.04);
+  border-bottom: 1px solid var(--c-border-s);
+  animation: slideDown 0.2s ease;
+}
+.product-service-row.visible { display: flex; }
+.product-service-row:last-child { border-bottom: none; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.product-service-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  color: var(--orange); white-space: nowrap; flex-shrink: 0;
+}
+.product-service-label svg { width: 12px; height: 12px; }
+.product-service-select {
+  flex: 1; background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 6px; padding: 6px 10px;
+  color: var(--c-text); font-size: 12px; font-family: inherit;
+  cursor: pointer; appearance: none; transition: border-color 0.2s;
+}
+.product-service-select:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-dim); }
+.product-service-select option { background: #fff; color: var(--c-text); }
+
+/* ─── SIN RESULTADOS ─────────────────────────── */
+.sin-resultados { text-align: center; padding: 60px 20px; color: var(--c-text-3); }
+.sin-resultados svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.35; }
+.sin-resultados p { font-size: 15px; margin: 0 0 20px; }
+
+/* ─── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 900px) {
+  .cat-col-headers,
+  .product-row { grid-template-columns: 1fr 80px 90px 85px; }
+  .cat-col-label:nth-child(5),
+  .cat-col-label:nth-child(6),
+  .pr-subtotal,
+  .pr-ahorro { display: none; }
+}
+
+@media (max-width: 768px) {
+  .filtros-search { margin-left: 0; width: 100%; }
+  .filtros-search input { width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .cat-col-headers,
+  .product-row { grid-template-columns: 1fr 70px 80px; }
+  .cat-col-label:nth-child(4),
+  .pr-precio-dto { display: none; }
+}
