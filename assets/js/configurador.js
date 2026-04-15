@@ -807,6 +807,11 @@ function updateCatBadge(cat) {
 // ═════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 1. Renderizar catálogo desde catalogo.js (si está disponible)
+  if (typeof window.CATALOGO !== 'undefined') {
+    renderCatalogo(window.CATALOGO);
+  }
+
   updateProgressBar();
   updateButtons();
   updateSidebar();
@@ -819,6 +824,106 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('change', updateSidebar);
   });
 });
+
+// ═════════════════════════════════════════
+// RENDER DINÁMICO DEL CATÁLOGO
+// Lee window.CATALOGO (de catalogo.js) e
+// inyecta el HTML en #catalogoProductos
+// ═════════════════════════════════════════
+
+// Configuración de categorías: orden, label, icono SVG, id de accordion
+const CAT_CONFIG = {
+  notebook:  {
+    id: 'cat-notebooks',   label: 'Notebooks',           open: true,
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
+  },
+  servidor:  {
+    id: 'cat-servidores',  label: 'Servidores',          open: false,
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="18" y2="6"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="18" x2="18" y2="18"/></svg>`,
+  },
+  impresora: {
+    id: 'cat-impresoras',  label: 'Impresoras',          open: false,
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>`,
+  },
+  networking: {
+    id: 'cat-networking',  label: 'Networking',          open: false,
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>`,
+  },
+  storage:   {
+    id: 'cat-storage',     label: 'Almacenamiento NAS',  open: false,
+    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+  },
+};
+
+const SVC_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+
+function renderCatalogo(catalogo) {
+  const container = document.getElementById('catalogoProductos');
+  if (!container) return;
+
+  // Agrupar productos por tipo
+  const grupos = {};
+  catalogo.forEach(prod => {
+    if (!grupos[prod.tipo]) grupos[prod.tipo] = [];
+    grupos[prod.tipo].push(prod);
+  });
+
+  // Renderizar en el orden definido en CAT_CONFIG
+  const html = Object.entries(CAT_CONFIG).map(([tipo, cfg]) => {
+    const productos = grupos[tipo] || [];
+    if (productos.length === 0) return '';
+
+    const itemsHtml = productos.map(prod => {
+      const opcionesHtml = prod.servicios.map(svc =>
+        `<option value="${svc.value}" data-price="${svc.price}">${svc.label} — $${svc.price.toLocaleString('es-CL')}${svc.unidad}</option>`
+      ).join('\n');
+
+      return `
+            <div class="product-item" data-marca="${prod.marca}" data-tipo="${prod.tipo}" data-name="${prod.name}" data-specs="${prod.specs}" data-price="${prod.price}">
+              <div class="product-main">
+                <div class="product-details">
+                  <div class="product-name">${prod.name}</div>
+                  <div class="product-specs">${prod.specs}</div>
+                </div>
+                <div class="product-price-tag">$${prod.price.toLocaleString('es-CL')}</div>
+                <div class="product-qty-control">
+                  <button type="button" onclick="decrementQty(event)">−</button>
+                  <span class="qty-value">0</span>
+                  <button type="button" onclick="incrementQty(event)">+</button>
+                </div>
+              </div>
+              <div class="product-service-row">
+                <label class="product-service-label">${SVC_ICON}Servicio:</label>
+                <select class="product-service-select service-check" data-name-prefix="${prod.name}" onchange="updateSidebar()">
+                  <option value="" data-price="0">Sin servicio</option>
+                  ${opcionesHtml}
+                </select>
+              </div>
+            </div>`;
+    }).join('');
+
+    const badgeId = cfg.id.replace('cat-', 'badge-');
+
+    return `
+      <div class="product-category${cfg.open ? ' open' : ''}" id="${cfg.id}" data-tipo="${tipo}">
+        <div class="category-header" onclick="toggleCategory('${cfg.id}')">
+          ${cfg.icon}
+          <h3>${cfg.label}</h3>
+          <span class="cat-badge" id="${badgeId}"></span>
+          <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="product-body">
+          <div class="product-list">
+            ${itemsHtml}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  container.innerHTML = html;
+}
+
+window.renderCatalogo = renderCatalogo;
 
 // ═════════════════════════════════════════
 // EXPONER AL SCOPE GLOBAL (requerido por
@@ -903,29 +1008,6 @@ function buildCatalogTable() {
   const catalogoDiv = document.getElementById('catalogoProductos');
   if (!catalogoDiv) return;
  
-  // Contenedor KPI encima de la tabla
-  const kpiBanner = document.createElement('div');
-  kpiBanner.className = 'catalogo-kpi-banner';
-  kpiBanner.id = 'tablaKpiBanner';
-  kpiBanner.innerHTML = `
-    <div class="kpi-item">
-      <span class="kpi-label">Unidades</span>
-      <span class="kpi-value" id="kpiUnidades">0</span>
-    </div>
-    <div class="kpi-item">
-      <span class="kpi-label">Subtotal lista</span>
-      <span class="kpi-value kpi-value--orange" id="kpiSubtotalLista">$0</span>
-    </div>
-    <div class="kpi-item">
-      <span class="kpi-label">Descuento</span>
-      <span class="kpi-value kpi-value--green" id="kpiDcto">0%</span>
-    </div>
-    <div class="kpi-item">
-      <span class="kpi-label">Ahorro total $</span>
-      <span class="kpi-value kpi-value--green" id="kpiAhorro">$0</span>
-    </div>
-  `;
-  catalogoDiv.parentNode.insertBefore(kpiBanner, catalogoDiv);
  
   // Para cada categoría definida, construir su tabla
   CATALOG_CATEGORIES.forEach((cat, catIdx) => {
@@ -1240,17 +1322,7 @@ function refreshTablePrices() {
     }
   });
  
-  // 4. Actualizar KPI banner
-  const kpiUnidades = document.getElementById('kpiUnidades');
-  const kpiSubLista = document.getElementById('kpiSubtotalLista');
-  const kpiDcto     = document.getElementById('kpiDcto');
-  const kpiAhorro   = document.getElementById('kpiAhorro');
- 
-  if (kpiUnidades) kpiUnidades.textContent = totalQty;
-  if (kpiSubLista) kpiSubLista.textContent = `$${fmt(totalListaAcum)}`;
-  if (kpiDcto)     kpiDcto.textContent     = pct > 0 ? `${pct}%` : '0%';
-  if (kpiAhorro)   kpiAhorro.textContent   = `$${fmt(totalAhorroAcum)}`;
- 
+  
   // 5. Actualizar también los precios USD
   document.querySelectorAll('.product-row').forEach(row => {
     const price = parseInt(row.dataset.price) || 0;

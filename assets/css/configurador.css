@@ -336,34 +336,6 @@ body {
 .filtros-search input::placeholder { color: var(--c-text-4); }
 
 /* ─── KPI BANNER ─────────────────────────────── */
-.catalogo-kpi-banner {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  margin-bottom: 16px;
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.kpi-item {
-  display: flex; flex-direction: column; gap: 3px;
-  padding: 14px 18px;
-  border-right: 1px solid var(--c-border-s);
-}
-.kpi-item:last-child { border-right: none; }
-.kpi-label {
-  font-size: 9px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.6px;
-  color: var(--c-text-3);
-}
-.kpi-value {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px; font-weight: 800;
-  color: var(--c-text); line-height: 1;
-}
-.kpi-value--green { color: #16a34a; }
-.kpi-value--orange { color: var(--orange); }
 
 /* ─── CATÁLOGO TABLA (generada por JS) ──────── */
 
@@ -820,7 +792,7 @@ body {
   .cat-col-label:nth-child(6),
   .pr-subtotal,
   .pr-ahorro { display: none; }
-  .catalogo-kpi-banner { grid-template-columns: repeat(2, 1fr); }
+
 }
 
 @media (max-width: 768px) {
@@ -855,6 +827,5 @@ body {
   .product-row { grid-template-columns: 1fr 70px 80px; }
   .cat-col-label:nth-child(4),
   .pr-precio-dto { display: none; }
-  .catalogo-kpi-banner { grid-template-columns: 1fr 1fr; }
-  .kpi-item { padding: 12px 12px; }
+
 }
