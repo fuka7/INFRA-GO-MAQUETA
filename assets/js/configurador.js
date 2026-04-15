@@ -764,7 +764,7 @@ function setFiltro(btn, tipo) {
     document.querySelectorAll('#filtrosTipo .chip').forEach(c => c.classList.remove('active'));
   }
   btn.classList.add('active');
-  aplicarFiltros();
+  window.aplicarFiltros();
 }
 
 function actualizarConteos() {
@@ -818,7 +818,7 @@ function resetFiltros() {
   document.querySelector('[data-filtro="tipo"][data-val="todos"]')?.classList.add('active');
   const inp = document.getElementById('searchProductos');
   if (inp) inp.value = '';
-  aplicarFiltros();
+  window.aplicarFiltros();
 }
 
 // ═════════════════════════════════════════
@@ -875,7 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Configuración de categorías: orden, label, icono SVG, id de accordion
 const CAT_CONFIG = {
   notebook:  {
-    id: 'cat-notebooks',   label: 'Notebooks',           open: true,
+    id: 'cat-notebooks',   label: 'Notebooks',           open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
   },
   servidor:  {
@@ -984,7 +984,7 @@ window.enviarCotizacion     = enviarCotizacion;
 window.updateSidebar        = updateSidebar;
 window.cerrarModal          = cerrarModal;
 window.setFiltro            = setFiltro;
-window.aplicarFiltros       = aplicarFiltros;
+// window.aplicarFiltros ya fue seteada por _patchAplicarFiltros()
 window.resetFiltros         = resetFiltros;
 window.toggleCategory       = toggleCategory;
 window.setPlazo             = setPlazo;
@@ -1071,7 +1071,7 @@ function buildCatalogTable() {
  
     // Wrapper de la tabla
     const wrap = document.createElement('div');
-    wrap.className = 'catalog-table-wrap' + (catIdx === 0 ? ' open' : '');
+    wrap.className = 'catalog-table-wrap';
     wrap.id = `tablewrap-${cat.tipo}`;
     wrap.dataset.tipo = cat.tipo;
  
@@ -1382,46 +1382,55 @@ function updateTableCatBadge(tipo) {
 }
  
 /* ─────────────────────────────────────────────
-   FILTROS: aplicar también a las filas de tabla
+   FILTROS: extender aplicarFiltros para que también
+   filtre las filas de tabla (catalog-table-wrap)
+   NOTA: se parchea DESPUÉS de que aplicarFiltros
+   ya está definida en el scope, así _original es válido.
 ───────────────────────────────────────────────*/
-const _originalAplicarFiltros = window.aplicarFiltros;
-window.aplicarFiltros = function () {
-  // Filtrar en el accordion original (para que la lógica original siga funcionando)
-  if (typeof _originalAplicarFiltros === 'function') _originalAplicarFiltros();
- 
-  // Filtrar también en las filas de tabla
-  const q = (document.getElementById('searchProductos')?.value || '').toLowerCase();
- 
-  // Leer filtro activo de marca y tipo desde los chips
-  const activeChipMarca = document.querySelector('#filtrosMarca .chip.active');
-  const activeChipTipo  = document.querySelector('#filtrosTipo .chip.active, #filtrosTipo .sidebar-menu-item.active');
-  const filtroMarca = activeChipMarca?.dataset?.val || 'todos';
-  const filtroTipo  = activeChipTipo?.dataset?.val  || 'todos';
- 
-  document.querySelectorAll('.catalog-table-wrap').forEach(wrap => {
-    const catTipo = wrap.dataset.tipo;
-    const tipoOk  = filtroTipo === 'todos' || catTipo === filtroTipo;
-    let rowsVisible = 0;
- 
-    wrap.querySelectorAll('.product-row').forEach(row => {
-      const marcaOk  = filtroMarca === 'todos' || (row.dataset.marca || '').toLowerCase().includes(filtroMarca.toLowerCase());
-      const searchOk = !q || (row.dataset.name       || '').toLowerCase().includes(q)
-                          || (row.dataset.partnumber || '').toLowerCase().includes(q)
-                          || (row.dataset.marca      || '').toLowerCase().includes(q);
- 
-      const visible = tipoOk && marcaOk && searchOk;
-      row.style.display = visible ? '' : 'none';
- 
-      // También ocultar fila de servicio si el producto no es visible
-      const svcRow = document.getElementById(`svcrow-${slugify(row.dataset.name)}`);
-      if (svcRow) svcRow.style.display = visible ? '' : 'none';
- 
-      if (visible) rowsVisible++;
+function _patchAplicarFiltros() {
+  const _originalAplicarFiltros = aplicarFiltros; // referencia local correcta
+
+  window.aplicarFiltros = function () {
+    // 1. Ejecutar el filtrado original (accordion .product-category)
+    _originalAplicarFiltros();
+
+    // 2. Filtrar también en las filas de tabla (catalog-table-wrap)
+    const q = (document.getElementById('searchProductos')?.value || '').toLowerCase();
+
+    // Usar las mismas variables de estado que usa aplicarFiltros original
+    const fMarca = filtroMarca;
+    const fTipo  = filtroTipo;
+
+    document.querySelectorAll('.catalog-table-wrap').forEach(wrap => {
+      const catTipo = wrap.dataset.tipo;
+      const tipoOk  = fTipo === 'todos' || catTipo === fTipo;
+      let rowsVisible = 0;
+
+      wrap.querySelectorAll('.product-row').forEach(row => {
+        const marcaOk  = fMarca === 'todos' || (row.dataset.marca || '').toLowerCase() === fMarca.toLowerCase();
+        const searchOk = !q || (row.dataset.name       || '').toLowerCase().includes(q)
+                            || (row.dataset.partnumber || '').toLowerCase().includes(q)
+                            || (row.dataset.marca      || '').toLowerCase().includes(q);
+
+        const visible = tipoOk && marcaOk && searchOk;
+        row.style.display = visible ? '' : 'none';
+
+        // También ocultar fila de servicio si el producto no es visible
+        const svcRow = document.getElementById(`svcrow-${slugify(row.dataset.name)}`);
+        if (svcRow) svcRow.style.display = visible ? '' : 'none';
+
+        if (visible) rowsVisible++;
+      });
+
+      wrap.style.display = rowsVisible > 0 ? '' : 'none';
     });
- 
-    wrap.style.display = rowsVisible > 0 ? '' : 'none';
-  });
-};
+  };
+
+  // Exponer la versión parcheada
+  window.aplicarFiltros = window.aplicarFiltros;
+}
+// Llamar inmediatamente (aplicarFiltros ya está definida en este scope)
+_patchAplicarFiltros();
  
 /* ─────────────────────────────────────────────
    PARCHE: refreshTablePrices cuando cambia el
