@@ -7,70 +7,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="stylesheet" href="/assets/css/tienda.css">
-  <link rel="stylesheet" href="/assets/css/footer.css">
-  <link rel="stylesheet" href="/assets/css/responsive.css">
-  <style>
-/* ── NAVBAR INLINE — prefijo igb- ── */
-.igb-top{position:fixed;top:0;left:0;right:0;z-index:1002;height:36px;background:#051237;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,0.07);}
-.igb-top span{font-family:'Barlow',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);}
-.igb-main{position:fixed;top:36px;left:0;right:0;z-index:1001;height:64px;background:#0a1628;display:flex;align-items:center;gap:24px;padding:0 48px;border-bottom:1px solid rgba(255,255,255,0.06);}
-.igb-logo{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;color:#fff;text-decoration:none;flex-shrink:0;line-height:1;}
-.igb-logo span{color:#e8920a;}
-.igb-search{flex:1;max-width:660px;display:flex;height:40px;border-radius:6px;overflow:hidden;background:#fff;}
-.igb-search-input{flex:1;border:none;outline:none;padding:0 16px;font-family:'Barlow',sans-serif;font-size:14px;color:#111;}
-.igb-search-input::placeholder{color:rgba(0,0,0,0.4);}
-.igb-search-btn{width:46px;background:#e8920a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s;}
-.igb-search-btn:hover{background:#f0a500;}
-.igb-search-btn svg{width:18px;height:18px;}
-.igb-actions{display:flex;align-items:center;gap:24px;flex-shrink:0;}
-.igb-account{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;transition:opacity .2s;}
-.igb-account:hover{opacity:.75;}
-.igb-account-text{display:flex;flex-direction:column;line-height:1.25;}
-.igb-account-text small{font-size:10px;color:rgba(255,255,255,0.5);}
-.igb-account-text strong{font-size:14px;font-weight:700;}
-.igb-cart{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;transition:opacity .2s;}
-.igb-cart:hover{opacity:.75;}
-.igb-cart strong{font-size:14px;font-weight:700;}
-.igb-cart-wrap{position:relative;display:flex;align-items:center;}
-.igb-cart-count{position:absolute;top:-7px;right:-9px;width:18px;height:18px;background:#e8920a;color:#fff;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.igb-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;background:none;border:1px solid rgba(255,255,255,0.25);border-radius:7px;cursor:pointer;padding:8px;margin-left:auto;flex-shrink:0;}
-.igb-burger span{display:block;width:100%;height:2px;background:#fff;border-radius:2px;transition:transform .25s,opacity .2s;}
-.igb-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-.igb-burger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-.igb-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-.igb-nav{position:fixed;top:100px;left:0;right:0;z-index:1000;height:44px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.1);}
-.igb-nav-inner{display:flex;align-items:center;height:100%;padding:0 48px;}
-.igb-categories{position:relative;flex-shrink:0;}
-.igb-cat-trigger{display:flex;align-items:center;gap:8px;background:none;border:1px solid rgba(0,0,0,0.15);border-radius:6px;padding:6px 14px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;color:#111;cursor:pointer;margin-right:20px;white-space:nowrap;transition:border-color .2s,background .2s;}
-.igb-cat-trigger:hover{border-color:#e8920a;background:rgba(232,146,10,0.05);}
-.igb-chevron{transition:transform .2s;}
-.igb-categories.open .igb-chevron{transform:rotate(180deg);}
-.igb-dropdown{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.12);min-width:220px;padding:6px;display:none;z-index:2000;}
-.igb-categories.open .igb-dropdown{display:block;}
-.igb-dropdown-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:7px;text-decoration:none;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;color:rgba(0,0,0,0.75);transition:background .15s,color .15s;}
-.igb-dropdown-item:hover{background:rgba(232,146,10,0.08);color:#e8920a;}
-.igb-links{display:flex;align-items:center;list-style:none;flex:1;padding-left:8px;}
-.igb-links li a{display:block;padding:0 16px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;color:rgba(0,0,0,0.65);text-decoration:none;white-space:nowrap;transition:color .2s;}
-.igb-links li a:hover,.igb-links li a.igb-active{color:#e8920a;font-weight:700;}
-.igb-cta{flex-shrink:0;display:inline-block;background:#e8920a;color:#fff !important;font-family:'Barlow',sans-serif;font-weight:700;font-size:13px;padding:8px 20px;border-radius:6px;text-decoration:none;white-space:nowrap;transition:background .2s,transform .15s;}
-.igb-cta:hover{background:#f0a500;transform:translateY(-1px);}
-.igb-overlay{display:none;position:fixed;inset:0;top:100px;background:rgba(0,0,0,0.4);z-index:1500;}
-.igb-overlay.open{display:block;}
-.igb-mobile{position:fixed;top:100px;left:0;right:0;z-index:1600;background:#fff;display:flex;flex-direction:column;padding:12px 16px 24px;gap:2px;border-bottom:2px solid rgba(232,146,10,0.3);box-shadow:0 8px 24px rgba(0,0,0,0.1);transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform .3s,opacity .25s;}
-.igb-mobile.open{transform:translateY(0);opacity:1;visibility:visible;}
-.igb-mobile a{display:block;padding:11px 16px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:600;color:rgba(0,0,0,0.7);text-decoration:none;border-radius:8px;transition:background .15s,color .15s;}
-.igb-mobile a:hover{background:rgba(0,0,0,0.05);color:#111;}
-.igb-mobile .igb-cta{margin-top:10px;text-align:center;border-radius:8px;padding:13px 20px;}
-.igb-mobile-sep{border:none;border-top:1px solid rgba(0,0,0,0.08);margin:8px 0;}
-/* Reservar espacio */
-body{padding-top:144px;}
-.hero-carousel{height:calc(100vh - 144px);}
-/* Responsive */
-@media(max-width:1024px){.igb-actions{display:none;}.igb-nav{display:none;}.igb-burger{display:flex;}.igb-main{padding:0 24px;}.igb-search{max-width:100%;}body{padding-top:100px;}.hero-carousel{height:calc(100vh - 100px);}}
-@media(max-width:768px){.igb-top{height:32px;}.igb-main{top:32px;height:56px;padding:0 20px;}.igb-nav{top:88px;}.igb-mobile{top:88px;}.igb-overlay{top:88px;}.igb-search{display:none;}body{padding-top:88px;}.hero-carousel{height:calc(100vh - 88px);}}
-</style>
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/navbar.css">
+<link rel="stylesheet" href="/assets/css/tienda.css">
+<link rel="stylesheet" href="/assets/css/footer.css">
+<link rel="stylesheet" href="/assets/css/responsive.css">
 </head>
 <body>
 <!-- ════════════════ NAVBAR INLINE ════════════════ -->
@@ -1025,10 +966,6 @@ window.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 
-</div><!-- /.ig-footer-root -->
-<!-- ════════════════ FIN FOOTER ════════════════ -->
-
-<!-- includes.js desactivado: navbar y footer ahora son inline -->
-
+</div>
 </body>
 </html>
