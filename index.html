@@ -7,1004 +7,597 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/tienda.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
 <link rel="stylesheet" href="/assets/css/navbar.css">
 <link rel="stylesheet" href="/assets/css/footer.css">
+
+<link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero" id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
+<!-- ══════════════════════════════════════
+     HERO — CARRUSEL 3 SLIDES
+══════════════════════════════════════ -->
+<section class="hero-carousel" id="hero">
 
-  <div class="hero-content">
-    <h1 class="hero-title">
-      Cotiza, compara y compra<br>tecnología empresarial<br><span style="color:var(--gold);">en minutos</span>
-    </h1>
+  <!-- Barra de progreso auto-avance -->
+  <div class="carousel-progress" id="carouselProgress"></div>
 
-    <p class="hero-desc">
-      Plataforma B2B para empresas que necesitan renovar infraestructura TI sin intermediarios ni demoras.
-    </p>
+  <!-- Slides -->
+  <div class="hero-slides" id="heroSlides">
 
-    <ul class="hero-checklist">
-      <li>Integración con mayoristas — precios de distribuidor</li>
-      <li>Cotización exportable en PDF lista para gerencias</li>
-      <li>Respuesta inmediata — descuento por volumen automático</li>
-    </ul>
+    <!-- ══════════════════════════════
+         SLIDE 1: Plataforma B2B
+    ══════════════════════════════ -->
+    <div class="hero-slide slide-1">
+      <div class="slide-grid"></div>
+      <div class="slide-glow"></div>
 
-    <div class="hero-actions">
-      <a href="configurador.html" class="btn-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        Generar cotización ahora
-      </a>
-      <a href="#demo" class="btn-outline">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
-        Ver demo en 60 segundos
-      </a>
+      <div class="slide-inner">
+        <div class="slide-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Plataforma B2B · InfraGo
+        </div>
+        <h1 class="slide-title">
+          Cotiza, compara y compra<br>tecnología empresarial<br><em>en minutos.</em>
+        </h1>
+        <p class="slide-desc">
+          Plataforma B2B para empresas que necesitan renovar infraestructura TI sin intermediarios ni demoras. Precios de distribuidor, descuento por volumen automático y propuesta PDF lista para gerencias.
+        </p>
+        <ul class="slide-checklist">
+          <li>Integración con mayoristas — precios reales de distribuidor</li>
+          <li>Cotización exportable en PDF lista para aprobar</li>
+          <li>Respuesta inmediata — descuento automático por volumen</li>
+        </ul>
+        <a href="configurador.html" class="slide-cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Generar cotización ahora
+        </a>
+      </div>
+
+      <div class="slide-visual">
+        <div class="slide-stat-cluster">
+          <div class="stat-card">
+            <div class="stat-card-num">5 min</div>
+            <div class="stat-card-label">Tiempo promedio de cotización</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">5%</div>
+            <div class="stat-card-label">Descuento máximo por volumen</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">+90</div>
+            <div class="stat-card-label">Productos en catálogo</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="hero-kpis">
-      <div class="hero-kpi">
-        <span class="kpi-num">90</span>
-        <span class="kpi-label">PRODUCTOS</span>
+    <!-- ══════════════════════════════
+         SLIDE 2: Tienda / catálogo
+    ══════════════════════════════ -->
+    <div class="hero-slide slide-2">
+      <div class="slide-grid"></div>
+      <div class="slide-glow"></div>
+
+      <div class="slide-inner">
+        <div class="slide-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Tienda · Tecnología empresarial
+        </div>
+        <h1 class="slide-title">
+          El mejor hardware<br>empresarial,<br><em>sin inversión inicial.</em>
+        </h1>
+        <p class="slide-desc">
+          Más de 80 modelos de notebooks, servidores, impresoras y networking disponibles en arriendo mensual. HP, Dell, Lenovo, Apple, Cisco, Fortinet — marcas líderes con soporte técnico incluido y entrega en menos de 48 horas en Santiago.
+        </p>
+        <ul class="slide-checklist">
+          <li>Garantía de fábrica incluida en todos los equipos</li>
+          <li>Reemplazo garantizado ante fallas — sin tiempo de espera</li>
+          <li>Soporte técnico en terreno 24/7 sin costo adicional</li>
+        </ul>
+        <a href="tienda.html" class="slide-cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Explorar catálogo completo
+        </a>
       </div>
-      <div class="hero-kpi-divider"></div>
-      <div class="hero-kpi">
-        <span class="kpi-num">5%</span>
-        <span class="kpi-label">DTO. MÁXIMO</span>
+
+      <div class="slide-visual">
+        <div class="slide-stat-cluster">
+          <div class="stat-card">
+            <div class="stat-card-num">+80</div>
+            <div class="stat-card-label">Modelos disponibles</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">48h</div>
+            <div class="stat-card-label">Entrega en Santiago</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">6</div>
+            <div class="stat-card-label">Marcas partner certificadas</div>
+          </div>
+        </div>
       </div>
-      <div class="hero-kpi-divider"></div>
-      <div class="hero-kpi">
-        <span class="kpi-num">60</span>
-        <span class="kpi-label">CUOTAS MÁX</span>
+    </div>
+
+    <!-- ══════════════════════════════
+         SLIDE 3: Financiamiento
+    ══════════════════════════════ -->
+    <div class="hero-slide slide-3">
+      <div class="slide-grid"></div>
+      <div class="slide-glow"></div>
+
+      <div class="slide-inner">
+        <div class="slide-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Financiamiento Corporativo
+        </div>
+        <h1 class="slide-title">
+          Renueva tu TI hoy.<br>Págalo cómodo<br><em>hasta en 60 cuotas.</em>
+        </h1>
+        <p class="slide-desc">
+          Tu empresa no debería esperar para tener la tecnología que necesita. Con InfraGo accedes a financiamiento corporativo con los mejores bancos del país — aprobación rápida, sin papeleo extra y con cuotas que se ajustan a tu presupuesto.
+        </p>
+        <ul class="slide-checklist">
+          <li>Santander, BCI, Banco de Chile y HP Financial</li>
+          <li>Aprobación en 24h — sin garantías adicionales</li>
+          <li>Tu gerencia aprueba hoy, tu equipo trabaja mañana</li>
+        </ul>
+        <a href="configurador.html" class="slide-cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Simular mi financiamiento
+        </a>
       </div>
-      <div class="hero-kpi-divider"></div>
-      <div class="hero-kpi">
-        <span class="kpi-num">6</span>
-        <span class="kpi-label">MARCAS PARTNER</span>
+
+      <div class="slide-visual">
+        <div class="slide-stat-cluster">
+          <div class="stat-card">
+            <div class="stat-card-num">60</div>
+            <div class="stat-card-label">Cuotas máximas disponibles</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">4</div>
+            <div class="stat-card-label">Bancos socios</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">24h</div>
+            <div class="stat-card-label">Tiempo de aprobación</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /hero-slides -->
+
+  <!-- Controles — solo dots -->
+  <div class="carousel-controls">
+    <div class="carousel-dots">
+      <button class="carousel-dot active" data-idx="0" aria-label="Slide 1"></button>
+      <button class="carousel-dot" data-idx="1" aria-label="Slide 2"></button>
+      <button class="carousel-dot" data-idx="2" aria-label="Slide 3"></button>
+    </div>
+  </div>
+
+  <!-- Strip de marcas — slider automático infinito -->
+  <div class="hero-brands-strip">
+    <div class="brands-track-wrapper">
+      <div class="brands-scroll-track">
+      <img src="/img/HP_logo_630x630.png" alt="HP" class="brand-logo-strip">
+      <img src="/img/images-removebg-preview.png" alt="Apple" class="brand-logo-strip">
+      <img src="/img/lenovo-white-logo-png-image-701751694772186qprjoasoxm.png" alt="Lenovo" class="brand-logo-strip">
+      <img src="/img/Dell-Logo.png" alt="Dell" class="brand-logo-strip">
+      <img src="/img/asus_logo_icon_168565.png" alt="ASUS" class="brand-logo-strip">
+      <img src="/img/logo-Brother.png" alt="Brother" class="brand-logo-strip">
+      <img src="/img/Bitdefender_logo.svg.png" alt="Bitdefender" class="brand-logo-strip">
+      <img src="/img/Microsoft_logo_(2012).svg.png" alt="Microsoft" class="brand-logo-strip">
+      </div>
+      <div class="brands-scroll-track" aria-hidden="true">
+      <img src="/img/HP_logo_630x630.png" alt="HP" class="brand-logo-strip">
+      <img src="/img/images-removebg-preview.png" alt="Apple" class="brand-logo-strip">
+      <img src="/img/lenovo-white-logo-png-image-701751694772186qprjoasoxm.png" alt="Lenovo" class="brand-logo-strip">
+      <img src="/img/Dell-Logo.png" alt="Dell" class="brand-logo-strip">
+      <img src="/img/asus_logo_icon_168565.png" alt="ASUS" class="brand-logo-strip">
+      <img src="/img/logo-Brother.png" alt="Brother" class="brand-logo-strip">
+      <img src="/img/Bitdefender_logo.svg.png" alt="Bitdefender" class="brand-logo-strip">
+      <img src="/img/Microsoft_logo_(2012).svg.png" alt="Microsoft" class="brand-logo-strip">
       </div>
     </div>
   </div>
 
-  <!-- Visual flotante: servidor, laptop, impresora -->
-  <div class="hero-visual">
-    <div class="hero-devices">
-      <!-- Servidor rack (centro) -->
-      <div class="device-server">
-        <div class="server-rack">
-          <div class="server-top-glow"></div>
-          <div class="rack-unit ru-highlight">
-            <div class="ru-led active"></div>
-            <div class="ru-bars"><span></span><span></span><span></span><span></span></div>
-            <div class="ru-label">STORAGE</div>
-          </div>
-          <div class="rack-unit">
-            <div class="ru-led active"></div>
-            <div class="ru-bars"><span></span><span></span><span></span><span></span></div>
-            <div class="ru-label">NET-01</div>
-          </div>
-          <div class="rack-unit">
-            <div class="ru-led active"></div>
-            <div class="ru-bars"><span></span><span></span><span></span></div>
-            <div class="ru-label">SRV-02</div>
-          </div>
-          <div class="rack-unit ru-highlight">
-            <div class="ru-led active"></div>
-            <div class="ru-bars"><span></span><span></span><span></span><span></span><span></span></div>
-            <div class="ru-label">CORE</div>
-          </div>
-          <div class="rack-unit">
-            <div class="ru-led"></div>
-            <div class="ru-bars"><span></span><span></span></div>
-            <div class="ru-label">BKUP</div>
-          </div>
-          <div class="rack-unit ru-highlight">
-            <div class="ru-led active"></div>
-            <div class="ru-bars"><span></span><span></span><span></span><span></span></div>
-            <div class="ru-label">FIREWALL</div>
-          </div>
-          <div class="rack-cables">
-            <div class="cable c1"></div>
-            <div class="cable c2"></div>
-            <div class="cable c3"></div>
-          </div>
-        </div>
-      </div>
-      <!-- Laptop (frente-izquierda) -->
-      <div class="device-laptop">
-        <div class="laptop-screen">
-          <div class="laptop-screen-inner">
-            <div class="ls-topbar">
-              <div class="ls-dot r"></div><div class="ls-dot y"></div><div class="ls-dot g"></div>
-            </div>
-            <div class="ls-map"></div>
-            <div class="ls-bars">
-              <div class="ls-bar" style="width:60%;height:4px;background:rgba(59,130,246,0.6);border-radius:2px;margin-bottom:4px;"></div>
-              <div class="ls-bar" style="width:40%;height:4px;background:rgba(240,165,0,0.5);border-radius:2px;margin-bottom:4px;"></div>
-              <div class="ls-bar" style="width:80%;height:4px;background:rgba(59,130,246,0.4);border-radius:2px;"></div>
-            </div>
-          </div>
-        </div>
-        <div class="laptop-base"></div>
-      </div>
-      <!-- Monitor (frente-derecha) -->
-      <div class="device-monitor">
-        <div class="monitor-screen">
-          <div class="monitor-inner">
-            <div class="mi-header">DASHBOARD</div>
-            <div class="mi-globe"></div>
-            <div class="mi-stats">
-              <div class="mi-stat"></div>
-              <div class="mi-stat"></div>
-              <div class="mi-stat"></div>
-            </div>
-          </div>
-        </div>
-        <div class="monitor-stand"></div>
-        <div class="monitor-foot"></div>
-      </div>
-      <!-- Impresora (derecha) -->
-      <div class="device-printer">
-        <div class="printer-body">
-          <div class="printer-top">
-            <div class="printer-panel">
-              <div class="pp-circle"></div>
-              <div class="pp-lines">
-                <div></div><div></div>
-              </div>
-            </div>
-          </div>
-          <div class="printer-tray"></div>
-          <div class="printer-slot"></div>
-        </div>
-      </div>
-      <!-- Plataforma reflectante -->
-      <div class="devices-platform"></div>
-      <!-- Glow background -->
-      <div class="devices-glow"></div>
-    </div>
-  </div>
+</section><!-- /hero-carousel -->
 
-  <!-- Barra de marcas y certificaciones (SLIDER AUTOMÁTICO) -->
-  <div class="hero-brands-bar">
-    <div class="brands-slider-container">
-      <div class="brands-logos" id="brandsLogosSlider">
-        <!-- Primer set de logos -->
-        <!-- HP -->
-        <div class="brand-item">
-          <img src="/img/HP_logo_630x630.png" alt="HP" class="brand-logo">
-        </div>
-        <!-- Apple -->
-        <div class="brand-item">
-          <img src="/img/images-removebg-preview.png" alt="Apple" class="brand-logo">
-        </div>
-        <!-- Lenovo -->
-        <div class="brand-item">
-          <img src="/img/lenovo-white-logo-png-image-701751694772186qprjoasoxm.png" alt="Lenovo" class="brand-logo">
-        </div>
-        <!-- Dell -->
-        <div class="brand-item">
-          <img src="/img/Dell-Logo.png" alt="Dell" class="brand-logo">
-        </div>
-        <!-- ASUS -->
-        <div class="brand-item">
-          <img src="/img/asus_logo_icon_168565.png" alt="ASUS" class="brand-logo">
-        </div>
-        <!-- Brother -->
-        <div class="brand-item">
-          <img src="/img/logo-Brother.png" alt="Brother" class="brand-logo">
-        </div>
-        <!-- Bitdefender -->
-        <div class="brand-item">
-          <img src="/img/Bitdefender_logo.svg.png" alt="Bitdefender" class="brand-logo">
-        </div>
-        <!-- Microsoft -->
-        <div class="brand-item">
-          <img src="/img/Microsoft_logo_(2012).svg.png" alt="Microsoft" class="brand-logo">
-        </div>
+<div class="divider-line"></div>
 
-        <!-- Segundo set duplicado para loop continuo -->
-        <!-- HP -->
-        <div class="brand-item">
-          <img src="/img/HP_logo_630x630.png" alt="HP" class="brand-logo">
-        </div>
-        <!-- Apple -->
-        <div class="brand-item">
-          <img src="/img/images-removebg-preview.png" alt="Apple" class="brand-logo">
-        </div>
-        <!-- Lenovo -->
-        <div class="brand-item">
-          <img src="/img/lenovo-white-logo-png-image-701751694772186qprjoasoxm.png" alt="Lenovo" class="brand-logo">
-        </div>
-        <!-- Dell -->
-        <div class="brand-item">
-          <img src="/img/Dell-Logo.png" alt="Dell" class="brand-logo">
-        </div>
-        <!-- ASUS -->
-        <div class="brand-item">
-          <img src="/img/asus_logo_icon_168565.png" alt="ASUS" class="brand-logo">
-        </div>
-        <!-- Brother -->
-        <div class="brand-item">
-          <img src="/img/logo-Brother.png" alt="Brother" class="brand-logo">
-        </div>
-        <!-- Bitdefender -->
-        <div class="brand-item">
-          <img src="/img/Bitdefender_logo.svg.png" alt="Bitdefender" class="brand-logo">
-        </div>
-        <!-- Microsoft -->
-        <div class="brand-item">
-          <img src="/img/Microsoft_logo_(2012).svg.png" alt="Microsoft" class="brand-logo">
-        </div>
+<!-- ══════════════════════════════════════
+     POR QUÉ INFRAGO — 6 cards
+══════════════════════════════════════ -->
+<section class="why-section-new" id="por-que">
+  <p class="section-eyebrow">Por qué InfraGo</p>
+  <h2 class="section-heading">Todo para comprar TI<br>sin fricción</h2>
+  <p class="section-sub">Para gerentes de TI, compras y finanzas que necesitan resultados — no procesos.</p>
+
+  <div class="why-grid">
+
+    <div class="why-card-new">
+      <div class="why-icon-new" style="background:linear-gradient(135deg,rgba(37,99,196,0.12),rgba(37,99,196,0.06)); color:#2563c4;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="why-title-new">Cotiza en minutos</div>
+      <p class="why-desc-new">Lo que tardaba 3 días ahora toma menos de 5 minutos. Configura, exporta y presenta.</p>
+      <div class="why-stat-new">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        70% menos tiempo de compra
       </div>
     </div>
-    <div class="brands-separator"></div>
-    <div class="brands-certs">
-      <div class="cert-label">Modelo Operativo Certificado</div>
-      <div class="cert-badges">
-        <div class="cert-badge cert-itil">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          ITIL4
-        </div>
-        <div class="cert-badge cert-hipaa">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          HIPAA<br><span>COMPLIANT</span>
-        </div>
+
+    <div class="why-card-new">
+      <div class="why-icon-new" style="background:linear-gradient(135deg,rgba(22,163,74,0.12),rgba(22,163,74,0.06)); color:#16a34a;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="why-title-new">Precios de distribuidor</div>
+      <p class="why-desc-new">Descuento por volumen consolidado, hasta 5% sobre precio de lista. Automático.</p>
+      <div class="why-stat-new">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        Hasta 5% descuento volumen
       </div>
     </div>
+
+    <div class="why-card-new">
+      <div class="why-icon-new" style="background:linear-gradient(135deg,rgba(232,146,10,0.12),rgba(232,146,10,0.06)); color:var(--gold);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="why-title-new">Propuesta ejecutiva</div>
+      <p class="why-desc-new">PDF listo para aprobar en gerencias. Con detalle técnico, financiero y marcas.</p>
+      <div class="why-stat-new">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        1 clic — PDF instantáneo
+      </div>
+    </div>
+
+    <div class="why-card-new">
+      <div class="why-icon-new" style="background:linear-gradient(135deg,rgba(8,145,178,0.12),rgba(8,145,178,0.06)); color:#0891b2;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <div class="why-title-new">Financiamiento integrado</div>
+      <p class="why-desc-new">Hasta 60 cuotas. Santander, BCI, HP Financial. Sin papeleo adicional.</p>
+      <div class="why-stat-new">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        CAE 10,69% — hasta 60 cuotas
+      </div>
+    </div>
+
+    <div class="why-card-new">
+      <div class="why-icon-new" style="background:linear-gradient(135deg,rgba(147,51,234,0.12),rgba(147,51,234,0.06)); color:#9333ea;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="why-title-new">PM de marca directo</div>
+      <p class="why-desc-new">HP, Microsoft, Lenovo. Acceso directo a especialistas de marca en 1 clic.</p>
+      <div class="why-stat-new">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        6 especialistas disponibles
+      </div>
+    </div>
+
+    <div class="why-card-new">
+      <div class="why-icon-new" style="background:linear-gradient(135deg,rgba(13,148,136,0.12),rgba(13,148,136,0.06)); color:#0d9488;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="why-title-new">Precios del día</div>
+      <p class="why-desc-new">Dólar TIC actualizado diariamente desde el Banco Central. Precio real, siempre.</p>
+      <div class="why-stat-new">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+        TC en tiempo real
+      </div>
+    </div>
+
   </div>
 </section>
 
 <div class="divider-line"></div>
 
-<!-- POR QUÉ INFRAGO -->
-<section class="why-section" id="como-funciona">
-  <div class="section-tag" style="text-align:center;">Por qué InfraGo</div>
-  <h2 class="section-title" style="text-align:center;">Todo para comprar TI sin fricción</h2>
-  <p class="section-sub" style="text-align:center;margin:0 auto 48px;">Para gerentes de TI, compras y finanzas que necesitan resultados, no procesos.</p>
+<!-- ══════════════════════════════════════
+     CÓMO FUNCIONA — 4 pasos
+══════════════════════════════════════ -->
+<section class="how-section" id="como-funciona">
+  <p class="section-eyebrow">Proceso simple</p>
+  <h2 class="section-heading">Cómo funciona</h2>
+  <p class="section-sub">Cuatro pasos para tener tu infraestructura TI lista y financiada.</p>
 
-  <div class="why-carousel-wrapper">
-    <button class="why-arrow why-arrow--prev" id="whyPrev" aria-label="Anterior">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-
-    <div class="why-track-outer">
-      <div class="why-track" id="whyTrack">
-
-        <!-- Card 1 -->
-        <div class="why-card">
-          <div class="why-card-icon" style="background:linear-gradient(135deg,#1a3a6b,#2563c4);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="why-card-title">Cotiza en minutos</div>
-          <p class="why-card-desc">Lo que tardaba 3 días ahora toma menos de 5 minutos.</p>
-          <div class="why-card-stat">↑ 70% menos tiempo de compra</div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="why-card">
-          <div class="why-card-icon" style="background:linear-gradient(135deg,#1a6b3a,#16a34a);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          </div>
-          <div class="why-card-title">Precios de distribuidor</div>
-          <p class="why-card-desc">Descuento por volumen consolidado. Hasta 5% sobre precio de lista.</p>
-          <div class="why-card-stat">↑ Hasta 5% descuento volumen</div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="why-card">
-          <div class="why-card-icon" style="background:linear-gradient(135deg,#6b3a1a,#e8920a);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          </div>
-          <div class="why-card-title">Propuesta ejecutiva</div>
-          <p class="why-card-desc">PDF listo para aprobar en gerencias. Con detalle técnico y financiero.</p>
-          <div class="why-card-stat">↑ 1 clic — PDF instantáneo</div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="why-card">
-          <div class="why-card-icon" style="background:linear-gradient(135deg,#1a5c6b,#0891b2);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          </div>
-          <div class="why-card-title">Financiamiento integrado</div>
-          <p class="why-card-desc">Hasta 60 cuotas. Santander, BCI, HP Financial. Sin papeleo extra.</p>
-          <div class="why-card-stat">↑ CAE 10,69% — hasta 60 cuotas</div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="why-card">
-          <div class="why-card-icon" style="background:linear-gradient(135deg,#5c1a6b,#9333ea);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div class="why-card-title">PM de marca directo</div>
-          <p class="why-card-desc">HP, Microsoft, Lenovo. Agenda en 1 clic vía HP Poly o WhatsApp.</p>
-          <div class="why-card-stat">↑ 6 especialistas disponibles</div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="why-card">
-          <div class="why-card-icon" style="background:linear-gradient(135deg,#1a6b5c,#0d9488);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
-          <div class="why-card-title">Precios del día</div>
-          <p class="why-card-desc">Dólar TIC actualizado diariamente. Precio real de mercado, siempre.</p>
-          <div class="why-card-stat">↑ TC en tiempo real</div>
-        </div>
-
-      </div>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <div class="how-step-title">Selecciona equipos</div>
+      <p class="how-step-desc">Elige productos del catálogo con descuentos por volumen automáticos.</p>
     </div>
-
-    <button class="why-arrow why-arrow--next" id="whyNext" aria-label="Siguiente">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <div class="how-step-title">Agrega servicios</div>
+      <p class="how-step-desc">Instalación, soporte mensual, garantía extendida — a medida de tu empresa.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <div class="how-step-title">Simula el financiamiento</div>
+      <p class="how-step-desc">Escoge plazo y banco. La cuota mensual se calcula en tiempo real.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">4</div>
+      <div class="how-step-title">Recibe la cotización</div>
+      <p class="how-step-desc">PDF ejecutivo en tu correo. Listo para presentar a gerencia o finanzas.</p>
+    </div>
   </div>
 </section>
 
-<script>
-/* ── CARRUSEL POR QUÉ INFRAGO ── */
-(function() {
-  const track = document.getElementById('whyTrack');
-  const prev  = document.getElementById('whyPrev');
-  const next  = document.getElementById('whyNext');
-  if (!track || !prev || !next) return;
+<div class="divider-line" style="border-color:rgba(255,255,255,0.06);"></div>
 
-  let current = 0;
+<!-- ══════════════════════════════════════
+     CATEGORÍAS DE PRODUCTO
+══════════════════════════════════════ -->
+<section class="cats-section" id="catalogo">
+  <p class="section-eyebrow">Catálogo</p>
+  <h2 class="section-heading">Tecnología empresarial<br>lista para operar</h2>
+  <p class="section-sub">+80 modelos disponibles en arriendo mensual. Sin inversión inicial, soporte incluido.</p>
 
-  function getVisible() {
-    const w = window.innerWidth;
-    if (w >= 1200) return 5;
-    if (w >= 900)  return 3;
-    if (w >= 600)  return 2;
-    return 1;
-  }
+  <div class="cats-grid">
 
-  function getTotal() {
-    return track.querySelectorAll('.why-card').length;
-  }
-
-  function update() {
-    const visible = getVisible();
-    const total   = getTotal();
-    const max     = total - visible;
-    current = Math.max(0, Math.min(current, max));
-    const cardW = track.querySelector('.why-card').offsetWidth + 24; // gap
-    track.style.transform = `translateX(-${current * cardW}px)`;
-    prev.disabled = current === 0;
-    next.disabled = current >= max;
-  }
-
-  prev.addEventListener('click', () => { current--; update(); });
-  next.addEventListener('click', () => { current++; update(); });
-  window.addEventListener('resize', () => update());
-  update();
-})();
-</script>
-
-<div class="divider-line"></div>
-
-<!-- PREVIEW TIENDA -->
-<section class="tienda-preview-section" id="tienda">
-  <div class="tp-section-header">
-    <div>
-      <div class="section-tag">Tienda</div>
-      <h2 class="section-title">Equipos disponibles</h2>
-      <p class="section-sub">Hardware de primera línea en modalidad arriendo. Sin inversión inicial, soporte incluido.</p>
-    </div>
-    <div class="tp-header-stats">
-      <div class="tp-hstat">
-        <span class="tp-hstat-num">+80</span>
-        <span class="tp-hstat-label">Modelos</span>
+    <!-- Notebooks -->
+    <div class="cat-card">
+      <div class="cat-card-accent" style="background: linear-gradient(180deg,#2563c4,#1a4fa0);"></div>
+      <div class="cat-icon-wrap" style="background:rgba(37,99,196,0.1);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2563c4" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
       </div>
-      <div class="tp-hstat-divider"></div>
-      <div class="tp-hstat">
-        <span class="tp-hstat-num">48h</span>
-        <span class="tp-hstat-label">Entrega</span>
-      </div>
-      <div class="tp-hstat-divider"></div>
-      <div class="tp-hstat">
-        <span class="tp-hstat-num">0</span>
-        <span class="tp-hstat-label">Inversión inicial</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="tienda-preview-grid">
-
-    <!-- Producto 1 — HP EliteBook -->
-    <div class="tp-card tp-card--featured">
-      <div class="tp-card-glow"></div>
-      <div class="tp-badge">
-        <svg width="9" height="9" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.5 4.5H12L8.25 7.25 9.75 12 6 9.25 2.25 12l1.5-4.75L0 4.5h4.5z"/></svg>
-        Más vendido
-      </div>
-      <div class="tp-img-box">
-        <div class="tp-img-glow tp-img-glow--blue"></div>
-        <!-- Notebook detallado -->
-        <svg viewBox="0 0 120 88" fill="none" xmlns="http://www.w3.org/2000/svg" class="tp-device-svg">
-          <!-- Pantalla -->
-          <rect x="10" y="4" width="100" height="64" rx="4" fill="#0a1628" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-          <rect x="16" y="10" width="88" height="52" rx="2" fill="rgba(37,99,196,0.12)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
-          <!-- Contenido pantalla -->
-          <rect x="22" y="18" width="40" height="3" rx="1.5" fill="rgba(255,255,255,0.3)"/>
-          <rect x="22" y="25" width="56" height="2" rx="1" fill="rgba(255,255,255,0.12)"/>
-          <rect x="22" y="30" width="48" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
-          <rect x="22" y="35" width="52" height="2" rx="1" fill="rgba(255,255,255,0.10)"/>
-          <!-- Gráfica en pantalla -->
-          <polyline points="70,52 78,42 86,46 94,36 102,40" stroke="rgba(59,130,246,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <polyline points="70,52 78,48 86,50 94,44 102,47" stroke="rgba(240,165,0,0.4)" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- Cámara -->
-          <circle cx="60" cy="7" r="1.5" fill="rgba(255,255,255,0.2)"/>
-          <!-- Base notebook -->
-          <path d="M6 68 L4 76 L116 76 L114 68 Z" fill="#0c1a30" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-          <!-- Teclado -->
-          <rect x="12" y="70" width="96" height="4" rx="1" fill="rgba(255,255,255,0.04)"/>
-          <rect x="42" y="72" width="36" height="1.5" rx="0.75" fill="rgba(255,255,255,0.08)"/>
-          <!-- Indicador LED -->
-          <circle cx="112" cy="72" r="1" fill="rgba(34,197,94,0.8)"/>
-          <!-- Bisagra -->
-          <rect x="4" y="75" width="112" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
-          <rect x="0" y="77" width="120" height="3" rx="1.5" fill="#080f1e" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        </svg>
-      </div>
-      <div class="tp-card-body">
-        <div class="tp-brand-row">
-          <span class="tp-brand">HP</span>
-          <span class="tp-category-tag">Notebook</span>
+      <div class="cat-body">
+        <span class="cat-tag" style="background:rgba(37,99,196,0.1);color:#2563c4;">Notebooks</span>
+        <div class="cat-title">Equipos portátiles empresariales</div>
+        <p class="cat-desc">Productividad a workstation. HP, Dell, Lenovo, ASUS y Apple — desde pesos o en cuotas.</p>
+        <div class="cat-chips">
+          <span class="cat-chip">Productividad</span>
+          <span class="cat-chip">Workstation</span>
+          <span class="cat-chip">Gaming Corp</span>
         </div>
-        <div class="tp-name">EliteBook 640 G10</div>
-        <div class="tp-specs-list">
-          <span class="tp-spec-chip">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
-            Intel Core i5
-          </span>
-          <span class="tp-spec-chip">16GB RAM</span>
-          <span class="tp-spec-chip">512GB SSD</span>
-        </div>
-      </div>
-      <div class="tp-price-row">
-        <div class="tp-price">
-          <span class="tp-price-from">Desde</span>
-          <span class="tp-price-val">$18.750</span>
-          <span class="tp-price-period">/mes</span>
-        </div>
-        <a href="tienda.html" class="tp-btn">
-          Ver detalle
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </a>
       </div>
     </div>
 
-    <!-- Producto 2 — Dell Inspiron -->
-    <div class="tp-card">
-      <div class="tp-card-glow"></div>
-      <div class="tp-img-box">
-        <div class="tp-img-glow tp-img-glow--blue"></div>
-        <svg viewBox="0 0 120 88" fill="none" xmlns="http://www.w3.org/2000/svg" class="tp-device-svg">
-          <rect x="10" y="4" width="100" height="64" rx="4" fill="#0a1628" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-          <rect x="16" y="10" width="88" height="52" rx="2" fill="rgba(37,99,196,0.08)" stroke="rgba(59,130,246,0.18)" stroke-width="1"/>
-          <!-- UI elements in screen -->
-          <rect x="22" y="16" width="32" height="12" rx="2" fill="rgba(37,99,196,0.25)" stroke="rgba(59,130,246,0.3)" stroke-width="0.75"/>
-          <rect x="22" y="32" width="22" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
-          <rect x="22" y="37" width="32" height="1.5" rx="0.75" fill="rgba(255,255,255,0.08)"/>
-          <rect x="22" y="41" width="28" height="1.5" rx="0.75" fill="rgba(255,255,255,0.08)"/>
-          <!-- Chart area -->
-          <rect x="68" y="16" width="34" height="22" rx="2" fill="rgba(240,165,0,0.06)" stroke="rgba(240,165,0,0.15)" stroke-width="0.75"/>
-          <polyline points="72,34 78,28 84,30 90,22 96,26" stroke="rgba(240,165,0,0.55)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <!-- Bottom bar chart -->
-          <rect x="22" y="50" width="8" height="10" rx="1" fill="rgba(37,99,196,0.4)"/>
-          <rect x="33" y="46" width="8" height="14" rx="1" fill="rgba(37,99,196,0.5)"/>
-          <rect x="44" y="48" width="8" height="12" rx="1" fill="rgba(37,99,196,0.35)"/>
-          <rect x="55" y="44" width="8" height="16" rx="1" fill="rgba(37,99,196,0.6)"/>
-          <circle cx="60" cy="7" r="1.5" fill="rgba(255,255,255,0.15)"/>
-          <path d="M6 68 L4 76 L116 76 L114 68 Z" fill="#0c1a30" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <rect x="12" y="70" width="96" height="4" rx="1" fill="rgba(255,255,255,0.03)"/>
-          <rect x="42" y="72" width="36" height="1.5" rx="0.75" fill="rgba(255,255,255,0.07)"/>
-          <circle cx="112" cy="72" r="1" fill="rgba(59,130,246,0.7)"/>
-          <rect x="0" y="77" width="120" height="3" rx="1.5" fill="#080f1e" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-        </svg>
+    <!-- Servidores -->
+    <div class="cat-card">
+      <div class="cat-card-accent" style="background: linear-gradient(180deg,#16a34a,#14532d);"></div>
+      <div class="cat-icon-wrap" style="background:rgba(22,163,74,0.1);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.8"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
       </div>
-      <div class="tp-card-body">
-        <div class="tp-brand-row">
-          <span class="tp-brand">Dell</span>
-          <span class="tp-category-tag">Notebook</span>
+      <div class="cat-body">
+        <span class="cat-tag" style="background:rgba(22,163,74,0.1);color:#16a34a;">Servidores</span>
+        <div class="cat-title">Infraestructura de misión crítica</div>
+        <p class="cat-desc">Rack y torre para entornos exigentes. Dell PowerEdge y HPE ProLiant con soporte 24/7.</p>
+        <div class="cat-chips">
+          <span class="cat-chip">Rack 1U / 2U</span>
+          <span class="cat-chip">Tower</span>
+          <span class="cat-chip">NAS / Storage</span>
         </div>
-        <div class="tp-name">Inspiron 15 3530</div>
-        <div class="tp-specs-list">
-          <span class="tp-spec-chip">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
-            Intel Core i7
-          </span>
-          <span class="tp-spec-chip">16GB RAM</span>
-          <span class="tp-spec-chip">512GB SSD</span>
-        </div>
-      </div>
-      <div class="tp-price-row">
-        <div class="tp-price">
-          <span class="tp-price-from">Desde</span>
-          <span class="tp-price-val">$21.667</span>
-          <span class="tp-price-period">/mes</span>
-        </div>
-        <a href="tienda.html" class="tp-btn">
-          Ver detalle
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </a>
       </div>
     </div>
 
-    <!-- Producto 3 — Dell PowerEdge (Servidor) -->
-    <div class="tp-card">
-      <div class="tp-card-glow"></div>
-      <div class="tp-img-box tp-img-box--server">
-        <div class="tp-img-glow tp-img-glow--green"></div>
-        <svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg" class="tp-device-svg">
-          <!-- Rack Unit 1 -->
-          <rect x="4" y="6" width="112" height="20" rx="3" fill="#0a1628" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-          <circle cx="14" cy="16" r="3" fill="rgba(34,197,94,0.85)"/>
-          <filter id="led-glow"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <circle cx="14" cy="16" r="2" fill="rgba(34,197,94,1)" filter="url(#led-glow)"/>
-          <rect x="24" y="12" width="5" height="8" rx="1" fill="rgba(37,99,196,0.4)" stroke="rgba(59,130,246,0.3)" stroke-width="0.5"/>
-          <rect x="31" y="12" width="5" height="8" rx="1" fill="rgba(37,99,196,0.5)" stroke="rgba(59,130,246,0.3)" stroke-width="0.5"/>
-          <rect x="38" y="12" width="5" height="8" rx="1" fill="rgba(37,99,196,0.3)" stroke="rgba(59,130,246,0.2)" stroke-width="0.5"/>
-          <rect x="50" y="13" width="40" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
-          <rect x="50" y="17" width="28" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
-          <rect x="95" y="11" width="16" height="10" rx="2" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.75"/>
-          <rect x="97" y="13" width="12" height="6" rx="1" fill="rgba(240,165,0,0.08)"/>
-          <!-- Rack Unit 2 -->
-          <rect x="4" y="32" width="112" height="20" rx="3" fill="#0a1628" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-          <circle cx="14" cy="42" r="3" fill="rgba(34,197,94,0.8)"/>
-          <circle cx="14" cy="42" r="2" fill="rgba(34,197,94,1)" filter="url(#led-glow)"/>
-          <rect x="24" y="38" width="5" height="8" rx="1" fill="rgba(37,99,196,0.5)" stroke="rgba(59,130,246,0.3)" stroke-width="0.5"/>
-          <rect x="31" y="38" width="5" height="8" rx="1" fill="rgba(37,99,196,0.3)" stroke="rgba(59,130,246,0.2)" stroke-width="0.5"/>
-          <rect x="38" y="38" width="5" height="8" rx="1" fill="rgba(37,99,196,0.6)" stroke="rgba(59,130,246,0.35)" stroke-width="0.5"/>
-          <rect x="50" y="39" width="36" height="2" rx="1" fill="rgba(255,255,255,0.07)"/>
-          <rect x="50" y="43" width="24" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
-          <rect x="95" y="37" width="16" height="10" rx="2" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.75"/>
-          <!-- Rack Unit 3 — off -->
-          <rect x="4" y="58" width="112" height="20" rx="3" fill="#080f1e" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
-          <circle cx="14" cy="68" r="3" fill="rgba(255,255,255,0.12)"/>
-          <rect x="24" y="64" width="5" height="8" rx="1" fill="rgba(255,255,255,0.04)"/>
-          <rect x="31" y="64" width="5" height="8" rx="1" fill="rgba(255,255,255,0.04)"/>
-          <rect x="50" y="65" width="30" height="2" rx="1" fill="rgba(255,255,255,0.04)"/>
-          <rect x="95" y="63" width="16" height="10" rx="2" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" stroke-width="0.75"/>
-          <!-- Cables at bottom -->
-          <path d="M18 78 Q18 86 26 86" stroke="rgba(59,130,246,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <path d="M26 78 Q26 88 38 88" stroke="rgba(240,165,0,0.35)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <path d="M34 78 Q34 84 42 84" stroke="rgba(34,197,94,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        </svg>
+    <!-- Networking -->
+    <div class="cat-card">
+      <div class="cat-card-accent" style="background: linear-gradient(180deg,#0891b2,#164e63);"></div>
+      <div class="cat-icon-wrap" style="background:rgba(8,145,178,0.1);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="1.8"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
       </div>
-      <div class="tp-card-body">
-        <div class="tp-brand-row">
-          <span class="tp-brand">Dell</span>
-          <span class="tp-category-tag tp-category-tag--green">Servidor</span>
+      <div class="cat-body">
+        <span class="cat-tag" style="background:rgba(8,145,178,0.1);color:#0891b2;">Networking</span>
+        <div class="cat-title">Conectividad y redes corporativas</div>
+        <p class="cat-desc">Switches, routers, access points y firewall. Cisco, Fortinet, Ubiquiti para entornos seguros.</p>
+        <div class="cat-chips">
+          <span class="cat-chip">Switches</span>
+          <span class="cat-chip">Wi-Fi 6</span>
+          <span class="cat-chip">Firewall</span>
         </div>
-        <div class="tp-name">PowerEdge R650</div>
-        <div class="tp-specs-list">
-          <span class="tp-spec-chip">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg>
-            Intel Xeon
-          </span>
-          <span class="tp-spec-chip">64GB RAM</span>
-          <span class="tp-spec-chip">1TB SSD</span>
-        </div>
-      </div>
-      <div class="tp-price-row">
-        <div class="tp-price">
-          <span class="tp-price-from">Desde</span>
-          <span class="tp-price-val">$104.167</span>
-          <span class="tp-price-period">/mes</span>
-        </div>
-        <a href="tienda.html" class="tp-btn">
-          Ver detalle
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </a>
       </div>
     </div>
 
-    <!-- Producto 4 — HP LaserJet (Impresora) -->
-    <div class="tp-card">
-      <div class="tp-card-glow"></div>
-      <div class="tp-img-box">
-        <div class="tp-img-glow tp-img-glow--gold"></div>
-        <svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg" class="tp-device-svg">
-          <!-- Cuerpo principal impresora -->
-          <rect x="16" y="20" width="88" height="48" rx="5" fill="#0a1628" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-          <!-- Panel superior -->
-          <rect x="16" y="20" width="88" height="16" rx="5" fill="#0c1e38" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-          <!-- Panel de control -->
-          <rect x="22" y="24" width="36" height="8" rx="3" fill="rgba(37,99,196,0.15)" stroke="rgba(59,130,246,0.2)" stroke-width="0.75"/>
-          <circle cx="30" cy="28" r="2.5" fill="rgba(240,165,0,0.7)"/>
-          <circle cx="38" cy="28" r="2.5" fill="rgba(255,255,255,0.2)"/>
-          <circle cx="46" cy="28" r="2.5" fill="rgba(255,255,255,0.12)"/>
-          <!-- Pantalla pequeña -->
-          <rect x="68" y="23" width="28" height="10" rx="2" fill="rgba(37,99,196,0.2)" stroke="rgba(59,130,246,0.25)" stroke-width="0.75"/>
-          <rect x="71" y="26" width="14" height="1.5" rx="0.75" fill="rgba(255,255,255,0.3)"/>
-          <rect x="71" y="29" width="10" height="1.5" rx="0.75" fill="rgba(255,255,255,0.12)"/>
-          <!-- Ranura de salida de papel -->
-          <rect x="22" y="42" width="76" height="3" rx="1.5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="0.75"/>
-          <!-- Papel saliendo -->
-          <rect x="30" y="38" width="60" height="8" rx="1" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
-          <rect x="34" y="40" width="24" height="1" rx="0.5" fill="rgba(0,0,0,0.15)"/>
-          <rect x="34" y="42" width="18" height="1" rx="0.5" fill="rgba(0,0,0,0.1)"/>
-          <rect x="34" y="44" width="20" height="1" rx="0.5" fill="rgba(0,0,0,0.12)"/>
-          <!-- Bandeja inferior -->
-          <rect x="20" y="62" width="80" height="6" rx="2" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-          <rect x="24" y="64" width="72" height="2" rx="1" fill="rgba(255,255,255,0.04)"/>
-          <!-- Puerto USB / conectores -->
-          <rect x="88" y="48" width="10" height="6" rx="1.5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="0.75"/>
-          <rect x="90" y="50" width="6" height="2" rx="0.5" fill="rgba(255,255,255,0.15)"/>
-          <!-- LED status -->
-          <circle cx="102" cy="27" r="2" fill="rgba(34,197,94,0.8)"/>
-          <!-- Sombra base -->
-          <ellipse cx="60" cy="72" rx="50" ry="4" fill="rgba(0,0,0,0.25)"/>
-        </svg>
+    <!-- Impresoras -->
+    <div class="cat-card">
+      <div class="cat-card-accent" style="background: linear-gradient(180deg,#e8920a,#c47200);"></div>
+      <div class="cat-icon-wrap" style="background:rgba(232,146,10,0.1);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#e8920a" stroke-width="1.8"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>
       </div>
-      <div class="tp-card-body">
-        <div class="tp-brand-row">
-          <span class="tp-brand">HP</span>
-          <span class="tp-category-tag tp-category-tag--gold">Impresora</span>
+      <div class="cat-body">
+        <span class="cat-tag" style="background:rgba(232,146,10,0.1);color:var(--gold);">Impresoras</span>
+        <div class="cat-title">Soluciones de impresión profesional</div>
+        <p class="cat-desc">Láser, multifuncionales y producción para oficinas corporativas. HP y Brother.</p>
+        <div class="cat-chips">
+          <span class="cat-chip">Láser B/N</span>
+          <span class="cat-chip">Color</span>
+          <span class="cat-chip">Multifuncional</span>
         </div>
-        <div class="tp-name">LaserJet M110w</div>
-        <div class="tp-specs-list">
-          <span class="tp-spec-chip">Impresión B/N</span>
-          <span class="tp-spec-chip">Red + Wi-Fi</span>
-          <span class="tp-spec-chip">USB</span>
-        </div>
-      </div>
-      <div class="tp-price-row">
-        <div class="tp-price">
-          <span class="tp-price-from">Desde</span>
-          <span class="tp-price-val">$14.583</span>
-          <span class="tp-price-period">/mes</span>
-        </div>
-        <a href="tienda.html" class="tp-btn">
-          Ver detalle
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </a>
       </div>
     </div>
 
   </div>
 
-  <div class="tienda-preview-footer">
-    <a href="tienda.html" class="btn-primary">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Ver tienda completa
+  <div style="text-align:center; margin-top: 52px;">
+    <a href="configurador.html" class="slide-cta" style="font-size:15px; padding:16px 40px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Ver catálogo completo y cotizar
     </a>
-    <p class="tienda-preview-footer-sub">+80 modelos disponibles · Entrega en 48h en Santiago · Soporte incluido</p>
-  </div>
-</section>
-<section class="plans-section" id="planes-soluciones">
-  <div class="section-tag">Planes</div>
-  <h2 class="section-title">Planes y Soluciones</h2>
-  <p class="section-sub">Soporte alineado a tu nivel de operación. Desde startups hasta empresas con múltiples sedes.</p>
-
-  <div class="plans-container">
-    <!-- PLAN BÁSICO -->
-    <div class="plan-card plan-basic">
-      <div class="plan-badge">Entrada</div>
-      <div class="plan-name">Soporte Básico</div>
-      <div class="plan-desc">Para equipos pequeños que necesitan soporte confiable</div>
-      
-      <div class="plan-price">
-        <div class="plan-price-value">Desde</div>
-        <div class="plan-price-amount">$450k</div>
-        <div class="plan-price-period">por equipo/mes</div>
-      </div>
-
-      <div class="plan-includes">
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          NOC 24/7
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Soporte Reactivo
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Equipos incluidos
-        </div>
-      </div>
-
-      <a href="configurador.html" class="btn-plan">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M3 8h10M9 4l4 4-4 4"/>
-        </svg>
-        Cotizar Plan
-      </a>
-    </div>
-
-    <!-- PLAN PREMIUM 360 (DESTACADO) -->
-    <div class="plan-card plan-premium">
-      <div class="plan-badge plan-badge-featured">Recomendado</div>
-      <div class="plan-featured-glow"></div>
-      
-      <div class="plan-name">Premium 360</div>
-      <div class="plan-desc">Solución integral con monitoreo y gestión activa</div>
-      
-      <div class="plan-price">
-        <div class="plan-price-value">Desde</div>
-        <div class="plan-price-amount">$890k</div>
-        <div class="plan-price-period">por equipo/mes</div>
-      </div>
-
-      <div class="plan-includes">
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          NOC 24/7 monitoring
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Soporte Proactivo
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Respuesta en terreno
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Equipos incluidos
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          SLA 99.5% garantizado
-        </div>
-      </div>
-
-      <a href="configurador.html" class="btn-plan btn-plan-primary">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M3 8h10M9 4l4 4-4 4"/>
-        </svg>
-        Cotizar Plan
-      </a>
-    </div>
-
-    <!-- PLAN EMPRESAS & PROYECTOS -->
-    <div class="plan-card plan-enterprise">
-      <div class="plan-badge">Empresas</div>
-      <div class="plan-name">Empresas & Proyectos</div>
-      <div class="plan-desc">Infraestructura a la medida para operaciones complejas</div>
-      
-      <div class="plan-price">
-        <div class="plan-price-value">Desde</div>
-        <div class="plan-price-amount">$1.5M</div>
-        <div class="plan-price-period">por proyecto/mes</div>
-      </div>
-
-      <div class="plan-includes">
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          NOC 24/7 + Gestión
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Soporte Proactivo
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Equipos incluidos
-        </div>
-        <div class="plan-include-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          Infraestructura personalizada
-        </div>
-      </div>
-
-      <a href="configurador.html" class="btn-plan">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M3 8h10M9 4l4 4-4 4"/>
-        </svg>
-        Cotizar Proyectos
-      </a>
-    </div>
+    <p style="margin-top:14px;font-size:13px;color:rgba(17,17,17,0.4);">+80 modelos · 6 marcas partner · Precios de distribuidor</p>
   </div>
 </section>
 
 <div class="divider-line"></div>
 
-<!-- QUIÉNES SOMOS — diseño renovado -->
-<section class="about-section" id="quienes-somos">
- 
-  <!-- Fondo decorativo -->
-  <div class="about-bg-grid"></div>
-  <div class="about-bg-glow"></div>
- 
-  <div class="about-inner">
- 
-    <!-- COLUMNA IZQUIERDA: Texto principal -->
-    <div class="about-left">
-      <div class="about-accent-bar"></div>
-      <div class="section-tag">Sobre nosotros</div>
-      <h2 class="about-heading">
-        Simplificamos la TI<br>
-        <span class="about-heading-highlight">para que tú te enfoques<br>en tu negocio.</span>
-      </h2>
- 
-      <p class="about-body">
-        En InfraGo somos especialistas en infraestructura como servicio (IaaS) y soluciones de soporte técnico (DaaS). Combinamos hardware de vanguardia con soporte de primer nivel para entregar operaciones TI sin fricción — desde la cotización hasta la puesta en marcha.
+<!-- ══════════════════════════════════════
+     QUIÉNES SOMOS
+══════════════════════════════════════ -->
+<section class="about-section-new" id="quienes-somos">
+  <div class="about-inner-new">
+
+    <div class="about-left-new">
+      <p class="section-eyebrow">Sobre nosotros</p>
+      <h2 class="section-heading">Simplificamos la TI<br>para que tú te enfoques<br>en tu negocio.</h2>
+      <p class="about-lead">
+        En InfraGo somos especialistas en infraestructura como servicio (IaaS) y soluciones DaaS. Combinamos hardware de vanguardia con soporte de primer nivel para entregar operaciones TI sin fricción — desde la cotización hasta la puesta en marcha.
       </p>
- 
-      <a href="configurador.html" class="btn-primary about-cta">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
+      <a href="configurador.html" class="about-cta-new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         Ver cómo funciona
       </a>
- 
-      <!-- Logo TIC Managers -->
-      <div class="about-partner">
-        <span class="about-partner-label">Una empresa de</span>
-        <div class="about-partner-logo">
-          <img src="/img/logo tic.png" alt="TIC Managers" width="56" height="56" style="object-fit:contain;">
-          <span class="about-partner-name">TIC Managers</span>
+      <div class="about-partner-new">
+        <span class="about-partner-label-new">Una empresa de</span>
+        <div class="about-partner-logo-new">
+          <img src="/img/logo tic.png" alt="TIC Managers" width="40" height="40">
+          <span class="about-partner-name-new">TIC Managers</span>
         </div>
       </div>
     </div>
- 
-    <!-- COLUMNA DERECHA: Stats + Servicios -->
+
     <div class="about-right">
- 
-      <!-- Stats grid tipo Gartner -->
-      <div class="about-stats">
-        <div class="about-stat">
-          <div class="about-stat-num">90<span class="about-stat-unit">+</span></div>
-          <div class="about-stat-label">Productos en catálogo</div>
+      <div class="about-stats-new">
+        <div class="about-stat-new">
+          <div class="about-stat-num-new">90<span class="about-stat-unit-new">+</span></div>
+          <div class="about-stat-label-new">Productos en catálogo</div>
         </div>
-        <div class="about-stat">
-          <div class="about-stat-num">6<span class="about-stat-unit"></span></div>
-          <div class="about-stat-label">Marcas partner certificadas</div>
+        <div class="about-stat-new">
+          <div class="about-stat-num-new">6</div>
+          <div class="about-stat-label-new">Marcas partner</div>
         </div>
-        <div class="about-stat">
-          <div class="about-stat-num">48<span class="about-stat-unit">h</span></div>
-          <div class="about-stat-label">Infraestructura lista</div>
+        <div class="about-stat-new">
+          <div class="about-stat-num-new">48<span class="about-stat-unit-new">h</span></div>
+          <div class="about-stat-label-new">Infraestructura lista</div>
         </div>
-        <div class="about-stat">
-          <div class="about-stat-num">99<span class="about-stat-unit">%</span></div>
-          <div class="about-stat-label">SLA garantizado</div>
+        <div class="about-stat-new">
+          <div class="about-stat-num-new">99<span class="about-stat-unit-new">%</span></div>
+          <div class="about-stat-label-new">SLA garantizado</div>
         </div>
       </div>
- 
-      <!-- Servicios tipo Construction -->
-      <div class="about-services">
-        <div class="about-service-label">Lo que hacemos</div>
- 
-        <div class="about-service-item">
-          <div class="about-service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="2" y="3" width="20" height="14" rx="2"/>
-              <path d="M8 21h8M12 17v4"/>
-            </svg>
-          </div>
-          <div>
-            <div class="about-service-title">Infraestructura como Servicio</div>
-            <div class="about-service-desc">Equipos y conectividad listos en horas, sin inversión inicial.</div>
-          </div>
-        </div>
- 
-        <div class="about-service-item">
-          <div class="about-service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
-            </svg>
-          </div>
-          <div>
-            <div class="about-service-title">Device as a Service (DaaS)</div>
-            <div class="about-service-desc">Gestión completa del parque tecnológico empresarial.</div>
-          </div>
-        </div>
- 
-        <div class="about-service-item">
-          <div class="about-service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/>
-              <path d="M9 13h6M9 17h4M14 2v6h6"/>
-            </svg>
-          </div>
-          <div>
-            <div class="about-service-title">Cotización Inteligente</div>
-            <div class="about-service-desc">PDF profesional generado en minutos con precios de distribuidor.</div>
-          </div>
-        </div>
-      </div>
- 
     </div>
+
   </div>
 </section>
 
-<!-- CTA FINAL -->
-<section class="cta-section">
-  <div class="cta-box">
-    <div class="section-tag" style="text-align:center;">Tu empresa no puede esperar</div>
-    <h2 class="cta-title">Tu infraestructura<br><span style="color:var(--gold);">lista en 48 horas.</span></h2>
-    <p class="cta-sub">Configura tu solución ahora y recibe cotización en tiempo real. Sin compromisos, sin letra chica.</p>
-    <div class="cta-actions">
-      <a href="configurador.html" class="btn-primary">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 8h10M9 4l4 4-4 4"/>
-        </svg>
-        Configurar mi solución
-      </a>
-      <button class="btn-outline" onclick="openQuoter()">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6l-4-4z"/>
-          <path d="M9 2v4h4M6 9h4M6 12h2"/>
-        </svg>
-        Cotizar con IA
-      </button>
-    </div>
-  </div>
+<!-- ══════════════════════════════════════
+     CTA FINAL
+══════════════════════════════════════ -->
+<section class="cta-final" id="contacto">
+  <div class="cta-final-glow"></div>
+  <p class="cta-final-eyebrow">Tu empresa no puede esperar</p>
+  <h2 class="cta-final-title">Tu infraestructura<br><em>lista en 48 horas.</em></h2>
+  <p class="cta-final-sub">Configura tu solución ahora y recibe cotización en tiempo real. Sin compromisos, sin letra chica.</p>
+  <a href="configurador.html" class="cta-final-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    Configurar mi solución ahora
+  </a>
+  <p class="cta-note">Cotización gratuita · Sin compromisos · Respuesta en menos de 24h</p>
 </section>
 
 <!-- ══════════════════════════════════════
      SCRIPTS
 ══════════════════════════════════════ -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-<script src="/assets/js/index.js"></script>
-<script src="assets/js/chatbot.js"></script>
 <script>
 /* ════════════════════════════════════════════
-   CONFIG — API_BASE_
+   HERO CAROUSEL
 ════════════════════════════════════════════ */
-const API_BASE = 'https://infrago-backend-production.up.railway.app';
+(function () {
+  const slides    = document.getElementById('heroSlides');
+  const dots      = document.querySelectorAll('.carousel-dot');
+  const prev      = document.getElementById('heroPrev');   // null — flechas eliminadas
+  const next      = document.getElementById('heroNext');   // null — flechas eliminadas
+  const progress  = document.getElementById('carouselProgress');
+
+  const total   = 3;
+  let current   = 0;
+  let autoTimer = null;
+
+  function goTo(idx) {
+    current = (idx + total) % total;
+    slides.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+
+    // Reiniciar barra de progreso
+    progress.style.animation = 'none';
+    progress.offsetHeight;   // reflow
+    progress.style.animation = 'carouselProgress 5s linear infinite';
+  }
+
+  function autoPlay() {
+    autoTimer = setInterval(() => goTo(current + 1), 5000);
+  }
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoPlay();
+  }
+
+  if (prev) prev.addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+  if (next) next.addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => { goTo(+dot.dataset.idx); resetAuto(); });
+  });
+
+  // Swipe touch
+  let touchStartX = 0;
+  slides.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  slides.addEventListener('touchend',   e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { goTo(diff > 0 ? current + 1 : current - 1); resetAuto(); }
+  });
+
+  goTo(0);
+  autoPlay();
+})();
 
 /* ════════════════════════════════════════════
-   ANIMACIONES DE ENTRADA (SCROLL)
+   SLIDER MARCAS — JS puro, loop infinito suave
+════════════════════════════════════════════ */
+(function () {
+  const wrapper = document.querySelector('.brands-track-wrapper');
+  if (!wrapper) return;
+
+  let pos = 0;
+  let paused = false;
+  const speed = 0.6; // px por frame — ajustar para velocidad
+
+  // Clonar el primer track si no hay segundo (seguridad)
+  const tracks = wrapper.querySelectorAll('.brands-scroll-track');
+
+  function tick() {
+    if (!paused) {
+      pos -= speed;
+      // Cuando el primer track salió completamente, reiniciar
+      const trackW = tracks[0].offsetWidth;
+      if (Math.abs(pos) >= trackW) {
+        pos = 0;
+      }
+      wrapper.style.transform = `translateX(${pos}px)`;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Pausar al hover
+  wrapper.addEventListener('mouseenter', () => { paused = true; });
+  wrapper.addEventListener('mouseleave', () => { paused = false; });
+
+  requestAnimationFrame(tick);
+})();
+
+/* ════════════════════════════════════════════
+   ANIMACIONES SCROLL
 ════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-  const observer = new IntersectionObserver((entries) => {
+  const obs = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.style.animation = 'fadeUp 0.6s ease both';
-        observer.unobserve(entry.target);
+        obs.unobserve(entry.target);
       }
     });
-  }, observerOptions);
-  
-  document.querySelectorAll('.include-card, .partner-pill, .stat-card').forEach(el => observer.observe(el));
-});
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-/* ════════════════════════════════════════════
-   CERRAR MODALES CON ESC
-════════════════════════════════════════════ */
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    // cerrar modales "cómo funciona" si están abiertos
-  }
+  document.querySelectorAll('.why-card-new, .how-step, .cat-card, .about-stat-new').forEach(el => obs.observe(el));
 });
 </script>
 
-</script>
+<script src="/assets/js/index.js"></script>
+<script src="assets/js/chatbot.js"></script>
 
 <!-- ── INCLUDES: navbar + footer automáticos ── -->
 <script src="/assets/js/includes.js"></script>

@@ -20,24 +20,6 @@
       top: auto !important;
       z-index: auto !important;
     }
-
-    /* Barra de resumen: sticky justo debajo del navbar */
-    .sticky-resumen {
-      position: sticky !important;
-      top: 76px !important; /* 68px navbar + 8px de aire */
-      bottom: auto !important;
-      left: auto !important;
-      right: auto !important;
-      width: 100% !important;
-      margin: 16px 0 20px !important;
-      border-radius: 12px !important;
-      z-index: 98 !important;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
-    }
-
-    @media (max-width: 768px) {
-      .sticky-resumen { top: 68px !important; } /* navbar mobile = 60px + 8px */
-    }
   </style>
 </head>
 <body>
@@ -176,44 +158,14 @@
     <!-- ─── CONTENIDO DERECHA ─── -->
     <div class="paso1-content">
 
-    <!-- FILTROS -->
-    <div class="filtros-bar">
-      <div class="filtros-row">
-        <span class="filtros-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-          Marca:
-        </span>
-        <div class="filtros-chips" id="filtrosMarca">
-          <button class="chip active" data-filtro="marca" data-val="todos" onclick="setFiltro(this,'marca')">Todas</button>
-          <button class="chip" data-filtro="marca" data-val="HP" onclick="setFiltro(this,'marca')">HP</button>
-          <button class="chip" data-filtro="marca" data-val="Dell" onclick="setFiltro(this,'marca')">Dell</button>
-          <button class="chip" data-filtro="marca" data-val="Lenovo" onclick="setFiltro(this,'marca')">Lenovo</button>
-          <button class="chip" data-filtro="marca" data-val="Apple" onclick="setFiltro(this,'marca')">Apple</button>
-          <button class="chip" data-filtro="marca" data-val="Brother" onclick="setFiltro(this,'marca')">Brother</button>
-          <button class="chip" data-filtro="marca" data-val="Cisco" onclick="setFiltro(this,'marca')">Cisco</button>
-          <button class="chip" data-filtro="marca" data-val="Fortinet" onclick="setFiltro(this,'marca')">Fortinet</button>
-          <button class="chip" data-filtro="marca" data-val="Ubiquiti" onclick="setFiltro(this,'marca')">Ubiquiti</button>
-          <button class="chip" data-filtro="marca" data-val="Synology" onclick="setFiltro(this,'marca')">Synology</button>
-          <button class="chip" data-filtro="marca" data-val="QNAP" onclick="setFiltro(this,'marca')">QNAP</button>
-          <button class="chip" data-filtro="marca" data-val="Canon" onclick="setFiltro(this,'marca')">Canon</button>
-          <button class="chip" data-filtro="marca" data-val="TIC Managers" onclick="setFiltro(this,'marca')">TIC Managers</button>
-        </div>
-      </div>
-      <div class="filtros-row">
-        <span class="filtros-label">Tipo:</span>
-        <div class="filtros-chips" id="filtrosTipo">
-          <button class="chip chip--type active" data-filtro="tipo" data-val="todos" onclick="setFiltro(this,'tipo')">Todos</button>
-          <button class="chip chip--type" data-filtro="tipo" data-val="notebook" onclick="setFiltro(this,'tipo')">Notebooks</button>
-          <button class="chip chip--type" data-filtro="tipo" data-val="servidor" onclick="setFiltro(this,'tipo')">Servidores</button>
-          <button class="chip chip--type" data-filtro="tipo" data-val="impresora" onclick="setFiltro(this,'tipo')">Impresoras</button>
-          <button class="chip chip--type" data-filtro="tipo" data-val="networking" onclick="setFiltro(this,'tipo')">Networking</button>
-          <button class="chip chip--type" data-filtro="tipo" data-val="storage" onclick="setFiltro(this,'tipo')">Almacenamiento</button>
-          <button class="chip chip--type" data-filtro="tipo" data-val="servicio-tic" onclick="setFiltro(this,'tipo')">Servicios TIC</button>
-        </div>
-        <div class="filtros-search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="searchProductos" placeholder="Buscar..." oninput="aplicarFiltros()">
-        </div>
+    <!-- BUSCADOR -->
+    <div class="filtros-bar filtros-bar--simple">
+      <div class="filtros-search filtros-search--full">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchProductos" placeholder="Buscar producto por nombre, marca o categoría..." oninput="aplicarFiltros()" autocomplete="off">
+        <button class="search-clear" id="btnClearSearch" onclick="clearSearch()" title="Limpiar búsqueda" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
     </div>
 
@@ -256,12 +208,7 @@
       <!-- Los productos y servicios se inyectan aquí por renderCatalogo() -->
     </div><!-- /catalogoProductos -->
 
-    <!-- Sin resultados -->
-    <div id="sinResultados" style="display:none;" class="sin-resultados">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <p>No se encontraron productos con los filtros seleccionados</p>
-      <button class="chip active" onclick="resetFiltros()">Limpiar filtros</button>
-    </div>
+
 
     </div><!-- /paso1-content -->
     </div><!-- /paso1-layout -->
@@ -551,9 +498,11 @@
 
 <script src="/assets/js/catalogo.js"></script>
 <script type="module" src="/assets/js/configurador.js"></script>
+<script src="/assets/js/flat-catalog.js"></script>
 
 <!-- ── INCLUDES: navbar + footer automáticos ── -->
 <script src="/assets/js/includes.js"></script>
+<script src="/assets/js/flat-catalog.js"></script>
 
 </body>
 </html>

@@ -321,23 +321,45 @@ body {
 
 /* ─── RESUMEN BAR ────────────────────────────── */
 .sticky-resumen {
-  background: rgba(13, 30, 54, 0.97);
-  border-top: 2px solid var(--orange);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-left: 4px solid var(--orange);
   border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-  padding: 14px 40px;
-  margin-top: 32px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0;
+  margin-top: 24px;
+  overflow: hidden;
 }
-.sticky-resumen-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; }
-.sticky-col { display: flex; flex-direction: column; gap: 2px; padding: 0 24px; flex: 1; }
-.sticky-col:first-child { padding-left: 0; }
-.sticky-col--cuota { flex: 1.4; }
-.sticky-divider { width: 1px; height: 36px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
-.sticky-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.45); }
-.sticky-val { font-size: 14px; font-weight: 700; color: #fff; }
-.sticky-val--price { color: #fff; }
-.sticky-cuota { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--orange); line-height: 1; }
-.sticky-plazo { font-size: 11px; color: rgba(255,255,255,0.4); }
+.sticky-resumen-inner {
+  max-width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: stretch;
+}
+.sticky-col {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 3px; flex: 1; padding: 14px 20px;
+  border-right: 1px solid var(--c-border-s);
+}
+.sticky-col:last-child { border-right: none; }
+.sticky-col--cuota {
+  flex: 1.4;
+  background: #fdf4e7;
+}
+.sticky-divider { display: none; }
+.sticky-label {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--c-text-3);
+}
+.sticky-val { font-size: 13px; font-weight: 700; color: var(--c-text); }
+.sticky-val--price { color: var(--c-text); }
+.sticky-cuota {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: var(--orange); line-height: 1;
+}
+.sticky-plazo { font-size: 10px; color: var(--c-text-4); }
 
 /* ─── FORMULARIO (PASO 2) ────────────────────── */
 .form-section {

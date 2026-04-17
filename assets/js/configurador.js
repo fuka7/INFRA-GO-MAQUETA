@@ -1,6 +1,12 @@
-/* ═══════════════════════════════════════════════
-   configurador.js 
-═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   configurador.js — InfraGo
+   ───────────────────────────────────────────────────────────────
+   Contiene: navegación wizard, validaciones, descuentos,
+   tipo de cambio, sidebar, resumen, simulador, cotización.
+
+   La tabla del catálogo es responsabilidad de flat-catalog.js.
+   ═══════════════════════════════════════════════════════════════ */
+
 let supabaseClient = null;
 
 async function initSupabase() {
@@ -30,7 +36,8 @@ async function fetchDolarTIC() {
       window.tipoCambio = tipoCambio;
       if (input) input.value = tipoCambio;
       if (note)  note.textContent = `Tipo de cambio actualizado: $${tipoCambio.toLocaleString('es-CL')} CLP/USD`;
-      renderizarPreciosUSD();
+      // Notificar a flat-catalog para que actualice los precios USD
+      if (typeof window.flatRefreshPrices === 'function') window.flatRefreshPrices();
       updateSidebar();
     } else throw new Error('sin valor');
   } catch {
@@ -43,7 +50,7 @@ function actualizarTipoCambio(val) {
   if (!isNaN(v) && v > 0) {
     tipoCambio = v;
     window.tipoCambio = v;
-    renderizarPreciosUSD();
+    if (typeof window.flatRefreshPrices === 'function') window.flatRefreshPrices();
     updateSidebar();
     actualizarDescuento();
   }
@@ -54,22 +61,8 @@ function cambiarDolar(delta) {
   tipoCambio = Math.max(1, tipoCambio + delta);
   window.tipoCambio = tipoCambio;
   if (input) input.value = tipoCambio;
-  renderizarPreciosUSD();
+  if (typeof window.flatRefreshPrices === 'function') window.flatRefreshPrices();
   updateSidebar();
-  if (typeof refreshTablePrices === 'function') refreshTablePrices();
-}
-
-function renderizarPreciosUSD() {
-  document.querySelectorAll('.product-item').forEach(item => {
-    const priceCLP = parseInt(item.dataset.price);
-    if (!priceCLP) return;
-    const usd = Math.round(priceCLP / tipoCambio);
-    // Actualizar tag de precio CLP (por si cambia)
-    const tag = item.querySelector('.product-price-tag');
-    if (tag) {
-      tag.innerHTML = `$${priceCLP.toLocaleString('es-CL')} <span class="product-price-usd">≈ USD ${usd.toLocaleString('en-US')}</span>`;
-    }
-  });
 }
 
 // ═════════════════════════════════════════
@@ -83,21 +76,24 @@ const DCTO_TRAMOS = [
   { min:50, max:9999, pct:5 },
 ];
 
+function obtenerPctDescuento(totalQty) {
+  const tramo = DCTO_TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
+  return tramo ? tramo.pct : 0;
+}
+
 function actualizarDescuento() {
+  // Contar unidades desde _flatRows (fuente de verdad de flat-catalog.js)
   let totalQty = 0;
-  // Contar solo desde la tabla (product-row) para evitar doble conteo
-  // con el accordion original que queda oculto en el DOM
-  const tableRows = document.querySelectorAll('.product-row .qty-value');
-  if (tableRows.length > 0) {
-    tableRows.forEach(el => { totalQty += parseInt(el.textContent) || 0; });
+  if (typeof window._flatRows !== 'undefined') {
+    window._flatRows.forEach(r => { if (r.productName) totalQty += r.qty; });
   } else {
-    // Fallback: accordion original (cuando la tabla aún no se ha construido)
+    // Fallback: accordion oculto
     document.querySelectorAll('.product-item .qty-value').forEach(el => {
       totalQty += parseInt(el.textContent) || 0;
     });
   }
 
-  // Resaltar fila activa
+  // Resaltar fila activa en tabla de descuentos
   document.querySelectorAll('.dcto-row').forEach(row => {
     const min = parseInt(row.dataset.min);
     const max = parseInt(row.dataset.max);
@@ -105,9 +101,9 @@ function actualizarDescuento() {
   });
 
   // Mostrar descuento aplicado
-  const tramo = DCTO_TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
-  const dctoEl   = document.getElementById('dctoAplicado');
-  const dctoVal  = document.getElementById('dctoAplicadoVal');
+  const tramo   = DCTO_TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
+  const dctoEl  = document.getElementById('dctoAplicado');
+  const dctoVal = document.getElementById('dctoAplicadoVal');
   if (dctoEl && dctoVal) {
     if (tramo) {
       dctoEl.style.display = 'flex';
@@ -116,9 +112,14 @@ function actualizarDescuento() {
       dctoEl.style.display = 'none';
     }
   }
+
+  // Propagar a flat-catalog para repintar precios
+  if (typeof window.flatRefreshPrices === 'function') window.flatRefreshPrices();
 }
 
-
+// ═════════════════════════════════════════
+// ESTADO DEL WIZARD
+// ═════════════════════════════════════════
 let currentStep = 1;
 const totalSteps = 4;
 
@@ -137,7 +138,6 @@ let simTasa  = 12;
 // ═════════════════════════════════════════
 // NAVEGACIÓN
 // ═════════════════════════════════════════
-
 function nextStep() {
   if (!validateStep(currentStep)) return;
   if (currentStep < totalSteps) {
@@ -156,12 +156,8 @@ function prevStep() {
 }
 
 function updateStepDisplay() {
-  document.querySelectorAll('.wizard-step').forEach(step => {
-    step.classList.remove('active');
-  });
-
+  document.querySelectorAll('.wizard-step').forEach(step => step.classList.remove('active'));
   document.querySelector(`.wizard-step[data-step="${currentStep}"]`).classList.add('active');
-
   updateProgressBar();
   updateButtons();
 
@@ -175,7 +171,6 @@ function updateStepDisplay() {
 function updateProgressBar() {
   const progress = (currentStep / totalSteps) * 100;
   document.getElementById('progressBar').style.width = progress + '%';
-
   document.querySelectorAll('.progress-step').forEach(step => {
     const n = parseInt(step.dataset.step);
     step.classList.toggle('active', n <= currentStep);
@@ -204,36 +199,31 @@ function updateButtons() {
 // ═════════════════════════════════════════
 // VALIDACIONES
 // ═════════════════════════════════════════
-
 function validateStep(step) {
   if (step === 1) {
+    // La validación real de qty la hace flat-catalog (_overrideValidateStep)
+    // pero si flat-catalog no está, usamos fallback
     let totalQty = 0;
     document.querySelectorAll('.qty-value').forEach(el => {
       totalQty += parseInt(el.textContent) || 0;
     });
-
     if (totalQty === 0) {
       alert('⚠️ Debes seleccionar al menos un equipo');
       return false;
     }
-
     collectEquipos();
   }
 
-  // Al salir del paso 2 (info), recolectamos el form aunque esté incompleto
-  // para mostrarlo en el resumen. La validación estricta ocurre al salir del paso 3.
   if (step === 2) {
     collectServicios();
-    collectFormulario(); // recolectar sin validar
+    collectFormulario();
   }
 
-  // Al salir del paso 3 (resumen) → validar que el form esté completo
   if (step === 3 && !validateForm()) return false;
 
   return true;
 }
 
-// Recolecta el formulario sin validar (para el resumen)
 function collectFormulario() {
   state.formulario = {
     empresa:   document.getElementById('empresa')?.value.trim()   || '',
@@ -266,9 +256,9 @@ function validateForm() {
 }
 
 // ═════════════════════════════════════════
-// PRODUCTOS
+// PRODUCTOS — accordion oculto (fallback)
+// La tabla real es flat-catalog.js
 // ═════════════════════════════════════════
-
 function incrementQty(event) {
   event.preventDefault();
   const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
@@ -283,7 +273,6 @@ function decrementQty(event) {
   event.preventDefault();
   const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
   const current = parseInt(qtySpan.textContent);
-
   if (current > 0) {
     qtySpan.textContent = current - 1;
     const cat = event.currentTarget.closest('.product-category');
@@ -298,15 +287,12 @@ function toggleProduct() {}
 // ═════════════════════════════════════════
 // DATA
 // ═════════════════════════════════════════
-
 function collectEquipos() {
   state.equipos = {};
-
   document.querySelectorAll('.product-item').forEach(item => {
     const name  = item.dataset.name;
     const price = parseInt(item.dataset.price);
     const qty   = parseInt(item.querySelector('.qty-value').textContent) || 0;
-
     if (qty > 0) {
       state.equipos[name] = { qty, price };
     }
@@ -316,63 +302,68 @@ function collectEquipos() {
 function collectServicios() {
   state.servicios = {};
 
-  // 1. Servicios asociados a productos (service-check selects)
+  // Servicios asociados a productos (service-check selects)
   document.querySelectorAll('.service-check').forEach(el => {
     const selectedOption = el.options ? el.options[el.selectedIndex] : null;
     if (!selectedOption || !selectedOption.value) return;
-
     const price = parseInt(selectedOption.dataset.price) || 0;
     if (price === 0) return;
-
     const prefix = el.dataset.namePrefix || el.dataset.name || 'Servicio';
     const label  = `${prefix} — ${selectedOption.text.split('—')[0].trim()}`;
     state.servicios[label] = price;
   });
 
-  // 2. Productos tipo servicio-tic desde la tabla
-  document.querySelectorAll('.product-row[data-tipo="servicio-tic"]').forEach(row => {
-    const qty = parseInt(row.querySelector('.qty-value')?.textContent) || 0;
-    if (qty <= 0) return;
-    const price = parseInt(row.dataset.price) || 0;
-    const name  = row.dataset.name || 'Servicio TIC';
-    state.servicios[name] = price * qty;
-  });
+  // Productos tipo servicio-tic desde _flatRows
+  if (typeof window._flatRows !== 'undefined') {
+    window._flatRows.forEach(r => {
+      if (!r.productName || r.qty <= 0) return;
+      const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
+      if (!producto || producto.tipo !== 'servicio-tic') return;
+      state.servicios[r.productName] = (producto.price || 0) * r.qty;
+    });
+  }
 }
 
 // ═════════════════════════════════════════
 // SIDEBAR / STICKY RESUMEN
 // ═════════════════════════════════════════
-
 function updateSidebar() {
   let totalEqCLP = 0;
-  let totalQty = 0;
+  let totalQty   = 0;
   const selectedProducts = [];
 
-  document.querySelectorAll('.product-item').forEach(item => {
-    const qty = parseInt(item.querySelector('.qty-value').textContent) || 0;
-    const priceCLP = parseInt(item.dataset.price) || 0;
-    const name = item.dataset.name;
+  // Leer desde _flatRows si está disponible (fuente de verdad)
+  if (typeof window._flatRows !== 'undefined') {
+    const pct = obtenerPctDescuento(
+      window._flatRows.filter(r => r.productName).reduce((s, r) => s + r.qty, 0)
+    );
+    window._flatRows.forEach(r => {
+      if (!r.productName || r.qty <= 0) return;
+      const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
+      if (!producto) return;
+      const precio = Math.round((producto.price || 0) * (1 - pct / 100));
+      totalEqCLP += r.qty * precio;
+      totalQty   += r.qty;
+      selectedProducts.push({ name: r.productName, qty: r.qty });
+    });
+  } else {
+    // Fallback: accordion
+    document.querySelectorAll('.product-item').forEach(item => {
+      const qty      = parseInt(item.querySelector('.qty-value').textContent) || 0;
+      const priceCLP = parseInt(item.dataset.price) || 0;
+      const name     = item.dataset.name;
+      if (qty > 0) {
+        totalQty   += qty;
+        totalEqCLP += qty * priceCLP;
+        selectedProducts.push({ name, qty });
+      }
+    });
+  }
 
-    if (qty > 0) {
-      totalQty += qty;
-
-      // 🔥 precio afectado por dólar (si quieres lógica USD real)
-      const priceUSD = priceCLP / tipoCambio;
-      const priceFinal = priceUSD * tipoCambio; // puedes cambiar lógica aquí
-
-      totalEqCLP += qty * priceFinal;
-
-      selectedProducts.push({ name, qty });
-    }
-  });
-
-  // ─────────────────────────────
-  // SERVICIOS
-  // ─────────────────────────────
+  // Servicios
   let totalSvc = 0;
   let countSvc = 0;
 
-  // 1. Servicios asociados a productos (service-check selects)
   document.querySelectorAll('.service-check').forEach(el => {
     const selectedOption = el.options ? el.options[el.selectedIndex] : null;
     if (!selectedOption || !selectedOption.value) return;
@@ -382,65 +373,40 @@ function updateSidebar() {
     countSvc++;
   });
 
-  // 2. Productos tipo servicio-tic desde la tabla
-  document.querySelectorAll('.product-row[data-tipo="servicio-tic"]').forEach(row => {
-    const qty = parseInt(row.querySelector('.qty-value')?.textContent) || 0;
-    if (qty <= 0) return;
-    const price = parseInt(row.dataset.price) || 0;
-    totalSvc += price * qty;
-    countSvc += qty;
-  });
-
-  // Fallback: accordion original (cuando la tabla aun no existe)
-  if (document.querySelectorAll('.product-row').length === 0) {
-    document.querySelectorAll('.product-item[data-tipo="servicio-tic"]').forEach(item => {
-      const qty = parseInt(item.querySelector('.qty-value')?.textContent) || 0;
-      if (qty <= 0) return;
-      const price = parseInt(item.dataset.price) || 0;
-      totalSvc += price * qty;
-      countSvc += qty;
+  // Servicios TIC desde flat rows
+  if (typeof window._flatRows !== 'undefined') {
+    window._flatRows.forEach(r => {
+      if (!r.productName || r.qty <= 0) return;
+      const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
+      if (!producto || producto.tipo !== 'servicio-tic') return;
+      totalSvc += (producto.price || 0) * r.qty;
+      countSvc += r.qty;
     });
   }
 
-  // ─────────────────────────────
-  // DESCUENTO
-  // ─────────────────────────────
-  const pctDcto = obtenerPctDescuento(totalQty);
-  const descuento = totalEqCLP * (pctDcto / 100);
-
+  // Descuento
+  const pctDcto             = obtenerPctDescuento(totalQty);
+  const descuento           = totalEqCLP * (pctDcto / 100);
   const totalEquiposConDcto = totalEqCLP - descuento;
+  const totalGeneral        = totalEquiposConDcto + totalSvc;
+  const cuota               = Math.round(totalGeneral / simPlazo);
 
-  // ─────────────────────────────
-  // TOTALES
-  // ─────────────────────────────
-  const totalGeneral = totalEquiposConDcto + totalSvc;
-  const cuota = Math.round(totalGeneral / simPlazo);
-
-  // ─────────────────────────────
-  // UI
-  // ─────────────────────────────
   const setTxt = (id, val) => {
     const el = document.getElementById(id);
     if (el) el.textContent = val;
   };
 
-  setTxt('countEquipos', totalQty);
+  setTxt('countEquipos',   totalQty);
   setTxt('countServicios', countSvc);
-
-  setTxt('totalEquipos', totalEquiposConDcto.toLocaleString('es-CL'));
+  setTxt('totalEquipos',   totalEquiposConDcto.toLocaleString('es-CL'));
   setTxt('totalServicios', totalSvc.toLocaleString('es-CL'));
-  setTxt('totalGeneral', totalGeneral.toLocaleString('es-CL'));
-  setTxt('cuotaMensual', cuota.toLocaleString('es-CL'));
-
-  // 🔥 NUEVO
-  setTxt('ahorroTotal', descuento.toLocaleString('es-CL'));
-  setTxt('descuentoPct', pctDcto + '%');
-
+  setTxt('totalGeneral',   totalGeneral.toLocaleString('es-CL'));
+  setTxt('cuotaMensual',   cuota.toLocaleString('es-CL'));
+  setTxt('ahorroTotal',    descuento.toLocaleString('es-CL'));
+  setTxt('descuentoPct',   pctDcto + '%');
   setTxt('plazoSidebarLabel', simPlazo);
 
-  // ─────────────────────────────
-  // LISTA PRODUCTOS
-  // ─────────────────────────────
+  // Lista de productos en sidebar
   const list = document.getElementById('productsListSidebar');
   if (list) {
     if (selectedProducts.length === 0) {
@@ -459,12 +425,11 @@ function updateSidebar() {
 // ═════════════════════════════════════════
 // RESUMEN (Paso 3)
 // ═════════════════════════════════════════
-
 function generateFinalSummary() {
   collectEquipos();
   collectServicios();
 
-  const fmt = n => n.toLocaleString('es-CL');
+  const fmt    = n => n.toLocaleString('es-CL');
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
   // ── Productos ──────────────────────────────────────────
@@ -547,7 +512,6 @@ function generateFinalSummary() {
 // ═════════════════════════════════════════
 // SIMULADOR (Paso 4)
 // ═════════════════════════════════════════
-
 function initSimulador() {
   collectEquipos();
   collectServicios();
@@ -556,8 +520,7 @@ function initSimulador() {
   const totalSvc = Object.values(state.servicios).reduce((s, v) => s + v, 0);
 
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-
-  setTxt('montoFinanciar',     totalEq.toLocaleString('es-CL'));
+  setTxt('montoFinanciar',        totalEq.toLocaleString('es-CL'));
   setTxt('serviciosMensualesSim', totalSvc.toLocaleString('es-CL'));
 
   calcularSimulador();
@@ -567,9 +530,9 @@ function calcularSimulador() {
   const totalEq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
   const totalSvc = Object.values(state.servicios).reduce((s, v) => s + v, 0);
 
-  const principal = totalEq;
-  const tasaMensual = simTasa / 100 / 12;
-  const n = simPlazo;
+  const principal    = totalEq;
+  const tasaMensual  = simTasa / 100 / 12;
+  const n            = simPlazo;
 
   let cuotaProducto = 0;
   if (tasaMensual === 0) {
@@ -578,18 +541,17 @@ function calcularSimulador() {
     cuotaProducto = principal * (tasaMensual * Math.pow(1 + tasaMensual, n)) / (Math.pow(1 + tasaMensual, n) - 1);
   }
 
-  const cuotaTotal   = Math.round(cuotaProducto + totalSvc);
-  const totalPagar   = Math.round(cuotaProducto * n + totalSvc * n);
-  const intereses    = Math.round(cuotaProducto * n - principal);
+  const cuotaTotal = Math.round(cuotaProducto + totalSvc);
+  const totalPagar = Math.round(cuotaProducto * n + totalSvc * n);
+  const intereses  = Math.round(cuotaProducto * n - principal);
 
-  const fmt = v => v.toLocaleString('es-CL');
+  const fmt    = v => v.toLocaleString('es-CL');
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
   setTxt('simCuota',    '$' + fmt(cuotaTotal));
   setTxt('simTotal',    '$' + fmt(totalPagar));
   setTxt('simIntereses','$' + fmt(Math.max(0, intereses)));
 
-  // Tabla de amortización
   generarTablaAmort(principal, tasaMensual, n, cuotaProducto);
 }
 
@@ -603,8 +565,8 @@ function generarTablaAmort(principal, tasaMensual, n, cuota) {
   let rows = '';
 
   for (let i = 1; i <= n; i++) {
-    const interes  = Math.round(saldo * tasaMensual);
-    const capital  = Math.round(cuota - interes);
+    const interes = Math.round(saldo * tasaMensual);
+    const capital = Math.round(cuota - interes);
     saldo = Math.max(0, saldo - capital);
     totalCapital += capital;
     totalInteres += interes;
@@ -626,7 +588,6 @@ function setPlazo(meses, btn) {
   if (btn) btn.classList.add('active');
   calcularSimulador();
 
-  // Actualizar label del plazo en sticky y summary
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   setTxt('plazoSidebarLabel', simPlazo);
   setTxt('cuotaMensual', calcularCuotaSimple());
@@ -649,9 +610,9 @@ function toggleTablaAmort() {
 }
 
 function calcularCuotaSimple() {
-  const totalEq = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
+  const totalEq     = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
   const tasaMensual = simTasa / 100 / 12;
-  const n = simPlazo;
+  const n           = simPlazo;
   if (tasaMensual === 0) return Math.round(totalEq / n).toLocaleString('es-CL');
   const cuota = totalEq * (tasaMensual * Math.pow(1 + tasaMensual, n)) / (Math.pow(1 + tasaMensual, n) - 1);
   return Math.round(cuota).toLocaleString('es-CL');
@@ -660,7 +621,6 @@ function calcularCuotaSimple() {
 // ═════════════════════════════════════════
 // SUPABASE
 // ═════════════════════════════════════════
-
 async function guardarCotizacionSupabase(data) {
   await initSupabase();
 
@@ -686,7 +646,6 @@ async function guardarCotizacionSupabase(data) {
 // ═════════════════════════════════════════
 // COTIZACIÓN
 // ═════════════════════════════════════════
-
 function solicitarCotizacion() {
   if (!validateStep(3)) return;
 
@@ -736,7 +695,6 @@ function enviarCotizacion() {
 // ═════════════════════════════════════════
 // MODAL
 // ═════════════════════════════════════════
-
 function abrirModal() {
   document.getElementById('modalOverlay').classList.add('modal-visible');
   document.body.style.overflow = 'hidden';
@@ -750,87 +708,21 @@ function cerrarModal() {
 }
 
 // ═════════════════════════════════════════
-// FILTROS (Paso 1)
+// BÚSQUEDA (delegada a flat-catalog.js)
 // ═════════════════════════════════════════
-let filtroMarca = 'todos';
-let filtroTipo  = 'todos';
-
-function setFiltro(btn, tipo) {
-  if (tipo === 'marca') {
-    filtroMarca = btn.dataset.val;
-    document.querySelectorAll('#filtrosMarca .chip').forEach(c => c.classList.remove('active'));
-  } else {
-    filtroTipo = btn.dataset.val;
-    document.querySelectorAll('#filtrosTipo .chip').forEach(c => c.classList.remove('active'));
-  }
-  btn.classList.add('active');
-  window.aplicarFiltros();
-}
-
-function actualizarConteos() {
-  const tipos = ['todos', 'notebook', 'servidor', 'impresora', 'networking', 'storage', 'servicio-tic'];
-  tipos.forEach(tipo => {
-    const el = document.getElementById('count-' + tipo);
-    if (!el) return;
-    if (tipo === 'todos') {
-      el.textContent = document.querySelectorAll('.product-item').length;
-    } else {
-      el.textContent = document.querySelectorAll(`.product-item[data-tipo="${tipo}"]`).length;
-    }
-  });
-}
-
-function aplicarFiltros() {
-  const q = (document.getElementById('searchProductos')?.value || '').toLowerCase();
-  let algunaVisible = false;
-
-  document.querySelectorAll('.product-category').forEach(cat => {
-    const catTipo = cat.dataset.tipo;
-    const tipoOk  = filtroTipo === 'todos' || catTipo === filtroTipo;
-
-    let itemsVisibles = 0;
-    cat.querySelectorAll('.product-item').forEach(item => {
-      const marca      = (item.dataset.marca      || '').toLowerCase();
-      const nombre     = (item.dataset.name       || '').toLowerCase();
-      const partNumber = (item.dataset.partnumber || '').toLowerCase();
-
-      const marcaOk  = filtroMarca === 'todos' || marca.includes(filtroMarca.toLowerCase());
-      const searchOk = !q || nombre.includes(q) || partNumber.includes(q) || marca.includes(q);
-
-      const visible = tipoOk && marcaOk && searchOk;
-      item.style.display = visible ? '' : 'none';
-      if (visible) itemsVisibles++;
-    });
-
-    cat.style.display = itemsVisibles > 0 ? '' : 'none';
-    if (itemsVisibles > 0) algunaVisible = true;
-  });
-
-  const noRes = document.getElementById('sinResultados');
-  if (noRes) noRes.style.display = algunaVisible ? 'none' : 'block';
-}
-
-function resetFiltros() {
-  filtroMarca = 'todos';
-  filtroTipo  = 'todos';
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  document.querySelector('[data-filtro="marca"][data-val="todos"]')?.classList.add('active');
-  document.querySelector('[data-filtro="tipo"][data-val="todos"]')?.classList.add('active');
-  const inp = document.getElementById('searchProductos');
-  if (inp) inp.value = '';
-  window.aplicarFiltros();
-}
+// aplicarFiltros y clearSearch las define flat-catalog.js en su DOMContentLoaded.
+// Se declara un stub aquí para evitar errores si se llama antes de que cargue.
+function aplicarFiltros() {}
+function actualizarConteos() {}
 
 // ═════════════════════════════════════════
-// ACCORDION
+// ACCORDION (accordion oculto, solo usado
+// como fuente de datos por flat-catalog)
 // ═════════════════════════════════════════
 function toggleCategory(id) {
   document.getElementById(id)?.classList.toggle('open');
 }
 
-// ═════════════════════════════════════════
-// BADGE DE CATEGORÍA
-// ═════════════════════════════════════════
 function updateCatBadge(cat) {
   if (!cat) return;
   let total = 0;
@@ -844,58 +736,33 @@ function updateCatBadge(cat) {
 }
 
 // ═════════════════════════════════════════
-// INIT
-// ═════════════════════════════════════════
-
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Renderizar catálogo desde catalogo.js (si está disponible)
-  if (typeof window.CATALOGO !== 'undefined') {
-    renderCatalogo(window.CATALOGO);
-  }
-
-  updateProgressBar();
-  updateButtons();
-  updateSidebar();
-  actualizarConteos();
-  renderizarPreciosUSD();
-  actualizarDescuento();
-  fetchDolarTIC();
-
-  document.querySelectorAll('.service-check').forEach(el => {
-    el.addEventListener('change', updateSidebar);
-  });
-});
-
-// ═════════════════════════════════════════
 // RENDER DINÁMICO DEL CATÁLOGO
 // Lee window.CATALOGO (de catalogo.js) e
 // inyecta el HTML en #catalogoProductos
 // ═════════════════════════════════════════
-
-// Configuración de categorías: orden, label, icono SVG, id de accordion
 const CAT_CONFIG = {
   notebook:  {
-    id: 'cat-notebooks',   label: 'Notebooks',           open: false,
+    id: 'cat-notebooks',    label: 'Notebooks',          open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
   },
   servidor:  {
-    id: 'cat-servidores',  label: 'Servidores',          open: false,
+    id: 'cat-servidores',   label: 'Servidores',         open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="18" y2="6"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="18" x2="18" y2="18"/></svg>`,
   },
   impresora: {
-    id: 'cat-impresoras',  label: 'Impresoras',          open: false,
+    id: 'cat-impresoras',   label: 'Impresoras',         open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>`,
   },
   networking: {
-    id: 'cat-networking',  label: 'Networking',          open: false,
+    id: 'cat-networking',   label: 'Networking',         open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>`,
   },
   storage:   {
-    id: 'cat-storage',     label: 'Almacenamiento NAS',  open: false,
+    id: 'cat-storage',      label: 'Almacenamiento NAS', open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
   },
   'servicio-tic': {
-    id: 'cat-servicio-tic', label: 'Servicios TIC',       open: false,
+    id: 'cat-servicio-tic', label: 'Servicios TIC',      open: false,
     icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
   },
 };
@@ -906,14 +773,12 @@ function renderCatalogo(catalogo) {
   const container = document.getElementById('catalogoProductos');
   if (!container) return;
 
-  // Agrupar productos por tipo
   const grupos = {};
   catalogo.forEach(prod => {
     if (!grupos[prod.tipo]) grupos[prod.tipo] = [];
     grupos[prod.tipo].push(prod);
   });
 
-  // Renderizar en el orden definido en CAT_CONFIG
   const html = Object.entries(CAT_CONFIG).map(([tipo, cfg]) => {
     const productos = grupos[tipo] || [];
     if (productos.length === 0) return '';
@@ -924,11 +789,11 @@ function renderCatalogo(catalogo) {
       ).join('\n');
 
       return `
-            <div class="product-item" data-marca="${prod.marca}" data-tipo="${prod.tipo}" data-name="${prod.name}" data-partNumber="${prod.partNumber}" data-price="${prod.price}">
+            <div class="product-item" data-marca="${prod.marca}" data-tipo="${prod.tipo}" data-name="${prod.name}" data-partNumber="${prod.partNumber || ''}" data-price="${prod.price}">
               <div class="product-main">
                 <div class="product-details">
                   <div class="product-name">${prod.name}</div>
-                  ${prod.tipo !== 'servicio-tic' ? `<div class="product-specs">${prod.partNumber}</div>` : ''}
+                  ${prod.tipo !== 'servicio-tic' ? `<div class="product-specs">${prod.partNumber || ''}</div>` : ''}
                 </div>
                 <div class="product-price-tag">$${prod.price.toLocaleString('es-CL')}</div>
                 <div class="product-qty-control">
@@ -971,8 +836,7 @@ function renderCatalogo(catalogo) {
 window.renderCatalogo = renderCatalogo;
 
 // ═════════════════════════════════════════
-// EXPONER AL SCOPE GLOBAL (requerido por
-// los onclick inline del HTML)
+// EXPONER AL SCOPE GLOBAL
 // ═════════════════════════════════════════
 window.toggleProduct        = toggleProduct;
 window.incrementQty         = incrementQty;
@@ -983,9 +847,7 @@ window.solicitarCotizacion  = solicitarCotizacion;
 window.enviarCotizacion     = enviarCotizacion;
 window.updateSidebar        = updateSidebar;
 window.cerrarModal          = cerrarModal;
-window.setFiltro            = setFiltro;
-// window.aplicarFiltros ya fue seteada por _patchAplicarFiltros()
-window.resetFiltros         = resetFiltros;
+window.aplicarFiltros       = aplicarFiltros;   // flat-catalog.js la reemplaza en su DOMContentLoaded
 window.toggleCategory       = toggleCategory;
 window.setPlazo             = setPlazo;
 window.updateTasa           = updateTasa;
@@ -993,488 +855,25 @@ window.toggleTablaAmort     = toggleTablaAmort;
 window.actualizarTipoCambio = actualizarTipoCambio;
 window.cambiarDolar         = cambiarDolar;
 window.actualizarDescuento  = actualizarDescuento;
-/* ─────────────────────────────────────────────
-   TRAMOS DE DESCUENTO (igual que el JS original)
-───────────────────────────────────────────────*/
-const TABLA_DCTO_TRAMOS = [
-  { min: 10, max: 19, pct: 1 },
-  { min: 20, max: 29, pct: 2 },
-  { min: 30, max: 39, pct: 3 },
-  { min: 40, max: 49, pct: 4 },
-  { min: 50, max: 9999, pct: 5 },
-];
- 
-function obtenerPctDescuento(totalQty) {
-  const tramo = TABLA_DCTO_TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
-  return tramo ? tramo.pct : 0;
-}
- 
-/* ─────────────────────────────────────────────
-   CATEGORÍAS: definición para la nueva tabla
-   (sincroniza con las del HTML original)
-───────────────────────────────────────────────*/
-const CATALOG_CATEGORIES = [
-  {
-    id: 'tab-notebooks',
-    tipo: 'notebook',
-    label: 'Notebooks',
-    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
-  },
-  {
-    id: 'tab-servidores',
-    tipo: 'servidor',
-    label: 'Servidores',
-    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>`,
-  },
-  {
-    id: 'tab-impresoras',
-    tipo: 'impresora',
-    label: 'Impresoras',
-    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4M6 9h12v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z"/><line x1="8" y1="13" x2="16" y2="13"/></svg>`,
-  },
-  {
-    id: 'tab-networking',
-    tipo: 'networking',
-    label: 'Networking',
-    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>`,
-  },
-  {
-    id: 'tab-storage',
-    tipo: 'storage',
-    label: 'Almacenamiento',
-    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
-  },
-  {
-    id: 'tab-servicio-tic',
-    tipo: 'servicio-tic',
-    label: 'Servicios TIC',
-    icon: `<svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
-  },
-];
- 
-/* ─────────────────────────────────────────────
-   CONSTRUIR LA TABLA A PARTIR DEL HTML ORIGINAL
-───────────────────────────────────────────────*/
-function buildCatalogTable() {
-  const catalogoDiv = document.getElementById('catalogoProductos');
-  if (!catalogoDiv) return;
- 
- 
-  // Para cada categoría definida, construir su tabla
-  CATALOG_CATEGORIES.forEach((cat, catIdx) => {
-    // Obtener los product-item del accordion original
-    const originalCat = catalogoDiv.querySelector(`.product-category[data-tipo="${cat.tipo}"]`);
-    if (!originalCat) return;
- 
-    const items = originalCat.querySelectorAll('.product-item');
-    if (items.length === 0) return;
- 
-    // Wrapper de la tabla
-    const wrap = document.createElement('div');
-    wrap.className = 'catalog-table-wrap';
-    wrap.id = `tablewrap-${cat.tipo}`;
-    wrap.dataset.tipo = cat.tipo;
- 
-    // Header colapsable
-    wrap.innerHTML = `
-      <div class="catalog-table-header" onclick="toggleTableCat('tablewrap-${cat.tipo}')">
-        ${cat.icon}
-        <h3>${cat.label}</h3>
-        <span class="cat-badge" id="tablebadge-${cat.tipo}"></span>
-        <svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="catalog-table-body">
-        <div class="cat-col-headers">
-          <span class="cat-col-label">Producto</span>
-          <span class="cat-col-label right">P. Lista</span>
-          <span class="cat-col-label center">Cantidad</span>
-          <span class="cat-col-label right">P. c/dto.</span>
-          <span class="cat-col-label right">Subtotal</span>
-          <span class="cat-col-label right">Ahorro $</span>
-        </div>
-        <div class="product-rows" id="rows-${cat.tipo}"></div>
-      </div>
-    `;
- 
-    catalogoDiv.parentNode.insertBefore(wrap, catalogoDiv);
- 
-    // Construir filas
-    const rowsContainer = wrap.querySelector(`#rows-${cat.tipo}`);
- 
-    items.forEach(item => {
-      const name       = item.dataset.name       || '';
-      const partNumber = item.dataset.partnumber || '';
-      const marca      = item.dataset.marca      || '';
-      const price  = parseInt(item.dataset.price) || 0;
-      const usd    = Math.round(price / (window.tipoCambio || 900));
- 
-      // Clonar el select de servicios
-      const origSelect = item.querySelector('.product-service-select');
-      const selectClone = origSelect ? origSelect.cloneNode(true) : null;
-      if (selectClone) {
-        selectClone.addEventListener('change', () => {
-          // Sincronizar con el select original
-          if (origSelect) origSelect.value = selectClone.value;
-          if (typeof window.updateSidebar === 'function') window.updateSidebar();
-        });
-      }
- 
-      // Crear fila
-      const row = document.createElement('div');
-      row.className = 'product-row';
-      row.dataset.price = price;
-      row.dataset.name  = name;
-      row.dataset.marca = marca;
-      row.dataset.tipo  = cat.tipo;
-      row.dataset.partNumber = partNumber;
- 
-      row.innerHTML = `
-        <div class="pr-info">
-          <div class="pr-name">${name}</div>
-          ${cat.tipo !== 'servicio-tic' ? `<div class="pr-specs">${partNumber}</div>` : ''}
-          <span class="pr-marca-badge">${marca}</span>
-        </div>
-        <div class="pr-precio-lista">
-          <span class="precio-base" id="preciobase-${slugify(name)}">$${fmt(price)}</span>
-          <span class="precio-usd">≈ USD ${usd.toLocaleString('en-US')}</span>
-        </div>
-        <div class="pr-qty">
-          <button type="button" onclick="tablaDecrement(event)">−</button>
-          <span class="qty-value" id="qty-${slugify(name)}">0</span>
-          <button type="button" onclick="tablaIncrement(event)">+</button>
-        </div>
-        <div class="pr-precio-dto">
-          <span class="precio-dto-val sin-dto" id="preciodto-${slugify(name)}">$${fmt(price)}</span>
-          <span class="dto-badge oculto" id="dtobadge-${slugify(name)}"></span>
-        </div>
-        <div class="pr-subtotal">
-          <span class="subtotal-val inactive" id="subtotal-${slugify(name)}">—</span>
-        </div>
-        <div class="pr-ahorro">
-          <span class="ahorro-val cero" id="ahorro-${slugify(name)}">—</span>
-        </div>
-      `;
- 
-      rowsContainer.appendChild(row);
-    });
-  });
- 
-  // Ocultar el catalogoDiv original (los product-category ya se ocultan con CSS,
-  // pero ocultamos también el wrapper si queda vacío)
-  catalogoDiv.style.display = 'none';
- 
-  // Primer render de precios
-  refreshTablePrices();
-}
- 
-/* ─────────────────────────────────────────────
-   TOGGLE CATEGORÍA TABLA
-───────────────────────────────────────────────*/
-function toggleTableCat(id) {
-  document.getElementById(id)?.classList.toggle('open');
-}
-window.toggleTableCat = toggleTableCat;
- 
-/* ─────────────────────────────────────────────
-   INCREMENTAR / DECREMENTAR EN TABLA
-───────────────────────────────────────────────*/
-function tablaIncrement(event) {
-  event.preventDefault();
-  const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
-  qtySpan.textContent = parseInt(qtySpan.textContent) + 1;
- 
-  const row = event.currentTarget.closest('.product-row');
-  const name = row?.dataset.name;
- 
-  // Sincronizar con el qty-value del accordion original
-  syncOriginalQty(name, parseInt(qtySpan.textContent));
- 
-  refreshTablePrices();
-  if (typeof window.updateSidebar     === 'function') window.updateSidebar();
-  if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
- 
-  // Actualizar badge de categoría original
-  const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
-  if (origItem) {
-    const cat = origItem.closest('.product-category');
-    if (typeof window.updateCatBadge === 'function') window.updateCatBadge(cat);
-  }
-}
- 
-function tablaDecrement(event) {
-  event.preventDefault();
-  const qtySpan = event.currentTarget.parentElement.querySelector('.qty-value');
-  const current = parseInt(qtySpan.textContent);
-  if (current <= 0) return;
- 
-  qtySpan.textContent = current - 1;
- 
-  const row = event.currentTarget.closest('.product-row');
-  const name = row?.dataset.name;
- 
-  syncOriginalQty(name, current - 1);
-  refreshTablePrices();
-  if (typeof window.updateSidebar       === 'function') window.updateSidebar();
-  if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
- 
-  const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
-  if (origItem) {
-    const cat = origItem.closest('.product-category');
-    if (typeof window.updateCatBadge === 'function') window.updateCatBadge(cat);
-  }
-}
- 
-window.tablaIncrement = tablaIncrement;
-window.tablaDecrement = tablaDecrement;
- 
-/* ─────────────────────────────────────────────
-   SINCRONIZAR QTY CON EL ACCORDION ORIGINAL
-   (para que collectEquipos() siga funcionando)
-───────────────────────────────────────────────*/
-function syncOriginalQty(name, qty) {
-  const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
-  if (!origItem) return;
-  const origQty = origItem.querySelector('.qty-value');
-  if (origQty) origQty.textContent = qty;
-}
- 
-/* ─────────────────────────────────────────────
-   MOSTRAR / OCULTAR FILA DE SERVICIO
-───────────────────────────────────────────────*/
-function toggleServiceRow(name, qty) {
-  const svcRow = document.getElementById(`svcrow-${slugify(name)}`);
-  if (!svcRow) return;
-  if (qty > 0) {
-    svcRow.classList.add('visible');
-  } else {
-    svcRow.classList.remove('visible');
-    // Resetear select
-    const sel = svcRow.querySelector('select');
-    if (sel) {
-      sel.value = '';
-      // Sync original
-      const origItem = document.querySelector(`.product-item[data-name="${CSS.escape(name)}"]`);
-      if (origItem) {
-        const origSel = origItem.querySelector('select');
-        if (origSel) origSel.value = '';
-      }
-    }
-  }
-}
- 
-/* ─────────────────────────────────────────────
-   REFRESCAR PRECIOS EN TODA LA TABLA
-───────────────────────────────────────────────*/
-function refreshTablePrices() {
-  // 1. Calcular total de unidades para determinar % descuento
-  let totalQty = 0;
-  document.querySelectorAll('.product-row .qty-value').forEach(el => {
-    totalQty += parseInt(el.textContent) || 0;
-  });
-  const pct = obtenerPctDescuento(totalQty);
- 
-  // 2. Variables de totales para KPI
-  let totalListaAcum = 0;
-  let totalAhorroAcum = 0;
- 
-  // 3. Recorrer cada fila y actualizar celdas
-  document.querySelectorAll('.product-row').forEach(row => {
-    const price  = parseInt(row.dataset.price) || 0;
-    const name   = row.dataset.name;
-    const slug   = slugify(name);
-    const qty    = parseInt(row.querySelector('.qty-value')?.textContent) || 0;
-    const tc     = window.tipoCambio || 900;
- 
-    const precioConDto = Math.round(price * (1 - pct / 100));
-    const subtotal     = qty * precioConDto;
-    const subtotalLista = qty * price;
-    const ahorroLinea  = subtotalLista - subtotal;
- 
-    totalListaAcum  += subtotalLista;
-    totalAhorroAcum += ahorroLinea;
- 
-    // Precio lista (tachar si hay dto)
-    const elBase = document.getElementById(`preciobase-${slug}`);
-    if (elBase) {
-      elBase.textContent = `$${fmt(price)}`;
-      if (pct > 0 && qty > 0) {
-        elBase.classList.add('tachado');
-      } else {
-        elBase.classList.remove('tachado');
-      }
-    }
- 
-    // Precio con dto.
-    const elDto = document.getElementById(`preciodto-${slug}`);
-    const elDtoBadge = document.getElementById(`dtobadge-${slug}`);
-    if (elDto) {
-      elDto.textContent = `$${fmt(precioConDto)}`;
-      if (pct > 0) {
-        elDto.classList.remove('sin-dto');
-        if (elDtoBadge) {
-          elDtoBadge.textContent = `-${pct}%`;
-          elDtoBadge.classList.remove('oculto');
-        }
-      } else {
-        elDto.classList.add('sin-dto');
-        if (elDtoBadge) elDtoBadge.classList.add('oculto');
-      }
-    }
- 
-    // Subtotal
-    const elSub = document.getElementById(`subtotal-${slug}`);
-    if (elSub) {
-      if (qty > 0) {
-        elSub.textContent = `$${fmt(subtotal)}`;
-        elSub.classList.remove('inactive');
-      } else {
-        elSub.textContent = '—';
-        elSub.classList.add('inactive');
-      }
-    }
- 
-    // Ahorro por línea
-    const elAhorro = document.getElementById(`ahorro-${slug}`);
-    if (elAhorro) {
-      if (qty > 0 && ahorroLinea > 0) {
-        elAhorro.textContent = `$${fmt(ahorroLinea)}`;
-        elAhorro.classList.remove('cero');
-      } else if (qty > 0) {
-        elAhorro.textContent = '$0';
-        elAhorro.classList.add('cero');
-      } else {
-        elAhorro.textContent = '—';
-        elAhorro.classList.add('cero');
-      }
-    }
- 
-    // Badge de categoría tabla
-    const wrap = row.closest('.catalog-table-wrap');
-    if (wrap) {
-      const tipo = wrap.dataset.tipo;
-      updateTableCatBadge(tipo);
-    }
-  });
- 
-  
-  // 5. Actualizar también los precios USD
-  document.querySelectorAll('.product-row').forEach(row => {
-    const price = parseInt(row.dataset.price) || 0;
-    const tc    = window.tipoCambio || 900;
-    const usdEl = row.querySelector('.precio-usd');
-    if (usdEl) usdEl.textContent = `≈ USD ${Math.round(price / tc).toLocaleString('en-US')}`;
-  });
-}
- 
-/* ─────────────────────────────────────────────
-   BADGE POR CATEGORÍA EN TABLA
-───────────────────────────────────────────────*/
-function updateTableCatBadge(tipo) {
-  let total = 0;
-  document.querySelectorAll(`.product-row[data-tipo="${tipo}"] .qty-value`).forEach(el => {
-    total += parseInt(el.textContent) || 0;
-  });
-  const badge = document.getElementById(`tablebadge-${tipo}`);
-  if (badge) {
-    badge.textContent = `${total} uds`;
-    badge.classList.toggle('visible', total > 0);
-  }
-}
- 
-/* ─────────────────────────────────────────────
-   FILTROS: extender aplicarFiltros para que también
-   filtre las filas de tabla (catalog-table-wrap)
-   NOTA: se parchea DESPUÉS de que aplicarFiltros
-   ya está definida en el scope, así _original es válido.
-───────────────────────────────────────────────*/
-function _patchAplicarFiltros() {
-  const _originalAplicarFiltros = aplicarFiltros; // referencia local correcta
+window.obtenerPctDescuento  = obtenerPctDescuento;
+window.state                = state;
+window.tipoCambio           = tipoCambio;
 
-  window.aplicarFiltros = function () {
-    // 1. Ejecutar el filtrado original (accordion .product-category)
-    _originalAplicarFiltros();
-
-    // 2. Filtrar también en las filas de tabla (catalog-table-wrap)
-    const q = (document.getElementById('searchProductos')?.value || '').toLowerCase();
-
-    // Usar las mismas variables de estado que usa aplicarFiltros original
-    const fMarca = filtroMarca;
-    const fTipo  = filtroTipo;
-
-    document.querySelectorAll('.catalog-table-wrap').forEach(wrap => {
-      const catTipo = wrap.dataset.tipo;
-      const tipoOk  = fTipo === 'todos' || catTipo === fTipo;
-      let rowsVisible = 0;
-
-      wrap.querySelectorAll('.product-row').forEach(row => {
-        const marcaOk  = fMarca === 'todos' || (row.dataset.marca || '').toLowerCase() === fMarca.toLowerCase();
-        const searchOk = !q || (row.dataset.name       || '').toLowerCase().includes(q)
-                            || (row.dataset.partnumber || '').toLowerCase().includes(q)
-                            || (row.dataset.marca      || '').toLowerCase().includes(q);
-
-        const visible = tipoOk && marcaOk && searchOk;
-        row.style.display = visible ? '' : 'none';
-
-        // También ocultar fila de servicio si el producto no es visible
-        const svcRow = document.getElementById(`svcrow-${slugify(row.dataset.name)}`);
-        if (svcRow) svcRow.style.display = visible ? '' : 'none';
-
-        if (visible) rowsVisible++;
-      });
-
-      wrap.style.display = rowsVisible > 0 ? '' : 'none';
-    });
-  };
-
-  // Exponer la versión parcheada
-  window.aplicarFiltros = window.aplicarFiltros;
-}
-// Llamar inmediatamente (aplicarFiltros ya está definida en este scope)
-_patchAplicarFiltros();
- 
-/* ─────────────────────────────────────────────
-   PARCHE: refreshTablePrices cuando cambia el
-   descuento (llamada desde actualizarDescuento)
-───────────────────────────────────────────────*/
-const _originalActualizarDescuento = window.actualizarDescuento;
-window.actualizarDescuento = function () {
-  if (typeof _originalActualizarDescuento === 'function') _originalActualizarDescuento();
-  refreshTablePrices();
-};
- 
-/* ─────────────────────────────────────────────
-   PARCHE: refreshTablePrices cuando cambia el
-   tipo de cambio (dólar TIC)
-───────────────────────────────────────────────*/
-const _origActualizarTipoCambio = window.actualizarTipoCambio;
-window.actualizarTipoCambio = function (val) {
-  if (typeof _origActualizarTipoCambio === 'function') _origActualizarTipoCambio(val);
-  refreshTablePrices();
-};
- 
-/* ─────────────────────────────────────────────
-   HELPERS
-───────────────────────────────────────────────*/
-function fmt(n) {
-  return n.toLocaleString('es-CL');
-}
- 
-function slugify(str) {
-  return (str || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
- 
-/* ─────────────────────────────────────────────
-   INIT: esperar a que el DOM y el JS original
-   estén listos
-───────────────────────────────────────────────*/
+// ═════════════════════════════════════════
+// INIT
+// ═════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  // Pequeño delay para asegurarnos que configurador.js terminó su DOMContentLoaded
-  setTimeout(() => {
-    buildCatalogTable();
-    refreshTablePrices();
-  }, 50);
+  if (typeof window.CATALOGO !== 'undefined') {
+    renderCatalogo(window.CATALOGO);
+  }
+
+  updateProgressBar();
+  updateButtons();
+  updateSidebar();
+  actualizarDescuento();
+  fetchDolarTIC();
+
+  document.querySelectorAll('.service-check').forEach(el => {
+    el.addEventListener('change', updateSidebar);
+  });
 });
