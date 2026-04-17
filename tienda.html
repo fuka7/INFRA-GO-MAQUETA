@@ -9,11 +9,194 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="stylesheet" href="/assets/css/tienda.css">
-  <link rel="stylesheet" href="/assets/css/responsive.css">
-  <link rel="stylesheet" href="/assets/css/navbar.css">
   <link rel="stylesheet" href="/assets/css/footer.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+  <style>
+/* ── NAVBAR INLINE — prefijo igb- ── */
+.igb-top{position:fixed;top:0;left:0;right:0;z-index:1002;height:36px;background:#051237;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,0.07);}
+.igb-top span{font-family:'Barlow',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);}
+.igb-main{position:fixed;top:36px;left:0;right:0;z-index:1001;height:64px;background:#0a1628;display:flex;align-items:center;gap:24px;padding:0 48px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.igb-logo{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;color:#fff;text-decoration:none;flex-shrink:0;line-height:1;}
+.igb-logo span{color:#e8920a;}
+.igb-search{flex:1;max-width:660px;display:flex;height:40px;border-radius:6px;overflow:hidden;background:#fff;}
+.igb-search-input{flex:1;border:none;outline:none;padding:0 16px;font-family:'Barlow',sans-serif;font-size:14px;color:#111;}
+.igb-search-input::placeholder{color:rgba(0,0,0,0.4);}
+.igb-search-btn{width:46px;background:#e8920a;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s;}
+.igb-search-btn:hover{background:#f0a500;}
+.igb-search-btn svg{width:18px;height:18px;}
+.igb-actions{display:flex;align-items:center;gap:24px;flex-shrink:0;}
+.igb-account{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;transition:opacity .2s;}
+.igb-account:hover{opacity:.75;}
+.igb-account-text{display:flex;flex-direction:column;line-height:1.25;}
+.igb-account-text small{font-size:10px;color:rgba(255,255,255,0.5);}
+.igb-account-text strong{font-size:14px;font-weight:700;}
+.igb-cart{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;transition:opacity .2s;}
+.igb-cart:hover{opacity:.75;}
+.igb-cart strong{font-size:14px;font-weight:700;}
+.igb-cart-wrap{position:relative;display:flex;align-items:center;}
+.igb-cart-count{position:absolute;top:-7px;right:-9px;width:18px;height:18px;background:#e8920a;color:#fff;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.igb-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;background:none;border:1px solid rgba(255,255,255,0.25);border-radius:7px;cursor:pointer;padding:8px;margin-left:auto;flex-shrink:0;}
+.igb-burger span{display:block;width:100%;height:2px;background:#fff;border-radius:2px;transition:transform .25s,opacity .2s;}
+.igb-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.igb-burger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.igb-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.igb-nav{position:fixed;top:100px;left:0;right:0;z-index:1000;height:44px;background:#fff;border-bottom:1px solid rgba(0,0,0,0.1);}
+.igb-nav-inner{display:flex;align-items:center;height:100%;padding:0 48px;}
+.igb-categories{position:relative;flex-shrink:0;}
+.igb-cat-trigger{display:flex;align-items:center;gap:8px;background:none;border:1px solid rgba(0,0,0,0.15);border-radius:6px;padding:6px 14px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;color:#111;cursor:pointer;margin-right:20px;white-space:nowrap;transition:border-color .2s,background .2s;}
+.igb-cat-trigger:hover{border-color:#e8920a;background:rgba(232,146,10,0.05);}
+.igb-chevron{transition:transform .2s;}
+.igb-categories.open .igb-chevron{transform:rotate(180deg);}
+.igb-dropdown{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.12);min-width:220px;padding:6px;display:none;z-index:2000;}
+.igb-categories.open .igb-dropdown{display:block;}
+.igb-dropdown-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:7px;text-decoration:none;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;color:rgba(0,0,0,0.75);transition:background .15s,color .15s;}
+.igb-dropdown-item:hover{background:rgba(232,146,10,0.08);color:#e8920a;}
+.igb-links{display:flex;align-items:center;list-style:none;flex:1;padding-left:8px;}
+.igb-links li a{display:block;padding:0 16px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;color:rgba(0,0,0,0.65);text-decoration:none;white-space:nowrap;transition:color .2s;}
+.igb-links li a:hover,.igb-links li a.igb-active{color:#e8920a;font-weight:700;}
+.igb-cta{flex-shrink:0;display:inline-block;background:#e8920a;color:#fff !important;font-family:'Barlow',sans-serif;font-weight:700;font-size:13px;padding:8px 20px;border-radius:6px;text-decoration:none;white-space:nowrap;transition:background .2s,transform .15s;}
+.igb-cta:hover{background:#f0a500;transform:translateY(-1px);}
+.igb-overlay{display:none;position:fixed;inset:0;top:100px;background:rgba(0,0,0,0.4);z-index:1500;}
+.igb-overlay.open{display:block;}
+.igb-mobile{position:fixed;top:100px;left:0;right:0;z-index:1600;background:#fff;display:flex;flex-direction:column;padding:12px 16px 24px;gap:2px;border-bottom:2px solid rgba(232,146,10,0.3);box-shadow:0 8px 24px rgba(0,0,0,0.1);transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform .3s,opacity .25s;}
+.igb-mobile.open{transform:translateY(0);opacity:1;visibility:visible;}
+.igb-mobile a{display:block;padding:11px 16px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:600;color:rgba(0,0,0,0.7);text-decoration:none;border-radius:8px;transition:background .15s,color .15s;}
+.igb-mobile a:hover{background:rgba(0,0,0,0.05);color:#111;}
+.igb-mobile .igb-cta{margin-top:10px;text-align:center;border-radius:8px;padding:13px 20px;}
+.igb-mobile-sep{border:none;border-top:1px solid rgba(0,0,0,0.08);margin:8px 0;}
+/* Reservar espacio */
+body{padding-top:144px;}
+.hero-carousel{height:calc(100vh - 144px);}
+/* Responsive */
+@media(max-width:1024px){.igb-actions{display:none;}.igb-nav{display:none;}.igb-burger{display:flex;}.igb-main{padding:0 24px;}.igb-search{max-width:100%;}body{padding-top:100px;}.hero-carousel{height:calc(100vh - 100px);}}
+@media(max-width:768px){.igb-top{height:32px;}.igb-main{top:32px;height:56px;padding:0 20px;}.igb-nav{top:88px;}.igb-mobile{top:88px;}.igb-overlay{top:88px;}.igb-search{display:none;}body{padding-top:88px;}.hero-carousel{height:calc(100vh - 88px);}}
+</style>
 </head>
 <body>
+<!-- ════════════════ NAVBAR INLINE ════════════════ -->
+
+<!-- Topbar -->
+<div class="igb-top">
+  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000</span>
+</div>
+
+<!-- Fila principal -->
+<header class="igb-main">
+  <a class="igb-logo" href="/index.html">Infra<span>Go</span></a>
+  <div class="igb-search">
+    <input class="igb-search-input" type="text" placeholder="Buscar productos, marcas y más...">
+    <button class="igb-search-btn" type="button" onclick="igbSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+  </div>
+  <div class="igb-actions">
+    <a class="igb-account" href="#">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
+    </a>
+    <a class="igb-cart" href="#">
+      <span class="igb-cart-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="igb-cart-count">0</span>
+      </span>
+      <strong>Carro</strong>
+    </a>
+  </div>
+  <button class="igb-burger" type="button" onclick="igbToggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- Fila secundaria -->
+<nav class="igb-nav">
+  <div class="igb-nav-inner">
+    <div class="igb-categories" id="igbCats">
+      <button class="igb-cat-trigger" type="button" onclick="igbToggleCats()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        Categorías
+        <svg class="igb-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="igb-dropdown">
+        <a class="igb-dropdown-item" href="/tienda.html?cat=notebooks">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Notebooks
+        </a>
+        <a class="igb-dropdown-item" href="/tienda.html?cat=all-in-one">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="15" rx="2"/><circle cx="12" cy="11" r="3"/><path d="M8 21h8M12 18v3"/></svg>All in One (AIO)
+        </a>
+        <a class="igb-dropdown-item" href="/tienda.html?cat=pcs">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>PCs de Escritorio
+        </a>
+        <a class="igb-dropdown-item" href="/tienda.html?cat=accesorios">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3v4M8 3v4"/></svg>Accesorios
+        </a>
+      </div>
+    </div>
+    <ul class="igb-links">
+      <li><a href="/index.html">Inicio</a></li>
+      <li><a href="/configurador.html">Cotizador</a></li>
+      <li><a href="/tienda.html" class="igb-active">Tienda</a></li>
+      <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
+    </ul>
+    <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
+  </div>
+</nav>
+
+<!-- Overlay + Mobile -->
+<div class="igb-overlay" id="igbOverlay" onclick="igbCloseMenu()"></div>
+<div class="igb-mobile" id="igbMobile">
+  <a href="/index.html">Inicio</a>
+  <a href="/configurador.html">Cotizador</a>
+  <a href="/tienda.html" class="igb-active">Tienda</a>
+  <a href="/index.html#quienes-somos">Quiénes Somos</a>
+  <hr class="igb-mobile-sep">
+  <a href="/tienda.html?cat=notebooks">Notebooks</a>
+  <a href="/tienda.html?cat=all-in-one">All in One (AIO)</a>
+  <a href="/tienda.html?cat=pcs">PCs de Escritorio</a>
+  <a href="/tienda.html?cat=accesorios">Accesorios</a>
+  <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
+</div>
+
+<!-- JS navbar -->
+<script>
+function igbToggleCats(){
+  var el=document.getElementById('igbCats');
+  el.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var cats=document.getElementById('igbCats');
+  if(cats && !cats.contains(e.target)) cats.classList.remove('open');
+});
+function igbToggleMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var overlay=document.getElementById('igbOverlay');
+  var open=menu.classList.toggle('open');
+  if(btn) btn.classList.toggle('open',open);
+  if(overlay) overlay.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function igbCloseMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var overlay=document.getElementById('igbOverlay');
+  if(menu) menu.classList.remove('open');
+  if(btn) btn.classList.remove('open');
+  if(overlay) overlay.classList.remove('open');
+  document.body.style.overflow='';
+}
+function igbSearch(){
+  var q=document.querySelector('.igb-search-input').value.trim();
+  if(q) window.location.href='/tienda.html?q='+encodeURIComponent(q);
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') igbCloseMenu();
+});
+document.querySelector('.igb-search-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter') igbSearch();
+});
+</script>
+
+<!-- ════════════════ FIN NAVBAR ════════════════ -->
 
 <!-- HEADER -->
 <div class="tienda-header">
@@ -749,7 +932,103 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <!-- ── INCLUDES: navbar + footer automáticos ── -->
-<script src="/assets/js/includes.js"></script>
+
+<!-- ════════════════ FOOTER INLINE ════════════════ -->
+<!-- ══════════════════════════════════════
+     FOOTER — InfraGo (v2)
+══════════════════════════════════════ -->
+
+<div class="ig-footer-root">
+
+  <!-- FOOTER MAIN -->
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="brand-logo">
+        <svg width="30" height="30" viewBox="0 0 34 34" fill="none">
+          <path d="M4 17L12 8L20 17L12 26Z" fill="#1a4fa0"/>
+          <path d="M14 17L22 8L30 17L22 26Z" fill="#2563c4" opacity="0.85"/>
+          <path d="M9 17L17 8L25 17L17 26Z" fill="#3b82f6" opacity="0.65"/>
+        </svg>
+        <span>InfraGo</span>
+      </div>
+      <p class="brand-tagline">Operación TI inteligente. Sin fricción.<br>Una empresa de TIC Manager's.</p>
+      <div class="brand-badges">
+        <span class="badge">ISO 27001</span>
+        <span class="badge">Chile &amp; LATAM</span>
+        <span class="badge">Soporte 24/7</span>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <div class="col-label">Soluciones</div>
+      <ul class="col-links">
+        <li><a href="#">Notebooks</a></li>
+        <li><a href="#">Servidores y Redes</a></li>
+        <li><a href="#">Impresión</a></li>
+        <li><a href="#">Soluciones de Oficina</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <div class="col-label">Empresa</div>
+      <ul class="col-links">
+        <li><a href="#">Quiénes somos</a></li>
+        <li><a href="#">Planes</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Agendar Demo</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <div class="col-label">Contacto</div>
+      <ul class="col-links">
+        <li>
+          <a href="mailto:contacto@infrago.cl" class="contact-item">
+            <span class="contact-label">Email</span>
+            <span class="contact-val">contacto@infrago.cl</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="contact-item">
+            <span class="contact-label">Teléfono</span>
+            <span class="contact-val">+56 2 xxxx xxxx</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="contact-item">
+            <span class="contact-label">Dirección</span>
+            <span class="contact-val">Providencia 1208, Of. 307</span>
+          </a>
+        </li>
+        <li><a href="#">Soporte</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FOOTER BOTTOM -->
+  <div class="footer-bottom">
+    <div class="bottom-left">
+      <span class="copyright">© 2026 InfraGo SpA. Todos los derechos reservados.</span>
+      <span class="bottom-divider"></span>
+      <span class="made-by">Una empresa de <span>TIC Manager's</span></span>
+    </div>
+    <div class="footer-socials">
+      <a href="#" class="social-link">LinkedIn</a>
+      <span class="social-sep">·</span>
+      <a href="#" class="social-link">Instagram</a>
+      <span class="social-sep">·</span>
+      <a href="#" class="social-link">Facebook</a>
+      <span class="social-sep">·</span>
+      <a href="#" class="social-link">Términos</a>
+      <span class="social-sep">·</span>
+      <a href="#" class="social-link">Privacidad</a>
+    </div>
+  </div>
+
+</div><!-- /.ig-footer-root -->
+<!-- ════════════════ FIN FOOTER ════════════════ -->
+
+<!-- includes.js desactivado: navbar y footer ahora son inline -->
 
 </body>
 </html>

@@ -5,41 +5,7 @@
    © 2026 InfraGo SpA / TIC Manager's
 ═══════════════════════════════════════════════ */
 
-/* ══════════════════════════════════════════════
-   NAVBAR HAMBURGUESA — compartido en todas las páginas
-══════════════════════════════════════════════ */
-
-.nav-hamburger {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: 1px solid rgba(17,17,17,0.12);
-  border-radius: 8px;
-  cursor: pointer;
-  padding: 8px;
-  transition: border-color 0.2s;
-}
-
-.nav-hamburger:hover { border-color: rgba(17,17,17,0.28); }
-
-.nav-hamburger span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: #111111;
-  border-radius: 2px;
-  transition: transform 0.25s ease, opacity 0.2s;
-}
-
-.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-/* Estilos de nav-mobile-menu se manejan en navbar-mobile.css */
+/* Navbar: ver navbar.css */
 
 /* ══════════════════════════════════════════════
    TABLET — max-width: 1024px
@@ -47,9 +13,6 @@
 @media (max-width: 1024px) {
 
   /* Navbar */
-  nav { padding: 0 24px; z-index: 201; }
-  .nav-links { display: none; }
-  .nav-hamburger { display: flex; }
   /* .nav-mobile-menu se controla con navbar-mobile.css */
 
   /* Hero */
@@ -115,8 +78,6 @@
 @media (max-width: 768px) {
 
   /* Navbar */
-  nav { padding: 0 16px; height: 60px; }
-  .nav-mobile-menu { top: 60px; }
 
   /* Hero */
   .hero { padding: 88px 20px 180px; }
@@ -297,8 +258,6 @@
   .plan-price-amount { font-size: 28px; }
 
   /* Navbar */
-  nav { padding: 0 14px; }
-  .nav-logo-text { font-size: 22px; }
 
   /* Footer */
   footer { padding: 28px 16px; gap: 24px; }

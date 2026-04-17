@@ -46,6 +46,8 @@ body {
   font-weight: 400;
   overflow-x: hidden;
   line-height: 1.6;
+}
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1490,9 +1492,9 @@ footer {
 ═══════════════════════════════════════════════ */
 .hero-carousel {
   position: relative;
-  height: 100vh;
-  min-height: 560px;
   overflow: hidden;
+  height: calc(100vh - 144px);
+  min-height: 460px;
 }
 
 /* ── Slides ── */
@@ -2321,4 +2323,3 @@ footer {
 }
 /* ── SLIDE CHECKLIST (hero carrusel) ── */
 .slide-checklist { display: none; }
-}
