@@ -120,7 +120,7 @@
             </svg>
           </div>
           <h3>¡Sesión iniciada!</h3>
-          <p>Redirigiendo al configurador...</p>
+          <p id="loginSuccessMsg">Redirigiendo al configurador...</p>
         </div>
 
         <form class="auth-form" id="formLogin" novalidate>
@@ -398,14 +398,14 @@
       saveCurrent();
       updateNavbar();
 
-      // Capturar el redirect antes de cerrar el modal, ya que
-      // closeAuth() limpia _authRedirect para evitar redirects no deseados
+      // Capturar el redirect antes de cerrar el modal
       const redirectTarget = window._authRedirect;
 
       document.getElementById('formLogin').style.display = 'none';
       document.getElementById('loginSuccess').classList.add('show');
       setTimeout(() => {
-        closeAuth();
+        closeAuth(false); // no borrar redirect — ya lo tenemos capturado
+        window._authRedirect = null; // limpiar ahora que ya navegamos
         if (redirectTarget) window.location.href = redirectTarget;
       }, 1500);
     });
@@ -446,7 +446,15 @@
 
       document.getElementById('formRegister').style.display = 'none';
       document.getElementById('registerSuccess').classList.add('show');
-      setTimeout(() => switchTab('login'), 2200);
+      // Preserve any pending redirect across the tab switch
+      const pendingRedirect = window._authRedirect;
+      setTimeout(() => {
+        switchTab('login');
+        window._authRedirect = pendingRedirect;
+        // Reset register panel for next use
+        document.getElementById('registerSuccess').classList.remove('show');
+        document.getElementById('formRegister').style.display = '';
+      }, 2200);
     });
 
     /* Actualizar navbar si ya hay sesión */
@@ -490,7 +498,7 @@
     switchTab(tab);
   }
 
-  function closeAuth() {
+  function closeAuth(clearRedirect = true) {
     const overlay = document.getElementById('authOverlay');
     overlay.classList.remove('open');
 
@@ -504,8 +512,8 @@
     overlay.style.pointerEvents = 'none';
     setTimeout(() => { overlay.style.pointerEvents = ''; }, 50);
 
-    // Limpiar redirect pendiente al cerrar sin autenticarse
-    window._authRedirect = null;
+    // Solo limpiar redirect si el usuario cerró manualmente (no en flujo interno)
+    if (clearRedirect) window._authRedirect = null;
   }
 
   function switchTab(tab) {

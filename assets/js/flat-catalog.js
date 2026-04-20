@@ -67,12 +67,14 @@ window.buildCatalogTable = function buildCatalogTable() {
     <div class="flat-col-headers">
       <span class="flat-col-label center">#</span>
       <span class="flat-col-label">Producto del catálogo</span>
+      <span class="flat-col-label center">Prov.</span>
       <span class="flat-col-label center">Cat.</span>
+      <span class="flat-col-label center">N° Parte</span>
       <span class="flat-col-label right">P. Lista Unit.</span>
       <span class="flat-col-label center">Cant.</span>
       <span class="flat-col-label right">P. con dto.</span>
       <span class="flat-col-label right">Subtotal</span>
-      <span class="flat-col-label right">Ahorro $</span>
+      <span class="flat-col-label center"></span>
     </div>
     <div id="flatRowsBody"></div>
     <div class="flat-add-row">
@@ -130,7 +132,13 @@ function _buildRowEl(id, animate) {
       </div>
     </div>
 
+    <div class="pr-prov"><span class="pr-prov-badge" id="provbadge-${id}"></span></div>
+
     <div class="pr-cat"><span class="pr-cat-badge" id="catbadge-${id}"></span></div>
+
+    <div class="pr-partnum">
+      <span class="pr-partnum-val" id="partnumbadge-${id}"></span>
+    </div>
 
     <div class="pr-precio-lista">
       <span class="precio-base" id="plista-${id}">—</span>
@@ -138,9 +146,13 @@ function _buildRowEl(id, animate) {
     </div>
 
     <div class="pr-qty pr-qty--disabled" id="prqty-${id}">
-      <button type="button" onclick="flatRowDecQty(${id})" tabindex="-1">−</button>
-      <span class="qty-value" id="qval-${id}">0</span>
-      <button type="button" onclick="flatRowIncQty(${id})" tabindex="-1">+</button>
+      <div class="qty-spinner-wrap">
+        <span class="qty-value" id="qval-${id}">0</span>
+        <div class="qty-arrows">
+          <button type="button" onclick="flatRowIncQty(${id})" tabindex="-1">▲</button>
+          <button type="button" onclick="flatRowDecQty(${id})" tabindex="-1">▼</button>
+        </div>
+      </div>
     </div>
 
     <div class="pr-precio-dto">
@@ -152,8 +164,7 @@ function _buildRowEl(id, animate) {
       <span class="subtotal-val inactive" id="psub-${id}">—</span>
     </div>
 
-    <div class="pr-ahorro">
-      <span class="ahorro-val cero" id="pahorro-${id}">—</span>
+    <div class="pr-del">
       <button type="button" class="flat-del-btn" onclick="flatRemoveRow(${id})" title="Eliminar fila">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -241,6 +252,20 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     badge.className   = `pr-cat-badge ${meta.cls}`;
   }
 
+  /* Badge de marca (PROV.) */
+  const provBadge = document.getElementById(`provbadge-${id}`);
+  if (provBadge) {
+    provBadge.textContent = (producto.marca || '').toUpperCase();
+    provBadge.className   = `pr-prov-badge pr-prov-badge--${flatSlugify(producto.marca || '')}`;
+  }
+
+  /* Badge de part number */
+  const partBadge = document.getElementById(`partnumbadge-${id}`);
+  if (partBadge) {
+    partBadge.textContent = producto.partNumber || '—';
+    partBadge.className   = producto.partNumber ? 'pr-partnum-val has-part' : 'pr-partnum-val';
+  }
+
   /* Habilitar spinner de cantidad y poner 1 automáticamente */
   const qtyWrap = document.getElementById(`prqty-${id}`);
   if (qtyWrap) qtyWrap.classList.remove('pr-qty--disabled');
@@ -317,7 +342,11 @@ function _renumberRows() {
 function _clearRowDisplay(id) {
   const badge = document.getElementById(`catbadge-${id}`);
   if (badge) { badge.textContent = ''; badge.className = 'pr-cat-badge'; }
-  ['plista','pusd','pdto','psub','pahorro'].forEach(pfx => {
+  const provBadge = document.getElementById(`provbadge-${id}`);
+  if (provBadge) { provBadge.textContent = ''; provBadge.className = 'pr-prov-badge'; }
+  const partBadge = document.getElementById(`partnumbadge-${id}`);
+  if (partBadge) { partBadge.textContent = ''; partBadge.className = 'pr-partnum-val'; }
+  ['plista','pusd','pdto','psub'].forEach(pfx => {
     const el = document.getElementById(`${pfx}-${id}`);
     if (el) el.textContent = '—';
   });
@@ -567,172 +596,285 @@ function _injectStyles() {
   const style = document.createElement('style');
   style.id = 'flat-order-styles';
   style.textContent = `
-    /* Fila del pedido */
+    /* ── Cabecera de columnas ── */
+    .flat-col-headers {
+      display: grid;
+      grid-template-columns: 40px minmax(200px,2fr) 70px 60px 110px 100px 90px 100px 110px 40px;
+      align-items: center;
+      padding: 10px 20px;
+      background: #f8f9fb;
+      border-bottom: 2px solid #dde1e8;
+      gap: 8px;
+    }
+    .flat-col-label {
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .6px;
+      color: #7a8fa6;
+    }
+    .flat-col-label.center { text-align: center; }
+    .flat-col-label.right  { text-align: right;  }
+
+    /* ── Fila del pedido ── */
     .flat-order-row {
       display: grid;
-      grid-template-columns: 36px minmax(200px, 1.6fr) 62px 88px 84px 84px 96px 86px;
+      grid-template-columns: 40px minmax(200px,2fr) 70px 60px 110px 100px 90px 100px 110px 40px;
       align-items: center;
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--c-border-s);
+      padding: 10px 20px;
+      border-bottom: 1px solid #eaecf0;
       transition: background 0.15s, opacity 0.2s, transform 0.2s;
-      gap: 0;
+      gap: 8px;
     }
     .flat-order-row:last-of-type { border-bottom: none; }
-    .flat-order-row:hover { background: rgba(232,146,10,0.025); }
+    .flat-order-row:hover { background: rgba(232,146,10,.03); }
     .flat-order-row.row-entering { opacity: 0; transform: translateY(-6px); }
     .flat-order-row.row-leaving  { opacity: 0; transform: translateX(10px); }
 
-    /* Select de producto */
-    .pr-info--select { display: flex; flex-direction: column; gap: 5px; justify-content: center; }
+    /* Número de fila */
+    .pr-num {
+      font-size: 11px; font-weight: 700;
+      color: #b0bcc9; text-align: center;
+    }
+
+    /* Select producto */
+    .pr-info--select { display: flex; flex-direction: column; gap: 4px; justify-content: center; padding-right: 8px; }
     .flat-select-wrap { position: relative; }
     .flat-product-select {
       width: 100%;
-      background: var(--c-surface-2);
-      border: 1px solid var(--c-border);
-      border-radius: 7px;
-      padding: 6px 28px 6px 10px;
-      color: var(--c-text);
-      font-size: 12px;
+      background: #f4f5f7;
+      border: 1px solid #dde1e8;
+      border-radius: 6px;
+      padding: 5px 26px 5px 9px;
+      color: #0d1e36;
+      font-size: 12px; font-weight: 500;
       font-family: inherit;
       cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      transition: border-color 0.18s, box-shadow 0.18s;
+      appearance: none; -webkit-appearance: none;
+      transition: border-color .18s, box-shadow .18s;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 8px center;
+      background-position: right 7px center;
     }
     .flat-product-select:focus {
       outline: none;
-      border-color: var(--orange);
-      box-shadow: 0 0 0 3px var(--orange-dim);
+      border-color: #e8920a;
+      box-shadow: 0 0 0 3px rgba(232,146,10,.12);
+      background-color: #fff;
     }
-    .flat-product-select option     { background: #1a2030; color: #eee; }
-    .flat-product-select optgroup   { color: var(--orange); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* Botón eliminar fila */
-    .flat-del-btn {
-      width: 22px; height: 22px;
-      border-radius: 5px;
-      border: 1px solid rgba(239,68,68,0.25);
-      background: rgba(239,68,68,0.07);
-      color: #ef4444;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      margin-left: 6px;
-      flex-shrink: 0;
-      transition: all 0.15s;
+    /* Badge PROV */
+    .pr-prov { display: flex; align-items: center; justify-content: center; }
+    .pr-prov-badge {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: .3px;
+      padding: 2px 7px; border-radius: 4px;
+      border: 1px solid #dde1e8;
+      background: #f4f5f7;
+      color: #3d5068;
+      white-space: nowrap;
     }
-    .flat-del-btn:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.5); }
-    .flat-del-btn svg { width: 11px; height: 11px; }
+    .pr-prov-badge--hp          { border-color:#0096d6; color:#0096d6; background:rgba(0,150,214,.07); }
+    .pr-prov-badge--dell        { border-color:#0076ce; color:#0076ce; background:rgba(0,118,206,.07); }
+    .pr-prov-badge--lenovo      { border-color:#e2001a; color:#e2001a; background:rgba(226,0,26,.06); }
+    .pr-prov-badge--apple       { border-color:#555; color:#444; background:rgba(0,0,0,.05); }
+    .pr-prov-badge--brother     { border-color:#003087; color:#003087; background:rgba(0,48,135,.06); }
+    .pr-prov-badge--cisco       { border-color:#049fd9; color:#049fd9; background:rgba(4,159,217,.07); }
+    .pr-prov-badge--fortinet    { border-color:#d32f2f; color:#d32f2f; background:rgba(211,47,47,.06); }
+    .pr-prov-badge--ubiquiti    { border-color:#0559c9; color:#0559c9; background:rgba(5,89,201,.07); }
+    .pr-prov-badge--synology    { border-color:#b5202f; color:#b5202f; background:rgba(181,32,47,.06); }
+    .pr-prov-badge--qnap        { border-color:#009641; color:#009641; background:rgba(0,150,65,.07); }
+    .pr-prov-badge--canon       { border-color:#cc0000; color:#cc0000; background:rgba(204,0,0,.06); }
+    .pr-prov-badge--tic-managers{ border-color:#e8920a; color:#e8920a; background:rgba(232,146,10,.09); }
 
-    /* Botón agregar fila */
-    .flat-add-row {
-      padding: 12px 16px;
-      border-top: 1px dashed var(--c-border);
-      background: var(--c-surface-2);
+    /* Badge Cat */
+    .pr-cat { display: flex; align-items: center; justify-content: center; }
+    .pr-cat-badge {
+      font-size: 9px; font-weight: 800; letter-spacing: .4px;
+      padding: 2px 6px; border-radius: 4px;
+      background: #eaecf0; color: #7a8fa6;
+      border: 1px solid #dde1e8;
+      white-space: nowrap;
     }
-    #btnAddFlatRow {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--orange-dim);
-      border: 1px solid rgba(240,120,0,0.3);
-      border-radius: 8px;
-      padding: 8px 16px;
-      color: var(--orange);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-    #btnAddFlatRow:hover { background: rgba(240,120,0,0.18); border-color: var(--orange); }
-    #btnAddFlatRow svg  { width: 14px; height: 14px; }
+    .pr-cat-badge--notebook    { background:rgba(59,130,246,.1);  color:#2563eb; border-color:rgba(59,130,246,.3);  }
+    .pr-cat-badge--servidor    { background:rgba(139,92,246,.1);  color:#7c3aed; border-color:rgba(139,92,246,.3);  }
+    .pr-cat-badge--impresora   { background:rgba(16,185,129,.1);  color:#059669; border-color:rgba(16,185,129,.3);  }
+    .pr-cat-badge--networking  { background:rgba(245,158,11,.1);  color:#d97706; border-color:rgba(245,158,11,.3);  }
+    .pr-cat-badge--storage     { background:rgba(236,72,153,.1);  color:#db2777; border-color:rgba(236,72,153,.3);  }
+    .pr-cat-badge--servicio-tic{ background:rgba(232,146,10,.12); color:#b45309; border-color:rgba(232,146,10,.35); }
 
-    /* pr-ahorro con botón eliminar */
-    .flat-order-row .pr-ahorro {
+    /* Part Number */
+    .pr-partnum { display: flex; align-items: center; justify-content: center; }
+    .pr-partnum-val {
+      font-size: 10px; font-weight: 600;
+      color: #b0bcc9;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 96px;
+    }
+    .pr-partnum-val.has-part {
+      background: #f0f2f5;
+      border: 1px solid #dde1e8;
+      border-radius: 4px;
+      padding: 2px 6px;
+      color: #3d5068;
+    }
+
+    /* Precio lista */
+    .pr-precio-lista { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+    .precio-base {
+      font-size: 12px; font-weight: 700;
+      color: #0d1e36;
+    }
+    .precio-base.tachado {
+      text-decoration: line-through;
+      color: #b0bcc9;
+      font-weight: 400;
+    }
+    .precio-usd {
+      font-size: 10px; color: #7a8fa6;
+    }
+
+    /* Cantidad — spinner vertical */
+    .pr-qty { display: flex; align-items: center; justify-content: center; }
+    .pr-qty--disabled { opacity: .3; pointer-events: none; user-select: none; }
+    .qty-spinner-wrap {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
       gap: 4px;
+      background: #f4f5f7;
+      border: 1px solid #dde1e8;
+      border-radius: 7px;
+      padding: 3px 6px;
     }
-
-    /* ── Buscador simple ── */
-    .filtros-bar--simple {
+    .qty-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px; font-weight: 800;
+      color: #0d1e36;
+      min-width: 22px;
+      text-align: center;
+      line-height: 1;
+    }
+    .qty-arrows {
       display: flex;
-      align-items: center;
-      padding: 10px 0 24px;
-      gap: 10px;
+      flex-direction: column;
+      gap: 1px;
     }
-    .filtros-search--full {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--c-surface-2, #1e2535);
-      border: 1px solid var(--c-border, rgba(255,255,255,0.1));
-      border-radius: 10px;
-      padding: 0 14px;
-      transition: border-color 0.18s, box-shadow 0.18s;
-    }
-    .filtros-search--full:focus-within {
-      border-color: var(--orange, #f07800);
-      box-shadow: 0 0 0 3px var(--orange-dim, rgba(240,120,0,0.15));
-    }
-    .filtros-search--full svg {
-      width: 16px; height: 16px;
-      color: var(--c-text-muted, #888);
-      flex-shrink: 0;
-    }
-    .filtros-search--full input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--c-text, #eee);
-      font-size: 13px;
-      font-family: inherit;
-      padding: 11px 0;
-    }
-    .filtros-search--full input::placeholder { color: var(--c-text-muted, #666); }
-    .search-clear {
+    .qty-arrows button {
       background: none;
       border: none;
-      padding: 4px;
+      padding: 0 2px;
+      font-size: 9px;
+      color: #7a8fa6;
       cursor: pointer;
-      color: var(--c-text-muted, #888);
+      line-height: 1;
+      transition: color .15s;
+      display: block;
+    }
+    .qty-arrows button:hover { color: #e8920a; }
+
+    /* Precio con descuento */
+    .pr-precio-dto { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+    .precio-dto-val {
+      font-size: 13px; font-weight: 800;
+      color: #e8920a;
+    }
+    .precio-dto-val.sin-dto { color: #0d1e36; font-weight: 700; }
+    .dto-badge {
+      font-size: 9px; font-weight: 800;
+      background: rgba(34,197,94,.12);
+      color: #16a34a;
+      border: 1px solid rgba(34,197,94,.3);
+      border-radius: 10px;
+      padding: 1px 6px;
+    }
+    .dto-badge.oculto { display: none; }
+
+    /* Subtotal */
+    .pr-subtotal { text-align: right; }
+    .subtotal-val {
+      font-size: 13px; font-weight: 800;
+      color: #0d1e36;
+    }
+    .subtotal-val.inactive { color: #b0bcc9; font-weight: 400; }
+
+    /* Botón eliminar — columna propia */
+    .pr-del {
       display: flex;
       align-items: center;
-      border-radius: 4px;
-      transition: color 0.15s, background 0.15s;
-      flex-shrink: 0;
+      justify-content: center;
     }
-    .search-clear:hover { color: var(--c-text, #eee); background: rgba(255,255,255,0.06); }
-    .search-clear svg { width: 13px; height: 13px; }
 
-    /* Spinner deshabilitado (sin producto seleccionado) */
-    .pr-qty--disabled {
-      opacity: 0.25;
-      pointer-events: none;
-      user-select: none;
+    /* Botón eliminar */
+    .flat-del-btn {
+      width: 20px; height: 20px;
+      border-radius: 4px;
+      border: 1px solid rgba(239,68,68,.25);
+      background: rgba(239,68,68,.06);
+      color: #ef4444;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0; flex-shrink: 0;
+      transition: all .15s;
     }
+    .flat-del-btn:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.5); }
+    .flat-del-btn svg { width: 10px; height: 10px; }
+
+    /* Botón agregar */
+    .flat-add-row {
+      padding: 10px 16px;
+      border-top: 1px dashed #dde1e8;
+      background: #f8f9fb;
+      border-radius: 0 0 12px 12px;
+    }
+    #btnAddFlatRow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(232,146,10,.10);
+      border: 1px solid rgba(232,146,10,.3);
+      border-radius: 7px;
+      padding: 7px 16px;
+      color: #e8920a;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all .18s;
+    }
+    #btnAddFlatRow:hover { background: rgba(232,146,10,.18); border-color: #e8920a; }
+    #btnAddFlatRow svg { width: 13px; height: 13px; }
+
+    /* Buscador */
+    .filtros-bar--simple { display: flex; align-items: center; padding: 10px 0 20px; gap: 10px; }
+    .filtros-search--full {
+      flex: 1; display: flex; align-items: center; gap: 10px;
+      background: #f4f5f7; border: 1px solid #dde1e8;
+      border-radius: 8px; padding: 0 14px;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .filtros-search--full:focus-within { border-color: #e8920a; box-shadow: 0 0 0 3px rgba(232,146,10,.12); }
+    .filtros-search--full svg { width: 15px; height: 15px; color: #b0bcc9; flex-shrink: 0; }
+    .filtros-search--full input {
+      flex: 1; background: transparent; border: none; outline: none;
+      color: #0d1e36; font-size: 13px; font-family: inherit; padding: 10px 0;
+    }
+    .filtros-search--full input::placeholder { color: #b0bcc9; }
+    .search-clear {
+      background: none; border: none; padding: 3px; cursor: pointer;
+      color: #b0bcc9; border-radius: 4px; display: flex; align-items: center;
+      transition: color .15s, background .15s; flex-shrink: 0;
+    }
+    .search-clear:hover { color: #0d1e36; background: rgba(0,0,0,.05); }
+    .search-clear svg { width: 12px; height: 12px; }
 
     /* Responsive */
+    @media (max-width: 1400px) {
+      .flat-col-headers,
+      .flat-order-row { grid-template-columns: 36px minmax(180px,2fr) 64px 56px 100px 90px 84px 90px 40px; gap: 6px; }
+      .pr-partnum, .flat-col-headers span:nth-child(5) { display: none; }
+    }
     @media (max-width: 1100px) {
-      .flat-order-row { grid-template-columns: 36px minmax(160px, 1.6fr) 62px 80px 80px 80px; }
-      .flat-order-row .pr-ahorro { display: none; }
+      .flat-col-headers,
+      .flat-order-row { grid-template-columns: 32px minmax(160px,2fr) 58px 52px 82px 78px 82px 36px; gap: 4px; }
+      .pr-subtotal, .flat-col-headers span:nth-child(9) { display: none; }
     }
-    @media (max-width: 900px) {
-      .flat-order-row { grid-template-columns: 36px minmax(140px, 1.6fr) 62px 80px 80px; }
-      .flat-order-row .pr-subtotal { display: none; }
-    }
-    @media (max-width: 620px) {
-      .flat-order-row { grid-template-columns: 28px 1fr 60px 72px; }
-      .flat-order-row .pr-cat,
-      .flat-order-row .pr-precio-dto { display: none; }
+    @media (max-width: 760px) {
+      .flat-col-headers,
+      .flat-order-row { grid-template-columns: 28px 1fr 50px 66px 36px; gap: 4px; }
+      .pr-prov, .pr-cat, .pr-precio-dto { display: none; }
     }
   `;
   document.head.appendChild(style);

@@ -5,7 +5,53 @@
 
 <!-- BARRA SUPERIOR -->
 <div class="igb-top">
-  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000</span>
+  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span>
+</div>
+
+<!-- MODAL COMUNAS -->
+<div class="igb-comunas-overlay" id="igbComunasOverlay" onclick="igbCloseComunas()"></div>
+<div class="igb-comunas-modal" id="igbComunasModal" role="dialog" aria-modal="true" aria-label="Comunas con despacho gratis">
+  <div class="igb-comunas-header">
+    <div class="igb-comunas-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 12l4-4M5 12l4 4"/><rect x="3" y="3" width="18" height="18" rx="2" style="display:none"/></svg>
+      <span>🚚 Despacho Gratis en Santiago</span>
+    </div>
+    <button class="igb-comunas-close" onclick="igbCloseComunas()" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="igb-comunas-body">
+    <p class="igb-comunas-desc">Ofrecemos despacho gratuito de 2 a 4 días hábiles a las siguientes comunas de Santiago, en compras iguales o superiores a <strong>$75.000</strong> pagando por transferencia bancaria.</p>
+    <h3 class="igb-comunas-subtitle">¿Qué comunas tienen despacho gratis?</h3>
+    <ul class="igb-comunas-list">
+      <li>Cerrillos</li><li>Cerro Navia</li><li>Estación Central</li>
+      <li>Huechuraba</li><li>Independencia</li><li>La Florida</li>
+      <li>La Reina</li><li>Las Condes</li><li>Lo Barnechea <span class="igb-comunas-note">*</span></li>
+      <li>Lo Prado</li><li>Macul</li><li>Maipú</li>
+      <li>Ñuñoa</li><li>Pedro Aguirre Cerda</li><li>Peñalolén</li>
+      <li>Providencia</li><li>Puente Alto</li><li>Pudahuel</li>
+      <li>Quilicura</li><li>Quinta Normal</li><li>Recoleta</li>
+      <li>Renca</li><li>San Bernardo</li><li>San Joaquín</li>
+      <li>San Miguel</li><li>Santiago Centro</li><li>Vitacura</li>
+    </ul>
+    <p class="igb-comunas-footnote">* Lo Barnechea no incluye el sector de Farellones (centros de ski).</p>
+    <div class="igb-comunas-footer">
+      <div class="igb-comunas-req">
+        <div class="igb-comunas-req-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Compra mínima de $75.000
+        </div>
+        <div class="igb-comunas-req-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Pago por transferencia bancaria
+        </div>
+        <div class="igb-comunas-req-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          2 a 4 días hábiles de entrega
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- FILA PRINCIPAL: logo + buscador + cuenta + carro -->
@@ -25,6 +71,10 @@
   </div>
 
   <div class="igb-actions">
+    <a class="igb-cta igb-cta-header" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
+      Agendar reunión
+    </a>
+
     <a class="igb-account" href="#">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -110,13 +160,25 @@
       <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
     </ul>
 
-    <!-- CTA -->
-    <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
-      Agendar reunión
-    </a>
-
   </div>
 </nav>
+
+<!-- JS MODAL COMUNAS -->
+<script>
+function igbOpenComunas(){
+  document.getElementById('igbComunasOverlay').classList.add('open');
+  document.getElementById('igbComunasModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function igbCloseComunas(){
+  document.getElementById('igbComunasOverlay').classList.remove('open');
+  document.getElementById('igbComunasModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') igbCloseComunas();
+});
+</script>
 
 <!-- MENÚ MOBILE -->
 <div class="igb-overlay" id="igbOverlay"></div>

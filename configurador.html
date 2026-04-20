@@ -3,26 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tienda — InfraGo</title>
+  <title>Cotizador — InfraGo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/navbar.css">
-<link rel="stylesheet" href="/assets/css/tienda.css">
-<link rel="stylesheet" href="/assets/css/footer.css">
-<link rel="stylesheet" href="/assets/css/responsive.css">
-<link rel="stylesheet" href="/assets/css/auth.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/navbar.css">
+  <link rel="stylesheet" href="/assets/css/configurador.css">
+  <link rel="stylesheet" href="/assets/css/footer.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+  <link rel="stylesheet" href="/assets/css/auth.css">
 </head>
 <body>
-<!-- ════════════════ NAVBAR INLINE ════════════════ -->
 
-<!-- Topbar -->
+<!-- ════════════════ NAVBAR ════════════════ -->
 <div class="igb-top">
-  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000</span>
+  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span>
 </div>
 
-<!-- Fila principal -->
+<!-- MODAL COMUNAS -->
+<div class="igb-comunas-overlay" id="igbComunasOverlay" onclick="igbCloseComunas()"></div>
+<div class="igb-comunas-modal" id="igbComunasModal" role="dialog" aria-modal="true">
+  <div class="igb-comunas-header">
+    <div class="igb-comunas-title">🚚 Despacho Gratis en Santiago</div>
+    <button class="igb-comunas-close" onclick="igbCloseComunas()" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="igb-comunas-body">
+    <p class="igb-comunas-desc">Ofrecemos despacho gratuito de 2 a 4 días hábiles a las siguientes comunas, en compras iguales o superiores a <strong>$75.000</strong> pagando por transferencia bancaria.</p>
+    <h3 class="igb-comunas-subtitle">¿Qué comunas tienen despacho gratis?</h3>
+    <ul class="igb-comunas-list">
+      <li>Cerrillos</li><li>Cerro Navia</li><li>Estación Central</li>
+      <li>Huechuraba</li><li>Independencia</li><li>La Florida</li>
+      <li>La Reina</li><li>Las Condes</li><li>Lo Barnechea <span class="igb-comunas-note">*</span></li>
+      <li>Lo Prado</li><li>Macul</li><li>Maipú</li>
+      <li>Ñuñoa</li><li>Pedro Aguirre Cerda</li><li>Peñalolén</li>
+      <li>Providencia</li><li>Puente Alto</li><li>Pudahuel</li>
+      <li>Quilicura</li><li>Quinta Normal</li><li>Recoleta</li>
+      <li>Renca</li><li>San Bernardo</li><li>San Joaquín</li>
+      <li>San Miguel</li><li>Santiago Centro</li><li>Vitacura</li>
+    </ul>
+    <p class="igb-comunas-footnote">* Lo Barnechea no incluye el sector de Farellones (centros de ski).</p>
+    <div class="igb-comunas-footer">
+      <div class="igb-comunas-req">
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Compra mínima de $75.000</div>
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Pago por transferencia bancaria</div>
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>2 a 4 días hábiles de entrega</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <header class="igb-main">
   <a class="igb-logo" href="/index.html">Infra<span>Go</span></a>
   <div class="igb-search">
@@ -32,6 +64,7 @@
     </button>
   </div>
   <div class="igb-actions">
+    <a class="igb-cta igb-cta-header" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
     <a class="igb-account" href="#">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
@@ -49,7 +82,6 @@
   </button>
 </header>
 
-<!-- Fila secundaria -->
 <nav class="igb-nav">
   <div class="igb-nav-inner">
     <div class="igb-categories" id="igbCats">
@@ -75,20 +107,18 @@
     </div>
     <ul class="igb-links">
       <li><a href="/index.html">Inicio</a></li>
-      <li><a href="/configurador.html">Cotizador</a></li>
-      <li><a href="/tienda.html" class="igb-active">Tienda</a></li>
+      <li><a href="/configurador.html" class="igb-active">Cotizador</a></li>
+      <li><a href="/tienda.html">Tienda</a></li>
       <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
     </ul>
-    <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
   </div>
 </nav>
 
-<!-- Overlay + Mobile -->
 <div class="igb-overlay" id="igbOverlay" onclick="igbCloseMenu()"></div>
 <div class="igb-mobile" id="igbMobile">
   <a href="/index.html">Inicio</a>
-  <a href="/configurador.html">Cotizador</a>
-  <a href="/tienda.html" class="igb-active">Tienda</a>
+  <a href="/configurador.html" class="igb-active">Cotizador</a>
+  <a href="/tienda.html">Tienda</a>
   <a href="/index.html#quienes-somos">Quiénes Somos</a>
   <hr class="igb-mobile-sep">
   <a href="/tienda.html?cat=notebooks">Notebooks</a>
@@ -98,791 +128,593 @@
   <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
 </div>
 
-<!-- JS navbar -->
 <script>
-function igbToggleCats(){
-  var el=document.getElementById('igbCats');
-  el.classList.toggle('open');
-}
-document.addEventListener('click',function(e){
-  var cats=document.getElementById('igbCats');
-  if(cats && !cats.contains(e.target)) cats.classList.remove('open');
-});
-function igbToggleMenu(){
-  var btn=document.querySelector('.igb-burger');
-  var menu=document.getElementById('igbMobile');
-  var overlay=document.getElementById('igbOverlay');
-  var open=menu.classList.toggle('open');
-  if(btn) btn.classList.toggle('open',open);
-  if(overlay) overlay.classList.toggle('open',open);
-  document.body.style.overflow=open?'hidden':'';
-}
-function igbCloseMenu(){
-  var btn=document.querySelector('.igb-burger');
-  var menu=document.getElementById('igbMobile');
-  var overlay=document.getElementById('igbOverlay');
-  if(menu) menu.classList.remove('open');
-  if(btn) btn.classList.remove('open');
-  if(overlay) overlay.classList.remove('open');
-  document.body.style.overflow='';
-}
-function igbSearch(){
-  var q=document.querySelector('.igb-search-input').value.trim();
-  if(q) window.location.href='/tienda.html?q='+encodeURIComponent(q);
-}
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape') igbCloseMenu();
-});
-document.querySelector('.igb-search-input').addEventListener('keydown',function(e){
-  if(e.key==='Enter') igbSearch();
-});
-</script>
+function igbOpenComunas(){document.getElementById('igbComunasOverlay').classList.add('open');document.getElementById('igbComunasModal').classList.add('open');document.body.style.overflow='hidden';}
+function igbCloseComunas(){document.getElementById('igbComunasOverlay').classList.remove('open');document.getElementById('igbComunasModal').classList.remove('open');document.body.style.overflow='';}
+function igbToggleCats(){document.getElementById('igbCats').classList.toggle('open');}
+document.addEventListener('click',function(e){var c=document.getElementById('igbCats');if(c&&!c.contains(e.target))c.classList.remove('open');});
+function igbToggleMenu(){var btn=document.querySelector('.igb-burger');var menu=document.getElementById('igbMobile');var overlay=document.getElementById('igbOverlay');var open=menu.classList.toggle('open');if(btn)btn.classList.toggle('open',open);if(overlay)overlay.classList.toggle('open',open);document.body.style.overflow=open?'hidden':'';}
+function igbCloseMenu(){var btn=document.querySelector('.igb-burger');var menu=document.getElementById('igbMobile');var overlay=document.getElementById('igbOverlay');if(menu)menu.classList.remove('open');if(btn)btn.classList.remove('open');if(overlay)overlay.classList.remove('open');document.body.style.overflow='';}
+function igbSearch(){var q=document.querySelector('.igb-search-input').value.trim();if(q)window.location.href='/tienda.html?q='+encodeURIComponent(q);}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){igbCloseMenu();igbCloseComunas();}});
+document.addEventListener('DOMContentLoaded',function(){document.querySelector('.igb-search-input').addEventListener('keydown',function(e){if(e.key==='Enter')igbSearch();});});
 
+/* ── Categorías ── */
+window.clsSetCat = function(tipo, btn) {
+  document.querySelectorAll('.cls-cat-btn, .flat-cat-chip').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[data-tipo="' + tipo + '"]').forEach(b => b.classList.add('active'));
+  document.querySelectorAll('.flat-product-select').forEach(sel => {
+    sel.querySelectorAll('optgroup').forEach(og => {
+      const tipoMap = {
+        'notebook':'Notebooks','servidor':'Servidores','impresora':'Impresoras',
+        'networking':'Networking','storage':'Almacenamiento','servicio-tic':'Servicios TIC'
+      };
+      const show = tipo === 'todos' || og.label === (tipoMap[tipo] || tipo);
+      og.style.display = show ? '' : 'none';
+      og.querySelectorAll('option').forEach(o => { o.style.display = show ? '' : 'none'; });
+    });
+  });
+};
+</script>
 <!-- ════════════════ FIN NAVBAR ════════════════ -->
 
-<!-- HEADER -->
-<div class="tienda-header">
-  <div class="tienda-header-content">
-    <div class="tienda-header-text">
-      <div class="tienda-breadcrumb">
-        <a href="index.html">Inicio</a>
+
+<!-- ════════════════════════════════════════
+     CABECERA
+════════════════════════════════════════ -->
+<div class="config-header">
+  <div class="config-header-inner">
+    <div class="config-header-text">
+      <div class="config-breadcrumb">
+        <a href="/index.html">Inicio</a>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        <span>Tienda</span>
+        <span>Cotizador</span>
       </div>
-      <h1>Tienda InfraGo</h1>
-      <p>Hardware empresarial en arriendo mensual. Soporte técnico y mantenimiento incluidos en cada equipo.</p>
+      <h1>Cotizador InfraGo</h1>
+      <p>Selecciona los equipos y servicios. Te generamos una cotización formal en minutos.</p>
     </div>
-    <div class="tienda-header-stats">
-      <div class="tienda-stat">
-        <span class="tienda-stat-num">+50</span>
-        <span class="tienda-stat-label">Productos disponibles</span>
+    <div class="config-header-badges">
+      <div class="config-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Precios de distribuidor
       </div>
-      <div class="tienda-stat">
-        <span class="tienda-stat-num">24/7</span>
-        <span class="tienda-stat-label">Soporte incluido</span>
+      <div class="config-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Descuento automático por volumen
       </div>
-      <div class="tienda-stat">
-        <span class="tienda-stat-num">48h</span>
-        <span class="tienda-stat-label">Entrega Santiago</span>
+      <div class="config-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        PDF listo para aprobar
       </div>
     </div>
   </div>
 </div>
 
-<!-- MAIN LAYOUT -->
-<div class="tienda-layout">
 
-  <!-- SIDEBAR FILTROS -->
-  <aside class="tienda-sidebar">
-    <div class="filtro-section">
-      <div class="filtro-title">Categoría</div>
-      <div class="filtro-options" id="filtroCategorias">
-        <label class="filtro-check active" data-cat="todos">
-          <input type="radio" name="categoria" value="todos" checked>
-          <span class="filtro-check-box"></span>
-          Todos los productos
-        </label>
-        <label class="filtro-check" data-cat="notebooks">
-          <input type="radio" name="categoria" value="notebooks">
-          <span class="filtro-check-box"></span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          Notebooks
-        </label>
-        <label class="filtro-check" data-cat="servidores">
-          <input type="radio" name="categoria" value="servidores">
-          <span class="filtro-check-box"></span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg>
-          Servidores
-        </label>
-        <label class="filtro-check" data-cat="impresoras">
-          <input type="radio" name="categoria" value="impresoras">
-          <span class="filtro-check-box"></span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          Impresoras
-        </label>
-        <label class="filtro-check" data-cat="monitores">
-          <input type="radio" name="categoria" value="monitores">
-          <span class="filtro-check-box"></span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Monitores
-        </label>
-        <label class="filtro-check" data-cat="redes">
-          <input type="radio" name="categoria" value="redes">
-          <span class="filtro-check-box"></span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v3M8.5 17l3.5-6M15.5 17L12 11"/></svg>
-          Redes
-        </label>
+<!-- ════════════════════════════════════════
+     BARRA DE PROGRESO
+════════════════════════════════════════ -->
+<div class="config-progress-wrap">
+  <div class="config-progress-inner">
+    <div class="progress-track">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar" style="width:25%"></div>
+      </div>
+      <div class="progress-steps">
+        <div class="progress-step active" data-step="1">
+          <div class="progress-step-dot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <span class="progress-step-label">Equipos</span>
+        </div>
+        <div class="progress-step" data-step="2">
+          <div class="progress-step-dot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="progress-step-label">Datos</span>
+        </div>
+        <div class="progress-step" data-step="3">
+          <div class="progress-step-dot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <span class="progress-step-label">Resumen</span>
+        </div>
+        <div class="progress-step" data-step="4">
+          <div class="progress-step-dot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <span class="progress-step-label">Simulador</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     LAYOUT PRINCIPAL
+════════════════════════════════════════ -->
+<div class="config-layout">
+
+  <!-- ══════════════════════════════════
+       SIDEBAR IZQUIERDO (solo paso 1)
+  ══════════════════════════════════ -->
+  <aside class="config-left-sidebar" id="configLeftSidebar">
+
+    <!-- Widget Dólar TIC -->
+    <div class="cls-widget cls-widget--dolar">
+      <div class="cls-widget-header">
+        <span class="cls-dolar-dot"></span>
+        <span class="cls-widget-title">Dólar TIC</span>
+      </div>
+      <div class="cls-dolar-row">
+        <div class="cls-dolar-input-wrap">
+          <input type="number" id="tipoCambio" value="900" min="1"
+                 onchange="actualizarTipoCambio(this.value)"
+                 onblur="actualizarTipoCambio(this.value)">
+          <div class="cls-dolar-spinners">
+            <button type="button" onclick="cambiarDolar(+10)">▲</button>
+            <button type="button" onclick="cambiarDolar(-10)">▼</button>
+          </div>
+        </div>
+        <span class="cls-dolar-unit">CLP/USD</span>
+      </div>
+      <p class="cls-dolar-note" id="dolarNote">Obteniendo tipo de cambio…</p>
+      <p class="cls-dolar-source">Dólar observado BCCh + $5 TIC · Se actualiza al abrir</p>
+    </div>
+
+    <!-- Widget Descuentos por volumen -->
+    <div class="cls-widget">
+      <div class="cls-widget-title cls-widget-title--plain">Descuentos por volumen</div>
+      <div class="cls-dcto-list">
+        <div class="cls-dcto-row dcto-row" data-min="10" data-max="19">
+          <span>10 – 19 uds</span><span class="cls-dcto-pct dcto-pct">1% dto.</span>
+        </div>
+        <div class="cls-dcto-row dcto-row" data-min="20" data-max="29">
+          <span>20 – 29 uds</span><span class="cls-dcto-pct dcto-pct">2% dto.</span>
+        </div>
+        <div class="cls-dcto-row dcto-row" data-min="30" data-max="39">
+          <span>30 – 39 uds</span><span class="cls-dcto-pct dcto-pct">3% dto.</span>
+        </div>
+        <div class="cls-dcto-row dcto-row" data-min="40" data-max="49">
+          <span>40 – 49 uds</span><span class="cls-dcto-pct dcto-pct">4% dto.</span>
+        </div>
+        <div class="cls-dcto-row dcto-row" data-min="50" data-max="9999">
+          <span>50 uds +</span><span class="cls-dcto-pct dcto-pct">5% dto.</span>
+        </div>
+      </div>
+      <div class="cls-dcto-aplicado" id="dctoAplicado" style="display:none">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Descuento activo: <strong id="dctoAplicadoVal"></strong>
       </div>
     </div>
 
-    <div class="filtro-section">
-      <div class="filtro-title">Marca</div>
-      <div class="filtro-options" id="filtroMarcas">
-        <label class="filtro-checkbox">
-          <input type="checkbox" value="HP" checked>
-          <span class="filtro-check-box"></span>
-          HP
-        </label>
-        <label class="filtro-checkbox">
-          <input type="checkbox" value="Dell" checked>
-          <span class="filtro-check-box"></span>
-          Dell
-        </label>
-        <label class="filtro-checkbox">
-          <input type="checkbox" value="Lenovo" checked>
-          <span class="filtro-check-box"></span>
-          Lenovo
-        </label>
-        <label class="filtro-checkbox">
-          <input type="checkbox" value="Apple" checked>
-          <span class="filtro-check-box"></span>
-          Apple
-        </label>
-        <label class="filtro-checkbox">
-          <input type="checkbox" value="Cisco" checked>
-          <span class="filtro-check-box"></span>
-          Cisco
-        </label>
+    <!-- Widget Financiamiento corporativo -->
+    <div class="cls-widget cls-widget--fin">
+      <div class="cls-widget-title cls-widget-title--plain cls-widget-title--fin">Financiamiento corporativo</div>
+      <div class="cls-fin-logos">
+        <span class="cls-fin-logo cls-fin-logo--santander">Santander</span>
+        <span class="cls-fin-logo cls-fin-logo--bci">BCI</span>
+        <span class="cls-fin-logo cls-fin-logo--chile">B. Chile</span>
+        <span class="cls-fin-logo cls-fin-logo--hp">HP Fin.</span>
       </div>
+      <p class="cls-fin-text">Cuotas desde 12 a 48 meses. Tasa preferencial para empresas.</p>
     </div>
 
-    <div class="filtro-section">
-      <div class="filtro-title">Precio mensual</div>
-      <div class="filtro-range-labels">
-        <span id="rangeMin">$0</span>
-        <span id="rangeMax">$200.000</span>
+    <!-- Widget +50 unidades -->
+    <div class="cls-widget cls-widget--dark">
+      <div class="cls-dark-title">+50 unidades</div>
+      <p class="cls-dark-text">Propuesta personalizada, mejores condiciones y financiamiento a medida.</p>
+      <a class="cls-dark-btn" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Hablar con ejecutivo
+      </a>
+    </div>
+
+  </aside><!-- /config-left-sidebar -->
+
+
+  <!-- ── WIZARD ── -->
+  <div class="config-main">
+
+    <!-- ╔══════════════════════════════╗
+         PASO 1 — EQUIPOS
+         ╚══════════════════════════════╝ -->
+    <div class="wizard-step active" data-step="1">
+
+      <!-- Chips de categoría encima de la tabla -->
+      <div class="flat-cat-chips-bar">
+        <button class="flat-cat-chip active" data-tipo="todos" onclick="clsSetCat('todos',this)">
+          Todos <span id="cnt-todos">—</span>
+        </button>
+        <button class="flat-cat-chip" data-tipo="notebook" onclick="clsSetCat('notebook',this)">
+          Notebooks <span id="cnt-notebook">—</span>
+        </button>
+        <button class="flat-cat-chip" data-tipo="servidor" onclick="clsSetCat('servidor',this)">
+          Servidores <span id="cnt-servidor">—</span>
+        </button>
+        <button class="flat-cat-chip" data-tipo="impresora" onclick="clsSetCat('impresora',this)">
+          Impresoras <span id="cnt-impresora">—</span>
+        </button>
+        <button class="flat-cat-chip" data-tipo="networking" onclick="clsSetCat('networking',this)">
+          Networking <span id="cnt-networking">—</span>
+        </button>
+        <button class="flat-cat-chip" data-tipo="storage" onclick="clsSetCat('storage',this)">
+          Almacenamiento <span id="cnt-storage">—</span>
+        </button>
+        <button class="flat-cat-chip" data-tipo="servicio-tic" onclick="clsSetCat('servicio-tic',this)">
+          Servicios TIC <span id="cnt-servicio-tic">—</span>
+        </button>
       </div>
-      <input type="range" class="filtro-range" id="precioRange" min="0" max="200000" step="5000" value="200000"
-        oninput="filterByPrice(this.value)">
+
+      <!-- Cabecera de la tabla de pedido -->
+      <div class="flat-table-header">
+        <div class="flat-table-header-left">
+          <div class="flat-table-title">
+            Configurador de precios por volumen — <span>Portafolio TIC Managers</span>
+          </div>
+          <div class="flat-table-sub">Ítems ilimitados — descuento sobre total consolidado del pedido</div>
+        </div>
+        <div class="flat-table-header-right">
+          <span class="flat-table-year">Portafolio 2026</span>
+        </div>
+      </div>
+
+      <!-- Buscador -->
+      <div class="flat-search-row">
+        <div class="flat-search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="searchProductos" placeholder="Buscar en el catálogo (nombre o proveedor)…" oninput="aplicarFiltros()" autocomplete="off">
+          <button type="button" id="btnClearSearch" onclick="clearSearch()" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <span class="flat-search-count" id="catalogoConteo"></span>
+      </div>
+
+      <!-- Catálogo (buildCatalogTable lo inyecta aquí) -->
+      <div id="catalogoProductos"></div>
+
+    </div><!-- /paso 1 -->
+
+
+    <!-- ╔══════════════════════════════╗
+         PASO 2 — DATOS DE EMPRESA
+         ╚══════════════════════════════╝ -->
+    <div class="wizard-step" data-step="2">
+      <div class="step-intro">
+        <h2>Datos de tu empresa</h2>
+        <p>Completa la información de contacto para generar tu cotización formal.</p>
+      </div>
+
+      <div class="config-form-grid">
+        <div class="config-field config-field--full">
+          <label class="config-label">Empresa <span class="req">*</span></label>
+          <input type="text" id="empresa" class="config-input" placeholder="Nombre de tu empresa" autocomplete="organization">
+        </div>
+        <div class="config-field">
+          <label class="config-label">Región</label>
+          <select id="region" class="config-input">
+            <option value="">Selecciona región</option>
+            <option>Región Metropolitana</option>
+            <option>Región de Valparaíso</option>
+            <option>Región del Biobío</option>
+            <option>Región de La Araucanía</option>
+            <option>Región de Los Lagos</option>
+            <option>Región de Coquimbo</option>
+            <option>Región de Atacama</option>
+            <option>Región de Antofagasta</option>
+            <option>Región de Tarapacá</option>
+            <option>Región de Arica y Parinacota</option>
+            <option>Región del Maule</option>
+            <option>Región de Ñuble</option>
+            <option>Región de Los Ríos</option>
+            <option>Región de Aysén</option>
+            <option>Región de Magallanes</option>
+          </select>
+        </div>
+        <div class="config-field">
+          <label class="config-label">Ciudad</label>
+          <input type="text" id="ciudad" class="config-input" placeholder="Ciudad">
+        </div>
+        <div class="config-field config-field--full">
+          <label class="config-label">Dirección</label>
+          <input type="text" id="direccion" class="config-input" placeholder="Calle, número, oficina">
+        </div>
+        <div class="config-field">
+          <label class="config-label">Nombre de contacto <span class="req">*</span></label>
+          <input type="text" id="contacto" class="config-input" placeholder="Nombre Apellido" autocomplete="name">
+        </div>
+        <div class="config-field">
+          <label class="config-label">Cargo</label>
+          <input type="text" id="cargo" class="config-input" placeholder="Ej: Gerente TI">
+        </div>
+        <div class="config-field">
+          <label class="config-label">Teléfono <span class="req">*</span></label>
+          <input type="tel" id="telefono" class="config-input" placeholder="+56 9 1234 5678" autocomplete="tel">
+        </div>
+        <div class="config-field">
+          <label class="config-label">Email <span class="req">*</span></label>
+          <input type="email" id="email" class="config-input" placeholder="correo@empresa.cl" autocomplete="email">
+        </div>
+        <div class="config-field">
+          <label class="config-label">N° de empleados</label>
+          <select id="empleados" class="config-input">
+            <option value="">Selecciona</option>
+            <option>1 – 10</option>
+            <option>11 – 50</option>
+            <option>51 – 200</option>
+            <option>201 – 500</option>
+            <option>500+</option>
+          </select>
+        </div>
+        <div class="config-field">
+          <label class="config-label">Rubro</label>
+          <select id="rubro" class="config-input">
+            <option value="">Selecciona rubro</option>
+            <option>Tecnología</option>
+            <option>Salud</option>
+            <option>Educación</option>
+            <option>Retail / Comercio</option>
+            <option>Construcción</option>
+            <option>Finanzas / Seguros</option>
+            <option>Manufactura</option>
+            <option>Logística / Transporte</option>
+            <option>Servicios profesionales</option>
+            <option>Gobierno / Sector público</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="config-field config-field--full">
+          <label class="config-label">Notas adicionales</label>
+          <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
+        </div>
+      </div>
+    </div><!-- /paso 2 -->
+
+
+    <!-- ╔══════════════════════════════╗
+         PASO 3 — RESUMEN
+         ╚══════════════════════════════╝ -->
+    <div class="wizard-step" data-step="3">
+      <div class="step-intro">
+        <h2>Resumen de tu cotización</h2>
+        <p>Revisa equipos, servicios y datos antes de continuar.</p>
+      </div>
+
+      <div class="resumen-card">
+        <div class="resumen-card-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <h3>Equipos seleccionados</h3>
+        </div>
+        <div class="resumen-card-body" id="summaryEquipos">
+          <p class="resumen-empty">Sin productos seleccionados</p>
+        </div>
+        <div class="resumen-card-footer">
+          <span>Subtotal equipos</span>
+          <strong>$<span id="summarySubtotalEq">0</span></strong>
+        </div>
+      </div>
+
+      <div class="resumen-card">
+        <div class="resumen-card-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <h3>Servicios seleccionados</h3>
+        </div>
+        <div class="resumen-card-body" id="summaryServicios">
+          <p class="resumen-empty">Sin servicios seleccionados</p>
+        </div>
+        <div class="resumen-card-footer">
+          <span>Subtotal servicios/mes</span>
+          <strong>$<span id="summarySubtotalSvc">0</span>/mes</strong>
+        </div>
+      </div>
+
+      <div class="resumen-total-box">
+        <div class="resumen-total-row">
+          <span>Total mensual estimado</span>
+          <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
+        </div>
+        <div class="resumen-total-row resumen-total-sub">
+          <span>Cuota en <span id="plazoLabelSummary">24</span> meses</span>
+          <span>≈ $<span id="summaryCuota">0</span>/mes</span>
+        </div>
+      </div>
+
+      <!-- Bloque de info de contacto generado por generateFinalSummary() -->
+      <div id="summaryInfo"></div>
+
+    </div><!-- /paso 3 -->
+
+
+    <!-- ╔══════════════════════════════╗
+         PASO 4 — SIMULADOR
+         ╚══════════════════════════════╝ -->
+    <div class="wizard-step" data-step="4">
+      <div class="step-intro">
+        <h2>Simulador de financiamiento</h2>
+        <p>Ajusta el plazo y la tasa para ver tu cuota mensual estimada.</p>
+      </div>
+
+      <div class="sim-layout">
+
+        <!-- Parámetros -->
+        <div class="sim-panel">
+          <div class="sim-section">
+            <div class="sim-section-title">Monto a financiar (equipos)</div>
+            <div class="sim-amount">$<span id="montoFinanciar">0</span></div>
+          </div>
+          <div class="sim-section">
+            <div class="sim-section-title">Servicios mensuales incluidos</div>
+            <div class="sim-amount sim-amount--svc">$<span id="serviciosMensualesSim">0</span>/mes</div>
+          </div>
+          <div class="sim-section">
+            <div class="sim-section-title">Plazo de financiamiento</div>
+            <div class="sim-plazo-btns">
+              <button class="sim-plazo-btn"        onclick="setPlazo(12,this)">12 m</button>
+              <button class="sim-plazo-btn active"  onclick="setPlazo(24,this)">24 m</button>
+              <button class="sim-plazo-btn"         onclick="setPlazo(36,this)">36 m</button>
+              <button class="sim-plazo-btn"         onclick="setPlazo(48,this)">48 m</button>
+            </div>
+          </div>
+          <div class="sim-section">
+            <div class="sim-section-title">Tasa anual referencial: <strong><span id="tasaVal">12%</span></strong></div>
+            <input type="range" class="sim-tasa-range" min="0" max="30" step="0.5" value="12" oninput="updateTasa(this.value)">
+            <div class="sim-tasa-labels"><span>0%</span><span>15%</span><span>30%</span></div>
+          </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="sim-results">
+          <div class="sim-result-main">
+            <div class="sim-result-label">Cuota mensual total</div>
+            <div class="sim-result-val" id="simCuota">$0</div>
+          </div>
+          <div class="sim-result-grid">
+            <div class="sim-result-item">
+              <span class="sim-result-item-label">Total a pagar</span>
+              <span class="sim-result-item-val" id="simTotal">$0</span>
+            </div>
+            <div class="sim-result-item">
+              <span class="sim-result-item-label">Intereses totales</span>
+              <span class="sim-result-item-val" id="simIntereses">$0</span>
+            </div>
+          </div>
+
+          <button class="sim-toggle-tabla" id="btnToggleTabla" onclick="toggleTablaAmort()">▼ Ver tabla de amortización</button>
+          <div id="tablaAmortWrap" style="display:none">
+            <div class="sim-tabla-scroll">
+              <table class="sim-tabla">
+                <thead><tr><th>Mes</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead>
+                <tbody id="tablaAmortBody"></tbody>
+                <tfoot>
+                  <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong id="tfoot-cuota">—</strong></td>
+                    <td><strong id="tfoot-capital">—</strong></td>
+                    <td><strong id="tfoot-interes">—</strong></td>
+                    <td>—</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <button class="sim-send-btn" onclick="enviarCotizacion()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar Cotización
+          </button>
+        </div>
+
+      </div>
+    </div><!-- /paso 4 -->
+
+
+    <!-- ── NAVEGACIÓN ── -->
+    <div class="wizard-nav">
+      <button class="wizard-btn wizard-btn--prev" id="btnPrev" onclick="prevStep()" style="display:none">← Anterior</button>
+      <!-- btnNext vive en la barra inferior cuando currentStep===1; en pasos 2-4 se regenera aquí -->
+      <button class="wizard-btn wizard-btn--next" id="btnNextInline" onclick="nextStep()" style="display:none">Siguiente →</button>
     </div>
 
-    <div class="filtro-section">
-      <div class="filtro-title">Ordenar por</div>
-      <select class="filtro-select" id="ordenSelect" onchange="sortProducts()">
-        <option value="relevancia">Relevancia</option>
-        <option value="precio-asc">Precio: menor a mayor</option>
-        <option value="precio-desc">Precio: mayor a menor</option>
-        <option value="nombre">Nombre A-Z</option>
-      </select>
+  </div><!-- /config-main -->
+
+  <!-- ── SIDEBAR DERECHO — RESUMEN ── -->
+  <aside class="right-sidebar" id="bottomBar">
+    <div class="bb-col bb-col--equipos">
+      <div class="bb-label">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Equipos
+      </div>
+      <div class="bb-value">$<span id="totalEquipos">0</span></div>
+      <div class="bb-sub"><span id="countEquipos">0</span> unid.</div>
     </div>
 
-    <a href="configurador.html" class="filtro-cta">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      Configurar solución
-    </a>
+    <div class="bb-divider"></div>
+
+    <div class="bb-col bb-col--servicios">
+      <div class="bb-label">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Servicios
+      </div>
+      <div class="bb-value">$<span id="totalServicios">0</span><span class="bb-period">/mes</span></div>
+      <div class="bb-sub"><span id="countServicios">0</span> activos</div>
+    </div>
+
+    <div class="bb-divider"></div>
+
+    <div class="bb-col bb-col--dcto">
+      <div class="bb-label bb-label--green">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Descuento
+      </div>
+      <div class="bb-value bb-value--green">−$<span id="ahorroTotal">0</span></div>
+      <div class="bb-sub"><span id="descuentoPct">—</span> vol.</div>
+    </div>
+
+    <div class="bb-divider"></div>
+
+    <div class="bb-col bb-col--total">
+      <div class="bb-label">Total mensual</div>
+      <div class="bb-value bb-value--orange">$<span id="totalGeneral">0</span></div>
+      <div class="bb-sub">Plazo <span id="plazoSidebarLabel">24</span> m</div>
+    </div>
+
+    <div class="bb-divider"></div>
+
+    <div class="bb-col bb-col--cuota">
+      <div class="bb-label">Cuota estimada</div>
+      <div class="bb-cuota-val">$<span id="cuotaMensual">0</span><span class="bb-cuota-period">/mes</span></div>
+      <div class="bb-sub"><span id="plazoSidebarLabel2">24</span> meses</div>
+    </div>
+
+    <div class="bb-divider"></div>
+
+    <div class="bb-col bb-actions">
+      <button class="bb-btn-next" id="btnNext" onclick="nextStep()">
+        Siguiente
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
   </aside>
 
-  <!-- CONTENIDO -->
-  <main class="tienda-main">
+</div><!-- /config-layout -->
 
-    <!-- BARRA SUPERIOR -->
-    <div class="tienda-topbar">
-      <div class="tienda-search-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="tienda-search" id="searchInput" placeholder="Buscar productos..." oninput="searchProducts()">
+
+<!-- ════════════════════════════════════════
+     MODAL DE CONFIRMACIÓN
+════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-label="Confirmación de cotización">
+
+    <div id="modalSuccess">
+      <div class="modal-icon modal-icon--ok">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
       </div>
-      <div class="tienda-topbar-right">
-        <span class="tienda-count" id="productCount">18 productos</span>
-        <div class="tienda-view-btns">
-          <button class="tienda-view-btn active" id="viewGrid" onclick="setView('grid')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          </button>
-          <button class="tienda-view-btn" id="viewList" onclick="setView('list')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          </button>
-        </div>
-      </div>
+      <h2 class="modal-title">¡Cotización enviada!</h2>
+      <p class="modal-desc">Tu solicitud fue recibida correctamente. Nos contactaremos a la brevedad con la propuesta formal para <strong id="modalEmpresa"></strong>.</p>
+      <p class="modal-sub">Se enviará una copia a <strong id="modalEmail"></strong>.</p>
+      <button class="modal-btn" onclick="cerrarModal()">Volver al inicio</button>
     </div>
 
-    <!-- FILTROS ACTIVOS -->
-    <div class="tienda-active-filters" id="activeFilters"></div>
-
-    <!-- GRID DE PRODUCTOS -->
-    <div class="productos-grid" id="productosGrid">
-      <!-- Notebooks -->
-      <div class="prod-card" data-cat="notebooks" data-marca="HP" data-precio="18750" data-nombre="HP EliteBook 640">
-        <div class="prod-badge prod-badge--hot">Más vendido</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">EliteBook 640 G10</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i5-1335U</span>
-            <span>16GB DDR4</span>
-            <span>512GB SSD NVMe</span>
-            <span>14" FHD</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$18.750</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
+    <div id="modalError" style="display:none">
+      <div class="modal-icon modal-icon--err">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="HP" data-precio="22500" data-nombre="HP EliteBook 840">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">EliteBook 840 G10</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i7-1355U</span>
-            <span>16GB DDR5</span>
-            <span>512GB SSD NVMe</span>
-            <span>14" FHD IPS</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$22.500</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Dell" data-precio="21667" data-nombre="Dell Inspiron 15">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">Inspiron 15 3530</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i7-1355U</span>
-            <span>16GB DDR4</span>
-            <span>512GB SSD</span>
-            <span>15.6" FHD</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$21.667</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Dell" data-precio="27083" data-nombre="Dell Latitude 5540">
-        <div class="prod-badge prod-badge--new">Nuevo</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">Latitude 5540</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i7-1365U</span>
-            <span>16GB DDR4</span>
-            <span>256GB SSD</span>
-            <span>15.6" FHD</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$27.083</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Lenovo" data-precio="19583" data-nombre="Lenovo ThinkPad E14">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Lenovo</div>
-          <div class="prod-name">ThinkPad E14 Gen 5</div>
-          <div class="prod-specs-list">
-            <span>AMD Ryzen 5 7530U</span>
-            <span>16GB DDR4</span>
-            <span>512GB SSD</span>
-            <span>14" FHD IPS</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$19.583</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Apple" data-precio="50000" data-nombre="MacBook Pro 14">
-        <div class="prod-badge prod-badge--premium">Premium</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Apple</div>
-          <div class="prod-name">MacBook Pro 14"</div>
-          <div class="prod-specs-list">
-            <span>Apple M3 Pro</span>
-            <span>18GB RAM</span>
-            <span>512GB SSD</span>
-            <span>14" Liquid Retina XDR</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$50.000</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Servidores -->
-      <div class="prod-card" data-cat="servidores" data-marca="Dell" data-precio="104167" data-nombre="Dell PowerEdge R650">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="6" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="32" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="58" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="18" cy="16" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="68" r="3" fill="rgba(255,255,255,0.2)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">PowerEdge R650</div>
-          <div class="prod-specs-list">
-            <span>Intel Xeon Silver 4314</span>
-            <span>64GB DDR4 ECC</span>
-            <span>1TB SSD RAID</span>
-            <span>1U Rack</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$104.167</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="servidores" data-marca="HP" data-precio="133333" data-nombre="HP ProLiant DL380">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="6" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="32" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="58" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="18" cy="16" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="68" r="3" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">ProLiant DL380 Gen10</div>
-          <div class="prod-specs-list">
-            <span>Intel Xeon Gold 5218</span>
-            <span>128GB DDR4 ECC</span>
-            <span>2TB SSD RAID</span>
-            <span>2U Rack</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$133.333</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="servidores" data-marca="Dell" data-precio="62500" data-nombre="Dell PowerEdge T350">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="30" y="4" width="60" height="76" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="38" y="12" width="44" height="28" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><circle cx="60" cy="56" r="8" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">PowerEdge T350</div>
-          <div class="prod-specs-list">
-            <span>Intel Xeon E-2356G</span>
-            <span>32GB DDR4 ECC</span>
-            <span>1TB SATA</span>
-            <span>Torre</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$62.500</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Impresoras -->
-      <div class="prod-card" data-cat="impresoras" data-marca="HP" data-precio="14583" data-nombre="HP LaserJet M110w">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="20" width="80" height="44" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="30" y="8" width="60" height="18" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="30" y="64" width="60" height="12" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="38" y="32" width="44" height="3" rx="1.5" fill="rgba(59,130,246,0.3)"/><circle cx="90" cy="33.5" r="3" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">LaserJet M110w</div>
-          <div class="prod-specs-list">
-            <span>Impresión B/N</span>
-            <span>21 ppm</span>
-            <span>Wi-Fi + USB</span>
-            <span>Tóner incluido</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$14.583</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="impresoras" data-marca="HP" data-precio="20833" data-nombre="HP LaserJet MFP M236sdw">
-        <div class="prod-badge prod-badge--hot">Popular</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="20" width="80" height="44" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="30" y="8" width="60" height="18" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="30" y="64" width="60" height="12" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="38" y="32" width="44" height="3" rx="1.5" fill="rgba(59,130,246,0.3)"/><circle cx="90" cy="33.5" r="3" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">LaserJet MFP M236sdw</div>
-          <div class="prod-specs-list">
-            <span>Impresión / Copia / Scan</span>
-            <span>29 ppm</span>
-            <span>Wi-Fi + LAN + USB</span>
-            <span>Tóner incluido</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$20.833</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Monitores -->
-      <div class="prod-card" data-cat="monitores" data-marca="Dell" data-precio="10417" data-nombre="Dell P2423D">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="18" y="6" width="84" height="56" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="26" y="14" width="68" height="40" rx="1" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="50" y="62" width="20" height="10" rx="1" fill="rgba(255,255,255,0.08)"/><rect x="38" y="72" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">Monitor P2423D</div>
-          <div class="prod-specs-list">
-            <span>23.8" QHD 2560×1440</span>
-            <span>Panel IPS</span>
-            <span>USB-C + HDMI + DP</span>
-            <span>Ajuste de altura</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$10.417</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="monitores" data-marca="HP" data-precio="8333" data-nombre="HP M27fw">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="18" y="6" width="84" height="56" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="26" y="14" width="68" height="40" rx="1" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="50" y="62" width="20" height="10" rx="1" fill="rgba(255,255,255,0.08)"/><rect x="38" y="72" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">Monitor M27fw</div>
-          <div class="prod-specs-list">
-            <span>27" FHD 1920×1080</span>
-            <span>Panel IPS</span>
-            <span>HDMI + VGA</span>
-            <span>Sin marcos laterales</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$8.333</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Redes -->
-      <div class="prod-card" data-cat="redes" data-marca="Cisco" data-precio="25000" data-nombre="Cisco Catalyst 2960">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="28" width="108" height="28" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><g><rect x="14" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="24" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="34" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="44" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/></g><circle cx="100" cy="42" r="4" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Cisco</div>
-          <div class="prod-name">Catalyst 2960-X 24</div>
-          <div class="prod-specs-list">
-            <span>24 puertos GbE</span>
-            <span>4 uplinks SFP+</span>
-            <span>PoE+ 370W</span>
-            <span>Gestionable</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$25.000</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="redes" data-marca="Cisco" data-precio="16667" data-nombre="Cisco RV340 Router">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="28" width="80" height="28" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><path d="M60 14 L60 28" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M40 10 L60 14 L80 10" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-linecap="round"/><circle cx="100" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="92" cy="42" r="3" fill="rgba(240,165,0,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Cisco</div>
-          <div class="prod-name">RV340 Dual WAN</div>
-          <div class="prod-specs-list">
-            <span>Dual WAN Gigabit</span>
-            <span>4 puertos LAN</span>
-            <span>VPN IPSec/SSL</span>
-            <span>Firewall integrado</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$16.667</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="configurador.html" class="prod-btn">Cotizar</a>
-          </div>
-        </div>
-      </div>
-
+      <h2 class="modal-title">Hubo un problema</h2>
+      <p class="modal-desc">No pudimos guardar tu cotización. Intenta de nuevo o contáctanos directamente.</p>
+      <a class="modal-btn modal-btn--sec" href="mailto:contacto@infrago.cl">Enviar por email</a>
+      <button class="modal-btn" onclick="cerrarModal()">Intentar de nuevo</button>
     </div>
 
-    <!-- SIN RESULTADOS -->
-    <div class="tienda-empty" id="tiendaEmpty" style="display:none;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <h3>Sin resultados</h3>
-      <p>Prueba con otros filtros o términos de búsqueda</p>
-      <button onclick="resetFilters()">Limpiar filtros</button>
-    </div>
-
-  </main>
-</div>
-
-<!-- CTA BANNER -->
-<div class="tienda-cta-banner">
-  <div class="tienda-cta-content">
-    <div>
-      <h3>¿No encuentras lo que buscas?</h3>
-      <p>Cotiza una solución personalizada con nuestro configurador o habla con un experto.</p>
-    </div>
-    <div class="tienda-cta-actions">
-      <a href="configurador.html" class="btn-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Ir al configurador
-      </a>
-      <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" class="btn-outline" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Hablar con experto
-      </a>
-    </div>
   </div>
 </div>
 
-<script>
-/* ═══════════════════════════════════════════
-   TIENDA JS
-═══════════════════════════════════════════ */
 
-let currentView = 'grid';
-let currentCat  = 'todos';
-let currentMax  = 200000;
-let currentSearch = '';
-let currentOrder = 'relevancia';
-
-// Filtro por categoría
-document.querySelectorAll('#filtroCategorias input').forEach(radio => {
-  radio.addEventListener('change', () => {
-    currentCat = radio.value;
-    document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-    radio.closest('.filtro-check').classList.add('active');
-    applyFilters();
-  });
-});
-
-// Filtro por marca
-document.querySelectorAll('#filtroMarcas input').forEach(cb => {
-  cb.addEventListener('change', applyFilters);
-});
-
-function filterByPrice(val) {
-  currentMax = parseInt(val);
-  document.getElementById('rangeMax').textContent = '$' + parseInt(val).toLocaleString('es-CL');
-  applyFilters();
-}
-
-function searchProducts() {
-  currentSearch = document.getElementById('searchInput').value.toLowerCase();
-  applyFilters();
-}
-
-function sortProducts() {
-  currentOrder = document.getElementById('ordenSelect').value;
-  applyFilters();
-}
-
-function applyFilters() {
-  const marcasActivas = [...document.querySelectorAll('#filtroMarcas input:checked')].map(c => c.value);
-  let cards = [...document.querySelectorAll('.prod-card')];
-
-  cards.forEach(card => {
-    const cat    = card.dataset.cat;
-    const marca  = card.dataset.marca;
-    const precio = parseInt(card.dataset.precio);
-    const nombre = card.dataset.nombre.toLowerCase();
-
-    const catOk    = currentCat === 'todos' || cat === currentCat;
-    const marcaOk  = marcasActivas.includes(marca);
-    const precioOk = precio <= currentMax;
-    const searchOk = nombre.includes(currentSearch);
-
-    card.style.display = (catOk && marcaOk && precioOk && searchOk) ? '' : 'none';
-  });
-
-  // Ordenar
-  const grid = document.getElementById('productosGrid');
-  const visible = cards.filter(c => c.style.display !== 'none');
-
-  if (currentOrder === 'precio-asc') {
-    visible.sort((a, b) => parseInt(a.dataset.precio) - parseInt(b.dataset.precio));
-  } else if (currentOrder === 'precio-desc') {
-    visible.sort((a, b) => parseInt(b.dataset.precio) - parseInt(a.dataset.precio));
-  } else if (currentOrder === 'nombre') {
-    visible.sort((a, b) => a.dataset.nombre.localeCompare(b.dataset.nombre));
-  }
-
-  visible.forEach(card => grid.appendChild(card));
-
-  // Contador
-  const count = visible.length;
-  document.getElementById('productCount').textContent = count + ' producto' + (count !== 1 ? 's' : '');
-
-  // Estado vacío
-  document.getElementById('tiendaEmpty').style.display = count === 0 ? 'flex' : 'none';
-  document.getElementById('productosGrid').style.display = count === 0 ? 'none' : '';
-
-  updateActiveFilters();
-}
-
-// Array global para guardar closures — evita serializar funciones en onclick
-const _filterClears = [];
-
-function clearActiveFilter(i) {
-  if (_filterClears[i]) _filterClears[i]();
-}
-
-function updateActiveFilters() {
-  const container = document.getElementById('activeFilters');
-  const tags = [];
-
-  if (currentCat !== 'todos') tags.push({
-    label: currentCat,
-    clear: () => {
-      currentCat = 'todos';
-      document.querySelector('#filtroCategorias input[value="todos"]').checked = true;
-      document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-      document.querySelector('.filtro-check[data-cat="todos"]').classList.add('active');
-      applyFilters();
-    }
-  });
-
-  if (currentSearch) tags.push({
-    label: `"${currentSearch}"`,
-    clear: () => {
-      currentSearch = '';
-      document.getElementById('searchInput').value = '';
-      applyFilters();
-    }
-  });
-
-  if (currentMax < 200000) tags.push({
-    label: `Hasta $${currentMax.toLocaleString('es-CL')}`,
-    clear: () => {
-      currentMax = 200000;
-      document.getElementById('precioRange').value = 200000;
-      document.getElementById('rangeMax').textContent = '$200.000';
-      applyFilters();
-    }
-  });
-
-  _filterClears.length = 0;
-  tags.forEach((t, i) => { _filterClears[i] = t.clear; });
-
-  container.innerHTML = tags.map((t, i) =>
-    `<span class="active-filter-tag">${t.label} <button onclick="clearActiveFilter(${i})">&times;</button></span>`
-  ).join('');
-}
-
-function resetFilters() {
-  currentCat = 'todos';
-  currentSearch = '';
-  currentMax = 200000;
-  document.querySelector('#filtroCategorias input[value="todos"]').checked = true;
-  document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-  document.querySelector('.filtro-check[data-cat="todos"]').classList.add('active');
-  document.getElementById('searchInput').value = '';
-  document.getElementById('precioRange').value = 200000;
-  document.getElementById('rangeMax').textContent = '$200.000';
-  document.querySelectorAll('#filtroMarcas input').forEach(c => c.checked = true);
-  applyFilters();
-}
-
-function setView(v) {
-  currentView = v;
-  const grid = document.getElementById('productosGrid');
-  grid.className = v === 'list' ? 'productos-list' : 'productos-grid';
-  document.getElementById('viewGrid').classList.toggle('active', v === 'grid');
-  document.getElementById('viewList').classList.toggle('active', v === 'list');
-}
-
-// Init: leer ?cat= de URL
-window.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const cat = params.get('cat');
-  if (cat) {
-    const radio = document.querySelector(`#filtroCategorias input[value="${cat}"]`);
-    if (radio) {
-      radio.checked = true;
-      currentCat = cat;
-      document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-      radio.closest('.filtro-check').classList.add('active');
-      applyFilters();
-    }
-  }
-});
-</script>
-<!-- ── INCLUDES: navbar + footer automáticos ── -->
-
-<!-- ════════════════ FOOTER INLINE ════════════════ -->
-<!-- ══════════════════════════════════════
-     FOOTER — InfraGo (v2)
-══════════════════════════════════════ -->
-
+<!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
 <div class="ig-footer-root">
-
-  <!-- FOOTER MAIN -->
   <div class="footer-main">
     <div class="footer-brand">
       <div class="brand-logo">
@@ -900,7 +732,6 @@ window.addEventListener('DOMContentLoaded', () => {
         <span class="badge">Soporte 24/7</span>
       </div>
     </div>
-
     <div class="footer-col">
       <div class="col-label">Soluciones</div>
       <ul class="col-links">
@@ -910,7 +741,6 @@ window.addEventListener('DOMContentLoaded', () => {
         <li><a href="#">Soluciones de Oficina</a></li>
       </ul>
     </div>
-
     <div class="footer-col">
       <div class="col-label">Empresa</div>
       <ul class="col-links">
@@ -920,34 +750,16 @@ window.addEventListener('DOMContentLoaded', () => {
         <li><a href="#">Agendar Demo</a></li>
       </ul>
     </div>
-
     <div class="footer-col">
       <div class="col-label">Contacto</div>
       <ul class="col-links">
-        <li>
-          <a href="mailto:contacto@infrago.cl" class="contact-item">
-            <span class="contact-label">Email</span>
-            <span class="contact-val">contacto@infrago.cl</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="contact-item">
-            <span class="contact-label">Teléfono</span>
-            <span class="contact-val">+56 2 xxxx xxxx</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="contact-item">
-            <span class="contact-label">Dirección</span>
-            <span class="contact-val">Providencia 1208, Of. 307</span>
-          </a>
-        </li>
+        <li><a href="mailto:contacto@infrago.cl" class="contact-item"><span class="contact-label">Email</span><span class="contact-val">contacto@infrago.cl</span></a></li>
+        <li><a href="#" class="contact-item"><span class="contact-label">Teléfono</span><span class="contact-val">+56 2 xxxx xxxx</span></a></li>
+        <li><a href="#" class="contact-item"><span class="contact-label">Dirección</span><span class="contact-val">Providencia 1208, Of. 307</span></a></li>
         <li><a href="#">Soporte</a></li>
       </ul>
     </div>
   </div>
-
-  <!-- FOOTER BOTTOM -->
   <div class="footer-bottom">
     <div class="bottom-left">
       <span class="copyright">© 2026 InfraGo SpA. Todos los derechos reservados.</span>
@@ -955,18 +767,104 @@ window.addEventListener('DOMContentLoaded', () => {
       <span class="made-by">Una empresa de <span>TIC Manager's</span></span>
     </div>
     <div class="footer-socials">
-      <a href="#" class="social-link">LinkedIn</a>
-      <span class="social-sep">·</span>
-      <a href="#" class="social-link">Instagram</a>
-      <span class="social-sep">·</span>
-      <a href="#" class="social-link">Facebook</a>
-      <span class="social-sep">·</span>
-      <a href="#" class="social-link">Términos</a>
-      <span class="social-sep">·</span>
+      <a href="#" class="social-link">LinkedIn</a><span class="social-sep">·</span>
+      <a href="#" class="social-link">Instagram</a><span class="social-sep">·</span>
+      <a href="#" class="social-link">Facebook</a><span class="social-sep">·</span>
+      <a href="#" class="social-link">Términos</a><span class="social-sep">·</span>
       <a href="#" class="social-link">Privacidad</a>
     </div>
   </div>
 </div>
+
+
+<!-- ════════════════════════════════════════
+     SCRIPTS — orden crítico
+     1. catalogo.js  → define window.CATALOGO
+     2. configurador.js → lógica wizard, llama renderCatalogo()
+     3. flat-catalog.js → tabla visual + filtros (reemplaza aplicarFiltros)
+     4. auth.js → protección de ruta y sesión
+════════════════════════════════════════ -->
+<script src="/assets/js/catalogo.js"></script>
+<script src="/assets/js/configurador.js"></script>
+<script src="/assets/js/flat-catalog.js"></script>
 <script src="/assets/js/auth.js"></script>
+<script>
+(function() {
+
+  /* ── 1. Poblar conteos de categorías ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+      if (!window.CATALOGO) return;
+      const counts = { todos: window.CATALOGO.length };
+      window.CATALOGO.forEach(p => { counts[p.tipo] = (counts[p.tipo] || 0) + 1; });
+      Object.entries(counts).forEach(([tipo, n]) => {
+        const el = document.getElementById('cnt-' + tipo);
+        if (el) el.textContent = n;
+      });
+      const conteo = document.getElementById('catalogoConteo');
+      if (conteo) conteo.textContent = window.CATALOGO.length + ' productos';
+    }, 150);
+  });
+
+  /* ── 2. Sincronizar plazoSidebarLabel2 ── */
+  function syncPlazo() {
+    const p1 = document.getElementById('plazoSidebarLabel');
+    const p2 = document.getElementById('plazoSidebarLabel2');
+    if (p1 && p2) p2.textContent = p1.textContent;
+  }
+
+  /* ── 3. Aplicar visibilidad de sidebars según paso ── */
+  function applyStepLayout() {
+    const step    = window.currentStep || 1;
+    const isStep1 = step === 1;
+    const ls      = document.getElementById('configLeftSidebar');
+    const rs      = document.getElementById('bottomBar');
+    const layout  = document.querySelector('.config-layout');
+    const prev    = document.getElementById('btnPrev');
+    const inlineNext = document.getElementById('btnNextInline');
+
+    if (ls)          ls.style.display          = isStep1 ? '' : 'none';
+    if (rs)          rs.style.display          = isStep1 ? '' : 'none';
+    if (layout)      layout.className          = isStep1
+                       ? 'config-layout'
+                       : 'config-layout config-layout--single';
+    if (inlineNext)  inlineNext.style.display  = isStep1 ? 'none' : '';
+    if (prev)        prev.style.display        = isStep1 ? 'none' : '';
+
+    syncPlazo();
+  }
+
+  /* ── 4. Hookear DESPUÉS de que configurador.js se inicialice ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    /* Esperar a que configurador.js termine su propio DOMContentLoaded */
+    setTimeout(function() {
+
+      /* Override de updateStepDisplay — ahora sí existe */
+      const _orig = window.updateStepDisplay;
+      if (typeof _orig === 'function') {
+        window.updateStepDisplay = function() {
+          _orig.apply(this, arguments);
+          applyStepLayout();
+        };
+      }
+
+      /* Override de updateSidebar para sincronizar plazo */
+      const _origSidebar = window.updateSidebar;
+      if (typeof _origSidebar === 'function') {
+        window.updateSidebar = function() {
+          _origSidebar.apply(this, arguments);
+          syncPlazo();
+        };
+      }
+
+      /* Aplicar estado inicial (paso 1) */
+      applyStepLayout();
+
+    }, 200); /* mayor que el timeout de flat-catalog (80ms) */
+  });
+
+})();
+</script>
+
 </body>
 </html>
