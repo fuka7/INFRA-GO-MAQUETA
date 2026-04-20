@@ -398,11 +398,15 @@
       saveCurrent();
       updateNavbar();
 
+      // Capturar el redirect antes de cerrar el modal, ya que
+      // closeAuth() limpia _authRedirect para evitar redirects no deseados
+      const redirectTarget = window._authRedirect;
+
       document.getElementById('formLogin').style.display = 'none';
       document.getElementById('loginSuccess').classList.add('show');
       setTimeout(() => {
         closeAuth();
-        if (window._authRedirect) window.location.href = window._authRedirect;
+        if (redirectTarget) window.location.href = redirectTarget;
       }, 1500);
     });
 
@@ -480,6 +484,7 @@
   function openAuth(tab = 'login', redirectAfter = null) {
     window._authRedirect = redirectAfter;
     const overlay = document.getElementById('authOverlay');
+    overlay.style.pointerEvents = ''; // resetear por si closeAuth lo había deshabilitado
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     switchTab(tab);
@@ -488,7 +493,19 @@
   function closeAuth() {
     const overlay = document.getElementById('authOverlay');
     overlay.classList.remove('open');
-    document.body.style.overflow = '';
+
+    // Restaurar scroll del body solo si el menú mobile del navbar no lo bloqueó también
+    const mobileMenuOpen = document.getElementById('igbMobile')?.classList.contains('open');
+    if (!mobileMenuOpen) {
+      document.body.style.overflow = '';
+    }
+
+    // Asegurar que el overlay no bloquee clicks después de cerrarse
+    overlay.style.pointerEvents = 'none';
+    setTimeout(() => { overlay.style.pointerEvents = ''; }, 50);
+
+    // Limpiar redirect pendiente al cerrar sin autenticarse
+    window._authRedirect = null;
   }
 
   function switchTab(tab) {

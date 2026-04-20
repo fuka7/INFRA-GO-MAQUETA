@@ -249,51 +249,32 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
     <div class="prd-panel">
 
       <!-- Nombre del producto -->
-      <div class="prd-panel-name" id="prdName">MacBook Air 13.6/ M2 8C/ GPU 10C/ 24GB RAM/ 512GB Medianoche</div>
+      <div class="prd-panel-name" id="prdName"></div>
 
       <!-- Rating + opinar -->
       <div class="prd-panel-rating">
-        <div class="prd-stars" id="prdStars">
-          <svg class="prd-star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="prd-star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="prd-star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="prd-star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg class="prd-star" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-        </div>
-        <span class="prd-rating-num">4.8</span>
-        <span class="prd-rating-count">(19)</span>
+        <div class="prd-stars" id="prdStars"></div>
+        <span class="prd-rating-num" id="prdRating"></span>
+        <span class="prd-rating-count" id="prdReviews"></span>
         <a href="#" class="prd-rating-opinar">Opinar de este producto</a>
       </div>
 
-      <!-- Fila de meta-badges -->
+      <!-- Fila de meta-badges: marca, SKU, badge, despacho -->
       <div class="prd-meta-row">
-        <span class="prd-meta-tag prd-meta-brand">APPLE</span>
-        <span class="prd-meta-tag prd-meta-sku">SKU: Z1HN0CI/A</span>
-        <span class="prd-meta-tag prd-meta-new">
-          Nuevo
-          <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-        </span>
+        <span class="prd-meta-tag prd-meta-brand" id="prdBrand"></span>
+        <span class="prd-meta-tag prd-meta-sku" id="prdSku"></span>
+        <span class="prd-meta-tag prd-meta-new" id="prdBadge" style="display:none;"></span>
         <span class="prd-meta-tag prd-meta-ship">
           Recíbelo <u>GRATIS</u> el Miércoles
           <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
         </span>
       </div>
 
-      <!-- Badge ahorro -->
-      <div class="prd-savings-badge">Ahorras $ 130.000</div>
-
       <!-- Divisor -->
       <div class="prd-divider"></div>
 
-      <!-- Opciones disponibles -->
-      <div class="prd-options-section">
-        <div class="prd-options-label">Opciones disponibles</div>
-        <div class="prd-options-sublabel">Capacidad</div>
-        <div class="prd-options-row" id="prdOptions">
-          <button class="prd-option-btn" onclick="selectOption(this)">RAM 16 GB, SSD 256 GB</button>
-          <button class="prd-option-btn active" onclick="selectOption(this)">RAM 24 GB, SSD 512GB</button>
-        </div>
-      </div>
+      <!-- Specs resumen (chips) -->
+      <div class="prd-panel-specs" id="prdSpecsList"></div>
 
       <!-- Divisor -->
       <div class="prd-divider"></div>
@@ -302,8 +283,7 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
       <div class="prd-price-row">
         <span class="prd-price-label">Precio:</span>
         <div class="prd-price-block">
-          <span class="prd-panel-price" id="prdPrice">$ 989.990</span>
-          <span class="prd-price-old">$ 1.119.990</span>
+          <span class="prd-panel-price" id="prdPrice"></span>
           <span class="prd-price-methods">Todo medio de pago</span>
         </div>
       </div>
@@ -336,17 +316,13 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
       <!-- Botones de acción -->
       <div class="prd-panel-actions">
         <button class="prd-btn-cart" onclick="igbAddToCart()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="17" height="17"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
           Agregar al carro
         </button>
-        <a class="prd-btn-buy" id="prdBtnCotizar" href="/configurador.html">
-          Comprar ahora
+        <a class="prd-btn-buy" id="prdBtnCotizar" href="/configurador.html" onclick="return igbCotizar(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="17" height="17"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Cotización para empresas
         </a>
-      </div>
-
-      <!-- Cotización express -->
-      <div class="prd-cotizacion-link">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/></svg>
-        <a href="/configurador.html">Cotización express</a>
       </div>
 
     </div><!-- /prd-panel -->
@@ -456,7 +432,22 @@ function selectOption(btn) {
   opts.forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
 }
+
+function igbCotizar(e) {
+  // Si hay sesión activa, dejar navegar normal al configurador
+  if (window.igbAuth && window.igbAuth.current()) {
+    return true;
+  }
+  // Sin sesión: bloquear navegación y abrir modal desde acá,
+  // con redirect al configurador para después del login
+  e.preventDefault();
+  if (window.igbAuth) {
+    window.igbAuth.open('login', '/configurador.html');
+  }
+  return false;
+}
 </script>
+<script src="/assets/js/productos-DB.js"></script>
 <script src="/assets/js/producto.js"></script>
 <script src="/assets/js/auth.js"></script>
 </body>

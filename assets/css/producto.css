@@ -803,57 +803,62 @@
   min-width: 50px;
 }
 
-/* Botones de acción nuevos */
+/* Botones de acción — columna, full width */
 .prd-panel-actions {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 12px;
 }
 
 .prd-btn-cart {
-  flex: 1;
-  height: 48px;
+  width: 100%;
+  height: 50px;
   background: #3b82f6;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-family: 'Barlow', sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   text-decoration: none;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.25);
 }
 .prd-btn-cart:hover {
   background: #2563eb;
   transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(59,130,246,0.35);
 }
 
 .prd-btn-buy {
-  flex: 1;
-  height: 48px;
+  width: 100%;
+  height: 50px;
   background: #1e3a5f;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-family: 'Barlow', sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   text-decoration: none;
+  box-shadow: 0 2px 8px rgba(30,58,95,0.2);
 }
 .prd-btn-buy:hover {
   background: #1e40af;
   transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(30,64,175,0.3);
 }
 
 /* Cotización express */
