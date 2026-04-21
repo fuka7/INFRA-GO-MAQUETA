@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/assets/css/navbar.css">
 <link rel="stylesheet" href="/assets/css/footer.css">
 <link rel="stylesheet" href="/assets/css/producto.css">
+  <link rel="stylesheet" href="/assets/css/carrito.css">
 <link rel="stylesheet" href="/assets/css/auth.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
 </head>
@@ -37,7 +38,7 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
     </a>
-    <a class="igb-cart" href="#">
+    <a class="igb-cart" href="/carrito.html">
       <span class="igb-cart-wrap">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         <span class="igb-cart-count">0</span>
@@ -434,24 +435,15 @@ function selectOption(btn) {
   btn.classList.add('active');
 }
 
-function igbCotizar(e) {
-  // Si hay sesión activa, dejar navegar normal al configurador
-  if (window.igbAuth && window.igbAuth.current()) {
-    return true;
-  }
-  // Sin sesión: bloquear navegación y abrir modal desde acá,
-  // con redirect al configurador para después del login
-  e.preventDefault();
-  if (window.igbAuth) {
-    window.igbAuth.open('login', '/configurador.html');
-  }
-  return false;
-}
 </script>
 <script src="/assets/js/productos-DB.js"></script>
 <script src="/assets/js/producto.js"></script>
+<script src="/assets/js/shipping.js"></script>
+<script src="/assets/js/carrito.js"></script>
 <!-- Supabase + Auth -->
 <script type="module" src="/assets/js/config.js"></script>
 <script src="/assets/js/auth.js" defer></script>
+<!-- Inyector de componentes reutilizables -->
+<script src="/assets/js/navbar-inline.js"></script>
 </body>
 </html>

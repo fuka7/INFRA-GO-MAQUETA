@@ -542,6 +542,16 @@
     }
   };
 
+  /* ── Guard cotizador global — disponible en todas las páginas ──
+     Uso en cualquier HTML: onclick="return igbCotizar(event)"
+     No requiere lógica adicional en cada página.              ── */
+  window.igbCotizar = function(e) {
+    if (currentUser) return true; // tiene sesión → navegar normal
+    if (e) e.preventDefault();
+    openAuth('login', '/configurador.html');
+    return false;
+  };
+
   /* Click global en .igb-account — funciona en todas las páginas */
   document.addEventListener('click', function(e) {
     var btn = e.target.closest('.igb-account');

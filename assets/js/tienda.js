@@ -50,7 +50,13 @@ function buildCard(p) {
             <span class="prod-price-val">$${p.precio.toLocaleString('es-CL')}</span>
             <span class="prod-price-period">/mes</span>
           </div>
-          <a href="/producto.html?id=${p.id}" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
+          <div class="prod-btns">
+            <a href="/producto.html?id=${p.id}" class="prod-btn prod-btn--sec" onclick="event.stopPropagation()">Ver</a>
+            <button class="prod-btn prod-btn--cart" onclick="event.stopPropagation(); typeof igcAddItem==='function' && igcAddItem('${p.id}', '${p.nombre.replace(/'/g, String.fromCharCode(92,39))}', ${p.precio}, '')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Agregar
+            </button>
+          </div>
         </div>
       </div>
     </div>`;
@@ -220,3 +226,28 @@ window.addEventListener('DOMContentLoaded', () => {
 
   applyFilters();
 });
+/* ── Estilos botones dobles en cards ── */
+(function() {
+  if (document.getElementById('igc-card-btn-styles')) return;
+  var s = document.createElement('style');
+  s.id = 'igc-card-btn-styles';
+  s.textContent = [
+    '.prod-btns { display:flex; gap:6px; }',
+    '.prod-btn--sec {',
+    '  flex:0 0 auto; padding:8px 12px;',
+    '  background:transparent; border:1.5px solid #dde1e8;',
+    '  border-radius:7px; color:#4a6080; font-size:12px; font-weight:700;',
+    '  text-decoration:none; transition:all .15s; cursor:pointer; display:inline-flex;',
+    '  align-items:center;',
+    '}',
+    '.prod-btn--sec:hover { border-color:#1a4fa0; color:#1a4fa0; }',
+    '.prod-btn--cart {',
+    '  flex:1; display:flex; align-items:center; justify-content:center; gap:5px;',
+    '  background:#e8920a; border:none; border-radius:7px;',
+    '  color:#fff; font-size:12px; font-weight:800; cursor:pointer;',
+    '  padding:8px 10px; transition:background .15s; font-family:inherit;',
+    '}',
+    '.prod-btn--cart:hover { background:#cf7e08; }',
+  ].join('\n');
+  document.head.appendChild(s);
+})();

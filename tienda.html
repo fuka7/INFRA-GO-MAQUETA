@@ -10,15 +10,57 @@
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="stylesheet" href="/assets/css/navbar.css">
 <link rel="stylesheet" href="/assets/css/tienda.css">
+<link rel="stylesheet" href="/assets/css/carrito.css">
 <link rel="stylesheet" href="/assets/css/footer.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
 </head>
 <body>
+
+<!-- Placeholder para navbar inyectado -->
+<div id="navbar-placeholder"></div>
+
+<!-- CONTENIDO DEPRECADO: Navbar - ahora inyectado desde navbar.html -->
+<!--
+
 <!-- ════════════════ NAVBAR INLINE ════════════════ -->
 
 <!-- Topbar -->
-<div class="igb-top">
-  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000</span>
+<div class="igb-top" style="display:none;">
+  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span>
+</div>
+
+<!-- Modal comunas -->
+<div class="igb-comunas-overlay" id="igbComunasOverlay" onclick="igbCloseComunas()"></div>
+<div class="igb-comunas-modal" id="igbComunasModal" role="dialog" aria-modal="true" aria-label="Comunas con despacho gratis">
+  <div class="igb-comunas-header">
+    <div class="igb-comunas-title">🚚 Despacho Gratis en Santiago</div>
+    <button class="igb-comunas-close" onclick="igbCloseComunas()" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="igb-comunas-body">
+    <p class="igb-comunas-desc">Ofrecemos despacho gratuito de 2 a 4 días hábiles a las siguientes comunas de Santiago, en compras iguales o superiores a <strong>$75.000</strong> pagando por transferencia bancaria.</p>
+    <h3 class="igb-comunas-subtitle">¿Qué comunas tienen despacho gratis?</h3>
+    <ul class="igb-comunas-list">
+      <li>Cerrillos</li><li>Cerro Navia</li><li>Estación Central</li>
+      <li>Huechuraba</li><li>Independencia</li><li>La Florida</li>
+      <li>La Reina</li><li>Las Condes</li><li>Lo Barnechea <span class="igb-comunas-note">*</span></li>
+      <li>Lo Prado</li><li>Macul</li><li>Maipú</li>
+      <li>Ñuñoa</li><li>Pedro Aguirre Cerda</li><li>Peñalolén</li>
+      <li>Providencia</li><li>Puente Alto</li><li>Pudahuel</li>
+      <li>Quilicura</li><li>Quinta Normal</li><li>Recoleta</li>
+      <li>Renca</li><li>San Bernardo</li><li>San Joaquín</li>
+      <li>San Miguel</li><li>Santiago Centro</li><li>Vitacura</li>
+    </ul>
+    <p class="igb-comunas-footnote">* Lo Barnechea no incluye el sector de Farellones (centros de ski).</p>
+    <div class="igb-comunas-footer">
+      <div class="igb-comunas-req">
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Compra mínima de $75.000</div>
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Pago por transferencia bancaria</div>
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>2 a 4 días hábiles de entrega</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Fila principal -->
@@ -26,16 +68,17 @@
   <a class="igb-logo" href="/index.html">Infra<span>Go</span></a>
   <div class="igb-search">
     <input class="igb-search-input" type="text" placeholder="Buscar productos, marcas y más...">
-    <button class="igb-search-btn" type="button" onclick="igbSearch()">
+    <button class="igb-search-btn" type="button" onclick="igbSearch()" aria-label="Buscar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     </button>
   </div>
   <div class="igb-actions">
+    <a class="igb-cta igb-cta-header" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
     <a class="igb-account" href="#">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
     </a>
-    <a class="igb-cart" href="#">
+    <a class="igb-cart" href="/carrito.html">
       <span class="igb-cart-wrap">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         <span class="igb-cart-count">0</span>
@@ -74,11 +117,10 @@
     </div>
     <ul class="igb-links">
       <li><a href="/index.html">Inicio</a></li>
-      <li><a href="/configurador.html">Cotizador</a></li>
+      <li><a href="/configurador.html" class="igb-nav-cotizador" onclick="return igbCotizar(event)">Cotizador</a></li>
       <li><a href="/tienda.html" class="igb-active">Tienda</a></li>
       <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
     </ul>
-    <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
   </div>
 </nav>
 
@@ -86,7 +128,7 @@
 <div class="igb-overlay" id="igbOverlay" onclick="igbCloseMenu()"></div>
 <div class="igb-mobile" id="igbMobile">
   <a href="/index.html">Inicio</a>
-  <a href="/configurador.html">Cotizador</a>
+  <a href="/configurador.html" class="igb-nav-cotizador" onclick="return igbCotizar(event)">Cotizador</a>
   <a href="/tienda.html" class="igb-active">Tienda</a>
   <a href="/index.html#quienes-somos">Quiénes Somos</a>
   <hr class="igb-mobile-sep">
@@ -99,43 +141,23 @@
 
 <!-- JS navbar -->
 <script>
-function igbToggleCats(){
-  var el=document.getElementById('igbCats');
-  el.classList.toggle('open');
-}
-document.addEventListener('click',function(e){
-  var cats=document.getElementById('igbCats');
-  if(cats && !cats.contains(e.target)) cats.classList.remove('open');
-});
-function igbToggleMenu(){
-  var btn=document.querySelector('.igb-burger');
-  var menu=document.getElementById('igbMobile');
-  var overlay=document.getElementById('igbOverlay');
-  var open=menu.classList.toggle('open');
-  if(btn) btn.classList.toggle('open',open);
-  if(overlay) overlay.classList.toggle('open',open);
-  document.body.style.overflow=open?'hidden':'';
-}
-function igbCloseMenu(){
-  var btn=document.querySelector('.igb-burger');
-  var menu=document.getElementById('igbMobile');
-  var overlay=document.getElementById('igbOverlay');
-  if(menu) menu.classList.remove('open');
-  if(btn) btn.classList.remove('open');
-  if(overlay) overlay.classList.remove('open');
-  document.body.style.overflow='';
-}
-function igbSearch(){
-  var q=document.querySelector('.igb-search-input').value.trim();
-  if(q) window.location.href='/tienda.html?q='+encodeURIComponent(q);
-}
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape') igbCloseMenu();
-});
-document.querySelector('.igb-search-input').addEventListener('keydown',function(e){
-  if(e.key==='Enter') igbSearch();
-});
 
+/* Interceptar "Solicitar cotización" del mini-cart con el mismo guard */
+function igcCheckoutGuarded(){
+  if(window.igbAuth && window.igbAuth.current()){
+    if(typeof window._igcCheckoutOriginal==='function') window._igcCheckoutOriginal();
+    return;
+  }
+  if(window.igbAuth) window.igbAuth.open('login','/configurador.html');
+}
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){
+    if(typeof window.igcCheckout==='function'){
+      window._igcCheckoutOriginal = window.igcCheckout;
+    }
+    window.igcCheckout = igcCheckoutGuarded;
+  }, 400);
+});
 </script>
 
 <!-- ════════════════ FIN NAVBAR ════════════════ -->
@@ -144,11 +166,6 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
 <div class="tienda-header">
   <div class="tienda-header-content">
     <div class="tienda-header-text">
-      <div class="tienda-breadcrumb">
-        <a href="index.html">Inicio</a>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        <span>Tienda</span>
-      </div>
       <h1>Tienda InfraGo</h1>
       <p>Hardware empresarial en arriendo mensual. Soporte técnico y mantenimiento incluidos en cada equipo.</p>
     </div>
@@ -266,7 +283,7 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
       </select>
     </div>
 
-    <a href="configurador.html" class="filtro-cta">
+    <a href="configurador.html" class="filtro-cta" onclick="return igbCotizar(event)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       Configurar solución
     </a>
@@ -689,7 +706,7 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
       <p>Cotiza una solución personalizada con nuestro configurador o habla con un experto.</p>
     </div>
     <div class="tienda-cta-actions">
-      <a href="configurador.html" class="btn-primary">
+      <a href="configurador.html" class="btn-primary" onclick="return igbCotizar(event)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         Ir al configurador
       </a>
@@ -701,186 +718,20 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
   </div>
 </div>
 
-<script>
-/* ═══════════════════════════════════════════
-   TIENDA JS
-═══════════════════════════════════════════ */
-
-let currentView = 'grid';
-let currentCat  = 'todos';
-let currentMax  = 200000;
-let currentSearch = '';
-let currentOrder = 'relevancia';
-
-// Filtro por categoría
-document.querySelectorAll('#filtroCategorias input').forEach(radio => {
-  radio.addEventListener('change', () => {
-    currentCat = radio.value;
-    document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-    radio.closest('.filtro-check').classList.add('active');
-    applyFilters();
-  });
-});
-
-// Filtro por marca
-document.querySelectorAll('#filtroMarcas input').forEach(cb => {
-  cb.addEventListener('change', applyFilters);
-});
-
-function filterByPrice(val) {
-  currentMax = parseInt(val);
-  document.getElementById('rangeMax').textContent = '$' + parseInt(val).toLocaleString('es-CL');
-  applyFilters();
-}
-
-function searchProducts() {
-  currentSearch = document.getElementById('searchInput').value.toLowerCase();
-  applyFilters();
-}
-
-function sortProducts() {
-  currentOrder = document.getElementById('ordenSelect').value;
-  applyFilters();
-}
-
-function applyFilters() {
-  const marcasActivas = [...document.querySelectorAll('#filtroMarcas input:checked')].map(c => c.value);
-  let cards = [...document.querySelectorAll('.prod-card')];
-
-  cards.forEach(card => {
-    const cat    = card.dataset.cat;
-    const marca  = card.dataset.marca;
-    const precio = parseInt(card.dataset.precio);
-    const nombre = card.dataset.nombre.toLowerCase();
-
-    const catOk    = currentCat === 'todos' || cat === currentCat;
-    const marcaOk  = marcasActivas.includes(marca);
-    const precioOk = precio <= currentMax;
-    const searchOk = nombre.includes(currentSearch);
-
-    card.style.display = (catOk && marcaOk && precioOk && searchOk) ? '' : 'none';
-  });
-
-  // Ordenar
-  const grid = document.getElementById('productosGrid');
-  const visible = cards.filter(c => c.style.display !== 'none');
-
-  if (currentOrder === 'precio-asc') {
-    visible.sort((a, b) => parseInt(a.dataset.precio) - parseInt(b.dataset.precio));
-  } else if (currentOrder === 'precio-desc') {
-    visible.sort((a, b) => parseInt(b.dataset.precio) - parseInt(a.dataset.precio));
-  } else if (currentOrder === 'nombre') {
-    visible.sort((a, b) => a.dataset.nombre.localeCompare(b.dataset.nombre));
-  }
-
-  visible.forEach(card => grid.appendChild(card));
-
-  // Contador
-  const count = visible.length;
-  document.getElementById('productCount').textContent = count + ' producto' + (count !== 1 ? 's' : '');
-
-  // Estado vacío
-  document.getElementById('tiendaEmpty').style.display = count === 0 ? 'flex' : 'none';
-  document.getElementById('productosGrid').style.display = count === 0 ? 'none' : '';
-
-  updateActiveFilters();
-}
-
-// Array global para guardar closures — evita serializar funciones en onclick
-const _filterClears = [];
-
-function clearActiveFilter(i) {
-  if (_filterClears[i]) _filterClears[i]();
-}
-
-function updateActiveFilters() {
-  const container = document.getElementById('activeFilters');
-  const tags = [];
-
-  if (currentCat !== 'todos') tags.push({
-    label: currentCat,
-    clear: () => {
-      currentCat = 'todos';
-      document.querySelector('#filtroCategorias input[value="todos"]').checked = true;
-      document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-      document.querySelector('.filtro-check[data-cat="todos"]').classList.add('active');
-      applyFilters();
-    }
-  });
-
-  if (currentSearch) tags.push({
-    label: `"${currentSearch}"`,
-    clear: () => {
-      currentSearch = '';
-      document.getElementById('searchInput').value = '';
-      applyFilters();
-    }
-  });
-
-  if (currentMax < 200000) tags.push({
-    label: `Hasta $${currentMax.toLocaleString('es-CL')}`,
-    clear: () => {
-      currentMax = 200000;
-      document.getElementById('precioRange').value = 200000;
-      document.getElementById('rangeMax').textContent = '$200.000';
-      applyFilters();
-    }
-  });
-
-  _filterClears.length = 0;
-  tags.forEach((t, i) => { _filterClears[i] = t.clear; });
-
-  container.innerHTML = tags.map((t, i) =>
-    `<span class="active-filter-tag">${t.label} <button onclick="clearActiveFilter(${i})">&times;</button></span>`
-  ).join('');
-}
-
-function resetFilters() {
-  currentCat = 'todos';
-  currentSearch = '';
-  currentMax = 200000;
-  document.querySelector('#filtroCategorias input[value="todos"]').checked = true;
-  document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-  document.querySelector('.filtro-check[data-cat="todos"]').classList.add('active');
-  document.getElementById('searchInput').value = '';
-  document.getElementById('precioRange').value = 200000;
-  document.getElementById('rangeMax').textContent = '$200.000';
-  document.querySelectorAll('#filtroMarcas input').forEach(c => c.checked = true);
-  applyFilters();
-}
-
-function setView(v) {
-  currentView = v;
-  const grid = document.getElementById('productosGrid');
-  grid.className = v === 'list' ? 'productos-list' : 'productos-grid';
-  document.getElementById('viewGrid').classList.toggle('active', v === 'grid');
-  document.getElementById('viewList').classList.toggle('active', v === 'list');
-}
-
-// Init: leer ?cat= de URL
-window.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const cat = params.get('cat');
-  if (cat) {
-    const radio = document.querySelector(`#filtroCategorias input[value="${cat}"]`);
-    if (radio) {
-      radio.checked = true;
-      currentCat = cat;
-      document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
-      radio.closest('.filtro-check').classList.add('active');
-      applyFilters();
-    }
-  }
-});
-</script>
 <!-- ── INCLUDES: navbar + footer automáticos ── -->
+
+<!-- Placeholder para footer inyectado -->
+<div id="footer-placeholder"></div>
+
+<!-- CONTENIDO DEPRECADO: Footer anterior - ahora inyectado desde footer.html -->
+<!--
 
 <!-- ════════════════ FOOTER INLINE ════════════════ -->
 <!-- ══════════════════════════════════════
      FOOTER — InfraGo (v2)
 ══════════════════════════════════════ -->
 
-<div class="ig-footer-root">
+<div class="ig-footer-root" style="display:none;">
 
   <!-- FOOTER MAIN -->
   <div class="footer-main">
@@ -969,6 +820,9 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 <script src="/assets/js/productos-DB.js"></script>
 <script src="/assets/js/tienda.js"></script>
+<script src="/assets/js/navbar-inline.js"></script>
+<script src="/assets/js/shipping.js"></script>
+<script src="/assets/js/carrito.js"></script>
 <!-- Supabase + Auth -->
 <script type="module" src="/assets/js/config.js"></script>
 <script src="/assets/js/auth.js" defer></script>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito — InfraGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/navbar.css">
+  <link rel="stylesheet" href="/assets/css/carrito.css">
+  <link rel="stylesheet" href="/assets/css/footer.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+  <link rel="stylesheet" href="/assets/css/auth.css">
+</head>
+<body>
+
+<!-- ════════════════ NAVBAR ════════════════ -->
+<div class="igb-top">
+  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span>
+</div>
+
+<!-- Modal comunas -->
+<div class="igb-comunas-overlay" id="igbComunasOverlay" onclick="igbCloseComunas()"></div>
+<div class="igb-comunas-modal" id="igbComunasModal" role="dialog" aria-modal="true">
+  <div class="igb-comunas-header">
+    <div class="igb-comunas-title">🚚 Despacho Gratis en Santiago</div>
+    <button class="igb-comunas-close" onclick="igbCloseComunas()" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="igb-comunas-body">
+    <p class="igb-comunas-desc">Ofrecemos despacho gratuito de 2 a 4 días hábiles a las siguientes comunas, en compras iguales o superiores a <strong>$75.000</strong> pagando por transferencia bancaria.</p>
+    <h3 class="igb-comunas-subtitle">¿Qué comunas tienen despacho gratis?</h3>
+    <ul class="igb-comunas-list">
+      <li>Cerrillos</li><li>Cerro Navia</li><li>Estación Central</li>
+      <li>Huechuraba</li><li>Independencia</li><li>La Florida</li>
+      <li>La Reina</li><li>Las Condes</li><li>Lo Barnechea <span class="igb-comunas-note">*</span></li>
+      <li>Lo Prado</li><li>Macul</li><li>Maipú</li>
+      <li>Ñuñoa</li><li>Pedro Aguirre Cerda</li><li>Peñalolén</li>
+      <li>Providencia</li><li>Puente Alto</li><li>Pudahuel</li>
+      <li>Quilicura</li><li>Quinta Normal</li><li>Recoleta</li>
+      <li>Renca</li><li>San Bernardo</li><li>San Joaquín</li>
+      <li>San Miguel</li><li>Santiago Centro</li><li>Vitacura</li>
+    </ul>
+    <p class="igb-comunas-footnote">* Lo Barnechea no incluye el sector de Farellones.</p>
+    <div class="igb-comunas-footer">
+      <div class="igb-comunas-req">
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Compra mínima de $75.000</div>
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Pago por transferencia bancaria</div>
+        <div class="igb-comunas-req-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>2 a 4 días hábiles</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="igb-main">
+  <a class="igb-logo" href="/index.html">Infra<span>Go</span></a>
+  <div class="igb-search">
+    <input class="igb-search-input" type="text" placeholder="Buscar productos, marcas y más...">
+    <button class="igb-search-btn" type="button" onclick="igbSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+  </div>
+  <div class="igb-actions">
+    <a class="igb-account" href="#">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
+    </a>
+    <a class="igb-cart" href="/carrito.html">
+      <span class="igb-cart-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="igb-cart-count">0</span>
+      </span>
+      <strong>Carro</strong>
+    </a>
+  </div>
+  <button class="igb-burger" type="button" onclick="igbToggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<nav class="igb-nav">
+  <div class="igb-nav-inner">
+    <div class="igb-categories" id="igbCats">
+      <button class="igb-cat-trigger" type="button" onclick="igbToggleCats()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        Categorías
+        <svg class="igb-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="igb-dropdown">
+        <a class="igb-dropdown-item" href="/tienda.html?cat=notebooks"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Notebooks</a>
+        <a class="igb-dropdown-item" href="/tienda.html?cat=all-in-one"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="15" rx="2"/><circle cx="12" cy="11" r="3"/><path d="M8 21h8M12 18v3"/></svg>All in One (AIO)</a>
+        <a class="igb-dropdown-item" href="/tienda.html?cat=pcs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>PCs de Escritorio</a>
+        <a class="igb-dropdown-item" href="/tienda.html?cat=accesorios"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3v4M8 3v4"/></svg>Accesorios</a>
+      </div>
+    </div>
+    <ul class="igb-links">
+      <li><a href="/index.html">Inicio</a></li>
+      <li><a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a></li>
+      <li><a href="/tienda.html">Tienda</a></li>
+      <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
+    </ul>
+    <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
+  </div>
+</nav>
+
+<div class="igb-overlay" id="igbOverlay" onclick="igbCloseMenu()"></div>
+<div class="igb-mobile" id="igbMobile">
+  <a href="/index.html">Inicio</a>
+  <a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a>
+  <a href="/tienda.html">Tienda</a>
+  <a href="/index.html#quienes-somos">Quiénes Somos</a>
+  <hr class="igb-mobile-sep">
+  <a href="/tienda.html?cat=notebooks">Notebooks</a>
+  <a href="/tienda.html?cat=all-in-one">All in One (AIO)</a>
+  <a href="/tienda.html?cat=pcs">PCs de Escritorio</a>
+  <a href="/tienda.html?cat=accesorios">Accesorios</a>
+  <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
+</div>
+
+<script>
+function igbOpenComunas(){ document.getElementById('igbComunasOverlay').classList.add('open'); document.getElementById('igbComunasModal').classList.add('open'); document.body.style.overflow='hidden'; }
+function igbCloseComunas(){ document.getElementById('igbComunasOverlay').classList.remove('open'); document.getElementById('igbComunasModal').classList.remove('open'); document.body.style.overflow=''; }
+function igbToggleCats(){ document.getElementById('igbCats').classList.toggle('open'); }
+document.addEventListener('click',function(e){ var c=document.getElementById('igbCats'); if(c&&!c.contains(e.target)) c.classList.remove('open'); });
+function igbToggleMenu(){ var btn=document.querySelector('.igb-burger'),menu=document.getElementById('igbMobile'),ov=document.getElementById('igbOverlay'),open=menu.classList.toggle('open'); if(btn)btn.classList.toggle('open',open); if(ov)ov.classList.toggle('open',open); document.body.style.overflow=open?'hidden':''; }
+function igbCloseMenu(){ var btn=document.querySelector('.igb-burger'),menu=document.getElementById('igbMobile'),ov=document.getElementById('igbOverlay'); if(menu)menu.classList.remove('open'); if(btn)btn.classList.remove('open'); if(ov)ov.classList.remove('open'); document.body.style.overflow=''; }
+function igbSearch(){ var q=document.querySelector('.igb-search-input').value.trim(); if(q) window.location.href='/tienda.html?q='+encodeURIComponent(q); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ igbCloseMenu(); igbCloseComunas(); } });
+document.querySelector('.igb-search-input').addEventListener('keydown',function(e){ if(e.key==='Enter') igbSearch(); });
+</script>
+<!-- ════════════════ FIN NAVBAR ════════════════ -->
+
+<!-- ════════════════ CONTENIDO ════════════════ -->
+<div class="igc-page">
+
+  <!-- Columna izquierda: items -->
+  <div>
+    <h1 class="igc-page-title">Carro de Compras</h1>
+    <div class="igc-page-items" id="igcPageContainer">
+      <!-- renderizado por carrito.js -->
+    </div>
+  </div>
+
+  <!-- Columna derecha: panel resumen -->
+  <div class="igc-page-panel" id="igcPagePanel">
+    <div class="igc-panel-title">Resumen del pedido</div>
+
+    <div class="igc-panel-row">
+      <span>Subtotal productos</span>
+      <strong id="igcPanelSubtotal">$0</strong>
+    </div>
+
+    <!-- Widget de despacho -->
+    <div class="igc-panel-shipping">
+      <div id="igcPanelShipping"></div>
+    </div>
+
+    <div class="igc-panel-total">
+      <span>Total</span>
+      <span class="igc-panel-total-val" id="igcPanelTotal">$0</span>
+    </div>
+    <div class="igc-panel-iva">Precios no incluyen IVA</div>
+
+    <button class="igc-panel-btn-comprar" onclick="igcCheckout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Solicitar cotización formal
+    </button>
+
+    <a class="igc-panel-btn-cotizar" href="/configurador.html" onclick="return igbCotizar(event)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Crear cotización personalizada
+    </a>
+
+    <div class="igc-panel-secure">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Pago 100% seguro · ISO 27001
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="ig-footer-root">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div class="brand-logo">
+        <svg width="30" height="30" viewBox="0 0 34 34" fill="none"><path d="M4 17L12 8L20 17L12 26Z" fill="#1a4fa0"/><path d="M14 17L22 8L30 17L22 26Z" fill="#2563c4" opacity="0.85"/><path d="M9 17L17 8L25 17L17 26Z" fill="#3b82f6" opacity="0.65"/></svg>
+        <span>InfraGo</span>
+      </div>
+      <p class="brand-tagline">Operación TI inteligente. Sin fricción.<br>Una empresa de TIC Manager's.</p>
+      <div class="brand-badges"><span class="badge">ISO 27001</span><span class="badge">Chile &amp; LATAM</span><span class="badge">Soporte 24/7</span></div>
+    </div>
+    <div class="footer-col"><div class="col-label">Soluciones</div><ul class="col-links"><li><a href="#">Notebooks</a></li><li><a href="#">Servidores y Redes</a></li><li><a href="#">Impresión</a></li><li><a href="#">Soluciones de Oficina</a></li></ul></div>
+    <div class="footer-col"><div class="col-label">Empresa</div><ul class="col-links"><li><a href="#">Quiénes somos</a></li><li><a href="#">Planes</a></li><li><a href="#">Blog</a></li><li><a href="#">Agendar Demo</a></li></ul></div>
+    <div class="footer-col"><div class="col-label">Contacto</div><ul class="col-links"><li><a href="mailto:contacto@infrago.cl" class="contact-item"><span class="contact-label">Email</span><span class="contact-val">contacto@infrago.cl</span></a></li><li><a href="#" class="contact-item"><span class="contact-label">Teléfono</span><span class="contact-val">+56 2 xxxx xxxx</span></a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="bottom-left"><span class="copyright">© 2026 InfraGo SpA. Todos los derechos reservados.</span><span class="bottom-divider"></span><span class="made-by">Una empresa de <span>TIC Manager's</span></span></div>
+    <div class="footer-socials"><a href="#" class="social-link">LinkedIn</a><span class="social-sep">·</span><a href="#" class="social-link">Instagram</a><span class="social-sep">·</span><a href="#" class="social-link">Términos</a><span class="social-sep">·</span><a href="#" class="social-link">Privacidad</a></div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="/assets/js/navbar-inline.js"></script>
+<script src="/assets/js/shipping.js"></script>
+<script src="/assets/js/carrito.js"></script>
+<script type="module" src="/assets/js/config.js"></script>
+<script src="/assets/js/auth.js" defer></script>
+
+</body>
+</html>

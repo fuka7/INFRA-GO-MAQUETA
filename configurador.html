@@ -34,12 +34,18 @@
 </head>
 <body>
 
-<!-- ════════════════ NAVBAR ════════════════ -->
-<div class="igb-top">
+<!-- Placeholder para navbar inyectado -->
+<div id="navbar-placeholder"></div>
+
+<!-- CONTENIDO DEPRECADO: Navbar - ahora inyectado desde navbar.html -->
+<!--
+
+ ════════════════ NAVBAR ════════════════ 
+<div class="igb-top" style="display:none;">
   <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span>
 </div>
 
-<!-- MODAL COMUNAS -->
+<-- MODAL COMUNAS -->
 <div class="igb-comunas-overlay" id="igbComunasOverlay" onclick="igbCloseComunas()"></div>
 <div class="igb-comunas-modal" id="igbComunasModal" role="dialog" aria-modal="true">
   <div class="igb-comunas-header">
@@ -696,7 +702,13 @@ window.clsSetCat = function(tipo, btn) {
 <!-- ════════════════════════════════════════
      FOOTER
 ════════════════════════════════════════ -->
-<div class="ig-footer-root">
+<!-- Placeholder para footer inyectado -->
+<div id="footer-placeholder"></div>
+
+<!-- CONTENIDO DEPRECADO: Footer - ahora inyectado desde footer.html -->
+<!--
+
+<div class="ig-footer-root" style="display:none;">
   <div class="footer-main">
     <div class="footer-brand">
       <div class="brand-logo">
@@ -804,10 +816,17 @@ window.clsSetCat = function(tipo, btn) {
 
 })();
 </script>
-<!-- Supabase + Auth -->
+<!-- FIN Footer deprecado -->
+
+<!-- FIN Footer -->`n`n<!-- Supabase + Auth -->
 <script type="module" src="/assets/js/config.js"></script>
 <script src="/assets/js/auth.js" defer></script>
 <!-- Pre-relleno paso 3 desde perfil Supabase + SimpleAPI -->
 <script src="/assets/js/rut-prefill.js" defer></script>
+<!-- Inyector de componentes reutilizables -->
+<script src="/assets/js/navbar-inline.js"></script>
 </body>
 </html>
+
+
+

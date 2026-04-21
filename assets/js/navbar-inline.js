@@ -1,4 +1,11 @@
-<!-- ╔══════════════════════════════════════════════════╗
+/**
+ * ════════════════════════════════════════════════════════════
+ * NAVBAR — InfraGo (inline, sin fetch)
+ * ════════════════════════════════════════════════════════════
+ */
+(function () {
+
+  var NAVBAR_HTML = `<!-- ╔══════════════════════════════════════════════════╗
      NAVBAR — InfraGo
      Inyectado por /assets/js/includes.js en todas las páginas
      ╚══════════════════════════════════════════════════╝ -->
@@ -155,7 +162,7 @@
     <!-- Links principales -->
     <ul class="igb-links">
       <li><a href="/index.html">Inicio</a></li>
-      <li><a href="/configurador.html">Cotizador</a></li>
+      <li><a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a></li>
       <li><a href="/tienda.html">Tienda</a></li>
       <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
     </ul>
@@ -168,7 +175,7 @@
 <div class="igb-overlay" id="igbOverlay" onclick="igbCloseMenu()"></div>
 <div class="igb-mobile" id="igbMobile">
   <a href="/index.html">Inicio</a>
-  <a href="/configurador.html">Cotizador</a>
+  <a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a>
   <a href="/tienda.html">Tienda</a>
   <a href="/index.html#quienes-somos">Quiénes Somos</a>
   <hr class="igb-mobile-sep">
@@ -179,4 +186,22 @@
   <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
     Agendar reunión
   </a>
-</div>
+</div>`;
+
+  function injectNavbar() {
+    var placeholder = document.getElementById('navbar-placeholder');
+    if (!placeholder) return;
+    placeholder.innerHTML = NAVBAR_HTML;
+
+    document.dispatchEvent(new CustomEvent('componentInjected', {
+      detail: { component: 'navbar-placeholder' }
+    }));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectNavbar);
+  } else {
+    injectNavbar();
+  }
+
+})();

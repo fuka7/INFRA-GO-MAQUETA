@@ -143,6 +143,23 @@ function igbAddToCart() {
   const p = getProducto();
   if (!p) return;
 
+  /* Si carrito.js está cargado, usar su API unificada */
+  if (typeof window.igcAddItem === 'function') {
+    for (let i = 0; i < qty; i++) {
+      window.igcAddItem(p.id, p.nombre, p.precio, p.svg || '');
+    }
+    // Feedback visual
+    const btn = document.querySelector('.prd-btn-cart');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg> Agregado';
+      btn.style.background = '#16a34a';
+      setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
+    }
+    return;
+  }
+
+  /* Fallback: escribir directo en igb_cart */
   const cart = JSON.parse(localStorage.getItem('igb_cart') || '[]');
   const existing = cart.find(i => i.id === p.id);
   if (existing) {
@@ -152,14 +169,12 @@ function igbAddToCart() {
   }
   localStorage.setItem('igb_cart', JSON.stringify(cart));
 
-  // Actualizar badge del carro en navbar
   const badge = document.querySelector('.igb-cart-count');
   if (badge) {
     const total = cart.reduce((s, i) => s + i.qty, 0);
     badge.textContent = total;
   }
 
-  // Feedback visual en el botón
   const btn = document.querySelector('.prd-btn-cart');
   if (btn) {
     const orig = btn.innerHTML;
