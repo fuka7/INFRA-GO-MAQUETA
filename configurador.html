@@ -14,6 +14,13 @@
   <link rel="stylesheet" href="/assets/css/responsive.css">
   <link rel="stylesheet" href="/assets/css/auth.css">
   <style>
+    /* Pasos anteriores clickeables en el progress bar */
+    .progress-step { cursor: default; }
+    .progress-step.active ~ .progress-step { cursor: default; opacity: 0.5; }
+    .progress-step:not(.active):not(.progress-step.active ~ .progress-step) { cursor: pointer; }
+    .progress-step[data-step]:hover .progress-step-dot { opacity: 0.8; transform: scale(1.05); transition: transform 0.15s; }
+  </style>
+  <style>
     /* ── Sidebar números más grandes ── */
     .bb-value                { font-size: 20px !important; font-weight: 800 !important; }
     .bb-value--orange        { font-size: 22px !important; }
@@ -215,25 +222,25 @@ window.clsSetCat = function(tipo, btn) {
           <div class="progress-step-dot">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           </div>
-          <span class="progress-step-label">Equipos</span>
+          <span class="progress-step-label">Productos</span>
         </div>
         <div class="progress-step" data-step="2">
+          <div class="progress-step-dot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <span class="progress-step-label">Simulador</span>
+        </div>
+        <div class="progress-step" data-step="3">
           <div class="progress-step-dot">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
           <span class="progress-step-label">Datos</span>
         </div>
-        <div class="progress-step" data-step="3">
+        <div class="progress-step" data-step="4">
           <div class="progress-step-dot">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
           </div>
           <span class="progress-step-label">Resumen</span>
-        </div>
-        <div class="progress-step" data-step="4">
-          <div class="progress-step-dot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
-          <span class="progress-step-label">Simulador</span>
         </div>
       </div>
     </div>
@@ -386,9 +393,88 @@ window.clsSetCat = function(tipo, btn) {
     </div><!-- /paso 1 -->
 
     <!-- ╔══════════════════════════════╗
-         PASO 2 — DATOS DE EMPRESA
+         PASO 2 — SIMULADOR
          ╚══════════════════════════════╝ -->
     <div class="wizard-step" data-step="2">
+      <div class="step-intro">
+        <h2>Simulador de financiamiento</h2>
+        <p>Ajusta el plazo y la tasa para ver tu cuota mensual estimada.</p>
+      </div>
+
+      <div class="sim-layout">
+
+        <!-- Parámetros -->
+        <div class="sim-panel">
+          <div class="sim-section">
+            <div class="sim-section-title">Monto a financiar (equipos)</div>
+            <div class="sim-amount">$<span id="montoFinanciar">0</span></div>
+          </div>
+          <div class="sim-section">
+            <div class="sim-section-title">Servicios mensuales incluidos</div>
+            <div class="sim-amount sim-amount--svc">$<span id="serviciosMensualesSim">0</span>/mes</div>
+          </div>
+          <div class="sim-section">
+            <div class="sim-section-title">Plazo de financiamiento</div>
+            <div class="sim-plazo-btns">
+              <button class="sim-plazo-btn"        onclick="setPlazo(12,this)">12 m</button>
+              <button class="sim-plazo-btn active"  onclick="setPlazo(24,this)">24 m</button>
+              <button class="sim-plazo-btn"         onclick="setPlazo(36,this)">36 m</button>
+              <button class="sim-plazo-btn"         onclick="setPlazo(48,this)">48 m</button>
+            </div>
+          </div>
+          <div class="sim-section">
+            <div class="sim-section-title">Tasa anual referencial: <strong><span id="tasaVal">12%</span></strong></div>
+            <input type="range" class="sim-tasa-range" min="0" max="30" step="0.5" value="12" oninput="updateTasa(this.value)">
+            <div class="sim-tasa-labels"><span>0%</span><span>15%</span><span>30%</span></div>
+          </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="sim-results">
+          <div class="sim-result-main">
+            <div class="sim-result-label">Cuota mensual total</div>
+            <div class="sim-result-val" id="simCuota">$0</div>
+          </div>
+          <!-- Totales visibles -->
+          <div class="sim-totals-row">
+            <div class="sim-total-box">
+              <div class="sim-total-label">Total a pagar</div>
+              <div class="sim-total-val" id="simTotal">$0</div>
+            </div>
+            <div class="sim-total-box">
+              <div class="sim-total-label">Intereses totales</div>
+              <div class="sim-total-val" id="simIntereses">$0</div>
+            </div>
+          </div>
+
+          <button class="sim-toggle-tabla" id="btnToggleTabla" onclick="toggleTablaAmort()">▼ Ver tabla de amortización</button>
+          <div id="tablaAmortWrap" style="display:none">
+            <div class="sim-tabla-scroll">
+              <table class="sim-tabla">
+                <thead><tr><th>Mes</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead>
+                <tbody id="tablaAmortBody"></tbody>
+                <tfoot>
+                  <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong id="tfoot-cuota">—</strong></td>
+                    <td><strong id="tfoot-capital">—</strong></td>
+                    <td><strong id="tfoot-interes">—</strong></td>
+                    <td>—</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div><!-- /paso 4 -->
+
+  <!-- ╔══════════════════════════════╗
+         PASO 3 — DATOS DE EMPRESA
+         ╚══════════════════════════════╝ -->
+    <div class="wizard-step" data-step="3">
       <div class="step-intro">
         <h2>Datos de tu empresa</h2>
         <p>Completa la información de contacto para generar tu cotización formal.</p>
@@ -453,9 +539,9 @@ window.clsSetCat = function(tipo, btn) {
     </div><!-- /paso 2 -->
 
     <!-- ╔══════════════════════════════╗
-         PASO 3 — RESUMEN
+         PASO 4 — RESUMEN
          ╚══════════════════════════════╝ -->
-    <div class="wizard-step" data-step="3">
+    <div class="wizard-step" data-step="4">
       <div class="step-intro">
         <h2>Resumen de tu cotización</h2>
         <p>Revisa equipos, servicios y datos antes de continuar.</p>
@@ -464,13 +550,13 @@ window.clsSetCat = function(tipo, btn) {
       <div class="resumen-card">
         <div class="resumen-card-header">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          <h3>Equipos seleccionados</h3>
+          <h3>Productos seleccionados</h3>
         </div>
         <div class="resumen-card-body" id="summaryEquipos">
           <p class="resumen-empty">Sin productos seleccionados</p>
         </div>
         <div class="resumen-card-footer">
-          <span>Subtotal equipos</span>
+          <span>Subtotal productos</span>
           <strong>$<span id="summarySubtotalEq">0</span></strong>
         </div>
       </div>
@@ -503,105 +589,22 @@ window.clsSetCat = function(tipo, btn) {
       <!-- Bloque de info de contacto generado por generateFinalSummary() -->
       <div id="summaryInfo"></div>
 
-    </div><!-- /paso 3 -->
-
-    <!-- ╔══════════════════════════════╗
-         PASO 4 — SIMULADOR
-         ╚══════════════════════════════╝ -->
-    <div class="wizard-step" data-step="4">
-      <div class="step-intro">
-        <h2>Simulador de financiamiento</h2>
-        <p>Ajusta el plazo y la tasa para ver tu cuota mensual estimada.</p>
-      </div>
-
-      <div class="sim-layout">
-
-        <!-- Parámetros -->
-        <div class="sim-panel">
-          <div class="sim-section">
-            <div class="sim-section-title">Monto a financiar (equipos)</div>
-            <div class="sim-amount">$<span id="montoFinanciar">0</span></div>
-          </div>
-          <div class="sim-section">
-            <div class="sim-section-title">Servicios mensuales incluidos</div>
-            <div class="sim-amount sim-amount--svc">$<span id="serviciosMensualesSim">0</span>/mes</div>
-          </div>
-          <div class="sim-section">
-            <div class="sim-section-title">Plazo de financiamiento</div>
-            <div class="sim-plazo-btns">
-              <button class="sim-plazo-btn"        onclick="setPlazo(12,this)">12 m</button>
-              <button class="sim-plazo-btn active"  onclick="setPlazo(24,this)">24 m</button>
-              <button class="sim-plazo-btn"         onclick="setPlazo(36,this)">36 m</button>
-              <button class="sim-plazo-btn"         onclick="setPlazo(48,this)">48 m</button>
-            </div>
-          </div>
-          <div class="sim-section">
-            <div class="sim-section-title">Tasa anual referencial: <strong><span id="tasaVal">12%</span></strong></div>
-            <input type="range" class="sim-tasa-range" min="0" max="30" step="0.5" value="12" oninput="updateTasa(this.value)">
-            <div class="sim-tasa-labels"><span>0%</span><span>15%</span><span>30%</span></div>
-          </div>
-        </div>
-
-        <!-- Resultados -->
-        <div class="sim-results">
-          <div class="sim-result-main">
-            <div class="sim-result-label">Cuota mensual total</div>
-            <div class="sim-result-val" id="simCuota">$0</div>
-          </div>
-          <div class="sim-result-grid">
-            <div class="sim-result-item">
-              <span class="sim-result-item-label">Total a pagar</span>
-              <span class="sim-result-item-val" id="simTotal">$0</span>
-            </div>
-            <div class="sim-result-item">
-              <span class="sim-result-item-label">Intereses totales</span>
-              <span class="sim-result-item-val" id="simIntereses">$0</span>
-            </div>
-          </div>
-
-          <button class="sim-toggle-tabla" id="btnToggleTabla" onclick="toggleTablaAmort()">▼ Ver tabla de amortización</button>
-          <div id="tablaAmortWrap" style="display:none">
-            <div class="sim-tabla-scroll">
-              <table class="sim-tabla">
-                <thead><tr><th>Mes</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead>
-                <tbody id="tablaAmortBody"></tbody>
-                <tfoot>
-                  <tr>
-                    <td><strong>Total</strong></td>
-                    <td><strong id="tfoot-cuota">—</strong></td>
-                    <td><strong id="tfoot-capital">—</strong></td>
-                    <td><strong id="tfoot-interes">—</strong></td>
-                    <td>—</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-
-          <button class="sim-send-btn" onclick="enviarCotizacion()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Enviar Cotización
-          </button>
-        </div>
-
-      </div>
     </div><!-- /paso 4 -->
 
-    <!-- ── NAVEGACIÓN ── -->
+    <!-- ── NAVEGACIÓN (siempre debajo del contenido) ── -->
     <div class="wizard-nav">
       <button class="wizard-btn wizard-btn--prev" id="btnPrev" onclick="prevStep()" style="display:none">← Anterior</button>
-      <!-- btnNext vive en la barra inferior cuando currentStep===1; en pasos 2-4 se regenera aquí -->
       <button class="wizard-btn wizard-btn--next" id="btnNextInline" onclick="nextStep()" style="display:none">Siguiente →</button>
     </div>
 
-  </div><!-- /config-main -->
+    </div><!-- /config-main -->
 
   <!-- ── SIDEBAR DERECHO — RESUMEN ── -->
   <aside class="right-sidebar" id="bottomBar">
     <div class="bb-col bb-col--equipos">
       <div class="bb-label">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        EQUIPOS
+        PRODUCTOS
       </div>
       <div class="bb-value">$<span id="totalEquipos">0</span></div>
       <div class="bb-sub"><span id="countEquipos">0</span> unid.</div>
@@ -670,6 +673,10 @@ window.clsSetCat = function(tipo, btn) {
       <h2 class="modal-title">¡Cotización enviada!</h2>
       <p class="modal-desc">Tu solicitud fue recibida correctamente. Nos contactaremos a la brevedad con la propuesta formal para <strong id="modalEmpresa"></strong>.</p>
       <p class="modal-sub">Se enviará una copia a <strong id="modalEmail"></strong>.</p>
+      <button class="modal-btn modal-btn--pdf" onclick="descargarCotizacionPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Descargar cotización PDF
+      </button>
       <button class="modal-btn" onclick="cerrarModal()">Volver al inicio</button>
     </div>
 
@@ -780,61 +787,19 @@ window.clsSetCat = function(tipo, btn) {
     }, 150);
   });
 
-  /* ── 2. Sincronizar plazoSidebarLabel2 ── */
-  function syncPlazo() {
-    const p1 = document.getElementById('plazoSidebarLabel');
-    const p2 = document.getElementById('plazoSidebarLabel2');
-    if (p1 && p2) p2.textContent = p1.textContent;
-  }
-
-  /* ── 3. Aplicar visibilidad de sidebars según paso ── */
-  function applyStepLayout() {
-    const step    = window.currentStep || 1;
-    const isStep1 = step === 1;
-    const ls      = document.getElementById('configLeftSidebar');
-    const rs      = document.getElementById('bottomBar');
-    const layout  = document.querySelector('.config-layout');
-    const prev    = document.getElementById('btnPrev');
-    const inlineNext = document.getElementById('btnNextInline');
-
-    if (ls)          ls.style.display          = isStep1 ? '' : 'none';
-    if (rs)          rs.style.display          = isStep1 ? '' : 'none';
-    if (layout)      layout.className          = isStep1
-                       ? 'config-layout'
-                       : 'config-layout config-layout--single';
-    if (inlineNext)  inlineNext.style.display  = isStep1 ? 'none' : '';
-    if (prev)        prev.style.display        = isStep1 ? 'none' : '';
-
-    syncPlazo();
-  }
-
-  /* ── 4. Hookear DESPUÉS de que configurador.js se inicialice ── */
+  /* ── 2. Sincronizar plazoSidebarLabel2 (patch sobre updateSidebar) ── */
   document.addEventListener('DOMContentLoaded', function() {
-    /* Esperar a que configurador.js termine su propio DOMContentLoaded */
     setTimeout(function() {
-
-      /* Override de updateStepDisplay — ahora sí existe */
-      const _orig = window.updateStepDisplay;
-      if (typeof _orig === 'function') {
-        window.updateStepDisplay = function() {
-          _orig.apply(this, arguments);
-          applyStepLayout();
-        };
-      }
-
-      /* Override de updateSidebar para sincronizar plazo */
       const _origSidebar = window.updateSidebar;
       if (typeof _origSidebar === 'function') {
         window.updateSidebar = function() {
           _origSidebar.apply(this, arguments);
-          syncPlazo();
+          const p1 = document.getElementById('plazoSidebarLabel');
+          const p2 = document.getElementById('plazoSidebarLabel2');
+          if (p1 && p2) p2.textContent = p1.textContent;
         };
       }
-
-      /* Aplicar estado inicial (paso 1) */
-      applyStepLayout();
-
-    }, 200); /* mayor que el timeout de flat-catalog (80ms) */
+    }, 200);
   });
 
 })();

@@ -1139,6 +1139,31 @@ body {
   color: #fff;
 }
 
+/* Fila de totales (Total a pagar + Intereses) en recuadro azul */
+.sim-totals-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.sim-total-box {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius-s);
+  padding: 14px 12px;
+  text-align: center;
+}
+.sim-total-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 6px;
+}
+.sim-total-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px; font-weight: 800;
+  color: #fff;
+}
+
 .sim-toggle-tabla {
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
@@ -1427,6 +1452,14 @@ body {
   box-shadow: none;
 }
 .modal-btn--sec:hover { background: var(--c-border); color: var(--c-text); }
+.modal-btn--pdf {
+  background: var(--navy);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 4px 16px rgba(0,0,0,.15);
+  gap: 8px;
+}
+.modal-btn--pdf:hover { background: #0d1e36; transform: translateY(-1px); }
 
 
 /* ════════════════════════════════════════════

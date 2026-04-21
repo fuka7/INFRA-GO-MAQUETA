@@ -144,6 +144,11 @@ let simTasa  = 12;
 // ═════════════════════════════════════════
 function nextStep() {
   if (!validateStep(currentStep)) return;
+  // Guardar datos del paso actual ANTES de cambiar el display
+  if (currentStep === 1) {
+    collectEquipos();
+    collectServicios();
+  }
   if (currentStep < totalSteps) {
     currentStep++;
     updateStepDisplay();
@@ -165,11 +170,39 @@ function updateStepDisplay() {
   updateProgressBar();
   updateButtons();
 
-  const sidebar = document.querySelector('.config-sidebar');
-  if (sidebar) sidebar.style.display = currentStep === 4 ? 'none' : '';
+  const isStep1 = currentStep === 1;
 
-  if (currentStep === 3) generateFinalSummary();
-  if (currentStep === 4) initSimulador();
+  // Sidebar izquierdo
+  const sidebar = document.querySelector('.config-sidebar');
+  if (sidebar) sidebar.style.display = isStep1 ? '' : 'none';
+  const leftSidebar = document.getElementById('configLeftSidebar');
+  if (leftSidebar) leftSidebar.style.display = isStep1 ? '' : 'none';
+
+  // Barra derecha (resumen)
+  const bottomBar = document.getElementById('bottomBar');
+  if (bottomBar) bottomBar.style.display = isStep1 ? '' : 'none';
+
+  // Layout: columna única en pasos 2-4
+  const layout = document.querySelector('.config-layout');
+  if (layout) layout.classList.toggle('config-layout--single', !isStep1);
+
+  // Botón Anterior y Next inline
+  const btnPrev    = document.getElementById('btnPrev');
+  const inlineNext = document.getElementById('btnNextInline');
+  if (btnPrev)     btnPrev.style.display    = isStep1 ? 'none' : '';
+  if (inlineNext) {
+    inlineNext.style.display = isStep1 ? 'none' : '';
+    if (currentStep === totalSteps) {
+      inlineNext.textContent = 'Enviar Cotización';
+      inlineNext.onclick = solicitarCotizacion;
+    } else {
+      inlineNext.textContent = 'Siguiente →';
+      inlineNext.onclick = nextStep;
+    }
+  }
+
+  if (currentStep === 2) initSimulador();
+  if (currentStep === 4) generateFinalSummary();
 }
 
 function updateProgressBar() {
@@ -191,7 +224,7 @@ function updateButtons() {
     btnNext.onclick = nextStep;
   } else if (currentStep === totalSteps) {
     btnPrev.style.display = 'inline-flex';
-    btnNext.textContent = 'Solicitar Cotización';
+    btnNext.textContent = 'Enviar Cotización';
     btnNext.onclick = solicitarCotizacion;
   } else {
     btnPrev.style.display = 'inline-flex';
@@ -219,11 +252,16 @@ function validateStep(step) {
   }
 
   if (step === 2) {
+    // Simulador — solo recopilar equipos para el cálculo
+    collectEquipos();
     collectServicios();
-    collectFormulario();
   }
 
   if (step === 3 && !validateForm()) return false;
+
+  if (step === 3) {
+    collectFormulario();
+  }
 
   return true;
 }
@@ -290,34 +328,61 @@ function toggleProduct() {}
 // DATA
 // ═════════════════════════════════════════
 function collectEquipos() {
-  state.equipos = {};
-  document.querySelectorAll('.product-item').forEach(item => {
-    const name  = item.dataset.name;
-    const price = parseInt(item.dataset.price);
-    const qty   = parseInt(item.querySelector('.qty-value').textContent) || 0;
-    if (qty > 0) {
-      state.equipos[name] = { qty, price };
-    }
-  });
+  // Preserve existing state if _flatRows is not available and DOM is not visible (pasos > 1)
+  const hasFlatRows = typeof window._flatRows !== 'undefined';
+
+  if (hasFlatRows) {
+    // Fuente de verdad: flat-catalog rows
+    state.equipos = {};
+    window._flatRows.forEach(r => {
+      if (!r.productName || r.qty <= 0) return;
+      const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
+      if (!producto) return;
+      state.equipos[r.productName] = { qty: r.qty, price: producto.price || 0 };
+    });
+  } else {
+    // Fallback: DOM accordion — solo actualizar si el paso 1 está visible
+    const step1 = document.querySelector('.wizard-step[data-step="1"]');
+    const step1Visible = step1 && step1.classList.contains('active');
+    if (!step1Visible && Object.keys(state.equipos).length > 0) return; // preserve existing state
+    state.equipos = {};
+    document.querySelectorAll('.product-item').forEach(item => {
+      const name  = item.dataset.name;
+      const price = parseInt(item.dataset.price);
+      const qty   = parseInt(item.querySelector('.qty-value').textContent) || 0;
+      if (qty > 0) {
+        state.equipos[name] = { qty, price };
+      }
+    });
+  }
 }
 
 function collectServicios() {
-  state.servicios = {};
+  const hasFlatRows = typeof window._flatRows !== 'undefined';
+  const step1 = document.querySelector('.wizard-step[data-step="1"]');
+  const step1Visible = step1 && step1.classList.contains('active');
 
-  // Servicios asociados a productos (service-check selects)
-  document.querySelectorAll('.service-check').forEach(el => {
-    const selectedOption = el.options ? el.options[el.selectedIndex] : null;
-    if (!selectedOption || !selectedOption.value) return;
-    const price = parseInt(selectedOption.dataset.price) || 0;
-    if (price === 0) return;
-    const prefix    = el.dataset.namePrefix || el.dataset.name || 'Servicio';
-    const label     = `${prefix} — ${selectedOption.text.split('—')[0].trim()}`;
-    const frecuencia = selectedOption.dataset.frecuencia || '/mes';
-    state.servicios[label] = { price, frecuencia };
-  });
+  // Solo resetear servicios si estamos en el paso 1 o hay flatRows disponibles
+  if (step1Visible || hasFlatRows) {
+    state.servicios = {};
+  }
+
+  // Servicios asociados a productos (service-check selects) — solo si paso 1 visible
+  if (step1Visible || !hasFlatRows) {
+    document.querySelectorAll('.service-check').forEach(el => {
+      const selectedOption = el.options ? el.options[el.selectedIndex] : null;
+      if (!selectedOption || !selectedOption.value) return;
+      const price = parseInt(selectedOption.dataset.price) || 0;
+      if (price === 0) return;
+      const prefix    = el.dataset.namePrefix || el.dataset.name || 'Servicio';
+      const label     = `${prefix} — ${selectedOption.text.split('—')[0].trim()}`;
+      const frecuencia = selectedOption.dataset.frecuencia || '/mes';
+      state.servicios[label] = { price, frecuencia };
+    });
+  }
 
   // Productos tipo servicio-tic desde _flatRows
-  if (typeof window._flatRows !== 'undefined') {
+  if (hasFlatRows) {
     window._flatRows.forEach(r => {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
@@ -438,21 +503,35 @@ function updateSidebar() {
       ).join('');
     }
   }
+
+  // ── Sincronizar state en vivo cada vez que cambie el sidebar ──
+  // Esto garantiza que state.equipos y state.servicios siempre reflejen
+  // lo que está seleccionado, sin importar en qué paso se encuentre el usuario
+  collectEquipos();
+  collectServicios();
 }
 
 // ═════════════════════════════════════════
 // RESUMEN (Paso 3)
 // ═════════════════════════════════════════
 function generateFinalSummary() {
-  collectEquipos();
-  collectServicios();
+  // state.equipos y state.servicios ya están actualizados via updateSidebar()
+  // Solo aseguramos tener los datos más frescos si _flatRows está disponible
+  if (typeof window._flatRows !== 'undefined') {
+    collectEquipos();
+    collectServicios();
+  }
 
   const fmt    = n => n.toLocaleString('es-CL');
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
-  // ── Productos ──────────────────────────────────────────
+  // ── Productos (solo hardware, excluye servicio-tic) ──────────────────────
   const summaryEquipos = document.getElementById('summaryEquipos');
-  const eqEntries = Object.entries(state.equipos);
+  // Filtrar state.equipos para excluir servicio-tic
+  const eqEntries = Object.entries(state.equipos).filter(([name]) => {
+    const prod = (window.CATALOGO || []).find(p => p.name === name);
+    return !prod || prod.tipo !== 'servicio-tic';
+  });
   let totalEq = 0;
   if (summaryEquipos) {
     if (eqEntries.length === 0) {
@@ -537,8 +616,11 @@ function generateFinalSummary() {
 // SIMULADOR (Paso 4)
 // ═════════════════════════════════════════
 function initSimulador() {
-  collectEquipos();
-  collectServicios();
+  // state.equipos y state.servicios ya están sincronizados por updateSidebar()
+  if (typeof window._flatRows !== 'undefined') {
+    collectEquipos();
+    collectServicios();
+  }
 
   const totalEq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
   const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
@@ -615,6 +697,9 @@ function setPlazo(meses, btn) {
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   setTxt('plazoSidebarLabel', simPlazo);
   setTxt('cuotaMensual', calcularCuotaSimple());
+
+  // Actualizar resumen si ya fue generado
+  if (currentStep === 4) generateFinalSummary();
 }
 
 function updateTasa(val) {
@@ -622,6 +707,7 @@ function updateTasa(val) {
   const el = document.getElementById('tasaVal');
   if (el) el.textContent = simTasa + '%';
   calcularSimulador();
+  if (currentStep === 4) generateFinalSummary();
 }
 
 function toggleTablaAmort() {
@@ -712,9 +798,136 @@ function solicitarCotizacion() {
 }
 
 // Alias usado en el HTML (btn "Enviar Cotización" del paso 4)
-function enviarCotizacion() {
-  solicitarCotizacion();
+// ═════════════════════════════════════════
+// DESCARGA PDF
+// ═════════════════════════════════════════
+function descargarCotizacionPDF() {
+  const f = state.formulario;
+  const fmt = n => (n || 0).toLocaleString('es-CL');
+
+  // Construir items de productos
+  const eqRows = Object.entries(state.equipos)
+    .filter(([name]) => {
+      const prod = (window.CATALOGO || []).find(p => p.name === name);
+      return !prod || prod.tipo !== 'servicio-tic';
+    })
+    .map(([name, v]) => `
+      <tr>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${name}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:center;">${v.qty}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;">$${fmt(v.price)}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(v.qty * v.price)}</td>
+      </tr>`).join('');
+
+  const svcRows = Object.entries(state.servicios).map(([name, svc]) => {
+    const price = typeof svc === 'object' ? svc.price : svc;
+    const freq  = typeof svc === 'object' ? svc.frecuencia : '/mes';
+    return `
+      <tr>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;" colspan="3">${name}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(price)}${freq}</td>
+      </tr>`;
+  }).join('');
+
+  const totalEq  = Object.entries(state.equipos)
+    .filter(([name]) => { const p = (window.CATALOGO||[]).find(x=>x.name===name); return !p||p.tipo!=='servicio-tic'; })
+    .reduce((s, [, v]) => s + v.qty * v.price, 0);
+  const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
+  const totalGen = totalEq + totalSvc;
+
+  const fecha = new Date().toLocaleDateString('es-CL', { year:'numeric', month:'long', day:'numeric' });
+
+  const htmlPDF = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cotización InfraGo — ${f.empresa || 'Cliente'}</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: Arial, sans-serif; font-size: 13px; color: #1a2540; background: #fff; padding: 32px; }
+    .header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:32px; }
+    .logo { font-size:28px; font-weight:900; color:#1a2540; }
+    .logo span { color:#e6a817; }
+    .meta { text-align:right; color:#666; font-size:12px; }
+    .meta strong { display:block; font-size:16px; font-weight:700; color:#1a2540; margin-bottom:4px; }
+    .divider { height:3px; background: linear-gradient(90deg,#1a2540,#e6a817); border-radius:2px; margin-bottom:28px; }
+    .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#e6a817; margin-bottom:12px; }
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin-bottom:28px; background:#f8f9fc; padding:16px; border-radius:8px; }
+    .info-field label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; color:#999; margin-bottom:2px; }
+    .info-field span { font-size:13px; font-weight:600; }
+    table { width:100%; border-collapse:collapse; margin-bottom:20px; }
+    thead th { background:#1a2540; color:#fff; padding:10px 12px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+    thead th:last-child { text-align:right; }
+    thead th:nth-child(2) { text-align:center; }
+    thead th:nth-child(3) { text-align:right; }
+    .totals-box { background:#f8f9fc; border-radius:8px; padding:16px 20px; margin-top:8px; }
+    .total-row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; }
+    .total-row.main { font-size:18px; font-weight:800; color:#e6a817; border-top:2px solid #e0e0e0; padding-top:12px; margin-top:4px; }
+    .footer-note { margin-top:32px; font-size:11px; color:#999; border-top:1px solid #f0f0f0; padding-top:16px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Infra<span>Go</span></div>
+    <div class="meta">
+      <strong>Cotización Formal</strong>
+      Fecha: ${fecha}<br>
+      contacto@infrago.cl
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="section-title">Datos del cliente</div>
+  <div class="info-grid">
+    ${f.empresa   ? `<div class="info-field"><label>Empresa</label><span>${f.empresa}</span></div>` : ''}
+    ${f.contacto  ? `<div class="info-field"><label>Contacto</label><span>${f.contacto}</span></div>` : ''}
+    ${f.cargo     ? `<div class="info-field"><label>Cargo</label><span>${f.cargo}</span></div>` : ''}
+    ${f.email     ? `<div class="info-field"><label>Email</label><span>${f.email}</span></div>` : ''}
+    ${f.telefono  ? `<div class="info-field"><label>Teléfono</label><span>${f.telefono}</span></div>` : ''}
+    ${f.region    ? `<div class="info-field"><label>Región</label><span>${f.region}</span></div>` : ''}
+    ${f.ciudad    ? `<div class="info-field"><label>Ciudad</label><span>${f.ciudad}</span></div>` : ''}
+  </div>
+
+  ${eqRows ? `
+  <div class="section-title">Productos</div>
+  <table>
+    <thead><tr><th>Producto</th><th style="text-align:center;">Cant.</th><th style="text-align:right;">P. Unit.</th><th style="text-align:right;">Subtotal</th></tr></thead>
+    <tbody>${eqRows}</tbody>
+  </table>` : ''}
+
+  ${svcRows ? `
+  <div class="section-title">Servicios</div>
+  <table>
+    <thead><tr><th colspan="3">Servicio</th><th style="text-align:right;">Precio</th></tr></thead>
+    <tbody>${svcRows}</tbody>
+  </table>` : ''}
+
+  <div class="totals-box">
+    <div class="total-row"><span>Subtotal productos</span><span>$${fmt(totalEq)}</span></div>
+    <div class="total-row"><span>Subtotal servicios/mes</span><span>$${fmt(totalSvc)}/mes</span></div>
+    <div class="total-row main"><span>Total estimado</span><span>$${fmt(totalGen)}</span></div>
+    <div class="total-row" style="font-size:12px;color:#666;"><span>Cuota en ${simPlazo} meses</span><span>≈ $${fmt(Math.round(totalGen / simPlazo))}/mes</span></div>
+  </div>
+
+  ${f.notas ? `<div class="footer-note"><strong>Notas:</strong> ${f.notas}</div>` : ''}
+  <div class="footer-note" style="margin-top:16px;">
+    Esta cotización es referencial y válida por 30 días. Los precios no incluyen IVA. Sujeto a disponibilidad de stock.<br>
+    InfraGo SpA — Una empresa de TIC Manager's · contacto@infrago.cl
+  </div>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank');
+  if (!win) { alert('Permite las ventanas emergentes para descargar el PDF.'); return; }
+  win.document.write(htmlPDF);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); }, 500);
 }
+
+window.descargarCotizacionPDF = descargarCotizacionPDF;
+
+
 
 // ═════════════════════════════════════════
 // MODAL
@@ -867,6 +1080,26 @@ window.incrementQty         = incrementQty;
 window.decrementQty         = decrementQty;
 window.nextStep             = nextStep;
 window.prevStep             = prevStep;
+window.updateStepDisplay    = updateStepDisplay;
+
+/* ── Navegación clickeando el progress bar ── */
+document.addEventListener('click', function(e) {
+  const stepDot = e.target.closest('.progress-step');
+  if (!stepDot) return;
+  const targetStep = parseInt(stepDot.dataset.step);
+  if (!targetStep || targetStep === currentStep) return;
+  // Solo permitir ir a pasos ya visitados (targetStep < currentStep) o al siguiente
+  if (targetStep < currentStep) {
+    // Guardar estado antes de navegar
+    if (currentStep === 1) {
+      collectEquipos();
+      collectServicios();
+    }
+    currentStep = targetStep;
+    updateStepDisplay();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
 window.solicitarCotizacion  = solicitarCotizacion;
 window.enviarCotizacion     = enviarCotizacion;
 window.updateSidebar        = updateSidebar;
@@ -900,4 +1133,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.service-check').forEach(el => {
     el.addEventListener('change', updateSidebar);
   });
-});;
+
+  // ── Paso 3: sincronizar state.formulario en tiempo real ──
+  // Así cualquier cambio en los campos queda guardado aunque no se presione "Siguiente"
+  const camposFormulario = ['empresa','region','ciudad','direccion','contacto','cargo','telefono','email','notas'];
+  camposFormulario.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const eventType = (el.tagName === 'SELECT') ? 'change' : 'input';
+    el.addEventListener(eventType, () => {
+      collectFormulario();
+      // Si el resumen (paso 4) ya está visible, regenerarlo en vivo
+      if (currentStep === 4) generateFinalSummary();
+    });
+  });
+});
