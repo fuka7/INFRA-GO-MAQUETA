@@ -11,7 +11,34 @@
   /* ════════════════════════════════════════════
      VALIDADORES
   ════════════════════════════════════════════ */
-  var validators = {
+  /* ════════════════════════════════════════════
+     HELPERS DE PERFIL
+  ════════════════════════════════════════════ */
+  function igBuildProfile(email, data) {
+    var d = data || {};
+    return {
+      email:        email                  || '',
+      rut:          d.rut                  || '',
+      phone:        d.phone                || '',
+      razon_social: d.razon_social         || '',
+      contacto:     d.contacto             || '',
+      cargo:        d.cargo                || '',
+      direccion:    d.direccion            || '',
+      ciudad:       d.ciudad               || '',
+      region:       d.region               || '',
+      sii_fetched:  d.sii_fetched          || false
+    };
+  }
+
+  function igSaveProfileCache(profile) {
+    try { localStorage.setItem('ig_profile', JSON.stringify(profile)); } catch(e) {}
+  }
+
+  function igClearProfileCache() {
+    try { localStorage.removeItem('ig_profile'); } catch(e) {}
+  }
+
+    var validators = {
     email: function(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); },
     rut: function(v) {
       v = v.replace(/\./g, '').replace(/-/g, '').trim().toLowerCase();
@@ -401,9 +428,10 @@
           setError(email, msg); setError(pw, ' ');
           return;
         }
-        return window.supabase.from('profiles').select('rut, phone').eq('id', res.data.user.id).single()
+        return window.supabase.from('profiles').select('rut, phone, email, razon_social, contacto, cargo, direccion, ciudad, region, sii_fetched').eq('id', res.data.user.id).single()
           .then(function(pr) {
-            currentUser = { email: res.data.user.email, rut: pr.data && pr.data.rut || '', phone: pr.data && pr.data.phone || '' };
+            currentUser = igBuildProfile(res.data.user.email, pr.data);
+            igSaveProfileCache(currentUser);
             updateNavbar();
             setLoading(btn, false);
             var redirectTarget = window._authRedirect;
@@ -478,8 +506,9 @@
     window.supabase.auth.getSession().then(function(res) {
       var session = res.data && res.data.session;
       if (session) {
-        window.supabase.from('profiles').select('rut, phone').eq('id', session.user.id).single().then(function(pr) {
-          currentUser = { email: session.user.email, rut: pr.data && pr.data.rut || '', phone: pr.data && pr.data.phone || '' };
+        window.supabase.from('profiles').select('rut, phone, email, razon_social, contacto, cargo, direccion, ciudad, region, sii_fetched').eq('id', session.user.id).single().then(function(pr) {
+          currentUser = igBuildProfile(session.user.email, pr.data);
+          igSaveProfileCache(currentUser);
           updateNavbar();
           guardConfigurador();
         });
@@ -490,12 +519,13 @@
 
     window.supabase.auth.onAuthStateChange(function(event, session) {
       if (event === 'SIGNED_IN' && session && !currentUser) {
-        window.supabase.from('profiles').select('rut, phone').eq('id', session.user.id).single().then(function(pr) {
-          currentUser = { email: session.user.email, rut: pr.data && pr.data.rut || '', phone: pr.data && pr.data.phone || '' };
+        window.supabase.from('profiles').select('rut, phone, email, razon_social, contacto, cargo, direccion, ciudad, region, sii_fetched').eq('id', session.user.id).single().then(function(pr) {
+          currentUser = igBuildProfile(session.user.email, pr.data);
+          igSaveProfileCache(currentUser);
           updateNavbar();
         });
       }
-      if (event === 'SIGNED_OUT') { currentUser = null; updateNavbar(); }
+      if (event === 'SIGNED_OUT') { currentUser = null; igClearProfileCache(); updateNavbar(); }
     });
   }
 
@@ -506,7 +536,10 @@
     open:    openAuth,
     close:   closeAuth,
     logout:  logout,
-    current: function() { return currentUser; }
+    current: function() { return currentUser; },
+    getProfileCache: function() {
+      try { return JSON.parse(localStorage.getItem('ig_profile') || 'null'); } catch(e) { return null; }
+    }
   };
 
   /* Click global en .igb-account — funciona en todas las páginas */
