@@ -65,7 +65,7 @@
   </div>
   <div class="igb-actions">
     <a class="igb-cta igb-cta-header" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
-    <a class="igb-account" href="#">
+    <a class="igb-account" href="#" onclick="igbOpenAccount(event)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
     </a>
@@ -155,6 +155,17 @@ window.clsSetCat = function(tipo, btn) {
     });
   });
 };
+
+function igbOpenAccount(e){
+  e.preventDefault();
+  if(window.igbAuth){
+    window.igbAuth.open('login');
+  } else {
+    window.addEventListener('supabase:ready',function(){
+      window.igbAuth.open('login');
+    },{once:true});
+  }
+}
 </script>
 <!-- ════════════════ FIN NAVBAR ════════════════ -->
 
