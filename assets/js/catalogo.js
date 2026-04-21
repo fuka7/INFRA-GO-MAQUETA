@@ -13,8 +13,8 @@
      partNumber: "XX-XXXXX",                   // part number del producto
      price:      450000,                       // precio CLP (número, sin puntos)
      servicios: [                              // servicios asociados (puede ser [])
-       { value: "instalacion", label: "Instalación y configuración", price: 80000, unidad: "" },
-       { value: "soporte",     label: "Soporte técnico mensual",     price: 35000, unidad: "/mes" },
+       { value: "instalacion", label: "Instalación y configuración", price: 80000, unidad: "",      frecuencia: "al inicio" },
+       { value: "soporte",     label: "Soporte técnico mensual",     price: 35000, unidad: "/mes",  frecuencia: "/mes" },
      ]
    }
 
@@ -37,10 +37,10 @@ const CATALOGO = [
     partNumber: "80A19LT#ABM",
     price:      450000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""     },
-      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes"  },
-      { value: "garantia",    label: "Garantía extendida 3 años",    price: 45000, unidad: "/año"  },
-      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: ""      },
+      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"     },
+      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes"  },
+      { value: "garantia",    label: "Garantía extendida 3 años",    price: 45000, unidad: "/año",  frecuencia: "/año"  },
+      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: "",      frecuencia: "al inicio"      },
     ],
   },
   {
@@ -50,10 +50,10 @@ const CATALOGO = [
     partNumber: "I15-I7U512-BLK",
     price:      520000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""     },
-      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes"  },
-      { value: "garantia",    label: "Garantía extendida 3 años",    price: 45000, unidad: "/año"  },
-      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: ""      },
+      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"     },
+      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes"  },
+      { value: "garantia",    label: "Garantía extendida 3 años",    price: 45000, unidad: "/año",  frecuencia: "/año"  },
+      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: "",      frecuencia: "al inicio"      },
     ],
   },
   {
@@ -63,9 +63,9 @@ const CATALOGO = [
     partNumber: "MRX33LL/A",
     price:      1200000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""    },
-      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes" },
-      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: ""     },
+      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: "",      frecuencia: "al inicio"     },
     ],
   },
   {
@@ -75,10 +75,10 @@ const CATALOGO = [
     partNumber: "21JK0005CL",
     price:      480000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: ""    },
-      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes" },
-      { value: "garantia",    label: "Garantía extendida 3 años",    price: 45000, unidad: "/año" },
-      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: ""     },
+      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "garantia",    label: "Garantía extendida 3 años",    price: 45000, unidad: "/año",  frecuencia: "/año" },
+      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: "",      frecuencia: "al inicio"     },
     ],
   },
 
@@ -92,10 +92,10 @@ const CATALOGO = [
     partNumber: "R650-XS-4314-64G",
     price:      2500000,
     servicios: [
-      { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: ""    },
-      { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes" },
-      { value: "monitoreo",   label: "Monitoreo 24/7",                   price: 80000,  unidad: "/mes" },
-      { value: "backup",      label: "Backup & Replicación",             price: 200000, unidad: "/mes" },
+      { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "monitoreo",   label: "Monitoreo 24/7",                   price: 80000,  unidad: "/mes",  frecuencia: "/mes" },
+      { value: "backup",      label: "Backup & Replicación",             price: 200000, unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
   {
@@ -105,10 +105,10 @@ const CATALOGO = [
     partNumber: "P56963-B21",
     price:      3200000,
     servicios: [
-      { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: ""    },
-      { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes" },
-      { value: "monitoreo",   label: "Monitoreo 24/7",                   price: 80000,  unidad: "/mes" },
-      { value: "backup",      label: "Backup & Replicación",             price: 200000, unidad: "/mes" },
+      { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "monitoreo",   label: "Monitoreo 24/7",                   price: 80000,  unidad: "/mes",  frecuencia: "/mes" },
+      { value: "backup",      label: "Backup & Replicación",             price: 200000, unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
   {
@@ -118,10 +118,10 @@ const CATALOGO = [
     partNumber: "7X06A0BWEA",
     price:      2800000,
     servicios: [
-      { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: ""    },
-      { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes" },
-      { value: "monitoreo",   label: "Monitoreo 24/7",                   price: 80000,  unidad: "/mes" },
-      { value: "backup",      label: "Backup & Replicación",             price: 200000, unidad: "/mes" },
+      { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte Premium mensual",          price: 120000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "monitoreo",   label: "Monitoreo 24/7",                   price: 80000,  unidad: "/mes",  frecuencia: "/mes" },
+      { value: "backup",      label: "Backup & Replicación",             price: 200000, unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
 
@@ -135,9 +135,9 @@ const CATALOGO = [
     partNumber: "7MD66F#BGJ",
     price:      350000,
     servicios: [
-      { value: "instalacion",    label: "Instalación y configuración red",   price: 40000, unidad: ""    },
-      { value: "mantenimiento",  label: "Mantenimiento preventivo mensual",  price: 25000, unidad: "/mes" },
-      { value: "toner",          label: "Servicio tóner incluido",           price: 15000, unidad: "/mes" },
+      { value: "instalacion",    label: "Instalación y configuración red",   price: 40000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "mantenimiento",  label: "Mantenimiento preventivo mensual",  price: 25000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "toner",          label: "Servicio tóner incluido",           price: 15000, unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
   {
@@ -147,8 +147,8 @@ const CATALOGO = [
     partNumber: "4468C002AA",
     price:      290000,
     servicios: [
-      { value: "instalacion",   label: "Instalación y configuración red",  price: 40000, unidad: ""    },
-      { value: "mantenimiento", label: "Mantenimiento preventivo mensual", price: 25000, unidad: "/mes" },
+      { value: "instalacion",   label: "Instalación y configuración red",  price: 40000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "mantenimiento", label: "Mantenimiento preventivo mensual", price: 25000, unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
   {
@@ -158,9 +158,9 @@ const CATALOGO = [
     partNumber: "MFCL6915DW",
     price:      720000,
     servicios: [
-      { value: "instalacion",   label: "Instalación y configuración red",  price: 50000, unidad: ""    },
-      { value: "mantenimiento", label: "Mantenimiento preventivo mensual", price: 30000, unidad: "/mes" },
-      { value: "toner",         label: "Servicio tóner incluido",          price: 20000, unidad: "/mes" },
+      { value: "instalacion",   label: "Instalación y configuración red",  price: 50000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "mantenimiento", label: "Mantenimiento preventivo mensual", price: 30000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "toner",         label: "Servicio tóner incluido",          price: 20000, unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
 
@@ -174,9 +174,9 @@ const CATALOGO = [
     partNumber: "CBS350-24P-4G-CL",
     price:      680000,
     servicios: [
-      { value: "instalacion",   label: "Instalación y cableado",         price: 90000,  unidad: ""    },
-      { value: "configuracion", label: "Configuración VLANs y QoS",      price: 120000, unidad: ""    },
-      { value: "monitoreo",     label: "Monitoreo de red mensual",        price: 60000,  unidad: "/mes" },
+      { value: "instalacion",   label: "Instalación y cableado",         price: 90000,  unidad: "",      frecuencia: "al inicio"    },
+      { value: "configuracion", label: "Configuración VLANs y QoS",      price: 120000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "monitoreo",     label: "Monitoreo de red mensual",        price: 60000,  unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
   {
@@ -186,9 +186,9 @@ const CATALOGO = [
     partNumber: "FG-60F",
     price:      1100000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración firewall", price: 150000, unidad: ""    },
-      { value: "licencia",    label: "Licencia FortiCare anual",             price: 180000, unidad: "/año" },
-      { value: "monitoreo",   label: "Monitoreo de seguridad mensual",       price: 90000,  unidad: "/mes" },
+      { value: "instalacion", label: "Instalación y configuración firewall", price: 150000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "licencia",    label: "Licencia FortiCare anual",             price: 180000, unidad: "/año",  frecuencia: "/año" },
+      { value: "monitoreo",   label: "Monitoreo de seguridad mensual",       price: 90000,  unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
   {
@@ -198,8 +198,8 @@ const CATALOGO = [
     partNumber: "U6-LR",
     price:      220000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración AP",    price: 50000, unidad: ""    },
-      { value: "soporte",     label: "Soporte red inalámbrica mensual",   price: 30000, unidad: "/mes" },
+      { value: "instalacion", label: "Instalación y configuración AP",    price: 50000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte red inalámbrica mensual",   price: 30000, unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
 
@@ -209,25 +209,25 @@ const CATALOGO = [
   {
     name:       "Synology DS923+",
     marca:      "Synology",
-    tipo:       "storage",
+    tipo:       "servidor",
     partNumber: "DS923+",
     price:      950000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración NAS",   price: 100000, unidad: ""    },
-      { value: "backup",      label: "Configuración backup automático",   price: 150000, unidad: ""    },
-      { value: "soporte",     label: "Soporte administración mensual",    price: 60000,  unidad: "/mes" },
+      { value: "instalacion", label: "Instalación y configuración NAS",   price: 100000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "backup",      label: "Configuración backup automático",   price: 150000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte administración mensual",    price: 60000,  unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
   {
     name:       "QNAP TS-464",
     marca:      "QNAP",
-    tipo:       "storage",
+    tipo:       "servidor",
     partNumber: "TS-464-8G",
     price:      870000,
     servicios: [
-      { value: "instalacion", label: "Instalación y configuración NAS",  price: 100000, unidad: ""    },
-      { value: "backup",      label: "Configuración backup automático",  price: 150000, unidad: ""    },
-      { value: "soporte",     label: "Soporte administración mensual",   price: 60000,  unidad: "/mes" },
+      { value: "instalacion", label: "Instalación y configuración NAS",  price: 100000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "backup",      label: "Configuración backup automático",  price: 150000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte administración mensual",   price: 60000,  unidad: "/mes",  frecuencia: "/mes" },
     ],
   },
 
@@ -269,6 +269,107 @@ const CATALOGO = [
     price:      18000,
     servicios: [],
   },
+
+  /* ──────────────────────────────────────────
+     ALL IN ONE (PC AIO)
+  ─────────────────────────────────────────── */
+  {
+    name:       "HP EliteOne 800 G9 AIO",
+    marca:      "HP",
+    tipo:       "notebook",
+    partNumber: "6B2Q4LA#ABM",
+    price:      890000,
+    servicios: [
+      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: "",      frecuencia: "al inicio"     },
+    ],
+  },
+  {
+    name:       "HP ProOne 440 G9 AIO",
+    marca:      "HP",
+    tipo:       "notebook",
+    partNumber: "6B2D2LA#ABM",
+    price:      720000,
+    servicios: [
+      { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
+      { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes" },
+      { value: "migracion",   label: "Migración de datos",           price: 60000, unidad: "",      frecuencia: "al inicio"     },
+    ],
+  },
+
+  /* ──────────────────────────────────────────
+     LICENCIAS — OFFICE & ANTIVIRUS
+  ─────────────────────────────────────────── */
+  {
+    name:       "Microsoft 365 Business Basic (mensual/usuario)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    partNumber: "CFQ7TTC0J25C",
+    price:      7900,
+    servicios: [],
+  },
+  {
+    name:       "Microsoft 365 Business Standard (mensual/usuario)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    partNumber: "CFQ7TTC0JTHM",
+    price:      15900,
+    servicios: [],
+  },
+  {
+    name:       "Microsoft 365 Apps for Business (mensual/usuario)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    partNumber: "CFQ7TTC0J7D9",
+    price:      11900,
+    servicios: [],
+  },
+  {
+    name:       "Bitdefender GravityZone Business Security (mensual/equipo)",
+    marca:      "TIC Managers",
+    tipo:       "storage",
+    partNumber: "BD-GZ-BS-MO",
+    price:      4900,
+    servicios: [],
+  },
+  {
+    name:       "Bitdefender GravityZone Business Security Premium (mensual/equipo)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    partNumber: "BD-GZ-BSP-MO",
+    price:      7500,
+    servicios: [],
+  },
+
+  /* ──────────────────────────────────────────
+     CIBERGESTIÓN MENSUAL
+  ─────────────────────────────────────────── */
+  {
+    name:       "TIC Managers Cibergestión Esencial (mensual)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    partNumber: "TIC-CG-ESE",
+    price:      85000,
+    servicios: [],
+  },
+  {
+    name:       "TIC Managers Cibergestión Avanzada (mensual)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    partNumber: "TIC-CG-AVZ",
+    price:      150000,
+    servicios: [],
+  },
+  {
+    name:       "TIC Managers Cibergestión Enterprise (mensual)",
+    marca:      "TIC Managers",
+    tipo:       "servicio-tic",
+    partNumber: "TIC-CG-ENT",
+    price:      280000,
+    servicios: [],
+  },
+
 
 ];
 

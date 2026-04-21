@@ -82,10 +82,14 @@ function obtenerPctDescuento(totalQty) {
 }
 
 function actualizarDescuento() {
-  // Contar unidades desde _flatRows (fuente de verdad de flat-catalog.js)
+  // Contar SOLO hardware (no servicio-tic) para el descuento por volumen
   let totalQty = 0;
   if (typeof window._flatRows !== 'undefined') {
-    window._flatRows.forEach(r => { if (r.productName) totalQty += r.qty; });
+    window._flatRows.forEach(r => {
+      if (!r.productName) return;
+      const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
+      if (prod && prod.tipo !== 'servicio-tic') totalQty += r.qty;
+    });
   } else {
     // Fallback: accordion oculto
     document.querySelectorAll('.product-item .qty-value').forEach(el => {
@@ -234,8 +238,6 @@ function collectFormulario() {
     cargo:     document.getElementById('cargo')?.value            || '',
     telefono:  document.getElementById('telefono')?.value.trim()  || '',
     email:     document.getElementById('email')?.value.trim()     || '',
-    empleados: document.getElementById('empleados')?.value        || '',
-    rubro:     document.getElementById('rubro')?.value            || '',
     notas:     document.getElementById('notas')?.value            || ''
   };
 }
@@ -308,9 +310,10 @@ function collectServicios() {
     if (!selectedOption || !selectedOption.value) return;
     const price = parseInt(selectedOption.dataset.price) || 0;
     if (price === 0) return;
-    const prefix = el.dataset.namePrefix || el.dataset.name || 'Servicio';
-    const label  = `${prefix} — ${selectedOption.text.split('—')[0].trim()}`;
-    state.servicios[label] = price;
+    const prefix    = el.dataset.namePrefix || el.dataset.name || 'Servicio';
+    const label     = `${prefix} — ${selectedOption.text.split('—')[0].trim()}`;
+    const frecuencia = selectedOption.dataset.frecuencia || '/mes';
+    state.servicios[label] = { price, frecuencia };
   });
 
   // Productos tipo servicio-tic desde _flatRows
@@ -319,7 +322,8 @@ function collectServicios() {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto || producto.tipo !== 'servicio-tic') return;
-      state.servicios[r.productName] = (producto.price || 0) * r.qty;
+      // servicio-tic siempre es mensual
+      state.servicios[r.productName] = { price: (producto.price || 0) * r.qty, frecuencia: '/mes' };
     });
   }
 }
@@ -328,22 +332,34 @@ function collectServicios() {
 // SIDEBAR / STICKY RESUMEN
 // ═════════════════════════════════════════
 function updateSidebar() {
-  let totalEqCLP = 0;
-  let totalQty   = 0;
+  let totalEqCLP    = 0;  // solo hardware (no servicio-tic)
+  let totalQtyEq    = 0;  // solo unidades de hardware
+  let totalQtySvc   = 0;  // solo unidades de servicios
   const selectedProducts = [];
 
   // Leer desde _flatRows si está disponible (fuente de verdad)
   if (typeof window._flatRows !== 'undefined') {
-    const pct = obtenerPctDescuento(
-      window._flatRows.filter(r => r.productName).reduce((s, r) => s + r.qty, 0)
-    );
+    // Paso 1: contar SOLO hardware para el descuento por volumen
+    const qtyHardware = window._flatRows
+      .filter(r => r.productName && r.qty > 0)
+      .reduce((s, r) => {
+        const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
+        return prod && prod.tipo !== 'servicio-tic' ? s + r.qty : s;
+      }, 0);
+
+    const pct = obtenerPctDescuento(qtyHardware);
+
     window._flatRows.forEach(r => {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto) return;
+
+      if (producto.tipo === 'servicio-tic') return; // los servicios TIC van aparte
+
+      // Hardware: aplica descuento por volumen
       const precio = Math.round((producto.price || 0) * (1 - pct / 100));
       totalEqCLP += r.qty * precio;
-      totalQty   += r.qty;
+      totalQtyEq += r.qty;
       selectedProducts.push({ name: r.productName, qty: r.qty });
     });
   } else {
@@ -353,14 +369,14 @@ function updateSidebar() {
       const priceCLP = parseInt(item.dataset.price) || 0;
       const name     = item.dataset.name;
       if (qty > 0) {
-        totalQty   += qty;
+        totalQtyEq += qty;
         totalEqCLP += qty * priceCLP;
         selectedProducts.push({ name, qty });
       }
     });
   }
 
-  // Servicios
+  // Servicios: asociados a productos (service-check) + servicio-tic de flat rows
   let totalSvc = 0;
   let countSvc = 0;
 
@@ -369,27 +385,29 @@ function updateSidebar() {
     if (!selectedOption || !selectedOption.value) return;
     const price = parseInt(selectedOption.dataset.price) || 0;
     if (price === 0) return;
-    totalSvc += price;
+    totalSvc += price; // todos los servicios suman al total independiente de frecuencia
     countSvc++;
   });
 
-  // Servicios TIC desde flat rows
+  // Servicios TIC desde flat rows — SIN descuento por volumen
   if (typeof window._flatRows !== 'undefined') {
     window._flatRows.forEach(r => {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto || producto.tipo !== 'servicio-tic') return;
-      totalSvc += (producto.price || 0) * r.qty;
-      countSvc += r.qty;
+      totalSvc    += (producto.price || 0) * r.qty;
+      countSvc    += r.qty;
+      totalQtySvc += r.qty;
     });
   }
 
-  // Descuento
-  const pctDcto             = obtenerPctDescuento(totalQty);
+  // Descuento — solo sobre hardware
+  const pctDcto             = obtenerPctDescuento(totalQtyEq);
   const descuento           = totalEqCLP * (pctDcto / 100);
   const totalEquiposConDcto = totalEqCLP - descuento;
   const totalGeneral        = totalEquiposConDcto + totalSvc;
   const cuota               = Math.round(totalGeneral / simPlazo);
+  const totalQty            = totalQtyEq; // alias para los setTxt de abajo
 
   const setTxt = (id, val) => {
     const el = document.getElementById(id);
@@ -462,13 +480,19 @@ function generateFinalSummary() {
     if (svcEntries.length === 0) {
       summaryServicios.innerHTML = '<p class="resumen-empty">Sin servicios seleccionados</p>';
     } else {
-      summaryServicios.innerHTML = svcEntries.map(([name, price]) => {
+      summaryServicios.innerHTML = svcEntries.map(([name, svc]) => {
+        const price     = typeof svc === 'object' ? svc.price      : svc;
+        const frecuencia = typeof svc === 'object' ? svc.frecuencia : '/mes';
         totalSvc += price;
+        const freqLabel = frecuencia === 'al inicio' ? ' — pago al inicio'
+                        : frecuencia === '/año'       ? '/año'
+                        : '/mes';
         return `<div class="resumen-line-item">
           <div class="resumen-line-info">
             <span class="resumen-line-name">${name}</span>
+            <span class="resumen-line-qty" style="font-size:10px;opacity:0.6;">${frecuencia === 'al inicio' ? 'pago único' : frecuencia === '/año' ? 'anual' : 'mensual'}</span>
           </div>
-          <span class="resumen-line-price">$${fmt(price)}/mes</span>
+          <span class="resumen-line-price">$${fmt(price)}${freqLabel}</span>
         </div>`;
       }).join('');
     }
@@ -517,7 +541,7 @@ function initSimulador() {
   collectServicios();
 
   const totalEq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
-  const totalSvc = Object.values(state.servicios).reduce((s, v) => s + v, 0);
+  const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
 
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   setTxt('montoFinanciar',        totalEq.toLocaleString('es-CL'));
@@ -528,7 +552,7 @@ function initSimulador() {
 
 function calcularSimulador() {
   const totalEq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
-  const totalSvc = Object.values(state.servicios).reduce((s, v) => s + v, 0);
+  const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
 
   const principal    = totalEq;
   const tasaMensual  = simTasa / 100 / 12;
@@ -876,4 +900,4 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.service-check').forEach(el => {
     el.addEventListener('change', updateSidebar);
   });
-});
+});;

@@ -35,7 +35,7 @@ const TIPO_META = {
   'servidor':     { abbr: 'SRV', cls: 'pr-cat-badge--servidor'   },
   'impresora':    { abbr: 'IMP', cls: 'pr-cat-badge--impresora'  },
   'networking':   { abbr: 'NET', cls: 'pr-cat-badge--networking' },
-  'storage':      { abbr: 'NAS', cls: 'pr-cat-badge--storage'    },
+  'storage':      { abbr: 'LIC', cls: 'pr-cat-badge--storage'    },
   'servicio-tic': { abbr: 'SVC', cls: 'pr-cat-badge--servicio-tic'},
 };
 
@@ -186,11 +186,11 @@ function _buildSelectOptions() {
 
   const grupos = {};
   const labelMap = {
-    'notebook':     'Notebooks',
-    'servidor':     'Servidores',
+    'notebook':     'Notebook',
+    'servidor':     'Server & Storage',
     'impresora':    'Impresoras',
     'networking':   'Networking',
-    'storage':      'Almacenamiento',
+    'storage':      'Licencias & Atach',
     'servicio-tic': 'Servicios TIC',
   };
 
@@ -362,10 +362,12 @@ function _clearRowDisplay(id) {
 window.flatRefreshPrices = function flatRefreshPrices() {
   const tc = window.tipoCambio || 900;
 
-  /* 1. Total unidades para calcular % descuento */
+  /* 1. Total unidades SOLO hardware para calcular % descuento (excluye servicio-tic) */
   let totalQty = 0;
   _flatRows.forEach(r => {
-    if (r.productName) totalQty += r.qty;
+    if (!r.productName) return;
+    const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
+    if (prod && prod.tipo !== 'servicio-tic') totalQty += r.qty;
   });
   const pct = flatObtenerPct(totalQty);
 
@@ -381,8 +383,12 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const producto = (window.CATALOGO || []).find(p => p.name === productName);
     if (!producto) return;
 
+    // Servicios TIC: sin descuento por volumen
+    const esSvc        = producto.tipo === 'servicio-tic';
+    const pctEfectivo  = esSvc ? 0 : pct;
+
     const price         = producto.price || 0;
-    const precioConDto  = Math.round(price * (1 - pct / 100));
+    const precioConDto  = Math.round(price * (1 - pctEfectivo / 100));
     const subtotal      = qty * precioConDto;
     const subtotalLista = qty * price;
     const ahorro        = subtotalLista - subtotal;
@@ -393,27 +399,27 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     totalListaAcum  += subtotalLista;
     totalAhorroAcum += ahorro;
 
-    /* Precio lista (tachado si hay dto) */
+    /* Precio lista (tachado si hay dto y qty > 0) */
     const elBase = document.getElementById(`plista-${id}`);
     if (elBase) {
       elBase.textContent = `$${flatFmt(price)}`;
-      elBase.classList.toggle('tachado', pct > 0 && qty > 0);
+      elBase.classList.toggle('tachado', pctEfectivo > 0 && qty > 0);
     }
 
     /* USD del precio con descuento */
     const elUsd = document.getElementById(`pusd-${id}`);
     if (elUsd) {
-      elUsd.textContent = productName ? `≈ USD ${usd.toLocaleString('en-US')}` : '';
+      elUsd.textContent = productName && !esSvc ? `≈ USD ${usd.toLocaleString('en-US')}` : '';
     }
 
     /* Precio con dto */
     const elDto   = document.getElementById(`pdto-${id}`);
     const elBadge = document.getElementById(`dtobadge-${id}`);
     if (elDto) {
-      elDto.textContent = `$${flatFmt(precioConDto)}`;
-      if (pct > 0) {
+      elDto.textContent = qty > 0 ? `$${flatFmt(precioConDto)}` : '—';
+      if (pctEfectivo > 0 && qty > 0) {
         elDto.classList.remove('sin-dto');
-        if (elBadge) { elBadge.textContent = `-${pct}%`; elBadge.classList.remove('oculto'); }
+        if (elBadge) { elBadge.textContent = `-${pctEfectivo}%`; elBadge.classList.remove('oculto'); }
       } else {
         elDto.classList.add('sin-dto');
         if (elBadge) elBadge.classList.add('oculto');

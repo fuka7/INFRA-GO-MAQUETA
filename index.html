@@ -67,7 +67,7 @@
   </div>
   <div class="igb-actions">
     <a class="igb-cta igb-cta-header" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
-    <a class="igb-account" href="#" onclick="igbOpenAccount(event)">
+    <a class="igb-account" href="#">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
     </a>
@@ -189,25 +189,10 @@ function igbGoToCotizador(e){
   }
   return true;
 }
-function igbOpenAccount(e){
-  e.preventDefault();
-  // igbAuth.open() maneja la cola internamente si auth aún no está listo
-  if(window.igbAuth){
-    window.igbAuth.open('login');
-  } else {
-    // Retry cada 100ms hasta que igbAuth esté disponible (máx 3s)
-    var tries = 0;
-    var interval = setInterval(function(){
-      tries++;
-      if(window.igbAuth){ clearInterval(interval); window.igbAuth.open('login'); }
-      else if(tries > 30) clearInterval(interval);
-    }, 100);
-  }
-}
+
 </script>
 
 <!-- ════════════════ FIN NAVBAR ════════════════ -->
-
 
 <!-- ══════════════════════════════════════
      HERO — CARRUSEL 3 SLIDES

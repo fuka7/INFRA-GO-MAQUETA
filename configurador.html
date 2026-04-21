@@ -13,6 +13,17 @@
   <link rel="stylesheet" href="/assets/css/footer.css">
   <link rel="stylesheet" href="/assets/css/responsive.css">
   <link rel="stylesheet" href="/assets/css/auth.css">
+  <style>
+    /* ── Sidebar números más grandes ── */
+    .bb-value                { font-size: 20px !important; font-weight: 800 !important; }
+    .bb-value--orange        { font-size: 22px !important; }
+    .bb-cuota-val            { font-size: 22px !important; font-weight: 800 !important; }
+    .bb-label                { font-size: 11px !important; font-weight: 700 !important; letter-spacing: 0.5px; text-transform: uppercase; }
+    .bb-sub                  { font-size: 11px !important; opacity: 0.65; }
+    /* IVA nota verde bajo total */
+    .bb-sub                  { color: inherit; }
+    .bb-col--total .bb-sub   { color: #22c55e; font-weight: 600; font-size: 10px !important; }
+  </style>
 </head>
 <body>
 
@@ -65,7 +76,7 @@
   </div>
   <div class="igb-actions">
     <a class="igb-cta igb-cta-header" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">Agendar reunión</a>
-    <a class="igb-account" href="#" onclick="igbOpenAccount(event)">
+    <a class="igb-account" href="#">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>
     </a>
@@ -146,8 +157,8 @@ window.clsSetCat = function(tipo, btn) {
   document.querySelectorAll('.flat-product-select').forEach(sel => {
     sel.querySelectorAll('optgroup').forEach(og => {
       const tipoMap = {
-        'notebook':'Notebooks','servidor':'Servidores','impresora':'Impresoras',
-        'networking':'Networking','storage':'Almacenamiento','servicio-tic':'Servicios TIC'
+        'notebook':'Notebook','servidor':'Server & Storage','impresora':'Impresoras',
+        'networking':'Networking','storage':'Licencias & Atach','servicio-tic':'Servicios TIC'
       };
       const show = tipo === 'todos' || og.label === (tipoMap[tipo] || tipo);
       og.style.display = show ? '' : 'none';
@@ -156,19 +167,8 @@ window.clsSetCat = function(tipo, btn) {
   });
 };
 
-function igbOpenAccount(e){
-  e.preventDefault();
-  if(window.igbAuth){
-    window.igbAuth.open('login');
-  } else {
-    window.addEventListener('supabase:ready',function(){
-      window.igbAuth.open('login');
-    },{once:true});
-  }
-}
 </script>
 <!-- ════════════════ FIN NAVBAR ════════════════ -->
-
 
 <!-- ════════════════════════════════════════
      CABECERA
@@ -200,7 +200,6 @@ function igbOpenAccount(e){
     </div>
   </div>
 </div>
-
 
 <!-- ════════════════════════════════════════
      BARRA DE PROGRESO
@@ -240,7 +239,6 @@ function igbOpenAccount(e){
     </div>
   </div>
 </div>
-
 
 <!-- ════════════════════════════════════════
      LAYOUT PRINCIPAL
@@ -324,7 +322,6 @@ function igbOpenAccount(e){
 
   </aside><!-- /config-left-sidebar -->
 
-
   <!-- ── WIZARD ── -->
   <div class="config-main">
 
@@ -339,10 +336,10 @@ function igbOpenAccount(e){
           Todos <span id="cnt-todos">—</span>
         </button>
         <button class="flat-cat-chip" data-tipo="notebook" onclick="clsSetCat('notebook',this)">
-          Notebooks <span id="cnt-notebook">—</span>
+          Notebook <span id="cnt-notebook">—</span>
         </button>
         <button class="flat-cat-chip" data-tipo="servidor" onclick="clsSetCat('servidor',this)">
-          Servidores <span id="cnt-servidor">—</span>
+          Server &amp; Storage <span id="cnt-servidor">—</span>
         </button>
         <button class="flat-cat-chip" data-tipo="impresora" onclick="clsSetCat('impresora',this)">
           Impresoras <span id="cnt-impresora">—</span>
@@ -351,7 +348,7 @@ function igbOpenAccount(e){
           Networking <span id="cnt-networking">—</span>
         </button>
         <button class="flat-cat-chip" data-tipo="storage" onclick="clsSetCat('storage',this)">
-          Almacenamiento <span id="cnt-storage">—</span>
+          Licencias &amp; Atach <span id="cnt-storage">—</span>
         </button>
         <button class="flat-cat-chip" data-tipo="servicio-tic" onclick="clsSetCat('servicio-tic',this)">
           Servicios TIC <span id="cnt-servicio-tic">—</span>
@@ -387,7 +384,6 @@ function igbOpenAccount(e){
       <div id="catalogoProductos"></div>
 
     </div><!-- /paso 1 -->
-
 
     <!-- ╔══════════════════════════════╗
          PASO 2 — DATOS DE EMPRESA
@@ -448,41 +444,13 @@ function igbOpenAccount(e){
           <label class="config-label">Email <span class="req">*</span></label>
           <input type="email" id="email" class="config-input" placeholder="correo@empresa.cl" autocomplete="email">
         </div>
-        <div class="config-field">
-          <label class="config-label">N° de empleados</label>
-          <select id="empleados" class="config-input">
-            <option value="">Selecciona</option>
-            <option>1 – 10</option>
-            <option>11 – 50</option>
-            <option>51 – 200</option>
-            <option>201 – 500</option>
-            <option>500+</option>
-          </select>
-        </div>
-        <div class="config-field">
-          <label class="config-label">Rubro</label>
-          <select id="rubro" class="config-input">
-            <option value="">Selecciona rubro</option>
-            <option>Tecnología</option>
-            <option>Salud</option>
-            <option>Educación</option>
-            <option>Retail / Comercio</option>
-            <option>Construcción</option>
-            <option>Finanzas / Seguros</option>
-            <option>Manufactura</option>
-            <option>Logística / Transporte</option>
-            <option>Servicios profesionales</option>
-            <option>Gobierno / Sector público</option>
-            <option>Otro</option>
-          </select>
-        </div>
+
         <div class="config-field config-field--full">
           <label class="config-label">Notas adicionales</label>
           <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
         </div>
       </div>
     </div><!-- /paso 2 -->
-
 
     <!-- ╔══════════════════════════════╗
          PASO 3 — RESUMEN
@@ -536,7 +504,6 @@ function igbOpenAccount(e){
       <div id="summaryInfo"></div>
 
     </div><!-- /paso 3 -->
-
 
     <!-- ╔══════════════════════════════╗
          PASO 4 — SIMULADOR
@@ -620,7 +587,6 @@ function igbOpenAccount(e){
       </div>
     </div><!-- /paso 4 -->
 
-
     <!-- ── NAVEGACIÓN ── -->
     <div class="wizard-nav">
       <button class="wizard-btn wizard-btn--prev" id="btnPrev" onclick="prevStep()" style="display:none">← Anterior</button>
@@ -635,7 +601,7 @@ function igbOpenAccount(e){
     <div class="bb-col bb-col--equipos">
       <div class="bb-label">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        Equipos
+        EQUIPOS
       </div>
       <div class="bb-value">$<span id="totalEquipos">0</span></div>
       <div class="bb-sub"><span id="countEquipos">0</span> unid.</div>
@@ -666,9 +632,9 @@ function igbOpenAccount(e){
     <div class="bb-divider"></div>
 
     <div class="bb-col bb-col--total">
-      <div class="bb-label">Total mensual</div>
+      <div class="bb-label">Total</div>
       <div class="bb-value bb-value--orange">$<span id="totalGeneral">0</span></div>
-      <div class="bb-sub">Plazo <span id="plazoSidebarLabel">24</span> m</div>
+      <div class="bb-sub">+ IVA · Plazo <span id="plazoSidebarLabel">24</span> m</div>
     </div>
 
     <div class="bb-divider"></div>
@@ -690,7 +656,6 @@ function igbOpenAccount(e){
   </aside>
 
 </div><!-- /config-layout -->
-
 
 <!-- ════════════════════════════════════════
      MODAL DE CONFIRMACIÓN
@@ -720,7 +685,6 @@ function igbOpenAccount(e){
 
   </div>
 </div>
-
 
 <!-- ════════════════════════════════════════
      FOOTER
@@ -786,7 +750,6 @@ function igbOpenAccount(e){
     </div>
   </div>
 </div>
-
 
 <!-- ════════════════════════════════════════
      SCRIPTS — orden crítico
