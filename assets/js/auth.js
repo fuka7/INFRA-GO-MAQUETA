@@ -302,7 +302,7 @@
   }
 
   /* ── Inicializar eventos ── */
-  function init() {
+  async function init() {
     buildModal();
 
     const overlay = document.getElementById('authOverlay');
@@ -419,10 +419,24 @@
 
       setSubmitLoading(btn, true);
 
-      const { data, error } = await sb().auth.signInWithPassword({
-        email:    email.value.trim().toLowerCase(),
-        password: pw.value,
-      });
+      // Verificar que supabase esté disponible
+      if (!sb()) {
+        setError(email, 'Error de conexión. Recarga la página.');
+        setSubmitLoading(btn, false);
+        return;
+      }
+
+      let data, error;
+      try {
+        ({ data, error } = await sb().auth.signInWithPassword({
+          email:    email.value.trim().toLowerCase(),
+          password: pw.value,
+        }));
+      } catch(err) {
+        setError(email, 'Error de conexión. Intenta de nuevo.');
+        setSubmitLoading(btn, false);
+        return;
+      }
 
       setSubmitLoading(btn, false);
 
@@ -558,7 +572,8 @@
     });
 
     /* Hidratar sesión existente al cargar la página */
-    sb().auth.getSession().then(async ({ data: { session } }) => {
+    try {
+      const { data: { session } } = await sb().auth.getSession();
       if (session) {
         const { data: profile } = await sb()
           .from('profiles')
@@ -572,9 +587,11 @@
           phone: profile?.phone || '',
         };
       }
-      updateNavbar();
-      guardConfigurador();
-    });
+    } catch(e) {
+      console.warn('getSession error:', e);
+    }
+    updateNavbar();
+    guardConfigurador();
   }
 
   /* ── Actualizar botón Mi cuenta en navbar ── */
@@ -589,10 +606,9 @@
           <small>Sesión activa</small>
           <strong>${currentUser.email.split('@')[0]}</strong>
         </span>`;
-      accountLink.href    = '#';
-      accountLink.onclick = (e) => { e.preventDefault(); logout(); };
+      accountLink.dataset.authState = 'logged';
     } else {
-      accountLink.onclick = (e) => { e.preventDefault(); openAuth('login'); };
+      accountLink.dataset.authState = 'guest';
     }
   }
 
@@ -641,13 +657,56 @@
   }
 
   /* ── Init ── */
-  // config.js (module) dispara 'supabase:ready' cuando window.supabase está listo.
-  // auth.js (defer, non-module) puede correr antes — esperamos el evento si hace falta.
+  // Exponemos igbAuth INMEDIATAMENTE con cola de pendientes,
+  // así igbOpenAccount() funciona aunque auth no haya terminado de inicializarse.
+  let _pendingOpen = null;
+  let _ready = false;
+
+  window.igbAuth = {
+    open: function(tab, redirect) {
+      if (_ready) {
+        openAuth(tab || 'login', redirect || null);
+      } else {
+        _pendingOpen = { tab: tab || 'login', redirect: redirect || null };
+      }
+    },
+    close:   closeAuth,
+    logout:  function() { logout(); },
+    current: () => currentUser,
+    isLoggedIn: () => !!currentUser,
+  };
+
+  // Handler global para clicks en .igb-account — no depende de onclick en HTML
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.igb-account');
+    if (!btn) return;
+    e.preventDefault();
+    if (btn.dataset.authState === 'logged') {
+      logout();
+    } else {
+      window.igbAuth.open('login');
+    }
+  });
+
   function startWhenReady() {
     if (window.supabase) {
-      init();
+      init().then(() => {
+        _ready = true;
+        if (_pendingOpen) {
+          openAuth(_pendingOpen.tab, _pendingOpen.redirect);
+          _pendingOpen = null;
+        }
+      });
     } else {
-      window.addEventListener('supabase:ready', init, { once: true });
+      window.addEventListener('supabase:ready', function() {
+        init().then(() => {
+          _ready = true;
+          if (_pendingOpen) {
+            openAuth(_pendingOpen.tab, _pendingOpen.redirect);
+            _pendingOpen = null;
+          }
+        });
+      }, { once: true });
     }
   }
 
@@ -656,13 +715,5 @@
   } else {
     startWhenReady();
   }
-
-  /* Exponer globalmente */
-  window.igbAuth = {
-    open:    openAuth,
-    close:   closeAuth,
-    logout,
-    current: () => currentUser,
-  };
 
 })();

@@ -191,12 +191,17 @@ function igbGoToCotizador(e){
 }
 function igbOpenAccount(e){
   e.preventDefault();
+  // igbAuth.open() maneja la cola internamente si auth aún no está listo
   if(window.igbAuth){
     window.igbAuth.open('login');
   } else {
-    window.addEventListener('supabase:ready', function(){
-      window.igbAuth.open('login');
-    }, { once: true });
+    // Retry cada 100ms hasta que igbAuth esté disponible (máx 3s)
+    var tries = 0;
+    var interval = setInterval(function(){
+      tries++;
+      if(window.igbAuth){ clearInterval(interval); window.igbAuth.open('login'); }
+      else if(tries > 30) clearInterval(interval);
+    }, 100);
   }
 }
 </script>
