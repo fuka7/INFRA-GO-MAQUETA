@@ -1,19 +1,16 @@
 /* ═══════════════════════════════════════════════
    auth.js — InfraGo
-   Modal Login / Registro — solo frontend
+   Modal Login / Registro — conectado a Supabase
    © 2026 InfraGo SpA / TIC Managers
 ═══════════════════════════════════════════════ */
 
 (function () {
 
-  /* ── Estado ── */
-  const state = {
-    users: JSON.parse(localStorage.getItem('igb_users') || '[]'),
-    current: JSON.parse(localStorage.getItem('igb_current') || 'null'),
-  };
+  /* ── Supabase (inicializado en config.js como window.supabase) ── */
+  const sb = () => window.supabase;
 
-  function saveUsers()   { localStorage.setItem('igb_users',   JSON.stringify(state.users));   }
-  function saveCurrent() { localStorage.setItem('igb_current', JSON.stringify(state.current)); }
+  /* ── Estado de sesión en memoria (se hidrata desde Supabase) ── */
+  let currentUser = null; // { email, rut, phone }
 
   /* ── Helpers de validación ── */
   const validators = {
@@ -21,7 +18,6 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
     },
     rut(v) {
-      // Formato: 12.345.678-9 o 12345678-9 o 123456789
       v = v.replace(/\./g, '').replace(/-/g, '').trim().toLowerCase();
       if (!/^\d{7,8}[0-9k]$/.test(v)) return false;
       const dv  = v.slice(-1);
@@ -82,6 +78,12 @@
     input.classList.remove('error', 'ok');
     const err = input.closest('.auth-field')?.querySelector('.auth-error-msg');
     if (err) err.classList.remove('show');
+  }
+
+  function setSubmitLoading(btn, loading) {
+    btn.disabled = loading;
+    btn.style.opacity = loading ? '0.7' : '';
+    btn.style.cursor  = loading ? 'wait' : '';
   }
 
   /* ── Construir el modal HTML ── */
@@ -155,14 +157,16 @@
             <span class="auth-error-msg"></span>
           </div>
 
-          <div class="auth-forgot"><a href="#">¿Olvidaste tu contraseña?</a></div>
+          <div class="auth-forgot"><a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></div>
 
-          <button type="submit" class="auth-submit">
+          <button type="submit" class="auth-submit" id="btnLogin">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/>
             </svg>
             Iniciar sesión
           </button>
+
+          <div class="auth-error-msg" id="loginGlobalError" style="margin-top:8px;text-align:center;"></div>
 
         </form>
       </div>
@@ -179,7 +183,7 @@
             </svg>
           </div>
           <h3>¡Cuenta creada!</h3>
-          <p>Ya puedes iniciar sesión con tu correo y contraseña.</p>
+          <p>Revisa tu correo para confirmar tu cuenta y luego inicia sesión.</p>
         </div>
 
         <form class="auth-form" id="formRegister" novalidate>
@@ -275,7 +279,7 @@
           </label>
           <span class="auth-error-msg" id="termsError"></span>
 
-          <button type="submit" class="auth-submit">
+          <button type="submit" class="auth-submit" id="btnRegister">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/>
               <circle cx="9" cy="7" r="4"/>
@@ -284,6 +288,8 @@
             </svg>
             Crear cuenta
           </button>
+
+          <div class="auth-error-msg" id="registerGlobalError" style="margin-top:8px;text-align:center;"></div>
 
         </form>
       </div>
@@ -324,7 +330,6 @@
     /* Formato RUT en tiempo real */
     const rutInput = document.getElementById('regRut');
     rutInput.addEventListener('input', () => {
-      const pos = rutInput.selectionStart;
       rutInput.value = formatRut(rutInput.value);
     });
     rutInput.addEventListener('blur', () => {
@@ -334,11 +339,10 @@
     });
 
     /* Fuerza de contraseña */
-    const pwInput = document.getElementById('regPassword');
+    const pwInput    = document.getElementById('regPassword');
     const pwStrength = document.getElementById('pwStrength');
     const pwLabel    = document.getElementById('pwLabel');
-    const bars = [document.getElementById('bar1'), document.getElementById('bar2'),
-                  document.getElementById('bar3'), document.getElementById('bar4')];
+    const bars = ['bar1','bar2','bar3','bar4'].map(id => document.getElementById(id));
 
     pwInput.addEventListener('input', () => {
       if (!pwInput.value) { pwStrength.classList.remove('show'); return; }
@@ -372,108 +376,220 @@
       match ? setOk(this) : setError(this, 'Las contraseñas no coinciden');
     });
 
-    /* Submit LOGIN */
-    document.getElementById('formLogin').addEventListener('submit', function(e) {
+    /* Recuperar contraseña */
+    document.getElementById('forgotPasswordLink').addEventListener('click', async function(e) {
       e.preventDefault();
+      const emailVal = document.getElementById('loginEmail').value.trim();
+      if (!emailVal || !validators.email(emailVal)) {
+        setError(document.getElementById('loginEmail'), 'Ingresa tu correo primero');
+        return;
+      }
+      const { error } = await sb().auth.resetPasswordForEmail(emailVal, {
+        redirectTo: window.location.origin + '/reset-password.html',
+      });
+      const globalErr = document.getElementById('loginGlobalError');
+      if (error) {
+        globalErr.textContent = 'Error al enviar el correo. Intenta de nuevo.';
+        globalErr.classList.add('show');
+      } else {
+        globalErr.style.color = 'var(--color-ok, #22c55e)';
+        globalErr.textContent = 'Te enviamos un correo de recuperación.';
+        globalErr.classList.add('show');
+      }
+    });
+
+    /* ════════════════════════════════════════════
+       Submit LOGIN → Supabase signInWithPassword
+    ════════════════════════════════════════════ */
+    document.getElementById('formLogin').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email     = document.getElementById('loginEmail');
+      const pw        = document.getElementById('loginPassword');
+      const btn       = document.getElementById('btnLogin');
+      const globalErr = document.getElementById('loginGlobalError');
+
+      globalErr.classList.remove('show');
+
+      // Validación frontend
       let ok = true;
-      const email = document.getElementById('loginEmail');
-      const pw    = document.getElementById('loginPassword');
-
-      if (!validators.email(email.value)) { setError(email, 'Correo inválido'); ok = false; }
-      else setOk(email);
-
-      if (!pw.value) { setError(pw, 'Ingresa tu contraseña'); ok = false; }
-      else setOk(pw);
-
+      if (!validators.email(email.value)) { setError(email, 'Correo inválido'); ok = false; } else setOk(email);
+      if (!pw.value)                       { setError(pw, 'Ingresa tu contraseña'); ok = false; } else setOk(pw);
       if (!ok) return;
 
-      const user = state.users.find(u => u.email === email.value.trim().toLowerCase() && u.password === pw.value);
-      if (!user) {
-        setError(email, 'Correo o contraseña incorrectos');
+      setSubmitLoading(btn, true);
+
+      const { data, error } = await sb().auth.signInWithPassword({
+        email:    email.value.trim().toLowerCase(),
+        password: pw.value,
+      });
+
+      setSubmitLoading(btn, false);
+
+      if (error) {
+        // Errores comunes de Supabase → mensajes en español
+        const msg = error.message.includes('Invalid login')
+          ? 'Correo o contraseña incorrectos'
+          : error.message.includes('Email not confirmed')
+          ? 'Debes confirmar tu correo antes de ingresar'
+          : 'Error al iniciar sesión. Intenta de nuevo.';
+        setError(email, msg);
         setError(pw, ' ');
         return;
       }
 
-      state.current = { email: user.email, rut: user.rut, phone: user.phone };
-      saveCurrent();
+      // Obtener perfil del usuario (rut, phone)
+      const { data: profile } = await sb()
+        .from('profiles')
+        .select('rut, phone')
+        .eq('id', data.user.id)
+        .single();
+
+      currentUser = {
+        email: data.user.email,
+        rut:   profile?.rut   || '',
+        phone: profile?.phone || '',
+      };
+
       updateNavbar();
 
-      // Capturar el redirect antes de cerrar el modal
       const redirectTarget = window._authRedirect;
-
       document.getElementById('formLogin').style.display = 'none';
       document.getElementById('loginSuccess').classList.add('show');
+
       setTimeout(() => {
-        closeAuth(false); // no borrar redirect — ya lo tenemos capturado
-        window._authRedirect = null; // limpiar ahora que ya navegamos
+        closeAuth(false);
+        window._authRedirect = null;
         if (redirectTarget) window.location.href = redirectTarget;
       }, 1500);
     });
 
-    /* Submit REGISTRO */
-    document.getElementById('formRegister').addEventListener('submit', function(e) {
+    /* ════════════════════════════════════════════
+       Submit REGISTRO → Supabase signUp
+    ════════════════════════════════════════════ */
+    document.getElementById('formRegister').addEventListener('submit', async function(e) {
       e.preventDefault();
-      let ok = true;
 
-      const email   = document.getElementById('regEmail');
-      const rut     = document.getElementById('regRut');
-      const phone   = document.getElementById('regPhone');
-      const pw      = document.getElementById('regPassword');
-      const pwc     = document.getElementById('regPasswordConfirm');
-      const terms   = document.getElementById('regTerms');
+      const email    = document.getElementById('regEmail');
+      const rut      = document.getElementById('regRut');
+      const phone    = document.getElementById('regPhone');
+      const pw       = document.getElementById('regPassword');
+      const pwc      = document.getElementById('regPasswordConfirm');
+      const terms    = document.getElementById('regTerms');
       const termsErr = document.getElementById('termsError');
+      const btn      = document.getElementById('btnRegister');
+      const globalErr = document.getElementById('registerGlobalError');
 
-      if (!validators.email(email.value))  { setError(email, 'Correo inválido'); ok = false; } else setOk(email);
-      if (!validators.rut(rut.value))      { setError(rut,   'RUT inválido');    ok = false; } else setOk(rut);
-      if (!validators.phone(phone.value))  { setError(phone, 'Teléfono inválido'); ok = false; } else setOk(phone);
-      if (!validators.password(pw.value))  { setError(pw, 'Mínimo 8 caracteres'); ok = false; } else setOk(pw);
+      globalErr.classList.remove('show');
+
+      // Validación frontend
+      let ok = true;
+      if (!validators.email(email.value))  { setError(email, 'Correo inválido'); ok = false; }    else setOk(email);
+      if (!validators.rut(rut.value))      { setError(rut,   'RUT inválido'); ok = false; }       else setOk(rut);
+      if (!validators.phone(phone.value))  { setError(phone, 'Teléfono inválido'); ok = false; }  else setOk(phone);
+      if (!validators.password(pw.value))  { setError(pw, 'Mínimo 8 caracteres'); ok = false; }   else setOk(pw);
       if (pwc.value !== pw.value)          { setError(pwc, 'Las contraseñas no coinciden'); ok = false; } else if (pwc.value) setOk(pwc);
       if (!terms.checked) {
         termsErr.textContent = 'Debes aceptar los términos'; termsErr.classList.add('show'); ok = false;
       } else {
         termsErr.classList.remove('show');
       }
-
       if (!ok) return;
 
-      const emailLower = email.value.trim().toLowerCase();
-      if (state.users.find(u => u.email === emailLower)) {
-        setError(email, 'Este correo ya está registrado'); return;
+      setSubmitLoading(btn, true);
+
+      // signUp envía RUT y teléfono en metadata → el trigger los inserta en profiles
+      const { error } = await sb().auth.signUp({
+        email:    email.value.trim().toLowerCase(),
+        password: pw.value,
+        options: {
+          data: {
+            rut:   rut.value,
+            phone: phone.value,
+          },
+        },
+      });
+
+      setSubmitLoading(btn, false);
+
+      if (error) {
+        const msg = error.message.includes('already registered')
+          ? 'Este correo ya está registrado'
+          : 'Error al crear la cuenta. Intenta de nuevo.';
+        setError(email, msg);
+        return;
       }
 
-      state.users.push({ email: emailLower, rut: rut.value, phone: phone.value, password: pw.value });
-      saveUsers();
-
+      // Éxito → mostrar pantalla de confirmación
       document.getElementById('formRegister').style.display = 'none';
       document.getElementById('registerSuccess').classList.add('show');
-      // Preserve any pending redirect across the tab switch
+
       const pendingRedirect = window._authRedirect;
       setTimeout(() => {
         switchTab('login');
         window._authRedirect = pendingRedirect;
-        // Reset register panel for next use
         document.getElementById('registerSuccess').classList.remove('show');
         document.getElementById('formRegister').style.display = '';
-      }, 2200);
+      }, 3000);
     });
 
-    /* Actualizar navbar si ya hay sesión */
-    updateNavbar();
+    /* Escuchar cambios de sesión (ej: confirmación por correo en otra pestaña) */
+    sb().auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        if (!currentUser) {
+          const { data: profile } = await sb()
+            .from('profiles')
+            .select('rut, phone')
+            .eq('id', session.user.id)
+            .single();
+
+          currentUser = {
+            email: session.user.email,
+            rut:   profile?.rut   || '',
+            phone: profile?.phone || '',
+          };
+          updateNavbar();
+        }
+      }
+      if (event === 'SIGNED_OUT') {
+        currentUser = null;
+        updateNavbar();
+      }
+    });
+
+    /* Hidratar sesión existente al cargar la página */
+    sb().auth.getSession().then(async ({ data: { session } }) => {
+      if (session) {
+        const { data: profile } = await sb()
+          .from('profiles')
+          .select('rut, phone')
+          .eq('id', session.user.id)
+          .single();
+
+        currentUser = {
+          email: session.user.email,
+          rut:   profile?.rut   || '',
+          phone: profile?.phone || '',
+        };
+      }
+      updateNavbar();
+      guardConfigurador();
+    });
   }
 
   /* ── Actualizar botón Mi cuenta en navbar ── */
   function updateNavbar() {
     const accountLink = document.querySelector('.igb-account');
     if (!accountLink) return;
-    if (state.current) {
-      const initials = state.current.email.slice(0,2).toUpperCase();
+    if (currentUser) {
+      const initials = currentUser.email.slice(0, 2).toUpperCase();
       accountLink.innerHTML = `
         <span style="width:32px;height:32px;background:#e8920a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">${initials}</span>
         <span class="igb-account-text">
           <small>Sesión activa</small>
-          <strong>${state.current.email.split('@')[0]}</strong>
+          <strong>${currentUser.email.split('@')[0]}</strong>
         </span>`;
-      accountLink.href = '#';
+      accountLink.href    = '#';
       accountLink.onclick = (e) => { e.preventDefault(); logout(); };
     } else {
       accountLink.onclick = (e) => { e.preventDefault(); openAuth('login'); };
@@ -481,10 +597,10 @@
   }
 
   /* ── Logout ── */
-  function logout() {
+  async function logout() {
     if (!confirm('¿Cerrar sesión?')) return;
-    state.current = null;
-    saveCurrent();
+    await sb().auth.signOut();
+    currentUser = null;
     updateNavbar();
   }
 
@@ -492,7 +608,7 @@
   function openAuth(tab = 'login', redirectAfter = null) {
     window._authRedirect = redirectAfter;
     const overlay = document.getElementById('authOverlay');
-    overlay.style.pointerEvents = ''; // resetear por si closeAuth lo había deshabilitado
+    overlay.style.pointerEvents = '';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     switchTab(tab);
@@ -501,18 +617,10 @@
   function closeAuth(clearRedirect = true) {
     const overlay = document.getElementById('authOverlay');
     overlay.classList.remove('open');
-
-    // Restaurar scroll del body solo si el menú mobile del navbar no lo bloqueó también
     const mobileMenuOpen = document.getElementById('igbMobile')?.classList.contains('open');
-    if (!mobileMenuOpen) {
-      document.body.style.overflow = '';
-    }
-
-    // Asegurar que el overlay no bloquee clicks después de cerrarse
+    if (!mobileMenuOpen) document.body.style.overflow = '';
     overlay.style.pointerEvents = 'none';
     setTimeout(() => { overlay.style.pointerEvents = ''; }, 50);
-
-    // Solo limpiar redirect si el usuario cerró manualmente (no en flujo interno)
     if (clearRedirect) window._authRedirect = null;
   }
 
@@ -524,8 +632,8 @@
   /* ── Proteger configurador ── */
   function guardConfigurador() {
     if (window.location.pathname.includes('configurador')) {
-      if (!state.current) {
-        openAuth('login', '/configurador.html');
+      if (!currentUser) {
+        openAuth('login', window.location.pathname + window.location.search);
         return true;
       }
     }
@@ -533,14 +641,28 @@
   }
 
   /* ── Init ── */
+  // config.js (module) dispara 'supabase:ready' cuando window.supabase está listo.
+  // auth.js (defer, non-module) puede correr antes — esperamos el evento si hace falta.
+  function startWhenReady() {
+    if (window.supabase) {
+      init();
+    } else {
+      window.addEventListener('supabase:ready', init, { once: true });
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { init(); guardConfigurador(); });
+    document.addEventListener('DOMContentLoaded', startWhenReady);
   } else {
-    init();
-    guardConfigurador();
+    startWhenReady();
   }
 
   /* Exponer globalmente */
-  window.igbAuth = { open: openAuth, close: closeAuth, logout, current: () => state.current };
+  window.igbAuth = {
+    open:    openAuth,
+    close:   closeAuth,
+    logout,
+    current: () => currentUser,
+  };
 
 })();
