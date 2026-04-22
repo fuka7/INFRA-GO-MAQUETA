@@ -7,7 +7,7 @@
 
   var NAVBAR_HTML = `<!-- ╔══════════════════════════════════════════════════╗
      NAVBAR — InfraGo
-     Inyectado por /assets/js/includes.js en todas las páginas
+     Inyectado por /assets/js/navbar-inline.js en todas las páginas
      ╚══════════════════════════════════════════════════╝ -->
 
 <!-- BARRA SUPERIOR -->
@@ -61,25 +61,79 @@
   </div>
 </div>
 
-<!-- FILA PRINCIPAL: logo + buscador + cuenta + carro -->
+<!-- NAVBAR ÚNICO -->
 <header class="igb-main">
 
   <a class="igb-logo" href="/index.html">
     Infra<span>Go</span>
   </a>
 
-  <div class="igb-search">
-    <input class="igb-search-input" type="text" placeholder="Buscar productos, marcas y más...">
-    <button class="igb-search-btn" type="button" onclick="igbSearch()" aria-label="Buscar">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+  <!-- Dropdown categorías -->
+  <div class="igb-categories" id="igbCats">
+    <button class="igb-cat-trigger" type="button" onclick="igbToggleCats()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      Categorías
+      <svg class="igb-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9"/>
       </svg>
     </button>
+
+    <div class="igb-dropdown">
+      <a class="igb-dropdown-item" href="/tienda.html?cat=notebooks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+        Notebooks
+      </a>
+      <a class="igb-dropdown-item" href="/tienda.html?cat=all-in-one">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="2" y="3" width="20" height="15" rx="2"/><circle cx="12" cy="11" r="3"/><path d="M8 21h8M12 18v3"/>
+        </svg>
+        All in One (AIO)
+      </a>
+      <a class="igb-dropdown-item" href="/tienda.html?cat=pcs">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        PCs de Escritorio
+      </a>
+      <a class="igb-dropdown-item" href="/tienda.html?cat=accesorios">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3v4M8 3v4"/>
+        </svg>
+        Accesorios
+      </a>
+    </div>
   </div>
+
+  <!-- Links principales -->
+  <ul class="igb-links">
+    <li><a href="/index.html">Inicio</a></li>
+    <li><a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a></li>
+    <li><a href="/tienda.html">Tienda</a></li>
+    <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
+  </ul>
 
   <div class="igb-actions">
     <a class="igb-cta igb-cta-header" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
       Agendar reunión
+    </a>
+
+    <!-- Carrito — visible solo en tienda.html y producto.html via carrito.js -->
+    <a class="igb-cart" href="/carrito.html" style="display:none;">
+      <div class="igb-cart-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span class="igb-cart-count" style="display:none;">0</span>
+      </div>
+      <span><small>Mi</small><strong>Carro</strong></span>
     </a>
 
     <a class="igb-account" href="#">
@@ -92,18 +146,6 @@
         <strong>Mi cuenta</strong>
       </span>
     </a>
-
-    <a class="igb-cart" href="/carrito.html">
-      <span class="igb-cart-wrap">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
-        </svg>
-        <span class="igb-cart-count">0</span>
-      </span>
-      <strong>Carro</strong>
-    </a>
   </div>
 
   <!-- Hamburguesa mobile -->
@@ -112,63 +154,6 @@
   </button>
 
 </header>
-
-<!-- FILA SECUNDARIA: categorías + links + CTA -->
-<nav class="igb-nav">
-  <div class="igb-nav-inner">
-
-    <!-- Dropdown categorías -->
-    <div class="igb-categories" id="igbCats">
-      <button class="igb-cat-trigger" type="button" onclick="igbToggleCats()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-        Categorías
-        <svg class="igb-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-
-      <div class="igb-dropdown">
-        <a class="igb-dropdown-item" href="/tienda.html?cat=notebooks">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-          </svg>
-          Notebooks
-        </a>
-        <a class="igb-dropdown-item" href="/tienda.html?cat=all-in-one">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="2" y="3" width="20" height="15" rx="2"/><circle cx="12" cy="11" r="3"/><path d="M8 21h8M12 18v3"/>
-          </svg>
-          All in One (AIO)
-        </a>
-        <a class="igb-dropdown-item" href="/tienda.html?cat=pcs">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-          </svg>
-          PCs de Escritorio
-        </a>
-        <a class="igb-dropdown-item" href="/tienda.html?cat=accesorios">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3v4M8 3v4"/>
-          </svg>
-          Accesorios
-        </a>
-      </div>
-    </div>
-
-    <!-- Links principales -->
-    <ul class="igb-links">
-      <li><a href="/index.html">Inicio</a></li>
-      <li><a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a></li>
-      <li><a href="/tienda.html">Tienda</a></li>
-      <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
-    </ul>
-
-  </div>
-</nav>
 
 
 <!-- MENÚ MOBILE -->

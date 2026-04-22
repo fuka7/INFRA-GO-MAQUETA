@@ -1493,7 +1493,7 @@ footer {
 .hero-carousel {
   position: relative;
   overflow: hidden;
-  height: calc(100vh - 144px);
+  height: calc(100vh - 96px);
   min-height: 460px;
 }
 

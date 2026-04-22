@@ -703,31 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <script type="module" src="/assets/js/config.js"></script>
 <script src="/assets/js/auth.js" defer></script>
 
-<!-- Navbar (inline) + Footer (async fetch) -->
 <script src="/assets/js/navbar-inline.js"></script>
-
-<!-- Cargar footer -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var placeholder = document.getElementById('footer-placeholder');
-  if (!placeholder) return;
-  
-  fetch('/footer.html')
-    .then(r => r.ok ? r.text() : fetch('footer.html').then(r => r.text()))
-    .then(html => {
-      html = html.replace(/<script[^>]*>[\s\S]*?WebSocket[\s\S]*?<\/script>/gi, '');
-      var parser = new DOMParser();
-      var doc = parser.parseFromString(html, 'text/html');
-      placeholder.innerHTML = '';
-      Array.from(doc.body.childNodes).forEach(function(node) {
-        try { placeholder.appendChild(document.importNode(node, true)); }
-        catch(e) { }
-      });
-    })
-    .catch(function(err) {
-      console.warn('Error cargando footer:', err);
-    });
-});
-</script>
+<script src="/assets/js/footer-inline.js"></script>
 </body>
 </html>

@@ -14,12 +14,15 @@
   /* ════════════════════════════════════════════
      HELPERS DE PERFIL
   ════════════════════════════════════════════ */
-  function igBuildProfile(email, data) {
+  function igBuildProfile(email, data, meta) {
     var d = data || {};
+    var m = meta || {};
     return {
       email:        email                  || '',
-      rut:          d.rut                  || '',
-      phone:        d.phone                || '',
+      nombre:       m.nombre               || d.nombre    || '',
+      apellido:     m.apellido             || d.apellido  || '',
+      rut:          d.rut                  || m.rut       || '',
+      phone:        d.phone                || m.phone     || '',
       razon_social: d.razon_social         || '',
       contacto:     d.contacto             || '',
       cargo:        d.cargo                || '',
@@ -160,6 +163,24 @@
         <form class="auth-form" id="formRegister" novalidate>\
           <div class="auth-row">\
             <div class="auth-field">\
+              <label class="auth-label">Nombre</label>\
+              <div class="auth-input-wrap">\
+                <input class="auth-input" type="text" id="regNombre" placeholder="Juan" autocomplete="given-name">\
+                <span class="auth-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>\
+              </div>\
+              <span class="auth-error-msg"></span>\
+            </div>\
+            <div class="auth-field">\
+              <label class="auth-label">Apellido</label>\
+              <div class="auth-input-wrap">\
+                <input class="auth-input" type="text" id="regApellido" placeholder="González" autocomplete="family-name">\
+                <span class="auth-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>\
+              </div>\
+              <span class="auth-error-msg"></span>\
+            </div>\
+          </div>\
+          <div class="auth-row">\
+            <div class="auth-field">\
               <label class="auth-label">Correo electrónico</label>\
               <div class="auth-input-wrap">\
                 <input class="auth-input" type="email" id="regEmail" placeholder="correo@empresa.cl" autocomplete="email">\
@@ -258,10 +279,19 @@
   function updateNavbar() {
     document.querySelectorAll('.igb-account').forEach(function(link) {
       if (currentUser) {
-        var initials = currentUser.email.slice(0, 2).toUpperCase();
+        var nombre   = (currentUser.nombre   || '').trim();
+        var apellido = (currentUser.apellido || '').trim();
+        var initials = nombre && apellido
+          ? (nombre[0] + apellido[0]).toUpperCase()
+          : nombre
+            ? nombre.slice(0, 2).toUpperCase()
+            : currentUser.email.slice(0, 2).toUpperCase();
+        var displayName = nombre
+          ? (nombre + (apellido ? ' ' + apellido : ''))
+          : currentUser.email.split('@')[0];
         link.innerHTML =
           '<span style="width:32px;height:32px;background:#e8920a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Barlow,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
-          '<span class="igb-account-text"><small>Sesión activa</small><strong>' + currentUser.email.split('@')[0] + '</strong></span>';
+          '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
         link.dataset.igbState = 'logged';
       } else {
         link.dataset.igbState = 'guest';
@@ -430,7 +460,7 @@
         }
         return window.supabase.from('profiles').select('rut, phone, email, razon_social, contacto, cargo, direccion, ciudad, region, sii_fetched').eq('id', res.data.user.id).single()
           .then(function(pr) {
-            currentUser = igBuildProfile(res.data.user.email, pr.data);
+            currentUser = igBuildProfile(res.data.user.email, pr.data, res.data.user.user_metadata);
             igSaveProfileCache(currentUser);
             updateNavbar();
             setLoading(btn, false);
@@ -452,21 +482,25 @@
     // REGISTRO SUBMIT
     document.getElementById('formRegister').addEventListener('submit', function(e) {
       e.preventDefault();
-      var email = document.getElementById('regEmail');
-      var rut   = document.getElementById('regRut');
-      var phone = document.getElementById('regPhone');
-      var pw    = document.getElementById('regPassword');
-      var pwc   = document.getElementById('regPasswordConfirm');
-      var terms = document.getElementById('regTerms');
-      var termsErr = document.getElementById('termsError');
-      var btn   = document.getElementById('btnRegister');
+      var nombre  = document.getElementById('regNombre');
+      var apellido= document.getElementById('regApellido');
+      var email   = document.getElementById('regEmail');
+      var rut     = document.getElementById('regRut');
+      var phone   = document.getElementById('regPhone');
+      var pw      = document.getElementById('regPassword');
+      var pwc     = document.getElementById('regPasswordConfirm');
+      var terms   = document.getElementById('regTerms');
+      var termsErr= document.getElementById('termsError');
+      var btn     = document.getElementById('btnRegister');
       document.getElementById('registerGlobalError').classList.remove('show');
 
       var ok = true;
-      if (!validators.email(email.value))  { setError(email, 'Correo inválido'); ok = false; }   else setOk(email);
-      if (!validators.rut(rut.value))      { setError(rut, 'RUT inválido'); ok = false; }        else setOk(rut);
-      if (!validators.phone(phone.value))  { setError(phone, 'Teléfono inválido'); ok = false; } else setOk(phone);
-      if (!validators.password(pw.value))  { setError(pw, 'Mínimo 8 caracteres'); ok = false; }  else setOk(pw);
+      if (!nombre.value.trim())            { setError(nombre,   'Ingresa tu nombre'); ok = false; }   else setOk(nombre);
+      if (!apellido.value.trim())          { setError(apellido, 'Ingresa tu apellido'); ok = false; } else setOk(apellido);
+      if (!validators.email(email.value))  { setError(email,    'Correo inválido'); ok = false; }     else setOk(email);
+      if (!validators.rut(rut.value))      { setError(rut,      'RUT inválido'); ok = false; }        else setOk(rut);
+      if (!validators.phone(phone.value))  { setError(phone,    'Teléfono inválido'); ok = false; }   else setOk(phone);
+      if (!validators.password(pw.value))  { setError(pw,       'Mínimo 8 caracteres'); ok = false; } else setOk(pw);
       if (pwc.value !== pw.value)          { setError(pwc, 'Las contraseñas no coinciden'); ok = false; } else if (pwc.value) setOk(pwc);
       if (!terms.checked) { termsErr.textContent = 'Debes aceptar los términos'; termsErr.classList.add('show'); ok = false; }
       else termsErr.classList.remove('show');
@@ -476,7 +510,7 @@
       window.supabase.auth.signUp({
         email: email.value.trim().toLowerCase(),
         password: pw.value,
-        options: { data: { rut: rut.value, phone: phone.value } }
+        options: { data: { nombre: nombre.value.trim(), apellido: apellido.value.trim(), rut: rut.value, phone: phone.value } }
       }).then(function(res) {
         setLoading(btn, false);
         if (res.error) {
@@ -507,7 +541,7 @@
       var session = res.data && res.data.session;
       if (session) {
         window.supabase.from('profiles').select('rut, phone, email, razon_social, contacto, cargo, direccion, ciudad, region, sii_fetched').eq('id', session.user.id).single().then(function(pr) {
-          currentUser = igBuildProfile(session.user.email, pr.data);
+          currentUser = igBuildProfile(session.user.email, pr.data, session.user.user_metadata);
           igSaveProfileCache(currentUser);
           updateNavbar();
           guardConfigurador();
@@ -520,7 +554,7 @@
     window.supabase.auth.onAuthStateChange(function(event, session) {
       if (event === 'SIGNED_IN' && session && !currentUser) {
         window.supabase.from('profiles').select('rut, phone, email, razon_social, contacto, cargo, direccion, ciudad, region, sii_fetched').eq('id', session.user.id).single().then(function(pr) {
-          currentUser = igBuildProfile(session.user.email, pr.data);
+          currentUser = igBuildProfile(session.user.email, pr.data, session.user.user_metadata);
           igSaveProfileCache(currentUser);
           updateNavbar();
         });

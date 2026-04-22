@@ -1,11 +1,10 @@
-<!-- ══════════════════════════════════════
-     FOOTER — InfraGo (v2)
-     Incluir via: <link rel="stylesheet" href="/assets/css/footer.css">
-══════════════════════════════════════ -->
+/**
+ * footer-inline.js — InfraGo
+ * Inyecta el footer en todas las páginas via #footer-placeholder
+ */
+(function () {
 
-<div class="ig-footer-root">
-
-  <!-- FOOTER MAIN -->
+  var FOOTER_HTML = `<div class="ig-footer-root">
   <div class="footer-main">
     <div class="footer-brand">
       <div class="brand-logo">
@@ -23,7 +22,6 @@
         <span class="badge">Soporte 24/7</span>
       </div>
     </div>
-
     <div class="footer-col">
       <div class="col-label">Soluciones</div>
       <ul class="col-links">
@@ -33,7 +31,6 @@
         <li><a href="#">Soluciones de Oficina</a></li>
       </ul>
     </div>
-
     <div class="footer-col">
       <div class="col-label">Empresa</div>
       <ul class="col-links">
@@ -43,34 +40,15 @@
         <li><a href="#">Agendar Demo</a></li>
       </ul>
     </div>
-
     <div class="footer-col">
       <div class="col-label">Contacto</div>
       <ul class="col-links">
-        <li>
-          <a href="mailto:contacto@infrago.cl" class="contact-item">
-            <span class="contact-label">Email</span>
-            <span class="contact-val">contacto@infrago.cl</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="contact-item">
-            <span class="contact-label">Teléfono</span>
-            <span class="contact-val">+56 2 xxxx xxxx</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="contact-item">
-            <span class="contact-label">Dirección</span>
-            <span class="contact-val">Providencia 1208, Of. 307</span>
-          </a>
-        </li>
-        <li><a href="#">Soporte</a></li>
+        <li><a href="mailto:contacto@infrago.cl" class="contact-item"><span class="contact-label">Email</span><span class="contact-val">contacto@infrago.cl</span></a></li>
+        <li><a href="#" class="contact-item"><span class="contact-label">Teléfono</span><span class="contact-val">+56 2 xxxx xxxx</span></a></li>
+        <li><a href="#" class="contact-item"><span class="contact-label">Dirección</span><span class="contact-val">Providencia 1208, Of. 307</span></a></li>
       </ul>
     </div>
   </div>
-
-  <!-- FOOTER BOTTOM -->
   <div class="footer-bottom">
     <div class="bottom-left">
       <span class="copyright">© 2026 InfraGo SpA. Todos los derechos reservados.</span>
@@ -78,16 +56,24 @@
       <span class="made-by">Una empresa de <span>TIC Manager's</span></span>
     </div>
     <div class="footer-socials">
-      <a href="#" class="social-link">LinkedIn</a>
-      <span class="social-sep">·</span>
-      <a href="#" class="social-link">Instagram</a>
-      <span class="social-sep">·</span>
-      <a href="#" class="social-link">Facebook</a>
-      <span class="social-sep">·</span>
-      <a href="#" class="social-link">Términos</a>
-      <span class="social-sep">·</span>
+      <a href="#" class="social-link">LinkedIn</a><span class="social-sep">·</span>
+      <a href="#" class="social-link">Instagram</a><span class="social-sep">·</span>
+      <a href="#" class="social-link">Términos</a><span class="social-sep">·</span>
       <a href="#" class="social-link">Privacidad</a>
     </div>
   </div>
+</div>`;
 
-</div><!-- /.ig-footer-root -->
+  function injectFooter() {
+    var placeholder = document.getElementById('footer-placeholder');
+    if (!placeholder) return;
+    placeholder.outerHTML = FOOTER_HTML;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectFooter);
+  } else {
+    injectFooter();
+  }
+
+})();
