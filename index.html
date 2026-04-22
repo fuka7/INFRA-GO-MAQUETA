@@ -497,6 +497,62 @@
 ══════════════════════════════════════ -->
 <script>
 /* ════════════════════════════════════════════
+   FUNCIONES NAVBAR GLOBAL — Modal de comunas y menú
+════════════════════════════════════════════ */
+function igbOpenComunas(){
+  document.getElementById('igbComunasOverlay').classList.add('open');
+  document.getElementById('igbComunasModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function igbCloseComunas(){
+  document.getElementById('igbComunasOverlay').classList.remove('open');
+  document.getElementById('igbComunasModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function igbToggleCats(){
+  document.getElementById('igbCats').classList.toggle('open');
+}
+function igbToggleMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  var open=menu.classList.toggle('open');
+  if(btn)btn.classList.toggle('open',open);
+  if(ov)ov.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    igbCloseMenu();
+    igbCloseComunas();
+  }
+});
+function igbCloseMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  menu.classList.remove('open');
+  ov.classList.remove('open');
+  if(btn)btn.classList.remove('open');
+  document.body.style.overflow='';
+}
+function igbSearch(){
+  var q=document.querySelector('.igb-search-input').value.trim();
+  if(q) window.location.href='/tienda.html?q='+encodeURIComponent(q);
+}
+function igbCotizar(e){
+  e.preventDefault();
+  window.location.href='/configurador.html';
+  return false;
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var search = document.querySelector('.igb-search-input');
+  if(search) search.addEventListener('keydown',function(e){
+    if(e.key==='Enter') igbSearch();
+  });
+});
+
+/* ════════════════════════════════════════════
    HERO CAROUSEL
 ════════════════════════════════════════════ */
 (function () {
@@ -636,19 +692,42 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<!-- Placeholder para footer inyectado por includes.js -->
+<div id="footer-placeholder"></div>
+
 <script src="/assets/js/index.js"></script>
 <script src="assets/js/chatbot.js"></script>
 <script src="/assets/js/carrito.js"></script>
-
-<!-- Placeholder para footer inyectado -->
-<div id="footer-placeholder"></div>
-
 
 <!-- Supabase + Auth -->
 <script type="module" src="/assets/js/config.js"></script>
 <script src="/assets/js/auth.js" defer></script>
 
-<!-- Inyector de componentes reutilizables -->
+<!-- Navbar (inline) + Footer (async fetch) -->
 <script src="/assets/js/navbar-inline.js"></script>
+
+<!-- Cargar footer -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var placeholder = document.getElementById('footer-placeholder');
+  if (!placeholder) return;
+  
+  fetch('/footer.html')
+    .then(r => r.ok ? r.text() : fetch('footer.html').then(r => r.text()))
+    .then(html => {
+      html = html.replace(/<script[^>]*>[\s\S]*?WebSocket[\s\S]*?<\/script>/gi, '');
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      placeholder.innerHTML = '';
+      Array.from(doc.body.childNodes).forEach(function(node) {
+        try { placeholder.appendChild(document.importNode(node, true)); }
+        catch(e) { }
+      });
+    })
+    .catch(function(err) {
+      console.warn('Error cargando footer:', err);
+    });
+});
+</script>
 </body>
 </html>

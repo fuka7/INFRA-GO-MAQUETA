@@ -776,11 +776,74 @@ window.clsSetCat = function(tipo, btn) {
      2. configurador.js → lógica wizard, llama renderCatalogo()
      3. flat-catalog.js → tabla visual + filtros (reemplaza aplicarFiltros)
      4. auth.js → protección de ruta y sesión
+     5. config.js → Supabase
 ════════════════════════════════════════ -->
+<script type="module" src="/assets/js/config.js"></script>
+<script src="/assets/js/auth.js"></script>
+
+<!-- Funciones navbar global -->
+<script>
+function igbOpenComunas(){
+  var overlay = document.getElementById('igbComunasOverlay');
+  var modal = document.getElementById('igbComunasModal');
+  if(overlay && modal) {
+    overlay.classList.add('open');
+    modal.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+}
+function igbCloseComunas(){
+  var overlay = document.getElementById('igbComunasOverlay');
+  var modal = document.getElementById('igbComunasModal');
+  if(overlay && modal) {
+    overlay.classList.remove('open');
+    modal.classList.remove('open');
+    document.body.style.overflow='';
+  }
+}
+function igbToggleCats(){
+  var cats = document.getElementById('igbCats');
+  if(cats) cats.classList.toggle('open');
+}
+function igbToggleMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  if(!menu) return;
+  var open=menu.classList.toggle('open');
+  if(btn)btn.classList.toggle('open',open);
+  if(ov)ov.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function igbCloseMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  if(menu) menu.classList.remove('open');
+  if(ov) ov.classList.remove('open');
+  if(btn)btn.classList.remove('open');
+  document.body.style.overflow='';
+}
+function igbSearch(){
+  var q=document.querySelector('.igb-search-input');
+  if(q && q.value.trim()) window.location.href='/tienda.html?q='+encodeURIComponent(q.value.trim());
+}
+function igbCotizar(e){
+  if(e) e.preventDefault();
+  window.location.href='/configurador.html';
+  return false;
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    igbCloseMenu();
+    igbCloseComunas();
+  }
+});
+</script>
+
 <script src="/assets/js/catalogo.js"></script>
 <script src="/assets/js/configurador.js"></script>
 <script src="/assets/js/flat-catalog.js"></script>
-<script src="/assets/js/auth.js"></script>
 <script>
 (function() {
 
@@ -818,15 +881,11 @@ window.clsSetCat = function(tipo, btn) {
 </script>
 <!-- FIN Footer deprecado -->
 
-<!-- FIN Footer -->`n`n<!-- Supabase + Auth -->
-<script type="module" src="/assets/js/config.js"></script>
-<script src="/assets/js/auth.js" defer></script>
+<!-- FIN Footer -->
+
 <!-- Pre-relleno paso 3 desde perfil Supabase + SimpleAPI -->
 <script src="/assets/js/rut-prefill.js" defer></script>
 <!-- Inyector de componentes reutilizables -->
 <script src="/assets/js/navbar-inline.js"></script>
 </body>
 </html>
-
-
-

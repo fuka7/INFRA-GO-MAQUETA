@@ -204,11 +204,79 @@ document.querySelector('.igb-search-input').addEventListener('keydown',function(
 </div>
 
 <!-- Scripts -->
+<script type="module" src="/assets/js/config.js"></script>
+<script src="/assets/js/auth.js"></script>
+
+<!-- Funciones navbar global -->
+<script>
+function igbOpenComunas(){
+  var overlay = document.getElementById('igbComunasOverlay');
+  var modal = document.getElementById('igbComunasModal');
+  if(overlay && modal) {
+    overlay.classList.add('open');
+    modal.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+}
+function igbCloseComunas(){
+  var overlay = document.getElementById('igbComunasOverlay');
+  var modal = document.getElementById('igbComunasModal');
+  if(overlay && modal) {
+    overlay.classList.remove('open');
+    modal.classList.remove('open');
+    document.body.style.overflow='';
+  }
+}
+function igbToggleCats(){
+  var cats = document.getElementById('igbCats');
+  if(cats) cats.classList.toggle('open');
+}
+function igbToggleMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  if(!menu) return;
+  var open=menu.classList.toggle('open');
+  if(btn)btn.classList.toggle('open',open);
+  if(ov)ov.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function igbCloseMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  if(menu) menu.classList.remove('open');
+  if(ov) ov.classList.remove('open');
+  if(btn)btn.classList.remove('open');
+  document.body.style.overflow='';
+}
+function igbSearch(){
+  var q=document.querySelector('.igb-search-input');
+  if(q && q.value.trim()) window.location.href='/tienda.html?q='+encodeURIComponent(q.value.trim());
+}
+function igbCotizar(e){
+  if(e) e.preventDefault();
+  if(window.igbAuth && typeof window.igbAuth.current === 'function' && window.igbAuth.current()){
+    window.location.href='/configurador.html';
+    return false;
+  }
+  if(window.openAuth) {
+    window.openAuth('login', '/configurador.html');
+    return false;
+  }
+  window.location.href='/configurador.html';
+  return false;
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    igbCloseMenu();
+    igbCloseComunas();
+  }
+});
+</script>
+
 <script src="/assets/js/navbar-inline.js"></script>
 <script src="/assets/js/shipping.js"></script>
 <script src="/assets/js/carrito.js"></script>
-<script type="module" src="/assets/js/config.js"></script>
-<script src="/assets/js/auth.js" defer></script>
-
 </body>
 </html>
