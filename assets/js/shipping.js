@@ -162,6 +162,104 @@
     };
   }
 
+  /* ── Estimar fecha de entrega (días hábiles desde hoy) ── */
+  function _estimarFecha(diasHabiles) {
+    var d = new Date();
+    var habil = 0;
+    while (habil < diasHabiles) {
+      d.setDate(d.getDate() + 1);
+      if (d.getDay() !== 0 && d.getDay() !== 6) habil++;
+    }
+    return d.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+
+  /* ── Opciones de respaldo (3 couriers referenciales) ── */
+  function _opcionesRespaldo(region) {
+    var base  = TARIFAS_RESPALDO[region] || { precio: 5990, dias: '3-5' };
+    var p     = base.precio;
+    var parts = base.dias.split('-').map(Number);
+    var OPTS  = [
+      { courier: 'Blue Express', factor: 0.85, dOff: +1 },
+      { courier: 'Starken',      factor: 1.00, dOff:  0 },
+      { courier: 'Chilexpress',  factor: 1.20, dOff: -1 },
+    ];
+    return OPTS.map(function(o) {
+      var precio = Math.round(p * o.factor / 100) * 100;
+      var dMin   = Math.max(1, parts[0] + o.dOff);
+      var dMax   = Math.max(dMin + 1, parts[1] + o.dOff);
+      var dias   = dMin + '-' + dMax;
+      return {
+        tipo:     'referencial',
+        precio:   precio,
+        dias:     dias,
+        courier:  o.courier,
+        label:    '~$' + precio.toLocaleString('es-CL'),
+        estimado: _estimarFecha(dMax)
+      };
+    }).sort(function(a, b) { return a.precio - b.precio; });
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     cotizarOpciones — retorna array de opciones de courier
+     para que el usuario elija.
+  ═══════════════════════════════════════════════════════════ */
+  window.igShipping.cotizarOpciones = async function(comuna, region, totalCompra) {
+    totalCompra = totalCompra || 0;
+
+    /* 1. ¿Despacho gratis? → una sola opción */
+    if (esComunaGratis(comuna) && totalCompra >= 75000) {
+      return [{
+        tipo: 'gratis', precio: 0, dias: '2-4',
+        courier: 'InfraGo Express', label: 'Gratis',
+        estimado: _estimarFecha(3)
+      }];
+    }
+
+    /* 2. Intentar Shipit API (devuelve múltiples couriers) */
+    if (SHIPIT_TOKEN && SHIPIT_TOKEN !== 'TU_TOKEN_SHIPIT_AQUI') {
+      try {
+        var data = await _cotizarShipitRaw(comuna, region);
+        if (data && data.length) {
+          return data.slice(0, 4).map(function(opt) {
+            var dias = opt.transit_days
+              ? opt.transit_days + '-' + (opt.transit_days + 1)
+              : '2-5';
+            return {
+              tipo:     'shipit',
+              precio:   opt.total_price || 0,
+              dias:     dias,
+              courier:  opt.courier_name || 'Courier',
+              label:    '$' + (opt.total_price || 0).toLocaleString('es-CL'),
+              estimado: _estimarFecha(opt.transit_days || 3)
+            };
+          }).sort(function(a, b) { return a.precio - b.precio; });
+        }
+      } catch(e) {
+        console.warn('[InfraGo Shipping] Shipit no disponible:', e.message);
+      }
+    }
+
+    /* 3. Opciones de respaldo */
+    return _opcionesRespaldo(region);
+  };
+
+  /* ── Raw Shipit fetch (devuelve array sin transformar) ── */
+  async function _cotizarShipitRaw(comuna, region) {
+    var body = {
+      origin:      { country:'CL', region:ORIGEN.region, commune:ORIGEN.comuna, street:ORIGEN.direccion, number:'1208' },
+      destination: { country:'CL', region:region||'Región Metropolitana', commune:comuna||'Santiago', street:'Dirección del cliente', number:'0' },
+      packages:    [{ weight:2, height:20, width:30, length:40 }],
+      declared_value: 50000
+    };
+    var res = await fetch('https://api.shipit.cl/v/deliveries/quote', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Token token=' + SHIPIT_TOKEN },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  }
+
   /* ═══════════════════════════════════════════════════════════
      WIDGET REUTILIZABLE — renderiza el cotizador en cualquier
      contenedor dado su ID.

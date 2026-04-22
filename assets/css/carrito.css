@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    carrito.css — InfraGo
    Toast de carrito + página carrito.html
 ═══════════════════════════════════════════════════════════════ */
@@ -176,11 +176,23 @@
 }
 .igc-mini-close:hover { color: #0d1e36; }
 
-/* Item rico (último agregado) */
+/* Lista scrolleable de todos los items */
+.igc-mini-items {
+  max-height: 360px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.igc-mini-items::-webkit-scrollbar { width: 4px; }
+.igc-mini-items::-webkit-scrollbar-track { background: transparent; }
+.igc-mini-items::-webkit-scrollbar-thumb { background: #d4dae3; border-radius: 4px; }
+
+/* Cada item */
 .igc-mini-item-rich {
   display: flex; align-items: flex-start; gap: 14px;
   padding: 16px 18px;
+  border-bottom: 1px solid #f0f2f5;
 }
+.igc-mini-item-rich:last-child { border-bottom: none; }
 .igc-mini-img-large {
   width: 90px; height: 72px; flex-shrink: 0;
   background: #f4f6fa; border-radius: 8px;
@@ -411,11 +423,11 @@
 }
 .igc-panel-row strong { color: #0d1e36; }
 
+.igc-panel-divider { height: 1px; background: #eaecf0; margin: 2px 0; }
+
 .igc-panel-total {
   display: flex; justify-content: space-between; align-items: center;
   font-size: 16px; font-weight: 800; color: #0d1e36;
-  padding-top: 12px;
-  border-top: 2px solid #eaecf0;
 }
 .igc-panel-total-val { font-size: 22px; color: #e8920a; }
 
@@ -474,9 +486,512 @@
 }
 .prod-btn--cart:hover { background: #cf7e08; }
 
+/* ── Servicios opcionales ─────────────────────────────────── */
+.igc-servicios {
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid #eaecf0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.igc-servicios-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-bottom: 1px solid #eaecf0;
+  color: #1a4fa0;
+}
+.igc-servicios-title {
+  font-size: 15px; font-weight: 800; color: #0d1e36;
+}
+.igc-servicios-subtitle {
+  font-size: 12px; color: #7a8fa6; margin-top: 1px;
+}
+.igc-servicios-list { padding: 8px 0; }
+
+.igc-svc-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #f4f5f7;
+  transition: background .12s;
+}
+.igc-svc-item:last-child { border-bottom: none; }
+.igc-svc-item:hover { background: #f8f9fb; }
+.igc-svc-item input[type="checkbox"] { display: none; }
+.igc-svc-check {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border: 2px solid #d4dae3;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  color: transparent;
+  transition: all .15s;
+  background: #fff;
+}
+.igc-svc-selected .igc-svc-check {
+  background: #1a4fa0;
+  border-color: #1a4fa0;
+  color: #fff;
+}
+.igc-svc-body { flex: 1; min-width: 0; }
+.igc-svc-label {
+  font-size: 13px; font-weight: 700; color: #0d1e36;
+}
+.igc-svc-desc {
+  font-size: 11px; color: #7a8fa6; margin-top: 2px;
+}
+.igc-svc-price {
+  text-align: right; flex-shrink: 0;
+}
+.igc-svc-price-val {
+  display: block;
+  font-size: 14px; font-weight: 800; color: #0d1e36;
+}
+.igc-svc-price-unit {
+  display: block;
+  font-size: 10px; color: #7a8fa6;
+}
+
+/* ── Método de pago ───────────────────────────────────────── */
+.igc-metodo-pago { display: flex; flex-direction: column; gap: 8px; }
+.igc-metodo-title {
+  font-size: 13px; font-weight: 700; color: #0d1e36; margin-bottom: 2px;
+}
+.igc-metodo-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid #e4e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .15s;
+  background: #fff;
+}
+.igc-metodo-option input { display: none; }
+.igc-metodo-selected {
+  border-color: #1a4fa0;
+  background: #f0f5ff;
+}
+.igc-metodo-icon { color: #1a4fa0; flex-shrink: 0; }
+.igc-metodo-info { flex: 1; }
+.igc-metodo-label { font-size: 13px; font-weight: 700; color: #0d1e36; }
+.igc-metodo-desc { font-size: 11px; color: #7a8fa6; margin-top: 1px; }
+.igc-metodo-badge {
+  font-size: 10px; font-weight: 800;
+  padding: 3px 7px; border-radius: 20px;
+  flex-shrink: 0;
+}
+.igc-metodo-badge--free { background: #dcfce7; color: #16a34a; }
+.igc-metodo-badge--fee  { background: #fff3cd; color: #a16207; }
+
 @media (max-width: 768px) {
   .igc-page { grid-template-columns: 1fr; }
   .igc-page-item { grid-template-columns: 56px 1fr auto; }
   .igc-page-subtotal { display: none; }
   .igc-mini-dropdown { width: 300px; right: -10px; }
+}
+/* ── Checkout multi-paso ─────────────────────────────────── */
+.igc-checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  min-height: calc(100vh - 96px);
+  align-items: start;
+}
+
+/* Columna izquierda */
+.igc-checkout-left {
+  padding: 36px 56px 60px;
+  max-width: 600px;
+}
+.igc-checkout-topbar {
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 36px;
+  flex-wrap: wrap; gap: 12px;
+}
+.igc-checkout-logo {
+  font-size: 22px; font-weight: 900; color: #0a1628;
+  text-decoration: none; letter-spacing: -.5px;
+}
+.igc-checkout-logo span { color: #e8920a; }
+
+.igc-checkout-crumbs {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px;
+}
+.igc-crumb {
+  color: #b0bcc9; font-weight: 600; background: none; border: none;
+  cursor: default; padding: 0; font-family: inherit; font-size: 13px;
+}
+.igc-crumb--active { color: #0d1e36; font-weight: 700; }
+.igc-crumb--done   { color: #1a4fa0; font-weight: 700; cursor: pointer; }
+.igc-crumb--done:hover { text-decoration: underline; }
+
+/* Pasos */
+.igc-step-title {
+  font-size: 20px; font-weight: 800; color: #0d1e36;
+  margin: 0 0 20px;
+}
+.igc-step-subtitle {
+  font-size: 14px; font-weight: 700; color: #0d1e36;
+  margin: 20px 0 10px;
+}
+
+/* Documento tributario */
+.igc-doc-toggle {
+  display: flex; border: 1.5px solid #d4dae3; border-radius: 9px;
+  overflow: hidden; margin-bottom: 16px;
+}
+.igc-doc-btn {
+  flex: 1; padding: 11px;
+  background: #fff; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: #7a8fa6;
+  font-family: inherit; transition: all .15s;
+}
+.igc-doc-btn + .igc-doc-btn { border-left: 1.5px solid #d4dae3; }
+.igc-doc-btn--active {
+  background: #0d1e36; color: #fff; font-weight: 700;
+}
+
+/* Campos */
+.igc-field-group {
+  display: flex; flex-direction: column; gap: 5px;
+  margin-bottom: 14px;
+}
+.igc-field-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.igc-field-group label {
+  font-size: 12px; font-weight: 700; color: #5a6a82;
+}
+.igc-req { color: #e03a3a; }
+.igc-field-group input,
+.igc-field-group select,
+.igc-field-group textarea {
+  padding: 10px 13px;
+  border: 1.5px solid #d4dae3; border-radius: 8px;
+  font-size: 14px; font-family: inherit; color: #0d1e36;
+  background: #fff; outline: none;
+  transition: border-color .15s;
+}
+.igc-field-group input:focus,
+.igc-field-group select:focus,
+.igc-field-group textarea:focus { border-color: #1a4fa0; box-shadow: 0 0 0 3px rgba(26,79,160,.08); }
+.igc-field-error { border-color: #e03a3a !important; background: #fff5f5 !important; }
+.igc-field-group textarea { resize: vertical; min-height: 64px; }
+
+/* Datos banco */
+.igc-bank-block {
+  margin-top: 16px; background: #f0f5ff;
+  border-radius: 10px; padding: 16px 18px;
+  border: 1px solid #c7d9f7;
+}
+.igc-bank-title {
+  font-size: 13px; font-weight: 800; color: #0d1e36; margin-bottom: 12px;
+}
+.igc-bank-grid { display: flex; flex-direction: column; gap: 0; }
+.igc-bank-row {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: #5a6a82;
+  padding: 7px 0; border-bottom: 1px dashed #c7d9f7;
+}
+.igc-bank-row:last-child { border-bottom: none; }
+.igc-bank-row strong { color: #0d1e36; font-weight: 700; }
+.igc-bank-note {
+  margin-top: 12px; font-size: 11px; color: #5a6a82;
+  line-height: 1.55; border-left: 3px solid #1a4fa0;
+  padding-left: 10px;
+}
+
+/* WebPay */
+.igc-webpay-block {
+  margin-top: 16px; background: #f8f9fb;
+  border-radius: 10px; padding: 16px 18px;
+  border: 1px solid #e4e8f0;
+}
+.igc-webpay-desc { font-size: 13px; color: #5a6a82; line-height: 1.5; margin: 8px 0; }
+.igc-webpay-cards { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.igc-webpay-cards span {
+  background: #fff; border: 1px solid #d4dae3;
+  border-radius: 5px; padding: 4px 11px;
+  font-size: 11px; font-weight: 700; color: #0d1e36;
+}
+
+/* Footer de cada paso */
+.igc-step-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 28px; padding-top: 20px;
+  border-top: 1px solid #eaecf0;
+  gap: 12px;
+}
+.igc-btn-back {
+  background: none; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 700; color: #7a8fa6;
+  font-family: inherit; padding: 10px 0;
+  transition: color .15s;
+}
+.igc-btn-back:hover { color: #0d1e36; }
+.igc-btn-next {
+  margin-left: auto;
+  padding: 12px 28px;
+  background: #0d1e36; border: none; border-radius: 9px;
+  font-size: 14px; font-weight: 800; color: #fff;
+  cursor: pointer; font-family: inherit;
+  transition: background .15s;
+}
+.igc-btn-next:hover { background: #1a4fa0; }
+.igc-btn-confirm {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 28px;
+  background: #1a4fa0; border: none; border-radius: 9px;
+  font-size: 14px; font-weight: 800; color: #fff;
+  cursor: pointer; font-family: inherit;
+  transition: background .15s;
+}
+.igc-btn-confirm:hover { background: #0d3578; }
+
+/* Columna derecha — resumen */
+.igc-checkout-right {
+  background: #f5f7fa;
+  border-left: 1px solid #e4e8f0;
+  min-height: calc(100vh - 96px);
+  position: sticky; top: 96px;
+  padding: 36px 28px;
+}
+.igc-checkout-summary { display: flex; flex-direction: column; gap: 0; }
+.igc-cks-item {
+  display: grid; grid-template-columns: 48px 1fr auto;
+  gap: 12px; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid #e4e8f0;
+}
+.igc-cks-item--svc { grid-template-columns: 1fr auto; }
+.igc-cks-item-img {
+  width: 48px; height: 40px;
+  background: #fff; border-radius: 7px; border: 1px solid #e4e8f0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.igc-cks-item-img svg { width: 36px; height: 30px; }
+.igc-cks-item-nombre { font-size: 12px; font-weight: 700; color: #0d1e36; line-height: 1.3; }
+.igc-cks-item-qty { font-size: 11px; color: #7a8fa6; margin-top: 2px; }
+.igc-cks-item-precio { font-size: 13px; font-weight: 700; color: #0d1e36; white-space: nowrap; }
+.igc-cks-divider { height: 1px; background: #e4e8f0; margin: 14px 0; }
+.igc-cks-row {
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: #7a8fa6; padding: 4px 0;
+}
+.igc-cks-row span:last-child { font-weight: 600; color: #0d1e36; }
+.igc-cks-envio { color: #7a8fa6; }
+.igc-cks-total {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 16px; font-weight: 800; color: #0d1e36; padding: 4px 0;
+}
+.igc-cks-total span:last-child { font-size: 20px; color: #1a4fa0; }
+
+/* Pantalla éxito */
+.igc-success-screen {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(4,15,35,.65);
+  display: none; align-items: center; justify-content: center;
+}
+.igc-success-box {
+  background: #fff; border-radius: 16px;
+  padding: 52px 44px; text-align: center;
+  max-width: 440px; width: 92%;
+  box-shadow: 0 24px 64px rgba(4,15,35,.25);
+}
+.igc-success-icon {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: #dcfce7; color: #16a34a;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.igc-success-title { font-size: 24px; font-weight: 800; color: #0d1e36; margin-bottom: 14px; }
+.igc-success-msg { font-size: 13px; color: #5a6a82; line-height: 1.65; margin-bottom: 28px; }
+.igc-success-btn {
+  display: inline-block; background: #1a4fa0; color: #fff;
+  border-radius: 9px; padding: 13px 32px;
+  font-size: 14px; font-weight: 800; text-decoration: none;
+  transition: background .15s;
+}
+.igc-success-btn:hover { background: #0d3578; }
+
+@media (max-width: 860px) {
+  .igc-checkout-layout { grid-template-columns: 1fr; }
+  .igc-checkout-right { display: none; }
+  .igc-checkout-left { padding: 24px 20px 48px; max-width: 100%; }
+  .igc-field-row { grid-template-columns: 1fr; }
+}
+
+/* ── Panel checkout deslizante (desde la derecha) ────────── */
+.igc-co-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(4,15,35,.55);
+  z-index: 3000;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.igc-co-overlay.open { opacity: 1; }
+
+.igc-co-panel {
+  display: none;
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 100%; max-width: 900px;
+  background: #fff;
+  z-index: 3001;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+  box-shadow: -8px 0 48px rgba(4,15,35,.18);
+}
+.igc-co-panel.open { transform: translateX(0); }
+
+.igc-co-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 60px;
+  background: #0a1628; flex-shrink: 0;
+}
+.igc-co-header-left { display: flex; align-items: center; gap: 20px; }
+.igc-co-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.5px;
+  white-space: nowrap;
+}
+.igc-co-logo span { color: #e8920a; }
+
+.igc-co-crumbs { display: flex; align-items: center; gap: 6px; }
+.igc-co-crumbs .igc-crumb {
+  font-size: 12px; color: rgba(255,255,255,.4); font-weight: 600;
+  background: none; border: none; cursor: default; padding: 0; font-family: inherit;
+}
+.igc-co-crumbs .igc-crumb--active { color: #fff; font-weight: 700; }
+.igc-co-crumbs .igc-crumb--done   { color: #e8920a; cursor: pointer; }
+.igc-co-crumbs .igc-crumb--done:hover { text-decoration: underline; }
+.igc-co-crumbs svg { color: rgba(255,255,255,.3); }
+
+.igc-co-close {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.6); padding: 6px; border-radius: 6px;
+  display: flex; align-items: center;
+  transition: color .15s, background .15s;
+}
+.igc-co-close:hover { color: #fff; background: rgba(255,255,255,.1); }
+
+.igc-co-body {
+  display: flex; flex: 1; overflow: hidden;
+}
+.igc-co-form {
+  flex: 1; overflow-y: auto;
+  padding: 32px 40px 56px;
+}
+.igc-co-summary {
+  width: 300px; flex-shrink: 0;
+  background: #f5f7fa;
+  border-left: 1px solid #e4e8f0;
+  padding: 28px 24px;
+  overflow-y: auto;
+}
+
+@media (max-width: 700px) {
+  .igc-co-panel { max-width: 100%; }
+  .igc-co-summary { display: none; }
+  .igc-co-form { padding: 24px 20px 48px; }
+  .igc-co-header-left { gap: 10px; }
+  .igc-co-crumbs { display: none; }
+}
+
+/* ── Sección de métodos de despacho (Step 2) ─────────────── */
+#igcShippingPreview { margin-top: 16px; }
+
+.igc-sp-loading {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: #7a8fa6; padding: 10px 0;
+}
+.igc-sp-spinner {
+  width: 15px; height: 15px; border-radius: 50%;
+  border: 2px solid #dde1e8; border-top-color: #1a4fa0;
+  animation: igcSpinAnim .7s linear infinite; display: inline-block; flex-shrink: 0;
+}
+@keyframes igcSpinAnim { to { transform: rotate(360deg); } }
+
+/* Contenedor de couriers */
+.igc-couriers {
+  border: 1.5px solid #dde1e8; border-radius: 10px; overflow: hidden;
+  animation: igcFadeUp .25s ease;
+}
+@keyframes igcFadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+.igc-couriers-title {
+  font-size: 13px; font-weight: 800; color: #0d1e36;
+  padding: 12px 16px; background: #f8f9fb;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.igc-couriers-banner {
+  font-size: 12px; color: #5a6a82;
+  padding: 9px 16px; background: #fff8ee;
+  border-bottom: 1px solid #fde68a;
+}
+.igc-couriers-banner--gratis {
+  background: #f0fdf4; border-bottom-color: #86efac; color: #15803d;
+}
+
+.igc-courier-opt {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; cursor: pointer;
+  border-bottom: 1px solid #f0f2f5;
+  transition: background .12s;
+  background: #fff;
+}
+.igc-courier-opt:last-of-type { border-bottom: none; }
+.igc-courier-opt:hover { background: #f8f9fb; }
+.igc-courier-opt--sel { background: #f0f5ff; }
+.igc-courier-opt--sel:hover { background: #e8effc; }
+
+.igc-courier-radio-dot {
+  flex-shrink: 0;
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid #d4dae3;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s;
+}
+.igc-courier-radio-dot::after {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: transparent; transition: background .15s;
+}
+.igc-courier-radio-dot--on {
+  border-color: #1a4fa0;
+}
+.igc-courier-radio-dot--on::after { background: #1a4fa0; }
+
+.igc-courier-badge {
+  flex-shrink: 0;
+  width: 40px; height: 40px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; letter-spacing: .02em;
+}
+
+.igc-courier-info { flex: 1; min-width: 0; }
+.igc-courier-eta-lbl { font-size: 10px; color: #7a8fa6; }
+.igc-courier-eta {
+  font-size: 13px; font-weight: 700; color: #0d1e36; margin-top: 1px;
+  text-transform: capitalize;
+}
+.igc-courier-name { font-size: 11px; color: #7a8fa6; margin-top: 2px; }
+
+.igc-courier-price {
+  flex-shrink: 0;
+  font-size: 15px; font-weight: 800; color: #0d1e36; white-space: nowrap;
+}
+.igc-courier-price--gratis { color: #16a34a; }
+
+.igc-couriers-nota {
+  font-size: 10px; color: #b0bcc9; padding: 8px 16px;
+  background: #f8f9fb; border-top: 1px solid #eaecf0; font-style: italic;
+}
+
+/* Select de comuna deshabilitado */
+#igcCoComuna:disabled {
+  background: #f0f2f5; color: #b0bcc9; cursor: not-allowed;
 }

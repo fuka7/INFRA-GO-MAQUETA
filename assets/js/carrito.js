@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    carrito.js — InfraGo
    ───────────────────────────────────────────────────────────────
    · Mini-dropdown en navbar al agregar producto (tienda + producto)
@@ -11,6 +11,25 @@
 
   var CART_KEY = 'igb_cart';
   var _items = [];
+
+  /* ── Servicios opcionales disponibles ── */
+  var SERVICIOS_TIENDA = [
+    { id: 'instalacion', label: 'Instalación y configuración', desc: 'Instalación en sitio y puesta en marcha', price: 80000,  unidad: '',     frecuencia: 'pago único' },
+    { id: 'soporte',     label: 'Soporte técnico mensual',     desc: 'Mesa de ayuda y soporte en terreno 24/7', price: 35000, unidad: '/mes', frecuencia: 'mensual'    },
+    { id: 'garantia',    label: 'Garantía extendida 3 años',   desc: 'Cobertura ampliada de fábrica + InfraGo', price: 45000, unidad: '/año', frecuencia: 'anual'      },
+    { id: 'migracion',   label: 'Migración de datos',          desc: 'Transferencia segura de datos y archivos', price: 60000, unidad: '',    frecuencia: 'pago único' },
+    { id: 'monitoreo',   label: 'Monitoreo 24/7',              desc: 'Supervisión continua de equipos y alertas', price: 80000, unidad: '/mes', frecuencia: 'mensual'  },
+  ];
+
+  /* ── Estado de servicios y método de pago ── */
+  var _selectedSvc = {};   /* { id: true/false } */
+  var _metodo = 'transferencia';
+
+  /* ── Estado de envío ── */
+  var _shippingCost     = 0;
+  var _shippingTimer    = null;
+  var _shippingOpciones = [];
+  var _shippingSelIdx   = -1;
 
   /* ── Persistencia ── */
   function _save() {
@@ -169,40 +188,39 @@
       return;
     }
 
-    /* Mostrar el último producto agregado de forma prominente */
-    var item = _lastAddedId ? _items.find(function(i){ return i.id === _lastAddedId; }) : null;
-    if (!item) item = _items[_items.length - 1];
+    /* Renderizar TODOS los items en lista scrolleable */
+    var allItemsHtml = _items.map(function(item) {
+      var marca = '';
+      if (window.PRODUCTOS_DB) {
+        var prd = window.PRODUCTOS_DB.find(function(p){ return p.id === item.id; });
+        if (prd) marca = prd.marca || '';
+      }
+      return [
+        '<div class="igc-mini-item-rich">',
+        '  <div class="igc-mini-img-large">' + (item.svg || _defaultImg()) + '</div>',
+        '  <div class="igc-mini-detail">',
+        marca ? '    <div class="igc-mini-marca">' + _esc(marca) + '</div>' : '',
+        '    <div class="igc-mini-nombre-rich">' + _esc(item.nombre) + '</div>',
+        '    <div class="igc-mini-stock-row">',
+        '      <span class="igc-mini-stock-dot"></span>',
+        '      Disponible, más de 20 unidades',
+        '    </div>',
+        '    <div class="igc-mini-payment-row">Todo medio de pago</div>',
+        '    <div class="igc-mini-precio-rich">' + _fmt(item.precio) + '</div>',
+        '  </div>',
+        '  <div class="igc-mini-qty-col">',
+        '    <div class="igc-mini-qty-wrap">',
+        '      <button onclick="igcChangeQty(\'' + item.id + '\',-1)">−</button>',
+        '      <span>' + item.qty + '</span>',
+        '      <button onclick="igcChangeQty(\'' + item.id + '\',1)">+</button>',
+        '    </div>',
+        '    <button class="igc-mini-del" onclick="igcRemoveItem(\'' + item.id + '\')">Eliminar</button>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    }).join('');
 
-    /* Buscar marca en PRODUCTOS_DB si está disponible */
-    var marca = '';
-    if (window.PRODUCTOS_DB) {
-      var prd = window.PRODUCTOS_DB.find(function(p){ return p.id === item.id; });
-      if (prd) marca = prd.marca || '';
-    }
-
-    var itemHtml = [
-      '<div class="igc-mini-item-rich">',
-      '  <div class="igc-mini-img-large">' + (item.svg || _defaultImg()) + '</div>',
-      '  <div class="igc-mini-detail">',
-      marca ? '    <div class="igc-mini-marca">' + _esc(marca) + '</div>' : '',
-      '    <div class="igc-mini-nombre-rich">' + _esc(item.nombre) + '</div>',
-      '    <div class="igc-mini-stock-row">',
-      '      <span class="igc-mini-stock-dot"></span>',
-      '      Disponible, más de 20 unidades',
-      '    </div>',
-      '    <div class="igc-mini-payment-row">Todo medio de pago</div>',
-      '    <div class="igc-mini-precio-rich">' + _fmt(item.precio) + '</div>',
-      '  </div>',
-      '  <div class="igc-mini-qty-col">',
-      '    <div class="igc-mini-qty-wrap">',
-      '      <button onclick="igcChangeQty(\'' + item.id + '\',-1)">−</button>',
-      '      <span>' + item.qty + '</span>',
-      '      <button onclick="igcChangeQty(\'' + item.id + '\',1)">+</button>',
-      '    </div>',
-      '    <button class="igc-mini-del" onclick="igcRemoveItem(\'' + item.id + '\')">Eliminar</button>',
-      '  </div>',
-      '</div>'
-    ].join('');
+    var bodyHtml = '<div class="igc-mini-items">' + allItemsHtml + '</div>';
 
     var footerHtml = [
       '<div class="igc-mini-total">',
@@ -211,7 +229,7 @@
       '</div>',
       '<div class="igc-mini-btns">',
       '  <a href="/carrito.html" class="igc-mini-btn-ver">Ver carro</a>',
-      '  <button class="igc-mini-btn-cotizar" onclick="igcCheckout()">Comprar</button>',
+      '  <button class="igc-mini-btn-cotizar" onclick="window.location.href=\'/carrito.html\'">Comprar</button>',
       '</div>',
       '<div class="igc-mini-cotizar-row">',
       '  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">',
@@ -222,7 +240,7 @@
       '</div>'
     ].join('');
 
-    el.innerHTML = _miniShell(itemHtml, footerHtml);
+    el.innerHTML = _miniShell(bodyHtml, footerHtml);
   }
 
   function _miniShell(bodyHtml, footerHtml) {
@@ -320,7 +338,7 @@
         '  <div class="igc-page-info">',
         '    <div class="igc-page-marca">InfraGo</div>',
         '    <div class="igc-page-nombre">' + _esc(item.nombre) + '</div>',
-        '    <div class="igc-page-precio">' + _fmt(item.precio) + '/mes</div>',
+        '    <div class="igc-page-precio">' + _fmt(item.precio) + '</div>',
         '    <div class="igc-page-disponible">Disponible · Todo medio de pago</div>',
         '  </div>',
         '  <div class="igc-page-qty">',
@@ -338,20 +356,462 @@
     }).join('');
 
     _updatePanel(_subtotal());
+    _renderServicios();
   }
 
-  /* FIX: recibe el subtotal como parámetro para evitar doble cálculo */
+  /* ── Subtotal de servicios seleccionados ── */
+  function _subtotalSvc() {
+    return SERVICIOS_TIENDA.reduce(function(s, svc) {
+      return s + (_selectedSvc[svc.id] ? svc.price : 0);
+    }, 0);
+  }
+
+  /* ── Renderizar sección de servicios opcionales ── */
+  function _renderServicios() {
+    var container = document.getElementById('igcServiciosContainer');
+    var list = document.getElementById('igcServiciosList');
+    if (!list) return;
+    if (!_items.length) { if (container) container.style.display = 'none'; return; }
+    if (container) container.style.display = '';
+
+    list.innerHTML = SERVICIOS_TIENDA.map(function(svc) {
+      var checked = _selectedSvc[svc.id] ? 'checked' : '';
+      var frecLabel = svc.frecuencia === 'mensual' ? '/mes' : svc.frecuencia === 'anual' ? '/año' : 'pago único';
+      return [
+        '<label class="igc-svc-item' + (checked ? ' igc-svc-selected' : '') + '" id="igcSvcRow_' + svc.id + '">',
+        '  <input type="checkbox" ' + checked + ' onchange="igcToggleSvc(\'' + svc.id + '\', this.checked)">',
+        '  <div class="igc-svc-check">',
+        '    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>',
+        '  </div>',
+        '  <div class="igc-svc-body">',
+        '    <div class="igc-svc-label">' + _esc(svc.label) + '</div>',
+        '    <div class="igc-svc-desc">' + _esc(svc.desc) + '</div>',
+        '  </div>',
+        '  <div class="igc-svc-price">',
+        '    <span class="igc-svc-price-val">' + _fmt(svc.price) + '</span>',
+        '    <span class="igc-svc-price-unit">' + frecLabel + '</span>',
+        '  </div>',
+        '</label>'
+      ].join('');
+    }).join('');
+  }
+
+  window.igcToggleSvc = function(id, checked) {
+    _selectedSvc[id] = !!checked;
+    var row = document.getElementById('igcSvcRow_' + id);
+    if (row) row.classList.toggle('igc-svc-selected', !!checked);
+    _updatePanel();
+  };
+
   function _updatePanel(sub) {
     if (sub === undefined) sub = _subtotal();
+    var subSvc = _subtotalSvc();
+    var base   = sub + subSvc;
+    var total  = _metodo === 'tarjeta' ? Math.round(base * 1.03) : base;
     var el;
-    el = document.getElementById('igcPanelSubtotal'); if(el) el.textContent = _fmt(sub);
-    el = document.getElementById('igcPanelTotal');    if(el) el.textContent = _fmt(sub);
-
-    /* Actualizar widget de shipping si ya está montado */
+    el = document.getElementById('igcPanelSubtotal');    if(el) el.textContent = _fmt(sub);
+    el = document.getElementById('igcPanelSubtotalSvc'); if(el) el.textContent = _fmt(subSvc);
+    el = document.getElementById('igcPanelTotal');       if(el) el.textContent = _fmt(total);
+    el = document.getElementById('igcPanelRowSvc');
+    if (el) el.style.display = subSvc > 0 ? '' : 'none';
     if (window.igShipping && typeof window.igShipping.updateTotal === 'function') {
-      window.igShipping.updateTotal(sub);
+      window.igShipping.updateTotal(total);
     }
   }
+
+  /* ════════════════════════════════════════════════════════════
+     CÁLCULO DE ENVÍO — se activa en el Step 2 del checkout
+  ════════════════════════════════════════════════════════════ */
+
+  /* Colores de badge por courier */
+  var _COURIER_COLORS = {
+    'blue express': { bg:'#003DA5', fg:'#fff' },
+    'starken':      { bg:'#7B1010', fg:'#fff' },
+    'chilexpress':  { bg:'#FFCD00', fg:'#000' },
+    'shippify':     { bg:'#00B09B', fg:'#fff' },
+    'infrago':      { bg:'#e8920a', fg:'#fff' },
+    'infrago express': { bg:'#e8920a', fg:'#fff' },
+  };
+
+  function _courierStyle(name) {
+    var key = (name||'').toLowerCase();
+    for (var k in _COURIER_COLORS) {
+      if (key.includes(k)) return _COURIER_COLORS[k];
+    }
+    return { bg:'#1a4fa0', fg:'#fff' };
+  }
+
+  function _courierInitials(name) {
+    return (name||'').split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2);
+  }
+
+  function _calcShipping() {
+    var cotizarFn = window.igShipping && window.igShipping.cotizarOpciones;
+    if (!cotizarFn) return;
+
+    var comunaEl  = document.getElementById('igcCoComuna');
+    var regionEl  = document.getElementById('igcCoRegion');
+    var previewEl = document.getElementById('igcShippingPreview');
+    var envioEl   = document.getElementById('igcCksEnvioVal');
+    if (!comunaEl || !regionEl) return;
+
+    var comuna = comunaEl.value.trim();
+    var region = regionEl.value;
+
+    if (!comuna) {
+      _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
+      if (previewEl) previewEl.style.display = 'none';
+      if (envioEl)   { envioEl.textContent = 'Por definir'; envioEl.style.color = ''; }
+      _cksRefresh(); return;
+    }
+
+    /* Loading */
+    if (previewEl) {
+      previewEl.style.display = '';
+      previewEl.innerHTML = '<div class="igc-sp-loading"><span class="igc-sp-spinner"></span> Consultando métodos de despacho…</div>';
+    }
+    if (envioEl) { envioEl.textContent = 'Calculando…'; envioEl.style.color = '#b0bcc9'; }
+
+    var totalBase = _subtotal() + _subtotalSvc();
+
+    cotizarFn(comuna, region || 'Región Metropolitana', totalBase)
+      .then(function(opciones) {
+        _shippingOpciones = opciones || [];
+        /* Auto-seleccionar la primera (más barata) */
+        _shippingSelIdx = _shippingOpciones.length > 0 ? 0 : -1;
+        _shippingCost   = _shippingSelIdx >= 0 ? (_shippingOpciones[0].precio || 0) : 0;
+
+        if (previewEl) {
+          previewEl.style.display = '';
+          previewEl.innerHTML = _buildCourierOptions(_shippingOpciones, _shippingSelIdx, totalBase, region);
+        }
+        _updateShippingBadge();
+        _cksRefresh();
+      })
+      .catch(function() {
+        _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
+        if (previewEl) previewEl.style.display = 'none';
+        if (envioEl)   { envioEl.textContent = 'Por definir'; envioEl.style.color = ''; }
+        _cksRefresh();
+      });
+  }
+
+  function _buildCourierOptions(opciones, selIdx, totalBase, region) {
+    var isGratis = opciones.length === 1 && opciones[0].tipo === 'gratis';
+    var esRef    = opciones.length > 0 && opciones[0].tipo === 'referencial';
+
+    var bannerHtml = '';
+    if (isGratis) {
+      bannerHtml = '<div class="igc-couriers-banner igc-couriers-banner--gratis">🎉 ¡Despacho gratuito a tu comuna! En compras sobre $75.000.</div>';
+    } else if (esRef) {
+      bannerHtml = '<div class="igc-couriers-banner">Tarifas referenciales. El precio exacto se confirma al procesar el pedido.</div>';
+    }
+
+    var optsHtml = opciones.map(function(opt, i) {
+      var sel    = i === selIdx;
+      var style  = _courierStyle(opt.courier);
+      var initls = _courierInitials(opt.courier);
+      var precio = opt.tipo === 'gratis' ? 'Gratis' : opt.label;
+      var nota   = opt.tipo === 'referencial' ? '*' : '';
+      return [
+        '<label class="igc-courier-opt' + (sel ? ' igc-courier-opt--sel' : '') + '" onclick="igcSelectCourier(' + i + ')">',
+        '  <input type="radio" name="igcCourierRadio"' + (sel ? ' checked' : '') + ' style="display:none">',
+        '  <div class="igc-courier-radio-dot' + (sel ? ' igc-courier-radio-dot--on' : '') + '"></div>',
+        '  <div class="igc-courier-badge" style="background:' + style.bg + ';color:' + style.fg + '">' + initls + '</div>',
+        '  <div class="igc-courier-info">',
+        opt.estimado ? '    <div class="igc-courier-eta-lbl">Fecha estimada de entrega:</div>' : '',
+        opt.estimado ? '    <div class="igc-courier-eta">' + opt.estimado + '</div>' : '',
+        '    <div class="igc-courier-name">' + _esc(opt.courier) + ' · ' + opt.dias + ' días hábiles</div>',
+        '  </div>',
+        '  <div class="igc-courier-price' + (opt.tipo === 'gratis' ? ' igc-courier-price--gratis' : '') + '">' + precio + nota + '</div>',
+        '</label>'
+      ].join('');
+    }).join('');
+
+    return [
+      '<div class="igc-couriers">',
+      '  <div class="igc-couriers-title">Seleccione el método de despacho:</div>',
+      bannerHtml,
+      optsHtml,
+      esRef ? '<div class="igc-couriers-nota">* Precio referencial, puede variar según peso y dimensiones del pedido.</div>' : '',
+      '</div>'
+    ].join('');
+  }
+
+  function _updateShippingBadge() {
+    var envioEl = document.getElementById('igcCksEnvioVal');
+    if (!envioEl) return;
+    if (_shippingSelIdx < 0 || !_shippingOpciones.length) {
+      envioEl.textContent = 'Por definir'; envioEl.style.color = ''; return;
+    }
+    var opt = _shippingOpciones[_shippingSelIdx];
+    if (opt.tipo === 'gratis') {
+      envioEl.textContent = 'Gratis'; envioEl.style.color = '#16a34a';
+    } else {
+      var sufijo = opt.tipo === 'referencial' ? '*' : '';
+      envioEl.textContent = opt.label + sufijo;
+      envioEl.style.color = opt.tipo === 'referencial' ? '#d97706' : '';
+    }
+  }
+
+  window.igcSelectCourier = function(idx) {
+    _shippingSelIdx = idx;
+    _shippingCost   = _shippingOpciones[idx] ? (_shippingOpciones[idx].precio || 0) : 0;
+
+    /* Actualizar estilos de los botones */
+    document.querySelectorAll('.igc-courier-opt').forEach(function(el, i) {
+      el.classList.toggle('igc-courier-opt--sel', i === idx);
+      var dot = el.querySelector('.igc-courier-radio-dot');
+      if (dot) dot.classList.toggle('igc-courier-radio-dot--on', i === idx);
+      var radio = el.querySelector('input[type="radio"]');
+      if (radio) radio.checked = (i === idx);
+    });
+
+    _updateShippingBadge();
+    _cksRefresh();
+  };
+
+  /* Handlers globales llamados desde onchange del HTML */
+  window.igcOnRegionChange = function() {
+    /* Resetear selección de envío al cambiar región */
+    _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
+    var previewEl = document.getElementById('igcShippingPreview');
+    if (previewEl) previewEl.style.display = 'none';
+    var envioEl = document.getElementById('igcCksEnvioVal');
+    if (envioEl) { envioEl.textContent = 'Por definir'; envioEl.style.color = ''; }
+    _cksRefresh();
+  };
+
+  window.igcOnComunaChange = function() {
+    clearTimeout(_shippingTimer);
+    _calcShipping();
+  };
+
+  function _attachShippingListeners() {
+    var comunaEl = document.getElementById('igcCoComuna');
+    var regionEl = document.getElementById('igcCoRegion');
+
+    /* Ambos son ahora <select> — solo necesitamos el evento change,
+       que ya está en el onchange inline del HTML. Aquí solo
+       recalculamos si al volver al paso 2 ya había valores. */
+    if (!comunaEl || !regionEl) return;
+    if (comunaEl.value && regionEl.value && !_shippingOpciones.length) {
+      _calcShipping();
+    }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     CHECKOUT — PASOS (Información → Envío → Pago)
+  ════════════════════════════════════════════════════════════ */
+
+  var _docTipo = 'boleta'; /* boleta | factura */
+
+  function _cksRefresh() {
+    _load();
+    var sub    = _subtotal();
+    var subSvc = _subtotalSvc();
+    var base   = sub + subSvc;
+    var total  = _metodo === 'tarjeta' ? Math.round(base * 1.03) : base;
+
+    /* Items del resumen lateral */
+    var html = _items.map(function(item) {
+      return [
+        '<div class="igc-cks-item">',
+        '  <div class="igc-cks-item-img">' + (item.svg || _defaultImg()) + '</div>',
+        '  <div class="igc-cks-item-info">',
+        '    <div class="igc-cks-item-nombre">' + _esc(item.nombre) + '</div>',
+        '    <div class="igc-cks-item-qty">Cantidad: ' + item.qty + '</div>',
+        '  </div>',
+        '  <div class="igc-cks-item-precio">' + _fmt(item.precio * item.qty) + '</div>',
+        '</div>'
+      ].join('');
+    }).join('');
+
+    SERVICIOS_TIENDA.forEach(function(s) {
+      if (!_selectedSvc[s.id]) return;
+      html += [
+        '<div class="igc-cks-item igc-cks-item--svc">',
+        '  <div class="igc-cks-item-info" style="grid-column:1/3">',
+        '    <div class="igc-cks-item-nombre">' + _esc(s.label) + '</div>',
+        '  </div>',
+        '  <div class="igc-cks-item-precio">' + _fmt(s.price) + '</div>',
+        '</div>'
+      ].join('');
+    });
+
+    total += _shippingCost;
+
+    var el;
+    el = document.getElementById('igcCksItems');    if(el) el.innerHTML = html;
+    el = document.getElementById('igcCksSubtotal'); if(el) el.textContent = _fmt(sub);
+    el = document.getElementById('igcCksSvc');      if(el) el.textContent = _fmt(subSvc);
+    el = document.getElementById('igcCksSvcRow');   if(el) el.style.display = subSvc > 0 ? '' : 'none';
+    el = document.getElementById('igcCksTotal');    if(el) el.textContent = _fmt(total);
+  }
+
+  function _setCrumbs(step) {
+    [1,2,3].forEach(function(n) {
+      var el = document.getElementById('igcCrumb' + n);
+      if (!el) return;
+      el.classList.toggle('igc-crumb--active', n === step);
+      el.classList.toggle('igc-crumb--done',   n < step);
+    });
+  }
+
+  window.igcSetDoc = function(tipo) {
+    _docTipo = tipo;
+    var bBtn = document.getElementById('igcDocBoleta');
+    var fBtn = document.getElementById('igcDocFactura');
+    var fFields = document.getElementById('igcFacturaFields');
+    if (bBtn) bBtn.classList.toggle('igc-doc-btn--active', tipo === 'boleta');
+    if (fBtn) fBtn.classList.toggle('igc-doc-btn--active', tipo === 'factura');
+    if (fFields) fFields.style.display = tipo === 'factura' ? '' : 'none';
+  };
+
+  /* Actualiza los bloques de pago en paso 3 */
+  window.igcSelectMetodo = function(metodo) {
+    _metodo = metodo;
+    var optT = document.getElementById('igcMetodoTransferencia');
+    var optK = document.getElementById('igcMetodoTarjeta');
+    if (optT) optT.classList.toggle('igc-metodo-selected', metodo === 'transferencia');
+    if (optK) optK.classList.toggle('igc-metodo-selected', metodo === 'tarjeta');
+    var bank   = document.getElementById('igcBankBlock');
+    var webpay = document.getElementById('igcWebpayBlock');
+    if (bank)   bank.style.display   = metodo === 'transferencia' ? '' : 'none';
+    if (webpay) webpay.style.display = metodo === 'tarjeta'       ? '' : 'none';
+    _updatePanel();
+    _cksRefresh();
+  };
+
+  /* Validaciones por paso */
+  function _validateStep(step) {
+    var checks = [];
+    if (step === 1) {
+      checks = [{ id:'igcCoEmail', label:'Email' }];
+      if (_docTipo === 'factura') {
+        checks.push({ id:'igcCoEmpresa',    label:'Razón Social' });
+        checks.push({ id:'igcCoRutEmpresa', label:'RUT Empresa' });
+      }
+    }
+    if (step === 2) {
+      checks = [
+        { id:'igcCoNombre',    label:'Nombre' },
+        { id:'igcCoApellido',  label:'Apellido' },
+        { id:'igcCoTel',       label:'Teléfono' },
+        { id:'igcCoDireccion', label:'Dirección' },
+        { id:'igcCoRegion',    label:'Región' },
+        { id:'igcCoComuna',    label:'Comuna' },
+      ];
+    }
+    var missing = checks.filter(function(f) {
+      var el = document.getElementById(f.id);
+      return !el || !el.value.trim();
+    });
+    if (missing.length) {
+      missing.forEach(function(f) {
+        var el = document.getElementById(f.id);
+        if (el) el.classList.add('igc-field-error');
+      });
+      document.getElementById(missing[0].id).focus();
+      return false;
+    }
+    return true;
+  }
+
+  window.igcCloseCheckout = function() {
+    var overlay = document.getElementById('igcCoOverlay');
+    var panel   = document.getElementById('igcCoPanel');
+    if (overlay) { overlay.classList.remove('open'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
+    if (panel)   { panel.classList.remove('open');   setTimeout(function(){ panel.style.display   = 'none'; }, 300); }
+    document.body.style.overflow = '';
+    _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
+  };
+
+  window.igcOpenCheckout = function() {
+    _load();
+    if (!_items.length) return;
+
+    /* Pre-rellenar si está logueado */
+    if (window.igbAuth && typeof window.igbAuth.current === 'function') {
+      var u = window.igbAuth.current();
+      if (u) {
+        var fn = document.getElementById('igcCoNombre');
+        var fa = document.getElementById('igcCoApellido');
+        var fe = document.getElementById('igcCoEmail');
+        if (fn && !fn.value) fn.value = u.nombre   || '';
+        if (fa && !fa.value) fa.value = u.apellido  || '';
+        if (fe && !fe.value) fe.value = u.email     || '';
+      }
+    }
+
+    _cksRefresh();
+    _setCrumbs(1);
+    document.getElementById('igcStep1').style.display = '';
+    document.getElementById('igcStep2').style.display = 'none';
+    document.getElementById('igcStep3').style.display = 'none';
+
+    var overlay = document.getElementById('igcCoOverlay');
+    var panel   = document.getElementById('igcCoPanel');
+    if (overlay) { overlay.style.display = 'block'; requestAnimationFrame(function(){ overlay.classList.add('open'); }); }
+    if (panel)   { panel.style.display   = 'flex';  requestAnimationFrame(function(){ panel.classList.add('open'); }); }
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.igcGoStep = function(step) {
+    if (step === 0) { igcCloseCheckout(); return; }
+
+    var currentStep = [1,2,3].find(function(n) {
+      var el = document.getElementById('igcStep' + n);
+      return el && el.style.display !== 'none';
+    });
+    if (step > currentStep && !_validateStep(currentStep)) return;
+
+    [1,2,3].forEach(function(n) {
+      var el = document.getElementById('igcStep' + n);
+      if (el) el.style.display = n === step ? '' : 'none';
+    });
+    _setCrumbs(step);
+    _cksRefresh();
+    if (step === 2) _attachShippingListeners();
+    var form = document.querySelector('.igc-co-form');
+    if (form) form.scrollTop = 0;
+  };
+
+  window.igcSubmitCheckout = function() {
+    if (!_validateStep(3)) return;
+
+    if (_metodo === 'tarjeta') {
+      alert('Para completar el pago con tarjeta se requiere integración con el servidor Transbank WebPay Plus.');
+      return;
+    }
+
+    /* Transferencia: mostrar pantalla de éxito */
+    var nombre = (document.getElementById('igcCoNombre') || {}).value || 'cliente';
+    var msg = [
+      '<strong>Gracias, ' + _esc(nombre) + '!</strong><br><br>',
+      'Tu pedido fue registrado. Realiza la transferencia a:<br>',
+      '<strong>Banco de Chile · Cta. Cte. 123-456-789</strong><br>',
+      'y envía el comprobante a <strong>pagos@infrago.cl</strong><br>',
+      'con el asunto <em>"Pedido — ' + _esc(nombre) + '"</em>.<br><br>',
+      'Un asesor te contactará en menos de 24 horas hábiles.'
+    ].join('');
+
+    igcCloseCheckout();
+    var ss  = document.getElementById('igcSuccessScreen');
+    var msg2 = document.getElementById('igcSuccessMsg');
+    if (msg2) msg2.innerHTML = msg;
+    if (ss)   ss.style.display = 'flex';
+
+    _items = []; _save(); _selectedSvc = {}; _updateNavbarBadge();
+    window.scrollTo(0, 0);
+  };
+
+  /* Limpiar error al escribir */
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.classList.contains('igc-field-error')) {
+      e.target.classList.remove('igc-field-error');
+    }
+  });
 
   /* ════════════════════════════════════════════════════════════
      INIT
@@ -397,10 +857,6 @@
 
     if (enCarrito) {
       _renderPage();
-      /* Montar widget shipping si está disponible */
-      if (window.igShipping) {
-        window.igShipping.mountCarrito('igcPanelShipping', _subtotal());
-      }
     }
   });
 

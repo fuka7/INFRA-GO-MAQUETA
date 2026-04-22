@@ -46,9 +46,7 @@ function buildCard(p) {
         <div class="prod-specs-list">${specsHtml}</div>
         <div class="prod-footer">
           <div class="prod-price">
-            <span class="prod-price-from">Desde</span>
             <span class="prod-price-val">$${p.precio.toLocaleString('es-CL')}</span>
-            <span class="prod-price-period">/mes</span>
           </div>
           <div class="prod-btns">
             <a href="/producto.html?id=${p.id}" class="prod-btn prod-btn--sec" onclick="event.stopPropagation()">Ver</a>
