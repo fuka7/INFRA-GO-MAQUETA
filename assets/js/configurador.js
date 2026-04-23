@@ -23,6 +23,7 @@ async function initSupabase() {
 // TIPO DE CAMBIO (DÓLAR TIC)
 // ═════════════════════════════════════════
 let tipoCambio = 900;
+window.tipoCambio = 900; // inicializar inmediatamente para que flat-catalog lo use
 
 async function fetchDolarTIC() {
   const input = document.getElementById('tipoCambio');
@@ -338,7 +339,11 @@ function collectEquipos() {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto) return;
-      state.equipos[r.productName] = { qty: r.qty, price: producto.price || 0 };
+      const tc = window.tipoCambio || 900;
+      const price = (producto.priceUSD && producto.priceUSD > 0)
+        ? Math.round(producto.priceUSD * tc)
+        : (producto.price || 0);
+      state.equipos[r.productName] = { qty: r.qty, price };
     });
   } else {
     // Fallback: DOM accordion — solo actualizar si el paso 1 está visible
@@ -421,8 +426,12 @@ function updateSidebar() {
 
       if (producto.tipo === 'servicio-tic') return; // los servicios TIC van aparte
 
-      // Hardware: aplica descuento por volumen
-      const precio = Math.round((producto.price || 0) * (1 - pct / 100));
+      // Hardware: precio dinámico (USD × tipo de cambio si aplica) con descuento por volumen
+      const tc = window.tipoCambio || 900;
+      const precioBase = (producto.priceUSD && producto.priceUSD > 0)
+        ? Math.round(producto.priceUSD * tc)
+        : (producto.price || 0);
+      const precio = Math.round(precioBase * (1 - pct / 100));
       totalEqCLP += r.qty * precio;
       totalQtyEq += r.qty;
       selectedProducts.push({ name: r.productName, qty: r.qty });
@@ -470,9 +479,10 @@ function updateSidebar() {
   const pctDcto             = obtenerPctDescuento(totalQtyEq);
   const descuento           = totalEqCLP * (pctDcto / 100);
   const totalEquiposConDcto = totalEqCLP - descuento;
-  const totalGeneral        = totalEquiposConDcto + totalSvc;
-  const cuota               = Math.round(totalGeneral / simPlazo);
-  const totalQty            = totalQtyEq; // alias para los setTxt de abajo
+  const totalNeto           = totalEquiposConDcto + totalSvc;
+  const iva                 = Math.round(totalNeto * 0.19);
+  const totalConIVA         = totalNeto + iva;
+  const totalQty            = totalQtyEq;
 
   const setTxt = (id, val) => {
     const el = document.getElementById(id);
@@ -483,8 +493,9 @@ function updateSidebar() {
   setTxt('countServicios', countSvc);
   setTxt('totalEquipos',   totalEquiposConDcto.toLocaleString('es-CL'));
   setTxt('totalServicios', totalSvc.toLocaleString('es-CL'));
-  setTxt('totalGeneral',   totalGeneral.toLocaleString('es-CL'));
-  setTxt('cuotaMensual',   cuota.toLocaleString('es-CL'));
+  setTxt('totalNeto',      totalNeto.toLocaleString('es-CL'));
+  setTxt('totalIVA',       iva.toLocaleString('es-CL'));
+  setTxt('totalGeneral',   totalConIVA.toLocaleString('es-CL'));
   setTxt('ahorroTotal',    descuento.toLocaleString('es-CL'));
   setTxt('descuentoPct',   pctDcto + '%');
   setTxt('plazoSidebarLabel', simPlazo);

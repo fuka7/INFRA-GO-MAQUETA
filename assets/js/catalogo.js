@@ -11,12 +11,17 @@
      marca:      "HP",                         // para filtro de marca
      tipo:       "notebook",                   // para filtro de tipo (ver TIPOS)
      partNumber: "XX-XXXXX",                   // part number del producto
-     price:      450000,                       // precio CLP (número, sin puntos)
+     priceUSD:   500,                          // precio en USD → se convierte con tipoCambio en tiempo real
+     price:      450000,                       // precio CLP fallback (solo si no hay priceUSD)
      servicios: [                              // servicios asociados (puede ser [])
        { value: "instalacion", label: "Instalación y configuración", price: 80000, unidad: "",      frecuencia: "al inicio" },
        { value: "soporte",     label: "Soporte técnico mensual",     price: 35000, unidad: "/mes",  frecuencia: "/mes" },
      ]
    }
+
+   NOTA: Si el producto tiene `priceUSD`, el precio CLP se calcula dinámicamente:
+     precioCLP = priceUSD * window.tipoCambio
+   Los servicios TIC y licencias SaaS no tienen priceUSD y usan `price` fijo en CLP.
 
    TIPOS VÁLIDOS (deben coincidir con los filtros del HTML):
      pc | notebook | servidor | impresora | networking | storage | servicio-tic
@@ -35,6 +40,7 @@ const CATALOGO = [
     marca:      "HP",
     tipo:       "notebook",
     partNumber: "80A19LT#ABM",
+    priceUSD:   499,
     price:      450000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"     },
@@ -48,6 +54,7 @@ const CATALOGO = [
     marca:      "Dell",
     tipo:       "notebook",
     partNumber: "I15-I7U512-BLK",
+    priceUSD:   579,
     price:      520000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"     },
@@ -61,6 +68,7 @@ const CATALOGO = [
     marca:      "Apple",
     tipo:       "notebook",
     partNumber: "MRX33LL/A",
+    priceUSD:   1299,
     price:      1200000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
@@ -73,6 +81,7 @@ const CATALOGO = [
     marca:      "Lenovo",
     tipo:       "notebook",
     partNumber: "21JK0005CL",
+    priceUSD:   529,
     price:      480000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
@@ -90,6 +99,7 @@ const CATALOGO = [
     marca:      "Dell",
     tipo:       "servidor",
     partNumber: "R650-XS-4314-64G",
+    priceUSD:   2799,
     price:      2500000,
     servicios: [
       { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: "",      frecuencia: "al inicio"    },
@@ -103,6 +113,7 @@ const CATALOGO = [
     marca:      "HP",
     tipo:       "servidor",
     partNumber: "P56963-B21",
+    priceUSD:   3599,
     price:      3200000,
     servicios: [
       { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: "",      frecuencia: "al inicio"    },
@@ -116,6 +127,7 @@ const CATALOGO = [
     marca:      "Lenovo",
     tipo:       "servidor",
     partNumber: "7X06A0BWEA",
+    priceUSD:   3099,
     price:      2800000,
     servicios: [
       { value: "instalacion", label: "Instalación rack y configuración", price: 150000, unidad: "",      frecuencia: "al inicio"    },
@@ -133,6 +145,7 @@ const CATALOGO = [
     marca:      "HP",
     tipo:       "impresora",
     partNumber: "7MD66F#BGJ",
+    priceUSD:   389,
     price:      350000,
     servicios: [
       { value: "instalacion",    label: "Instalación y configuración red",   price: 40000, unidad: "",      frecuencia: "al inicio"    },
@@ -145,6 +158,7 @@ const CATALOGO = [
     marca:      "Canon",
     tipo:       "impresora",
     partNumber: "4468C002AA",
+    priceUSD:   319,
     price:      290000,
     servicios: [
       { value: "instalacion",   label: "Instalación y configuración red",  price: 40000, unidad: "",      frecuencia: "al inicio"    },
@@ -156,6 +170,7 @@ const CATALOGO = [
     marca:      "Brother",
     tipo:       "impresora",
     partNumber: "MFCL6915DW",
+    priceUSD:   799,
     price:      720000,
     servicios: [
       { value: "instalacion",   label: "Instalación y configuración red",  price: 50000, unidad: "",      frecuencia: "al inicio"    },
@@ -172,6 +187,7 @@ const CATALOGO = [
     marca:      "Cisco",
     tipo:       "networking",
     partNumber: "CBS350-24P-4G-CL",
+    priceUSD:   749,
     price:      680000,
     servicios: [
       { value: "instalacion",   label: "Instalación y cableado",         price: 90000,  unidad: "",      frecuencia: "al inicio"    },
@@ -184,6 +200,7 @@ const CATALOGO = [
     marca:      "Fortinet",
     tipo:       "networking",
     partNumber: "FG-60F",
+    priceUSD:   1199,
     price:      1100000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración firewall", price: 150000, unidad: "",      frecuencia: "al inicio"    },
@@ -196,6 +213,7 @@ const CATALOGO = [
     marca:      "Ubiquiti",
     tipo:       "networking",
     partNumber: "U6-LR",
+    priceUSD:   249,
     price:      220000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración AP",    price: 50000, unidad: "",      frecuencia: "al inicio"    },
@@ -211,6 +229,7 @@ const CATALOGO = [
     marca:      "Synology",
     tipo:       "servidor",
     partNumber: "DS923+",
+    priceUSD:   1049,
     price:      950000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración NAS",   price: 100000, unidad: "",      frecuencia: "al inicio"    },
@@ -223,6 +242,7 @@ const CATALOGO = [
     marca:      "QNAP",
     tipo:       "servidor",
     partNumber: "TS-464-8G",
+    priceUSD:   969,
     price:      870000,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración NAS",  price: 100000, unidad: "",      frecuencia: "al inicio"    },
@@ -377,3 +397,19 @@ const CATALOGO = [
    EXPORTAR — disponible como window.CATALOGO para el configurador
    ═══════════════════════════════════════════════════════════════ */
 window.CATALOGO = CATALOGO;
+
+/* ═══════════════════════════════════════════════════════════════
+   getProductPrice(producto)
+   ───────────────────────────────────────────────────────────────
+   Fuente única para calcular el precio CLP de un producto:
+   · Si tiene priceUSD  → priceUSD × window.tipoCambio (dinámico)
+   · Si tiene solo price → price fijo CLP (servicios, licencias)
+   ═══════════════════════════════════════════════════════════════ */
+window.getProductPrice = function getProductPrice(producto) {
+  if (!producto) return 0;
+  if (producto.priceUSD && producto.priceUSD > 0) {
+    const tc = window.tipoCambio || 900;
+    return Math.round(producto.priceUSD * tc);
+  }
+  return producto.price || 0;
+};

@@ -165,9 +165,12 @@ function _buildRowEl(id, animate) {
     </div>
 
     <div class="pr-del">
-      <button type="button" class="flat-del-btn" onclick="flatRemoveRow(${id})" title="Eliminar fila">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      <button type="button" class="flat-del-btn" onclick="flatRemoveRow(${id})" title="Eliminar producto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
         </svg>
       </button>
     </div>
@@ -392,14 +395,16 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const esSvc        = producto.tipo === 'servicio-tic';
     const pctEfectivo  = esSvc ? 0 : pct;
 
-    const price         = producto.price || 0;
+    // Precio CLP dinámico: si el producto tiene priceUSD → priceUSD × tipoCambio
+    // De lo contrario usa price CLP fijo (servicios, licencias)
+    const price = (producto.priceUSD && producto.priceUSD > 0)
+      ? Math.round(producto.priceUSD * tc)
+      : (producto.price || 0);
+
     const precioConDto  = Math.round(price * (1 - pctEfectivo / 100));
     const subtotal      = qty * precioConDto;
     const subtotalLista = qty * price;
     const ahorro        = subtotalLista - subtotal;
-
-    // USD calculado sobre precio con descuento (más preciso para el comprador)
-    const usd = Math.round(precioConDto / tc);
 
     totalListaAcum  += subtotalLista;
     totalAhorroAcum += ahorro;
@@ -411,11 +416,9 @@ window.flatRefreshPrices = function flatRefreshPrices() {
       elBase.classList.toggle('tachado', pctEfectivo > 0 && qty > 0);
     }
 
-    /* USD del precio con descuento */
+    /* Ocultar siempre el campo USD — ya no se muestra */
     const elUsd = document.getElementById(`pusd-${id}`);
-    if (elUsd) {
-      elUsd.textContent = productName && !esSvc ? `≈ USD ${usd.toLocaleString('en-US')}` : '';
-    }
+    if (elUsd) elUsd.textContent = '';
 
     /* Precio con dto */
     const elDto   = document.getElementById(`pdto-${id}`);
@@ -787,7 +790,14 @@ function _overrideCollectEquipos() {
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto) return;
 
-      const price = Math.round((producto.price || 0) * (1 - pct / 100));
+      const tc = window.tipoCambio || 900;
+      const basePrice = (producto.priceUSD && producto.priceUSD > 0)
+        ? Math.round(producto.priceUSD * tc)
+        : (producto.price || 0);
+      const getPrice = (typeof window.getProductPrice === 'function')
+        ? window.getProductPrice
+        : (p) => p.price || 0;
+      const price = Math.round(basePrice * (1 - pct / 100));
       const key   = r.productName + (r.serviceValue ? ` (+svc:${r.serviceValue})` : '');
 
       if (window.state.equipos[key]) {
@@ -886,7 +896,7 @@ function _injectStyles() {
     /* ── Cabecera de columnas ── */
     .flat-col-headers {
       display: grid;
-      grid-template-columns: 40px minmax(200px,2fr) 70px 60px 110px 100px 90px 100px 110px 40px;
+      grid-template-columns: 40px minmax(200px,2fr) 70px 60px 110px 100px 90px 100px 110px;
       align-items: center;
       padding: 10px 20px;
       background: #f8f9fb;
@@ -903,10 +913,11 @@ function _injectStyles() {
 
     /* ── Fila del pedido ── */
     .flat-order-row {
+      position: relative;
       display: grid;
-      grid-template-columns: 40px minmax(200px,2fr) 70px 60px 110px 100px 90px 100px 110px 40px;
+      grid-template-columns: 40px minmax(200px,2fr) 70px 60px 110px 100px 90px 100px 110px;
       align-items: center;
-      padding: 10px 20px;
+      padding: 10px 44px 10px 20px;
       border-bottom: 1px solid #eaecf0;
       transition: background 0.15s, opacity 0.2s, transform 0.2s;
       gap: 8px;
@@ -1084,25 +1095,32 @@ function _injectStyles() {
 
     /* Botón eliminar — columna propia */
     .pr-del {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 2;
     }
 
     /* Botón eliminar */
     .flat-del-btn {
-      width: 20px; height: 20px;
-      border-radius: 4px;
-      border: 1px solid rgba(239,68,68,.25);
-      background: rgba(239,68,68,.06);
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(239,68,68,.35);
+      background: rgba(239,68,68,.08);
       color: #ef4444;
       cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center;
       padding: 0; flex-shrink: 0;
       transition: all .15s;
+      opacity: 0.7;
     }
-    .flat-del-btn:hover { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.5); }
-    .flat-del-btn svg { width: 10px; height: 10px; }
+    .flat-order-row:hover .flat-del-btn { opacity: 1; }
+    .flat-del-btn:hover { background: rgba(239,68,68,.22); border-color: #ef4444; color: #dc2626; opacity: 1; }
+    .flat-del-btn svg { width: 13px; height: 13px; }
 
     /* Botón agregar */
     .flat-add-row {
@@ -1150,17 +1168,17 @@ function _injectStyles() {
     /* Responsive */
     @media (max-width: 1400px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 36px minmax(180px,2fr) 64px 56px 100px 90px 84px 90px 40px; gap: 6px; }
+      .flat-order-row { grid-template-columns: 36px minmax(180px,2fr) 64px 56px 100px 90px 84px 90px; gap: 6px; }
       .pr-partnum, .flat-col-headers span:nth-child(5) { display: none; }
     }
     @media (max-width: 1100px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 32px minmax(160px,2fr) 58px 52px 82px 78px 82px 36px; gap: 4px; }
+      .flat-order-row { grid-template-columns: 32px minmax(160px,2fr) 58px 52px 82px 78px 82px; gap: 4px; }
       .pr-subtotal, .flat-col-headers span:nth-child(9) { display: none; }
     }
     @media (max-width: 760px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 28px 1fr 50px 66px 36px; gap: 4px; }
+      .flat-order-row { grid-template-columns: 28px 1fr 50px 66px; gap: 4px; }
       .pr-prov, .pr-cat, .pr-precio-dto { display: none; }
     }
 
