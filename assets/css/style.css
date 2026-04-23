@@ -1524,17 +1524,17 @@ footer {
 .slide-1 {
   background:
     linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-    url('/img/hero1.png') center/cover no-repeat;
+    url('/img/hero1\ .jpeg') center/cover no-repeat;
 }
 .slide-2 {
   background:
     linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-    url('/img/hero2.png') center/cover no-repeat;
+    url('/img/hero\ 2.jpeg') center/cover no-repeat;
 }
 .slide-3 {
   background:
     linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-    url('/img/hero3.png') center/cover no-repeat;
+    url('/img/hero3\ .jpeg') center/cover no-repeat;
 }
 
 /* Grid overlay en cada slide */
