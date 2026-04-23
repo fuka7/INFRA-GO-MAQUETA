@@ -160,7 +160,11 @@ function _buildRowEl(id, animate) {
 
     <div class="pr-qty pr-qty--disabled" id="prqty-${id}">
       <div class="qty-spinner-wrap">
-        <span class="qty-value" id="qval-${id}">0</span>
+        <input type="number" class="qty-value" id="qval-${id}" value="0" min="0"
+               oninput="flatRowSetQty(${id}, this)"
+               onkeydown="flatRowQtyKey(event, ${id})"
+               onblur="flatRowQtyBlur(${id}, this)"
+               tabindex="0">
         <div class="qty-arrows">
           <button type="button" onclick="flatRowIncQty(${id})" tabindex="-1">▲</button>
           <button type="button" onclick="flatRowDecQty(${id})" tabindex="-1">▼</button>
@@ -183,10 +187,35 @@ function _buildRowEl(id, animate) {
     requestAnimationFrame(() => div.classList.remove('row-entering'));
   }
 
+  /* Aplicar filtro de categoría activa al select de esta fila */
+  const rowSel = div.querySelector('.flat-product-select');
+  if (rowSel) _applyCatFilterToSelect(rowSel);
+
   return div;
 }
 
 /* ─── construir opciones del <select> agrupadas por categoría ── */
+/* ─── categoría activa según el chip seleccionado ─────────────── */
+function _getActiveCat() {
+  const chip = document.querySelector('.flat-cat-chip.active');
+  return chip ? (chip.dataset.tipo || 'todos') : 'todos';
+}
+
+/* ─── aplicar filtro de categoría a un <select> de fila ───────── */
+function _applyCatFilterToSelect(sel) {
+  const cat = _getActiveCat();
+  const tipoMap = {
+    'pc':'PC','notebook':'Notebook','servidor':'Server & Storage',
+    'impresora':'Impresoras','networking':'Networking',
+    'storage':'Licencias & Atach','servicio-tic':'Servicios TIC'
+  };
+  sel.querySelectorAll('optgroup').forEach(og => {
+    const show = cat === 'todos' || og.label === (tipoMap[cat] || cat);
+    og.style.display = show ? '' : 'none';
+    og.querySelectorAll('option').forEach(o => { o.style.display = show ? '' : 'none'; });
+  });
+}
+
 function _buildSelectOptions() {
   if (!window.CATALOGO || !Array.isArray(window.CATALOGO)) return '';
 
@@ -236,8 +265,8 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     row.productName  = null;
     row.serviceValue = null;
     row.qty = 0;
-    const span = document.getElementById(`qval-${id}`);
-    if (span) span.textContent = '0';
+    const inp = document.getElementById(`qval-${id}`);
+    if (inp) { inp.value = '0'; inp.min = '0'; }
     const qtyWrap = document.getElementById(`prqty-${id}`);
     if (qtyWrap) qtyWrap.classList.add('pr-qty--disabled');
     _clearRowDisplay(id);
@@ -283,8 +312,8 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
   if (qtyWrap) qtyWrap.classList.remove('pr-qty--disabled');
   if (row.qty === 0) {
     row.qty = 1;
-    const span = document.getElementById(`qval-${id}`);
-    if (span) span.textContent = '1';
+    const inp = document.getElementById(`qval-${id}`);
+    if (inp) { inp.value = '1'; inp.min = '1'; }
   }
 
   flatRefreshPrices();
@@ -301,8 +330,8 @@ window.flatRowIncQty = function flatRowIncQty(id) {
   const row = _flatRows.find(r => r.id === id);
   if (!row) return;
   row.qty++;
-  const span = document.getElementById(`qval-${id}`);
-  if (span) span.textContent = row.qty;
+  const inp = document.getElementById(`qval-${id}`);
+  if (inp) inp.value = row.qty;
   flatRefreshPrices();
   _syncAllToOriginal();
   if (typeof window.updateSidebar        === 'function') window.updateSidebar();
@@ -311,14 +340,53 @@ window.flatRowIncQty = function flatRowIncQty(id) {
 
 window.flatRowDecQty = function flatRowDecQty(id) {
   const row = _flatRows.find(r => r.id === id);
-  if (!row || row.qty <= 0) return;
+  if (!row) return;
+  const minQty = row.productName ? 1 : 0;
+  if (row.qty <= minQty) return;
   row.qty--;
-  const span = document.getElementById(`qval-${id}`);
-  if (span) span.textContent = row.qty;
+  const inp = document.getElementById(`qval-${id}`);
+  if (inp) inp.value = row.qty;
   flatRefreshPrices();
   _syncAllToOriginal();
   if (typeof window.updateSidebar        === 'function') window.updateSidebar();
   if (typeof window.actualizarDescuento  === 'function') window.actualizarDescuento();
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   flatRowSetQty — escritura directa desde el input de teclado
+═══════════════════════════════════════════════════════════════ */
+window.flatRowSetQty = function flatRowSetQty(id, inputEl) {
+  /* Permite escritura libre — solo sincroniza si el valor es un número válido */
+  const row = _flatRows.find(r => r.id === id);
+  if (!row) return;
+  const v = parseInt(inputEl.value);
+  if (isNaN(v)) return; // campo vacío o incompleto: no hacer nada todavía
+  const minQty = row.productName ? 1 : 0;
+  row.qty = v >= minQty ? v : minQty;
+  flatRefreshPrices();
+  _syncAllToOriginal();
+  if (typeof window.updateSidebar       === 'function') window.updateSidebar();
+  if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
+};
+
+/* Al perder el foco se corrige si quedó vacío o por debajo del mínimo */
+window.flatRowQtyBlur = function flatRowQtyBlur(id, inputEl) {
+  const row = _flatRows.find(r => r.id === id);
+  if (!row) return;
+  const v = parseInt(inputEl.value);
+  const minQty = row.productName ? 1 : 0;
+  row.qty = (!isNaN(v) && v >= minQty) ? v : minQty;
+  inputEl.value = row.qty;
+  flatRefreshPrices();
+  _syncAllToOriginal();
+  if (typeof window.updateSidebar       === 'function') window.updateSidebar();
+  if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
+};
+
+/* Teclas ↑/↓ sobre el input de cantidad */
+window.flatRowQtyKey = function flatRowQtyKey(e, id) {
+  if (e.key === 'ArrowUp')   { e.preventDefault(); flatRowIncQty(id); }
+  if (e.key === 'ArrowDown') { e.preventDefault(); flatRowDecQty(id); }
 };
 
 /* ═══════════════════════════════════════════════════════════════
@@ -894,18 +962,25 @@ function _overrideValidateStep() {
 function patchFlatFilters() {
   window.aplicarFiltros = function () {
     const q = (document.getElementById('searchProductos')?.value || '').toLowerCase().trim();
+    const cat = _getActiveCat();
+    const tipoMap = {
+      'pc':'PC','notebook':'Notebook','servidor':'Server & Storage',
+      'impresora':'Impresoras','networking':'Networking',
+      'storage':'Licencias & Atach','servicio-tic':'Servicios TIC'
+    };
 
     /* Mostrar / ocultar botón de limpiar */
     const btnClear = document.getElementById('btnClearSearch');
     if (btnClear) btnClear.style.display = q ? '' : 'none';
 
-    /* Filtrar opciones en cada fila */
+    /* Filtrar opciones en cada fila: por categoría activa Y por búsqueda de texto */
     document.querySelectorAll('.flat-product-select').forEach(sel => {
       sel.querySelectorAll('optgroup').forEach(group => {
+        const catMatch = cat === 'todos' || group.label === (tipoMap[cat] || cat);
         let groupVisible = 0;
         group.querySelectorAll('option').forEach(opt => {
           const name = opt.textContent.toLowerCase();
-          const show = !q || name.includes(q);
+          const show = catMatch && (!q || name.includes(q));
           opt.style.display = show ? '' : 'none';
           if (show) groupVisible++;
         });
@@ -1083,10 +1158,18 @@ function _injectStyles() {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 18px; font-weight: 800;
       color: #0d1e36;
-      min-width: 22px;
+      width: 42px;
       text-align: center;
       line-height: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      padding: 0;
+      -moz-appearance: textfield;
     }
+    .qty-value::-webkit-outer-spin-button,
+    .qty-value::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .qty-value:focus { color: #e8920a; }
     .qty-arrows {
       display: flex;
       flex-direction: column;

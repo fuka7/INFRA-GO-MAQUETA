@@ -35,17 +35,8 @@ document.addEventListener('DOMContentLoaded',function(){document.querySelector('
 window.clsSetCat = function(tipo, btn) {
   document.querySelectorAll('.cls-cat-btn, .flat-cat-chip').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('[data-tipo="' + tipo + '"]').forEach(b => b.classList.add('active'));
-  document.querySelectorAll('.flat-product-select').forEach(sel => {
-    sel.querySelectorAll('optgroup').forEach(og => {
-      const tipoMap = {
-        'pc':'PC','notebook':'Notebook','servidor':'Server & Storage','impresora':'Impresoras',
-        'networking':'Networking','storage':'Licencias & Atach','servicio-tic':'Servicios TIC'
-      };
-      const show = tipo === 'todos' || og.label === (tipoMap[tipo] || tipo);
-      og.style.display = show ? '' : 'none';
-      og.querySelectorAll('option').forEach(o => { o.style.display = show ? '' : 'none'; });
-    });
-  });
+  /* Delegar el filtrado al motor de flat-catalog para que combine categoría + búsqueda */
+  if (typeof window.aplicarFiltros === 'function') window.aplicarFiltros();
 };
 
 </script>
