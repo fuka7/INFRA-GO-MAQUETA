@@ -74,7 +74,6 @@ window.buildCatalogTable = function buildCatalogTable() {
       <span class="flat-col-label center">Cant.</span>
       <span class="flat-col-label right">P. con dto.</span>
       <span class="flat-col-label right">Subtotal</span>
-      <span class="flat-col-label center"></span>
     </div>
     <div id="flatRowsBody"></div>
     <div class="flat-add-row">
@@ -84,6 +83,20 @@ window.buildCatalogTable = function buildCatalogTable() {
         </svg>
         Agregar producto al pedido
       </button>
+      <div class="flat-del-row-wrap">
+        <select id="flatDeleteSelect" class="flat-delete-select">
+          <option value="">— seleccionar fila a eliminar —</option>
+        </select>
+        <button type="button" class="flat-del-row-btn" onclick="flatRemoveSelectedRow()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          Eliminar
+        </button>
+      </div>
     </div>
   `;
 
@@ -164,16 +177,6 @@ function _buildRowEl(id, animate) {
       <span class="subtotal-val inactive" id="psub-${id}">—</span>
     </div>
 
-    <div class="pr-del">
-      <button type="button" class="flat-del-btn" onclick="flatRemoveRow(${id})" title="Eliminar producto">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-          <path d="M10 11v6M14 11v6"/>
-          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-        </svg>
-      </button>
-    </div>
   `;
 
   if (animate) {
@@ -242,6 +245,7 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     _syncAllToOriginal();
     if (typeof window.updateSidebar       === 'function') window.updateSidebar();
     if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
+    _updateDeleteSelect();
     return;
   }
 
@@ -287,6 +291,7 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
   _syncAllToOriginal();
   if (typeof window.updateSidebar        === 'function') window.updateSidebar();
   if (typeof window.actualizarDescuento  === 'function') window.actualizarDescuento();
+  _updateDeleteSelect();
 };
 
 /* ═══════════════════════════════════════════════════════════════
@@ -337,6 +342,37 @@ window.flatRemoveRow = function flatRemoveRow(id) {
 };
 
 /* ─── renumerar filas ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   flatRemoveSelectedRow — elimina la fila elegida en el select
+═══════════════════════════════════════════════════════════════ */
+window.flatRemoveSelectedRow = function flatRemoveSelectedRow() {
+  var sel = document.getElementById('flatDeleteSelect');
+  if (!sel || !sel.value) return;
+  var id = parseInt(sel.value);
+  if (!isNaN(id)) {
+    sel.value = '';
+    window.flatRemoveRow(id);
+  }
+};
+
+/* ─── actualizar opciones del select de eliminación ─────────────── */
+function _updateDeleteSelect() {
+  var sel = document.getElementById('flatDeleteSelect');
+  if (!sel) return;
+  var prevVal = sel.value;
+  sel.innerHTML = '<option value="">— seleccionar producto a eliminar —</option>';
+  _flatRows.forEach(function(r) {
+    if (!r.productName) return; // solo filas con producto elegido
+    var opt = document.createElement('option');
+    opt.value = r.id;
+    opt.textContent = r.productName;
+    sel.appendChild(opt);
+  });
+  if (prevVal && sel.querySelector('option[value="' + prevVal + '"]')) {
+    sel.value = prevVal;
+  }
+}
+
 function _renumberRows() {
   let i = 0;
   document.querySelectorAll('.flat-order-row').forEach(el => {
@@ -344,6 +380,7 @@ function _renumberRows() {
     const num = el.querySelector('.row-num');
     if (num) num.textContent = i;
   });
+  _updateDeleteSelect();
 }
 
 /* ─── limpiar display de una fila vacía ───────────────────────── */
@@ -1105,29 +1142,15 @@ function _injectStyles() {
       z-index: 2;
     }
 
-    /* Botón eliminar */
-    .flat-del-btn {
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      border: 1px solid rgba(239,68,68,.35);
-      background: rgba(239,68,68,.08);
-      color: #ef4444;
-      cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 0; flex-shrink: 0;
-      transition: all .15s;
-      opacity: 0.7;
-    }
-    .flat-order-row:hover .flat-del-btn { opacity: 1; }
-    .flat-del-btn:hover { background: rgba(239,68,68,.22); border-color: #ef4444; color: #dc2626; opacity: 1; }
-    .flat-del-btn svg { width: 13px; height: 13px; }
 
-    /* Botón agregar */
+
+    /* Botón agregar + zona eliminar */
     .flat-add-row {
       padding: 10px 16px;
       border-top: 1px dashed #dde1e8;
       background: #f8f9fb;
       border-radius: 0 0 12px 12px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     }
     #btnAddFlatRow {
       display: inline-flex; align-items: center; gap: 7px;
@@ -1141,6 +1164,36 @@ function _injectStyles() {
     }
     #btnAddFlatRow:hover { background: rgba(232,146,10,.18); border-color: #e8920a; }
     #btnAddFlatRow svg { width: 13px; height: 13px; }
+    .flat-del-row-wrap {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-left: auto;
+    }
+    .flat-delete-select {
+      height: 32px;
+      border: 1px solid #dde1e8;
+      border-radius: 7px;
+      padding: 0 10px;
+      font-size: 12px; color: #4a6080;
+      background: #fff;
+      cursor: pointer;
+      min-width: 220px; max-width: 380px;
+      outline: none;
+      transition: border-color .18s;
+    }
+    .flat-delete-select:focus { border-color: #ef4444; }
+    .flat-del-row-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.35);
+      border-radius: 7px;
+      padding: 6px 14px;
+      color: #ef4444;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all .18s;
+      white-space: nowrap;
+    }
+    .flat-del-row-btn:hover { background: rgba(239,68,68,.18); border-color: #ef4444; color: #dc2626; }
+    .flat-del-row-btn svg { width: 13px; height: 13px; }
 
     /* Buscador */
     .filtros-bar--simple { display: flex; align-items: center; padding: 10px 0 20px; gap: 10px; }
