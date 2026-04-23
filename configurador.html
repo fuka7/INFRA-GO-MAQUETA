@@ -13,24 +13,6 @@
   <link rel="stylesheet" href="/assets/css/footer.css">
   <link rel="stylesheet" href="/assets/css/responsive.css">
   <link rel="stylesheet" href="/assets/css/auth.css">
-  <style>
-    /* Pasos anteriores clickeables en el progress bar */
-    .progress-step { cursor: default; }
-    .progress-step.active ~ .progress-step { cursor: default; opacity: 0.5; }
-    .progress-step:not(.active):not(.progress-step.active ~ .progress-step) { cursor: pointer; }
-    .progress-step[data-step]:hover .progress-step-dot { opacity: 0.8; transform: scale(1.05); transition: transform 0.15s; }
-  </style>
-  <style>
-    /* ── Sidebar números más grandes ── */
-    .bb-value                { font-size: 20px !important; font-weight: 800 !important; }
-    .bb-value--orange        { font-size: 22px !important; }
-    .bb-cuota-val            { font-size: 22px !important; font-weight: 800 !important; }
-    .bb-label                { font-size: 11px !important; font-weight: 700 !important; letter-spacing: 0.5px; text-transform: uppercase; }
-    .bb-sub                  { font-size: 11px !important; opacity: 0.65; }
-    /* IVA nota verde bajo total */
-    .bb-sub                  { color: inherit; }
-    .bb-col--total .bb-sub   { color: #22c55e; font-weight: 600; font-size: 10px !important; }
-  </style>
 </head>
 <body>
 
@@ -56,7 +38,7 @@ window.clsSetCat = function(tipo, btn) {
   document.querySelectorAll('.flat-product-select').forEach(sel => {
     sel.querySelectorAll('optgroup').forEach(og => {
       const tipoMap = {
-        'notebook':'Notebook','servidor':'Server & Storage','impresora':'Impresoras',
+        'pc':'PC','notebook':'Notebook','servidor':'Server & Storage','impresora':'Impresoras',
         'networking':'Networking','storage':'Licencias & Atach','servicio-tic':'Servicios TIC'
       };
       const show = tipo === 'todos' || og.label === (tipoMap[tipo] || tipo);
@@ -229,6 +211,9 @@ window.clsSetCat = function(tipo, btn) {
         <button class="flat-cat-chip active" data-tipo="todos" onclick="clsSetCat('todos',this)">
           Todos <span id="cnt-todos">—</span>
         </button>
+        <button class="flat-cat-chip" data-tipo="pc" onclick="clsSetCat('pc',this)">
+          PC <span id="cnt-pc">—</span>
+        </button>
         <button class="flat-cat-chip" data-tipo="notebook" onclick="clsSetCat('notebook',this)">
           Notebook <span id="cnt-notebook">—</span>
         </button>
@@ -260,18 +245,6 @@ window.clsSetCat = function(tipo, btn) {
         <div class="flat-table-header-right">
           <span class="flat-table-year">Portafolio 2026</span>
         </div>
-      </div>
-
-      <!-- Buscador -->
-      <div class="flat-search-row">
-        <div class="flat-search-wrap">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" id="searchProductos" placeholder="Buscar en el catálogo (nombre o proveedor)…" oninput="aplicarFiltros()" autocomplete="off">
-          <button type="button" id="btnClearSearch" onclick="clearSearch()" style="display:none">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-        <span class="flat-search-count" id="catalogoConteo"></span>
       </div>
 
       <!-- Catálogo (buildCatalogTable lo inyecta aquí) -->

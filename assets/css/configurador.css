@@ -372,13 +372,13 @@ body {
 .flat-cat-chip {
   display: inline-flex; align-items: center; gap: 5px;
   background: var(--c-surface); border: 1px solid var(--c-border);
-  border-radius: 20px; padding: 5px 14px;
-  font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600;
+  border-radius: 20px; padding: 8px 18px;
+  font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 600;
   color: var(--c-text-2); cursor: pointer; transition: all .18s; white-space: nowrap;
 }
 .flat-cat-chip span {
-  font-size: 10px; background: var(--c-surface-2); color: var(--c-text-4);
-  padding: 1px 5px; border-radius: 8px; font-weight: 700;
+  font-size: 12px; background: var(--c-surface-2); color: var(--c-text-4);
+  padding: 2px 7px; border-radius: 8px; font-weight: 700;
 }
 .flat-cat-chip:hover { border-color: rgba(232,146,10,.4); background: var(--orange-dim); color: var(--c-text); }
 .flat-cat-chip.active { background: var(--orange-dim); border-color: var(--orange); color: var(--orange); font-weight: 700; }
@@ -1491,7 +1491,7 @@ body {
   .modal-box { padding: 32px 24px 28px; }
   .flat-table-header { flex-direction: column; gap: 8px; }
   .flat-cat-chips-bar { gap: 4px; }
-  .flat-cat-chip { font-size: 11px; padding: 4px 10px; }
+  .flat-cat-chip { font-size: 12px; padding: 6px 12px; }
 }
 @media (max-width: 480px) {
   .progress-step-dot { width: 28px; height: 28px; }

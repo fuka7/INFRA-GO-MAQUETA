@@ -186,6 +186,7 @@ function _buildSelectOptions() {
 
   const grupos = {};
   const labelMap = {
+    'pc':           'PC',
     'notebook':     'Notebook',
     'servidor':     'Server & Storage',
     'impresora':    'Impresoras',
@@ -194,6 +195,8 @@ function _buildSelectOptions() {
     'servicio-tic': 'Servicios TIC',
   };
 
+  const orden = ['pc', 'notebook', 'servidor', 'impresora', 'networking', 'storage', 'servicio-tic'];
+
   window.CATALOGO.forEach(p => {
     const g = p.tipo || 'otros';
     if (!grupos[g]) grupos[g] = [];
@@ -201,14 +204,16 @@ function _buildSelectOptions() {
   });
 
   let html = '';
-  Object.entries(grupos).forEach(([tipo, items]) => {
-    const label = labelMap[tipo] || tipo;
-    html += `<optgroup label="${label}">`;
-    items.forEach(p => {
-      const part = p.partNumber ? ` · ${p.partNumber}` : '';
-      html += `<option value="${encodeURIComponent(p.name)}" data-tipo="${tipo}">${p.name}${part}</option>`;
-    });
-    html += `</optgroup>`;
+  orden.forEach(tipo => {
+    if (grupos[tipo]) {
+      const label = labelMap[tipo];
+      html += `<optgroup label="${label}">`;
+      grupos[tipo].forEach(p => {
+        const part = p.partNumber ? ` · ${p.partNumber}` : '';
+        html += `<option value="${encodeURIComponent(p.name)}" data-tipo="${tipo}">${p.name}${part}</option>`;
+      });
+      html += `</optgroup>`;
+    }
   });
   return html;
 }

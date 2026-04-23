@@ -19,7 +19,7 @@
    }
 
    TIPOS VÁLIDOS (deben coincidir con los filtros del HTML):
-     notebook | servidor | impresora | networking | storage | servicio-tic
+     pc | notebook | servidor | impresora | networking | storage | servicio-tic
 
    MARCAS VÁLIDAS (deben coincidir con los chips de filtro del HTML):
      HP | Dell | Lenovo | Apple | Brother | Cisco | Fortinet | Ubiquiti | Synology | QNAP | Canon | TIC Managers
@@ -276,9 +276,9 @@ const CATALOGO = [
   {
     name:       "HP EliteOne 800 G9 AIO",
     marca:      "HP",
-    tipo:       "notebook",
+    tipo:       "pc",
     partNumber: "6B2Q4LA#ABM",
-    price:      890000,
+    priceUSD:   989,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
       { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes" },
@@ -288,9 +288,9 @@ const CATALOGO = [
   {
     name:       "HP ProOne 440 G9 AIO",
     marca:      "HP",
-    tipo:       "notebook",
+    tipo:       "pc",
     partNumber: "6B2D2LA#ABM",
-    price:      720000,
+    priceUSD:   800,
     servicios: [
       { value: "instalacion", label: "Instalación y configuración",  price: 80000, unidad: "",      frecuencia: "al inicio"    },
       { value: "soporte",     label: "Soporte técnico mensual",      price: 35000, unidad: "/mes",  frecuencia: "/mes" },
@@ -304,7 +304,7 @@ const CATALOGO = [
   {
     name:       "Microsoft 365 Business Basic (mensual/usuario)",
     marca:      "TIC Managers",
-    tipo:       "servicio-tic",
+    tipo:       "storage",
     partNumber: "CFQ7TTC0J25C",
     price:      7900,
     servicios: [],
@@ -312,7 +312,7 @@ const CATALOGO = [
   {
     name:       "Microsoft 365 Business Standard (mensual/usuario)",
     marca:      "TIC Managers",
-    tipo:       "servicio-tic",
+    tipo:       "storage",
     partNumber: "CFQ7TTC0JTHM",
     price:      15900,
     servicios: [],
@@ -320,7 +320,7 @@ const CATALOGO = [
   {
     name:       "Microsoft 365 Apps for Business (mensual/usuario)",
     marca:      "TIC Managers",
-    tipo:       "servicio-tic",
+    tipo:       "storage",
     partNumber: "CFQ7TTC0J7D9",
     price:      11900,
     servicios: [],
@@ -336,7 +336,7 @@ const CATALOGO = [
   {
     name:       "Bitdefender GravityZone Business Security Premium (mensual/equipo)",
     marca:      "TIC Managers",
-    tipo:       "servicio-tic",
+    tipo:       "storage",
     partNumber: "BD-GZ-BSP-MO",
     price:      7500,
     servicios: [],
