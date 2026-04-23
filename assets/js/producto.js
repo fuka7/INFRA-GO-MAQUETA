@@ -131,7 +131,8 @@ function renderProducto(p) {
 }
 
 /* ── Agregar al carro ── */
-function igbAddToCart() {
+function igbAddToCart(e) {
+  if (e) e.stopPropagation();
   const p = getProducto();
   if (!p) return;
 

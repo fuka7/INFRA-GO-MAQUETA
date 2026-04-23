@@ -26,14 +26,24 @@
     <div class="igc-page-items" id="igcPageContainer"></div>
 
     <div class="igc-servicios" id="igcServiciosContainer" style="display:none;">
-      <div class="igc-servicios-header">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <div>
-          <div class="igc-servicios-title">Servicios opcionales</div>
-          <div class="igc-servicios-subtitle">Agrega soporte y servicios a tu compra</div>
+      <button class="igc-servicios-toggle" onclick="igcToggleServicios()" type="button">
+        <div class="igc-servicios-toggle-left">
+          <div class="igc-servicios-toggle-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="igc-servicios-title">¿Necesitas servicios adicionales?</div>
+            <div class="igc-servicios-subtitle">Instalación, soporte técnico, garantía extendida y más</div>
+          </div>
         </div>
+        <div class="igc-servicios-toggle-right">
+          <span class="igc-servicios-toggle-cta">Ver servicios</span>
+          <svg class="igc-servicios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </button>
+      <div class="igc-servicios-body" id="igcServiciosBody">
+        <div class="igc-servicios-list" id="igcServiciosList"></div>
       </div>
-      <div class="igc-servicios-list" id="igcServiciosList"></div>
     </div>
   </div>
 
@@ -329,6 +339,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){igbCloseMen
 <script src="/assets/js/footer-inline.js"></script>
 <script src="/assets/js/comunas-chile.js"></script>
 <script src="/assets/js/shipping.js"></script>
+<script src="/assets/js/catalogo.js"></script>
 <script src="/assets/js/carrito.js"></script>
 </body>
 </html>

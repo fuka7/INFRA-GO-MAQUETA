@@ -12,14 +12,29 @@
   var CART_KEY = 'igb_cart';
   var _items = [];
 
-  /* ── Servicios opcionales disponibles ── */
-  var SERVICIOS_TIENDA = [
-    { id: 'instalacion', label: 'Instalación y configuración', desc: 'Instalación en sitio y puesta en marcha', price: 80000,  unidad: '',     frecuencia: 'pago único' },
-    { id: 'soporte',     label: 'Soporte técnico mensual',     desc: 'Mesa de ayuda y soporte en terreno 24/7', price: 35000, unidad: '/mes', frecuencia: 'mensual'    },
-    { id: 'garantia',    label: 'Garantía extendida 3 años',   desc: 'Cobertura ampliada de fábrica + InfraGo', price: 45000, unidad: '/año', frecuencia: 'anual'      },
-    { id: 'migracion',   label: 'Migración de datos',          desc: 'Transferencia segura de datos y archivos', price: 60000, unidad: '',    frecuencia: 'pago único' },
-    { id: 'monitoreo',   label: 'Monitoreo 24/7',              desc: 'Supervisión continua de equipos y alertas', price: 80000, unidad: '/mes', frecuencia: 'mensual'  },
-  ];
+  /* ── Servicios opcionales — derivados de CATALOGO (catalogo.js) ── */
+  var SERVICIOS_TIENDA = (function() {
+    var fuente = window.CATALOGO || [];
+    var tics = fuente.filter(function(p) {
+      return p.tipo === 'servicio-tic'
+        && p.marca === 'TIC Managers'
+        && p.name.indexOf('Cibergestión') === -1
+        && p.name.indexOf('Microsoft') === -1
+        && p.name.indexOf('Bitdefender') === -1;
+    });
+    return tics.map(function(p) {
+      var esMensual = p.name.toLowerCase().indexOf('mensual') !== -1
+                   || p.name.toLowerCase().indexOf('seguro') !== -1;
+      return {
+        id:        p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+        label:     p.name.replace('TIC Managers ', ''),
+        desc:      p.desc || '',
+        price:     p.price,
+        unidad:    esMensual ? '/mes' : '',
+        frecuencia: esMensual ? 'mensual' : 'pago único'
+      };
+    });
+  })();
 
   /* ── Estado de servicios y método de pago ── */
   var _selectedSvc = {};   /* { id: true/false } */
@@ -67,6 +82,7 @@
     _lastAddedId = id;
     _save();
     _updateNavbarBadge();
+    if (!document.getElementById('igcMiniDropdown')) _buildMiniDropdown();
     _openMini();
     _renderMini();
   };
@@ -263,6 +279,7 @@
     if (document.getElementById('igcMiniDropdown')) return;
     var cartBtn = document.querySelector('.igb-cart');
     if (!cartBtn) return;
+    cartBtn.style.display = '';
 
     /* Corregir href del botón del carrito */
     cartBtn.href = '/carrito.html';
@@ -371,7 +388,10 @@
     var container = document.getElementById('igcServiciosContainer');
     var list = document.getElementById('igcServiciosList');
     if (!list) return;
-    if (!_items.length) { if (container) container.style.display = 'none'; return; }
+    if (!_items.length) {
+      if (container) { container.style.display = 'none'; container.classList.remove('open'); }
+      return;
+    }
     if (container) container.style.display = '';
 
     list.innerHTML = SERVICIOS_TIENDA.map(function(svc) {
@@ -395,6 +415,14 @@
       ].join('');
     }).join('');
   }
+
+  window.igcToggleServicios = function() {
+    var container = document.getElementById('igcServiciosContainer');
+    if (!container) return;
+    var isOpen = container.classList.toggle('open');
+    var cta = container.querySelector('.igc-servicios-toggle-cta');
+    if (cta) cta.textContent = isOpen ? 'Ocultar servicios' : 'Ver servicios';
+  };
 
   window.igcToggleSvc = function(id, checked) {
     _selectedSvc[id] = !!checked;
