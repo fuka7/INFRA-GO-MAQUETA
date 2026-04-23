@@ -579,7 +579,13 @@ window.refreshTablePrices = window.flatRefreshPrices;
    · Banner inline si totalQty >= 50 (alerta 1)
    · Se llama desde flatRefreshPrices
 ═══════════════════════════════════════════════════════════════ */
+/* ── Flags de alertas descartadas (en memoria, duran la sesión) ── */
+const _igaAlertDismissed = { volume: false, brand: false };
+
 function _checkVolumeAlerts() {
+  /* Si ya fue descartada una vez, nunca vuelve a aparecer */
+  if (_igaAlertDismissed.volume) return;
+
   const totalQty = _flatRows.filter(r => r.productName && r.qty > 0)
     .reduce((s, r) => s + r.qty, 0);
 
@@ -606,7 +612,7 @@ function _checkVolumeAlerts() {
           </svg>
           Hablar con ejecutivo
         </button>
-        <button class="iga-vb-close" onclick="this.closest('#iga-volume-banner').remove()" title="Cerrar">
+        <button class="iga-vb-close" onclick="igaDismissVolumeBanner()" title="Cerrar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
@@ -616,10 +622,19 @@ function _checkVolumeAlerts() {
       if (table) table.parentNode.insertBefore(banner, table);
     }
     banner.classList.add('iga-vb--visible');
-  } else {
-    if (banner) banner.classList.remove('iga-vb--visible');
   }
+  /* No ocultar al bajar de 50 — solo se oculta al descartar */
 }
+
+/* Descarta el banner de volumen para siempre en esta sesión */
+window.igaDismissVolumeBanner = function() {
+  _igaAlertDismissed.volume = true;
+  const banner = document.getElementById('iga-volume-banner');
+  if (banner) {
+    banner.classList.remove('iga-vb--visible');
+    setTimeout(() => banner.remove(), 400);
+  }
+};
 
 /* ═══════════════════════════════════════════════════════════════
    _calcBrandStats — calcula qty total y marca dominante
@@ -831,8 +846,11 @@ window.igaCloseVolumeModal = function() {
   setTimeout(() => { overlay.remove(); document.body.style.overflow = ''; }, 280);
 };
 
-/* igaResumeQuote — avanza al paso 2 sin re-interceptar la validación de 50 uds */
+/* igaResumeQuote — descarta la alerta de marca y avanza al paso 2 */
 window.igaResumeQuote = function() {
+  /* Marcar alerta de marca como descartada para siempre en esta sesión */
+  _igaAlertDismissed.brand = true;
+
   const _origValidate = window.validateStep;
   window.validateStep = function(step) {
     if (step === 1) return true; // ya validamos antes de abrir el modal
@@ -944,11 +962,16 @@ function _overrideValidateStep() {
       }
       _syncAllToOriginal();
       if (typeof window.collectEquipos === 'function') window.collectEquipos();
-      /* Si supera 50 unidades → mostrar modal de alto volumen e interceptar avance */
-      if (totalQty >= 50) {
-        window.igaOpenVolumeModal();
-        return false; // el modal ofrece "Continuar sin asistencia" que llama igaResumeQuote
+
+      /* Alerta de marca dominante al presionar Siguiente (solo si no fue descartada) */
+      if (!_igaAlertDismissed.brand) {
+        const stats = _calcBrandStats();
+        if (stats.topPct >= 50 && stats.topBrand) {
+          window.igaOpenVolumeModal();
+          return false; // el modal ofrece "Continuar sin asistencia" → igaResumeQuote
+        }
       }
+
       return true;
     }
     return _orig(step);
