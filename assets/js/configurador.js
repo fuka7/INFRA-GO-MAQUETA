@@ -611,24 +611,16 @@ function generateFinalSummary() {
     }
   }
 
-  // ── Totales con IVA ────────────────────────────────────────────
+  // Subtotales con IVA en los footers de cada card
   const eqIVA  = Math.round(totalEq * 1.19);
   const svcIVA = Math.round(totalSvc * 1.19);
-  const total  = eqIVA + svcIVA;
   setTxt('summarySubtotalEq',  fmt(eqIVA));
   setTxt('summarySubtotalSvc', fmt(svcIVA));
-  setTxt('summaryTotal',       fmt(total));
 
-  // Cuota usando la misma fórmula PMT del simulador (paso 2), sobre montos con IVA
-  const tm = simTasa / 100 / 12;
-  let cuotaEq = 0;
-  if (tm === 0) {
-    cuotaEq = eqIVA / simPlazo;
-  } else {
-    cuotaEq = eqIVA * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
-  }
-  setTxt('summaryCuota',      fmt(Math.round(cuotaEq + svcIVA)));
-  setTxt('plazoLabelSummary', simPlazo + ' meses');
+  // Guardar neto para que refreshResumenTotales lo use
+  window._summaryNetoEq  = totalEq;
+  window._summaryNetoSvc = totalSvc;
+  refreshResumenTotales();
 
   // ── Información de contacto ────────────────────────────
   const f = state.formulario;
@@ -1170,8 +1162,64 @@ window.actualizarDescuento  = actualizarDescuento;
 window.obtenerPctDescuento  = obtenerPctDescuento;
 window.state                = state;
 window.tipoCambio           = tipoCambio;
-window.popularComunas       = popularComunas;
-window.cotizarDespachoForm  = cotizarDespachoForm;
+window.popularComunas        = popularComunas;
+window.cotizarDespachoForm   = cotizarDespachoForm;
+window.refreshResumenTotales = refreshResumenTotales;
+
+// ═════════════════════════════════════════
+// TOTALES RESUMEN (con despacho)
+// ═════════════════════════════════════════
+function refreshResumenTotales() {
+  const fmt    = n => n.toLocaleString('es-CL');
+  const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+  const totalEq  = window._summaryNetoEq  || 0;
+  const totalSvc = window._summaryNetoSvc || 0;
+  const eqIVA    = Math.round(totalEq * 1.19);
+  const svcIVA   = Math.round(totalSvc * 1.19);
+  const neto     = totalEq + totalSvc;
+  const iva      = Math.round(neto * 0.19);
+
+  // Despacho
+  const despacho      = window._igDespachoResult || null;
+  const shippingCost  = despacho && despacho.tipo !== 'gratis' ? (despacho.precio || 0) : 0;
+  const shippingGratis = despacho && despacho.tipo === 'gratis';
+
+  const total = neto + iva + shippingCost;
+
+  setTxt('summaryNeto',  fmt(neto));
+  setTxt('summaryIVA',   fmt(iva));
+  setTxt('summaryTotal', fmt(total));
+
+  // Fila de despacho
+  const row   = document.getElementById('summaryDespachoRow');
+  const label = document.getElementById('summaryDespachoLabel');
+  if (row && label && despacho) {
+    row.style.display = '';
+    label.textContent = shippingGratis ? 'Gratis' : '$' + fmt(shippingCost);
+    label.style.color = shippingGratis ? '#22c55e' : '';
+  } else if (row) {
+    row.style.display = 'none';
+  }
+
+  // Financiamiento (sobre equipos + servicios, sin despacho — se paga aparte)
+  const tm = simTasa / 100 / 12;
+  let cuotaEq = 0;
+  if (tm === 0) {
+    cuotaEq = eqIVA / simPlazo;
+  } else {
+    cuotaEq = eqIVA * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
+  }
+  const cuotaTotal = Math.round(cuotaEq + svcIVA);
+  const totalPagar = Math.round(cuotaEq * simPlazo + svcIVA * simPlazo + shippingCost);
+  const intereses  = Math.max(0, Math.round(cuotaEq * simPlazo - eqIVA));
+
+  setTxt('summaryCuota',      fmt(cuotaTotal));
+  setTxt('summaryTotalPagar', fmt(totalPagar));
+  setTxt('summaryIntereses',  fmt(intereses));
+  setTxt('plazoLabelSummary', simPlazo + '');
+  setTxt('tasaLabelSummary',  simTasa + '');
+}
 
 // ═════════════════════════════════════════
 // DESPACHO — Paso 3

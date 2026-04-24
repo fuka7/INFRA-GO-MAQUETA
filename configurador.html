@@ -262,7 +262,7 @@ window.clsSetCat = function(tipo, btn) {
           </div>
           <div class="sim-section">
             <div class="sim-section-title">Servicios incluidos (c/IVA)</div>
-            <div class="sim-amount sim-amount--svc">$<span id="serviciosMensualesSim">0</span>/mes</div>
+            <div class="sim-amount sim-amount--svc">$<span id="serviciosMensualesSim">0</div>
           </div>
           <div class="sim-section">
             <div class="sim-section-title">Plazo de financiamiento</div>
@@ -438,15 +438,48 @@ window.clsSetCat = function(tipo, btn) {
         </div>
       </div>
 
+      <!-- Tarjeta de despacho inyectada por shipping.js -->
+      <div id="resumen-despacho-slot"></div>
+
       <div class="resumen-total-box">
-        <div class="resumen-total-row">
-          <span>Total mensual estimado</span>
+
+        <!-- Desglose de precio -->
+        <div class="resumen-total-row resumen-total-desglose">
+          <span>Subtotal neto</span>
+          <span>$<span id="summaryNeto">0</span></span>
+        </div>
+        <div class="resumen-total-row resumen-total-desglose">
+          <span>+ IVA (19%)</span>
+          <span>$<span id="summaryIVA">0</span></span>
+        </div>
+        <div class="resumen-total-row resumen-total-desglose" id="summaryDespachoRow" style="display:none">
+          <span>+ Despacho</span>
+          <span id="summaryDespachoLabel">—</span>
+        </div>
+        <div class="resumen-total-row resumen-total-main">
+          <span>Total</span>
           <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
         </div>
-        <div class="resumen-total-row resumen-total-sub">
-          <span>Cuota en <span id="plazoLabelSummary">24</span> meses</span>
-          <span>≈ $<span id="summaryCuota">0</span>/mes</span>
+
+        <div class="resumen-total-divider"></div>
+
+        <!-- Financiamiento -->
+        <div class="resumen-total-row resumen-total-fin-header">
+          <span>Financiamiento — <span id="plazoLabelSummary">24</span> meses al <span id="tasaLabelSummary">12</span>% anual</span>
         </div>
+        <div class="resumen-total-row">
+          <span>Cuota mensual estimada</span>
+          <span class="resumen-total-cuota">≈ $<span id="summaryCuota">0</span>/mes</span>
+        </div>
+        <div class="resumen-total-row resumen-total-sub">
+          <span>Total a pagar</span>
+          <span>$<span id="summaryTotalPagar">0</span></span>
+        </div>
+        <div class="resumen-total-row resumen-total-sub">
+          <span>Intereses estimados</span>
+          <span>$<span id="summaryIntereses">0</span></span>
+        </div>
+
       </div>
 
       <!-- Bloque de info de contacto generado por generateFinalSummary() -->

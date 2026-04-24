@@ -1027,7 +1027,7 @@ body {
   background: var(--c-surface);
   border: 1px solid rgba(232,146,10,.3);
   border-radius: var(--radius);
-  padding: 20px 24px;
+  padding: 22px 26px;
   margin-bottom: 16px;
   display: flex;
   flex-direction: column;
@@ -1040,16 +1040,41 @@ body {
   font-size: 15px; font-weight: 700;
   color: var(--c-text);
 }
+.resumen-total-desglose {
+  font-size: 13px; font-weight: 500;
+  color: var(--c-text-2);
+}
+.resumen-total-main {
+  font-size: 16px; font-weight: 800;
+  color: var(--c-text);
+  border-top: 1px solid var(--c-border);
+  padding-top: 10px;
+  margin-top: 2px;
+}
 .resumen-total-val {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px; font-weight: 800;
+  font-size: 28px; font-weight: 800;
+  color: var(--orange);
+}
+.resumen-total-divider {
+  border: none;
+  border-top: 2px dashed var(--c-border);
+  margin: 4px 0;
+}
+.resumen-total-fin-header {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--c-text-3);
+  justify-content: flex-start;
+}
+.resumen-total-cuota {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 800;
   color: var(--orange);
 }
 .resumen-total-sub {
-  font-size: 13px; font-weight: 600;
+  font-size: 13px; font-weight: 500;
   color: var(--c-text-2);
-  border-top: 1px dashed var(--c-border);
-  padding-top: 10px;
 }
 .resumen-total-sub span:last-child { color: var(--c-text-3); font-size: 13px; }
 
@@ -1076,17 +1101,17 @@ body {
 .sim-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: start;
+  gap: 28px;
+  align-items: stretch;
 }
 .sim-panel {
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 36px 32px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 .sim-section { display: flex; flex-direction: column; gap: 10px; }
 .sim-section-title {
@@ -1096,10 +1121,10 @@ body {
 }
 .sim-amount {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 30px; font-weight: 800;
+  font-size: 40px; font-weight: 800;
   color: var(--c-text);
 }
-.sim-amount--svc { font-size: 22px; color: var(--c-text-2); }
+.sim-amount--svc { font-size: 28px; color: var(--c-text-2); }
 
 .sim-plazo-btns {
   display: grid;
@@ -1110,9 +1135,9 @@ body {
   background: var(--c-surface-2);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-s);
-  padding: 10px 6px;
+  padding: 14px 6px;
   font-family: 'Barlow', sans-serif;
-  font-size: 13px; font-weight: 700;
+  font-size: 15px; font-weight: 700;
   color: var(--c-text-2);
   cursor: pointer;
   text-align: center;
@@ -1164,10 +1189,11 @@ body {
   background: var(--navy);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 36px 32px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  justify-content: center;
 }
 .sim-result-main { text-align: center; }
 .sim-result-label {
@@ -1178,7 +1204,7 @@ body {
 }
 .sim-result-val {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 52px; font-weight: 800;
+  font-size: 72px; font-weight: 800;
   color: var(--orange);
   line-height: 1;
 }
@@ -1217,18 +1243,18 @@ body {
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: var(--radius-s);
-  padding: 14px 12px;
+  padding: 20px 16px;
   text-align: center;
 }
 .sim-total-label {
-  font-size: 10px; font-weight: 700;
+  font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: .4px;
   color: rgba(255,255,255,.45);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .sim-total-val {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px; font-weight: 800;
+  font-size: 26px; font-weight: 800;
   color: #fff;
 }
 

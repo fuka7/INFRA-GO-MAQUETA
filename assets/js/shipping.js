@@ -577,8 +577,8 @@
   };
 
   function _injectDespachoCardConfigurador() {
-    var summaryInfo = document.getElementById('summaryInfo');
-    if (!summaryInfo) return;
+    var slot = document.getElementById('resumen-despacho-slot');
+    if (!slot) return;
 
     /* Crear tarjeta solo si no existe */
     if (!document.getElementById('resumen-despacho-card')) {
@@ -598,7 +598,7 @@
         '  <span style="font-size:13px;color:#9aa9bb;font-style:italic;">Selecciona una comuna en el paso anterior para ver el costo de despacho.</span>',
         '</div>'
       ].join('\n');
-      summaryInfo.insertAdjacentElement('beforebegin', card);
+      slot.appendChild(card);
     }
 
     _updateDespachoCardConfigurador();
@@ -621,6 +621,11 @@
 
     try {
       var r      = await window.igShipping.cotizar(comunaVal, regionVal, totalCompra);
+
+      /* Guardar resultado para que refreshResumenTotales lo sume al total */
+      window._igDespachoResult = r;
+      if (typeof window.refreshResumenTotales === 'function') window.refreshResumenTotales();
+
       var gratis = r.tipo === 'gratis';
       var ref    = r.tipo === 'referencial'
         ? ' <span style="font-size:11px;font-weight:400;color:#9aa9bb;">(referencial)</span>' : '';
