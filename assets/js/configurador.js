@@ -335,14 +335,28 @@ function collectEquipos() {
   if (hasFlatRows) {
     // Fuente de verdad: flat-catalog rows
     state.equipos = {};
+
+    // Calcular total hardware para descuento por volumen (igual lógica que updateSidebar)
+    const totalQtyHw = window._flatRows
+      .filter(r => r.productName && r.qty > 0)
+      .reduce((s, r) => {
+        const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
+        return prod && prod.tipo !== 'servicio-tic' ? s + r.qty : s;
+      }, 0);
+    const pct = obtenerPctDescuento(totalQtyHw);
+
     window._flatRows.forEach(r => {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto) return;
       const tc = window.tipoCambio || 900;
-      const price = (producto.priceUSD && producto.priceUSD > 0)
+      const basePrice = (producto.priceUSD && producto.priceUSD > 0)
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
+      // Aplicar descuento por volumen solo a hardware (servicio-tic no descuenta)
+      const price = (producto.tipo !== 'servicio-tic')
+        ? Math.round(basePrice * (1 - pct / 100))
+        : basePrice;
       state.equipos[r.productName] = { qty: r.qty, price };
     });
   } else {
@@ -402,9 +416,10 @@ function collectServicios() {
 // SIDEBAR / STICKY RESUMEN
 // ═════════════════════════════════════════
 function updateSidebar() {
-  let totalEqCLP    = 0;  // solo hardware (no servicio-tic)
-  let totalQtyEq    = 0;  // solo unidades de hardware
-  let totalQtySvc   = 0;  // solo unidades de servicios
+  let totalEqBase   = 0;  // hardware precio lista (sin descuento)
+  let totalEqCLP    = 0;  // hardware precio con descuento (lo que paga el cliente)
+  let totalQtyEq    = 0;  // unidades de hardware
+  let totalQtySvc   = 0;  // unidades de servicios
   const selectedProducts = [];
 
   // Leer desde _flatRows si está disponible (fuente de verdad)
@@ -432,8 +447,9 @@ function updateSidebar() {
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
       const precio = Math.round(precioBase * (1 - pct / 100));
-      totalEqCLP += r.qty * precio;
-      totalQtyEq += r.qty;
+      totalEqBase += r.qty * precioBase;  // acumula precio lista
+      totalEqCLP  += r.qty * precio;      // acumula precio con descuento
+      totalQtyEq  += r.qty;
       selectedProducts.push({ name: r.productName, qty: r.qty });
     });
   } else {
@@ -475,14 +491,13 @@ function updateSidebar() {
     });
   }
 
-  // Descuento — solo sobre hardware
-  const pctDcto             = obtenerPctDescuento(totalQtyEq);
-  const descuento           = totalEqCLP * (pctDcto / 100);
-  const totalEquiposConDcto = totalEqCLP - descuento;
-  const totalNeto           = totalEquiposConDcto + totalSvc;
-  const iva                 = Math.round(totalNeto * 0.19);
-  const totalConIVA         = totalNeto + iva;
-  const totalQty            = totalQtyEq;
+  // Cálculos correctos — totalEqCLP ya tiene el descuento aplicado desde el loop
+  const pctDcto     = obtenerPctDescuento(totalQtyEq);
+  const descuento   = Math.round(totalEqBase - totalEqCLP); // ahorro real: lista − con descuento
+  const totalNeto   = totalEqCLP + totalSvc;                // neto: hw descontado + servicios
+  const iva         = Math.round(totalNeto * 0.19);
+  const totalConIVA = totalNeto + iva;
+  const totalQty    = totalQtyEq;
 
   const setTxt = (id, val) => {
     const el = document.getElementById(id);
@@ -491,13 +506,13 @@ function updateSidebar() {
 
   setTxt('countEquipos',   totalQty);
   setTxt('countServicios', countSvc);
-  setTxt('totalEquipos',   totalEquiposConDcto.toLocaleString('es-CL'));
+  setTxt('totalEquipos',   totalEqCLP.toLocaleString('es-CL'));
   setTxt('totalServicios', totalSvc.toLocaleString('es-CL'));
   setTxt('totalNeto',      totalNeto.toLocaleString('es-CL'));
   setTxt('totalIVA',       iva.toLocaleString('es-CL'));
   setTxt('totalGeneral',   totalConIVA.toLocaleString('es-CL'));
   setTxt('ahorroTotal',    descuento.toLocaleString('es-CL'));
-  setTxt('descuentoPct',   pctDcto + '%');
+  setTxt('descuentoPct',   pctDcto > 0 ? pctDcto + '%' : '—');
   setTxt('plazoSidebarLabel', simPlazo);
 
   // Lista de productos en sidebar
@@ -593,8 +608,17 @@ function generateFinalSummary() {
   setTxt('summarySubtotalEq',  fmt(totalEq));
   setTxt('summarySubtotalSvc', fmt(totalSvc));
   setTxt('summaryTotal',       fmt(total));
-  setTxt('summaryCuota',       fmt(Math.round(total / simPlazo)));
-  setTxt('plazoLabelSummary',  simPlazo + ' meses');
+
+  // Cuota usando la misma fórmula PMT del simulador (paso 2)
+  const tm = simTasa / 100 / 12;
+  let cuotaEq = 0;
+  if (tm === 0) {
+    cuotaEq = totalEq / simPlazo;
+  } else {
+    cuotaEq = totalEq * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
+  }
+  setTxt('summaryCuota',      fmt(Math.round(cuotaEq + totalSvc)));
+  setTxt('plazoLabelSummary', simPlazo + ' meses');
 
   // ── Información de contacto ────────────────────────────
   const f = state.formulario;

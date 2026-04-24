@@ -491,14 +491,17 @@ window.clsSetCat = function(tipo, btn) {
       <div class="bb-sub bb-sub--iva">
         Neto $<span id="totalNeto">0</span> + IVA $<span id="totalIVA">0</span>
       </div>
-      <div class="bb-sub">Plazo <span id="plazoSidebarLabel">24</span> m</div>
     </div>
 
     <div class="bb-divider"></div>
 
     <div class="bb-col bb-actions">
+      <div class="bb-cuotas-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        ¿Cómo quieres pagar en cuotas?
+      </div>
       <button class="bb-btn-next" id="btnNext" onclick="nextStep()">
-        Siguiente
+        Simular financiamiento
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
@@ -728,5 +731,6 @@ document.addEventListener('keydown',function(e){
 <!-- Inyector de componentes reutilizables -->
 <script src="/assets/js/navbar-inline.js"></script>
 <script src="/assets/js/footer-inline.js"></script>
+
 </body>
 </html>

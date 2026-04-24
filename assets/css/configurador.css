@@ -193,13 +193,15 @@ body {
 ════════════════════════════════════════════ */
 .right-sidebar {
   position: sticky;
-  top: 170px;
+  top: 104px;          /* igb-top(36) + igb-main(60) + 8px buffer */
+  align-self: start;
   background: var(--navy);
   border-radius: var(--radius);
   border-left: 3px solid rgba(232,146,10,.5);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: 10;
 }
 
 /* Cada fila de dato */
@@ -220,7 +222,20 @@ body {
 .right-sidebar .bb-actions {
   padding: 14px 18px;
   flex-direction: column;
+  gap: 8px;
 }
+.bb-cuotas-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  opacity: .85;
+}
+.bb-cuotas-hint svg { flex-shrink: 0; color: var(--orange); }
 .right-sidebar .bb-btn-next {
   width: 100%;
   justify-content: center;
@@ -1466,8 +1481,22 @@ body {
 }
 @media (max-width: 1024px) {
   .config-layout { grid-template-columns: 1fr 180px; }
-  .config-left-sidebar { display: none; }
   .sim-layout { grid-template-columns: 1fr; }
+
+  /* Sidebar izquierdo: pasa a barra horizontal encima de la tabla */
+  .config-left-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column: 1 / -1;   /* ocupa todo el ancho del grid */
+    position: static;       /* desactiva sticky */
+    top: auto;
+    gap: 10px;
+  }
+  .cls-widget { padding: 10px 12px; }
+  .cls-widget--dark { padding: 10px 12px; }
+  .cls-dark-title { font-size: 15px; }
+  .cls-dark-text  { margin-bottom: 8px; }
+  /* El widget de dólar y el de descuento en fila 1; fin y +50 en fila 2 */
 }
 @media (max-width: 768px) {
   .config-header { padding: 24px 20px 20px; }
@@ -1484,6 +1513,12 @@ body {
   }
   .right-sidebar .bb-col { flex: 1 1 calc(50% - 1px); padding: 12px 14px; }
   .right-sidebar .bb-divider { width: 1px; height: auto; }
+  /* Widgets en columna única en móvil */
+  .config-left-sidebar {
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1;
+    gap: 8px;
+  }
   .config-form-grid { grid-template-columns: 1fr; padding: 16px; }
   .sim-plazo-btns { grid-template-columns: repeat(2, 1fr); }
   .sim-result-grid { grid-template-columns: 1fr; }
@@ -1497,4 +1532,6 @@ body {
   .progress-step-dot { width: 28px; height: 28px; }
   .progress-step-dot svg { width: 13px; height: 13px; }
   .right-sidebar .bb-col { flex: 1 1 100%; }
+  /* En pantallas muy pequeñas los widgets van en columna única */
+  .config-left-sidebar { grid-template-columns: 1fr; }
 }

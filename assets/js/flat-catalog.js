@@ -583,11 +583,22 @@ window.refreshTablePrices = window.flatRefreshPrices;
 const _igaAlertDismissed = { volume: false, brand: false };
 
 function _checkVolumeAlerts() {
-  /* Si ya fue descartada una vez, nunca vuelve a aparecer */
-  if (_igaAlertDismissed.volume) return;
-
   const totalQty = _flatRows.filter(r => r.productName && r.qty > 0)
     .reduce((s, r) => s + r.qty, 0);
+
+  /* Si llegan a 0 productos: ocultar banner y resetear alerta para que pueda volver a aparecer */
+  if (totalQty === 0) {
+    const existingBanner = document.getElementById('iga-volume-banner');
+    if (existingBanner) {
+      existingBanner.classList.remove('iga-vb--visible');
+      setTimeout(() => existingBanner.remove(), 400);
+    }
+    _igaAlertDismissed.volume = false;
+    return;
+  }
+
+  /* Si ya fue descartada (y aún quedan productos), no vuelve a aparecer */
+  if (_igaAlertDismissed.volume) return;
 
   let banner = document.getElementById('iga-volume-banner');
 
@@ -673,13 +684,13 @@ window.igaOpenVolumeModal = function igaOpenVolumeModal() {
   let existing = document.getElementById('iga-modal-overlay');
   if (existing) existing.remove();
 
-  // Variante 2: marca dominante >50% y pedido >50 uds
-  const showBrandVariant = stats.totalQty >= 50 && stats.topPct >= 50 && stats.topBrand;
+  // Variante marca dominante: >50% de una marca con 10+ uds
+  const showBrandVariant = stats.totalQty >= 10 && stats.topPct >= 50 && stats.topBrand;
 
   const overlay = document.createElement('div');
   overlay.id = 'iga-modal-overlay';
   overlay.className = 'iga-modal-overlay';
-  overlay.onclick = function(e) { if (e.target === overlay) igaCloseVolumeModal(); };
+  /* Sin cierre al hacer click fuera — el cliente debe elegir una opción */
 
   if (showBrandVariant) {
     overlay.innerHTML = `
@@ -694,11 +705,6 @@ window.igaOpenVolumeModal = function igaOpenVolumeModal() {
             <strong>Más del 50% de su pedido es ${stats.topBrand}</strong>
             <span>El PM de ${stats.topBrand} puede mejorar sus condiciones</span>
           </div>
-          <button class="iga-modal-close" onclick="igaCloseVolumeModal()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
         </div>
         <div class="iga-modal-body">
           <div class="iga-modal-persona">
@@ -768,11 +774,6 @@ window.igaOpenVolumeModal = function igaOpenVolumeModal() {
             <strong>Su pedido supera las 50 unidades</strong>
             <span>Podemos mejorar sus condiciones directamente con las marcas</span>
           </div>
-          <button class="iga-modal-close" onclick="igaCloseVolumeModal()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
         </div>
         <div class="iga-modal-body">
           <div class="iga-modal-persona">
@@ -963,10 +964,10 @@ function _overrideValidateStep() {
       _syncAllToOriginal();
       if (typeof window.collectEquipos === 'function') window.collectEquipos();
 
-      /* Alerta de marca dominante al presionar Siguiente (solo si no fue descartada) */
+      /* Alerta de marca dominante al presionar Siguiente (desde 10 uds, si no fue descartada) */
       if (!_igaAlertDismissed.brand) {
         const stats = _calcBrandStats();
-        if (stats.topPct >= 50 && stats.topBrand) {
+        if (stats.totalQty >= 10 && stats.topPct >= 50 && stats.topBrand) {
           window.igaOpenVolumeModal();
           return false; // el modal ofrece "Continuar sin asistencia" → igaResumeQuote
         }
