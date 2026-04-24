@@ -577,66 +577,72 @@
   };
 
   function _injectDespachoCardConfigurador() {
-    /* Evitar duplicados */
-    if (document.getElementById('resumen-despacho-card')) return;
-
     var summaryInfo = document.getElementById('summaryInfo');
     if (!summaryInfo) return;
 
-    /* Leer datos del formulario para pre-rellenar */
-    var comunaVal  = (document.getElementById('ciudad')  || {}).value  || '';
-    var regionVal  = (document.getElementById('region')  || {}).value  || '';
+    /* Crear tarjeta solo si no existe */
+    if (!document.getElementById('resumen-despacho-card')) {
+      var card = document.createElement('div');
+      card.id = 'resumen-despacho-card';
+      card.className = 'resumen-card';
+      card.innerHTML = [
+        '<div class="resumen-card-header">',
+        '  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
+        '    <rect x="1" y="3" width="15" height="13" rx="1"/>',
+        '    <path d="M16 8h4l3 5v3h-7V8z"/>',
+        '    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+        '  </svg>',
+        '  <h3>Despacho referencial</h3>',
+        '</div>',
+        '<div class="resumen-card-body" id="igs-cfg-result-body" style="padding:16px 20px;min-height:52px;">',
+        '  <span style="font-size:13px;color:#9aa9bb;font-style:italic;">Selecciona una comuna en el paso anterior para ver el costo de despacho.</span>',
+        '</div>'
+      ].join('\n');
+      summaryInfo.insertAdjacentElement('beforebegin', card);
+    }
 
-    /* Calcular total actual del pedido */
-    var totalEl = document.getElementById('summaryTotal');
-    var totalCompra = totalEl ? parseInt((totalEl.textContent || '0').replace(/\D/g,'')) || 0 : 0;
+    _updateDespachoCardConfigurador();
+  }
 
-    /* Insertar tarjeta antes de summaryInfo */
-    var card = document.createElement('div');
-    card.id = 'resumen-despacho-card';
-    card.className = 'resumen-card';
-    card.innerHTML = [
-      '<div class="resumen-card-header">',
-      '  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">',
-      '    <rect x="1" y="3" width="15" height="13" rx="1"/>',
-      '    <path d="M16 8h4l3 5v3h-7V8z"/>',
-      '    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
-      '  </svg>',
-      '  <h3>Despacho referencial</h3>',
-      '</div>',
-      '<div class="resumen-card-body" style="padding:16px;">',
-      '  <div id="igs-configurador-widget"></div>',
-      '</div>',
-      '<div class="resumen-card-footer" id="igs-cfg-footer" style="display:none">',
-      '  <span>Costo de despacho (referencial)</span>',
-      '  <strong id="igs-cfg-precio">—</strong>',
-      '</div>'
-    ].join('\n');
+  async function _updateDespachoCardConfigurador() {
+    var body = document.getElementById('igs-cfg-result-body');
+    if (!body) return;
 
-    summaryInfo.insertAdjacentElement('beforebegin', card);
+    var comunaVal = (document.getElementById('ciudad') || {}).value || '';
+    var regionVal = (document.getElementById('region') || {}).value || '';
 
-    /* Renderizar widget dentro de la tarjeta */
-    window.igShipping.renderWidget('igs-configurador-widget', {
-      totalCompra:   totalCompra,
-      comunaInicial: comunaVal,
-      regionInicial: regionVal,
-      onResult: function(r) {
-        var footer   = document.getElementById('igs-cfg-footer');
-        var precioEl = document.getElementById('igs-cfg-precio');
-        if (footer) footer.style.display = '';
-        if (precioEl) precioEl.textContent = r.tipo === 'gratis' ? 'Gratis' : r.label + ' (ref.)';
-      }
-    });
+    if (!comunaVal || !regionVal) return;
 
-    /* Registrar callback en el widget */
-    var widget = document.getElementById('igs-widget-igs-configurador-widget');
-    if (widget) {
-      widget._onResult = function(r) {
-        var footer   = document.getElementById('igs-cfg-footer');
-        var precioEl = document.getElementById('igs-cfg-precio');
-        if (footer) footer.style.display = '';
-        if (precioEl) precioEl.textContent = r.tipo === 'gratis' ? 'Gratis' : r.label + ' (ref.)';
-      };
+    var totalEl     = document.getElementById('summaryTotal');
+    var totalCompra = totalEl ? parseInt((totalEl.textContent || '0').replace(/\D/g, '')) || 0 : 0;
+
+    body.innerHTML = '<span class="igs-loading"><span class="igs-spinner"></span> Consultando tarifas…</span>';
+    _injectStyles();
+
+    try {
+      var r      = await window.igShipping.cotizar(comunaVal, regionVal, totalCompra);
+      var gratis = r.tipo === 'gratis';
+      var ref    = r.tipo === 'referencial'
+        ? ' <span style="font-size:11px;font-weight:400;color:#9aa9bb;">(referencial)</span>' : '';
+      var diasLabel = r.dias ? r.dias + ' días hábiles' : '';
+
+      body.innerHTML = [
+        '<div style="display:flex;align-items:center;gap:14px;">',
+        '  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="' + (gratis ? '#16a34a' : '#d97706') + '" stroke-width="2">',
+        '    <rect x="1" y="3" width="15" height="13" rx="1"/>',
+        '    <path d="M16 8h4l3 5v4h-7V8z"/>',
+        '    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+        '  </svg>',
+        '  <div style="flex:1;">',
+        '    <div style="font-size:12px;color:#7a8fa6;margin-bottom:2px;">Despacho a <strong>' + _escHtml(comunaVal) + '</strong> &mdash; ' + _escHtml(regionVal) + '</div>',
+        '    <div style="font-size:17px;font-weight:800;color:' + (gratis ? '#16a34a' : '#0d1e36') + ';">' +
+             (gratis ? 'Gratis' : '~$' + (r.precio || 0).toLocaleString('es-CL')) + ref + '</div>',
+        '  </div>',
+        diasLabel ? '  <div style="font-size:12px;font-weight:600;color:#e8920a;background:#fff3dc;border-radius:20px;padding:5px 12px;white-space:nowrap;">' + diasLabel + '</div>' : '',
+        '</div>'
+      ].join('\n');
+    } catch(e) {
+      body.innerHTML = '<span style="font-size:13px;color:#ef4444;">No se pudo obtener el costo de despacho.</span>';
     }
   }
 

@@ -82,7 +82,10 @@
           return o.value === val || o.text === val ||
                  o.text.toLowerCase().includes(val.toLowerCase());
         });
-        if (match) el.value = match.value;
+        if (match) {
+          el.value = match.value;
+          el.dispatchEvent(new Event('change'));
+        }
       } else {
         el.value = val;
       }
@@ -147,8 +150,6 @@
         if (empresaEl) empresaEl.value = razonSocial;
         if (direccionSII && !document.getElementById('direccion').value)
           document.getElementById('direccion').value = direccionSII;
-        if (ciudadSII && !document.getElementById('ciudad').value)
-          document.getElementById('ciudad').value = ciudadSII;
         if (regionSII) {
           var regionEl = document.getElementById('region');
           if (regionEl) {
@@ -156,7 +157,23 @@
             var match = opts.find(function(o) {
               return o.text.toLowerCase().includes(regionSII.toLowerCase());
             });
-            if (match && !regionEl.value) regionEl.value = match.value;
+            if (match && !regionEl.value) {
+              regionEl.value = match.value;
+              regionEl.dispatchEvent(new Event('change')); // puebla comunas
+            }
+          }
+        }
+        if (ciudadSII) {
+          var ciudadEl = document.getElementById('ciudad');
+          if (ciudadEl && !ciudadEl.value) {
+            var comunaOpts = Array.from(ciudadEl.options);
+            var comunaMatch = comunaOpts.find(function(o) {
+              return o.text.toLowerCase() === ciudadSII.toLowerCase();
+            });
+            if (comunaMatch) {
+              ciudadEl.value = comunaMatch.value;
+              ciudadEl.dispatchEvent(new Event('change')); // cotiza despacho
+            }
           }
         }
 

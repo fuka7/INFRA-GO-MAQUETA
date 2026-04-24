@@ -257,11 +257,11 @@ window.clsSetCat = function(tipo, btn) {
         <!-- Parámetros -->
         <div class="sim-panel">
           <div class="sim-section">
-            <div class="sim-section-title">Monto a financiar (equipos)</div>
+            <div class="sim-section-title">Monto a financiar — equipos (c/IVA)</div>
             <div class="sim-amount">$<span id="montoFinanciar">0</span></div>
           </div>
           <div class="sim-section">
-            <div class="sim-section-title">Servicios mensuales incluidos</div>
+            <div class="sim-section-title">Servicios incluidos (c/IVA)</div>
             <div class="sim-amount sim-amount--svc">$<span id="serviciosMensualesSim">0</span>/mes</div>
           </div>
           <div class="sim-section">
@@ -338,29 +338,41 @@ window.clsSetCat = function(tipo, btn) {
         </div>
         <div class="config-field">
           <label class="config-label">Región</label>
-          <select id="region" class="config-input">
+          <select id="region" class="config-input" onchange="popularComunas(this.value)">
             <option value="">Selecciona región</option>
             <option>Región Metropolitana</option>
             <option>Región de Valparaíso</option>
+            <option>Región de O'Higgins</option>
+            <option>Región del Maule</option>
+            <option>Región de Ñuble</option>
             <option>Región del Biobío</option>
             <option>Región de La Araucanía</option>
+            <option>Región de Los Ríos</option>
             <option>Región de Los Lagos</option>
+            <option>Región de Aysén</option>
+            <option>Región de Magallanes</option>
             <option>Región de Coquimbo</option>
             <option>Región de Atacama</option>
             <option>Región de Antofagasta</option>
             <option>Región de Tarapacá</option>
             <option>Región de Arica y Parinacota</option>
-            <option>Región del Maule</option>
-            <option>Región de Ñuble</option>
-            <option>Región de Los Ríos</option>
-            <option>Región de Aysén</option>
-            <option>Región de Magallanes</option>
           </select>
         </div>
         <div class="config-field">
-          <label class="config-label">Ciudad</label>
-          <input type="text" id="ciudad" class="config-input" placeholder="Ciudad">
+          <label class="config-label">Comuna</label>
+          <select id="ciudad" class="config-input" onchange="cotizarDespachoForm()">
+            <option value="">Selecciona comuna</option>
+          </select>
         </div>
+
+        <div id="despacho-quote-wrap" class="config-field config-field--full" style="display:none">
+          <label class="config-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:4px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Cotización de despacho
+          </label>
+          <div id="despacho-quote-inner" class="despacho-quote"></div>
+        </div>
+
         <div class="config-field config-field--full">
           <label class="config-label">Dirección</label>
           <input type="text" id="direccion" class="config-input" placeholder="Calle, número, oficina">
@@ -685,6 +697,8 @@ document.addEventListener('keydown',function(e){
 </script>
 
 <script src="/assets/js/catalogo.js"></script>
+<script src="/assets/js/comunas-chile.js"></script>
+<script src="/assets/js/shipping.js"></script>
 <script src="/assets/js/configurador.js"></script>
 <script src="/assets/js/flat-catalog.js"></script>
 <script>

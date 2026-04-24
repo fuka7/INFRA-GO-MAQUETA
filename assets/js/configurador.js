@@ -203,6 +203,14 @@ function updateStepDisplay() {
   }
 
   if (currentStep === 2) initSimulador();
+  if (currentStep === 3) {
+    const regionVal = (document.getElementById('region') || {}).value;
+    if (regionVal) {
+      popularComunas(regionVal);
+      const comunaVal = (document.getElementById('ciudad') || {}).value;
+      if (comunaVal) cotizarDespachoForm();
+    }
+  }
   if (currentStep === 4) generateFinalSummary();
 }
 
@@ -506,12 +514,12 @@ function updateSidebar() {
 
   setTxt('countEquipos',   totalQty);
   setTxt('countServicios', countSvc);
-  setTxt('totalEquipos',   totalEqCLP.toLocaleString('es-CL'));
-  setTxt('totalServicios', totalSvc.toLocaleString('es-CL'));
+  setTxt('totalEquipos',   Math.round(totalEqCLP * 1.19).toLocaleString('es-CL'));
+  setTxt('totalServicios', Math.round(totalSvc * 1.19).toLocaleString('es-CL'));
   setTxt('totalNeto',      totalNeto.toLocaleString('es-CL'));
   setTxt('totalIVA',       iva.toLocaleString('es-CL'));
   setTxt('totalGeneral',   totalConIVA.toLocaleString('es-CL'));
-  setTxt('ahorroTotal',    descuento.toLocaleString('es-CL'));
+  setTxt('ahorroTotal',    Math.round(descuento * 1.19).toLocaleString('es-CL'));
   setTxt('descuentoPct',   pctDcto > 0 ? pctDcto + '%' : '—');
   setTxt('plazoSidebarLabel', simPlazo);
 
@@ -603,21 +611,23 @@ function generateFinalSummary() {
     }
   }
 
-  // ── Totales ────────────────────────────────────────────
-  const total = totalEq + totalSvc;
-  setTxt('summarySubtotalEq',  fmt(totalEq));
-  setTxt('summarySubtotalSvc', fmt(totalSvc));
+  // ── Totales con IVA ────────────────────────────────────────────
+  const eqIVA  = Math.round(totalEq * 1.19);
+  const svcIVA = Math.round(totalSvc * 1.19);
+  const total  = eqIVA + svcIVA;
+  setTxt('summarySubtotalEq',  fmt(eqIVA));
+  setTxt('summarySubtotalSvc', fmt(svcIVA));
   setTxt('summaryTotal',       fmt(total));
 
-  // Cuota usando la misma fórmula PMT del simulador (paso 2)
+  // Cuota usando la misma fórmula PMT del simulador (paso 2), sobre montos con IVA
   const tm = simTasa / 100 / 12;
   let cuotaEq = 0;
   if (tm === 0) {
-    cuotaEq = totalEq / simPlazo;
+    cuotaEq = eqIVA / simPlazo;
   } else {
-    cuotaEq = totalEq * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
+    cuotaEq = eqIVA * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
   }
-  setTxt('summaryCuota',      fmt(Math.round(cuotaEq + totalSvc)));
+  setTxt('summaryCuota',      fmt(Math.round(cuotaEq + svcIVA)));
   setTxt('plazoLabelSummary', simPlazo + ' meses');
 
   // ── Información de contacto ────────────────────────────
@@ -657,23 +667,28 @@ function initSimulador() {
     collectServicios();
   }
 
-  const totalEq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
+  const totalEq  = Object.entries(state.equipos)
+    .filter(([name]) => { const p = (window.CATALOGO||[]).find(x => x.name === name); return !p || p.tipo !== 'servicio-tic'; })
+    .reduce((s, [, e]) => s + e.qty * e.price, 0);
   const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
 
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  setTxt('montoFinanciar',        totalEq.toLocaleString('es-CL'));
-  setTxt('serviciosMensualesSim', totalSvc.toLocaleString('es-CL'));
+  setTxt('montoFinanciar',        Math.round(totalEq * 1.19).toLocaleString('es-CL'));
+  setTxt('serviciosMensualesSim', Math.round(totalSvc * 1.19).toLocaleString('es-CL'));
 
   calcularSimulador();
 }
 
 function calcularSimulador() {
-  const totalEq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
+  const totalEq  = Object.entries(state.equipos)
+    .filter(([name]) => { const p = (window.CATALOGO||[]).find(x => x.name === name); return !p || p.tipo !== 'servicio-tic'; })
+    .reduce((s, [, e]) => s + e.qty * e.price, 0);
   const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
 
-  const principal    = totalEq;
-  const tasaMensual  = simTasa / 100 / 12;
-  const n            = simPlazo;
+  const principal   = Math.round(totalEq * 1.19);
+  const svcIVA      = Math.round(totalSvc * 1.19);
+  const tasaMensual = simTasa / 100 / 12;
+  const n           = simPlazo;
 
   let cuotaProducto = 0;
   if (tasaMensual === 0) {
@@ -682,8 +697,8 @@ function calcularSimulador() {
     cuotaProducto = principal * (tasaMensual * Math.pow(1 + tasaMensual, n)) / (Math.pow(1 + tasaMensual, n) - 1);
   }
 
-  const cuotaTotal = Math.round(cuotaProducto + totalSvc);
-  const totalPagar = Math.round(cuotaProducto * n + totalSvc * n);
+  const cuotaTotal = Math.round(cuotaProducto + svcIVA);
+  const totalPagar = Math.round(cuotaProducto * n + svcIVA * n);
   const intereses  = Math.round(cuotaProducto * n - principal);
 
   const fmt    = v => v.toLocaleString('es-CL');
@@ -846,13 +861,16 @@ function descargarCotizacionPDF() {
       const prod = (window.CATALOGO || []).find(p => p.name === name);
       return !prod || prod.tipo !== 'servicio-tic';
     })
-    .map(([name, v]) => `
+    .map(([name, v]) => {
+      const priceIVA = Math.round(v.price * 1.19);
+      return `
       <tr>
         <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${name}</td>
         <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:center;">${v.qty}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;">$${fmt(v.price)}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(v.qty * v.price)}</td>
-      </tr>`).join('');
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;">$${fmt(priceIVA)}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(v.qty * priceIVA)}</td>
+      </tr>`;
+    }).join('');
 
   const svcRows = Object.entries(state.servicios).map(([name, svc]) => {
     const price = typeof svc === 'object' ? svc.price : svc;
@@ -860,14 +878,16 @@ function descargarCotizacionPDF() {
     return `
       <tr>
         <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;" colspan="3">${name}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(price)}${freq}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(Math.round(price * 1.19))}${freq}</td>
       </tr>`;
   }).join('');
 
-  const totalEq  = Object.entries(state.equipos)
+  const totalEqNeto = Object.entries(state.equipos)
     .filter(([name]) => { const p = (window.CATALOGO||[]).find(x=>x.name===name); return !p||p.tipo!=='servicio-tic'; })
     .reduce((s, [, v]) => s + v.qty * v.price, 0);
-  const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
+  const totalSvcNeto = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
+  const totalEq  = Math.round(totalEqNeto * 1.19);
+  const totalSvc = Math.round(totalSvcNeto * 1.19);
   const totalGen = totalEq + totalSvc;
 
   const fecha = new Date().toLocaleDateString('es-CL', { year:'numeric', month:'long', day:'numeric' });
@@ -946,7 +966,7 @@ function descargarCotizacionPDF() {
 
   ${f.notas ? `<div class="footer-note"><strong>Notas:</strong> ${f.notas}</div>` : ''}
   <div class="footer-note" style="margin-top:16px;">
-    Esta cotización es referencial y válida por 30 días. Los precios no incluyen IVA. Sujeto a disponibilidad de stock.<br>
+    Esta cotización es referencial y válida por 30 días. Los precios incluyen IVA (19%). Sujeto a disponibilidad de stock.<br>
     InfraGo SpA — Una empresa de TIC Manager's · contacto@infrago.cl
   </div>
 </body>
@@ -1150,6 +1170,69 @@ window.actualizarDescuento  = actualizarDescuento;
 window.obtenerPctDescuento  = obtenerPctDescuento;
 window.state                = state;
 window.tipoCambio           = tipoCambio;
+window.popularComunas       = popularComunas;
+window.cotizarDespachoForm  = cotizarDespachoForm;
+
+// ═════════════════════════════════════════
+// DESPACHO — Paso 3
+// ═════════════════════════════════════════
+function popularComunas(regionVal) {
+  const sel = document.getElementById('ciudad');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Selecciona comuna</option>';
+  const comunas = (window.COMUNAS_CHILE || {})[regionVal] || [];
+  comunas.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  const wrap = document.getElementById('despacho-quote-wrap');
+  if (wrap) wrap.style.display = 'none';
+}
+
+async function cotizarDespachoForm() {
+  const region = (document.getElementById('region') || {}).value || '';
+  const comuna = (document.getElementById('ciudad') || {}).value || '';
+  const wrap   = document.getElementById('despacho-quote-wrap');
+  const inner  = document.getElementById('despacho-quote-inner');
+  if (!wrap || !inner) return;
+  if (!region || !comuna) { wrap.style.display = 'none'; return; }
+
+  const eq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
+  const svc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
+  const totalCompra = Math.round((eq + svc) * 1.19);
+
+  wrap.style.display = '';
+  inner.innerHTML = '<span class="dq-loading">Consultando tarifas…</span>';
+
+  try {
+    const res    = await window.igShipping.cotizar(comuna, region, totalCompra);
+    const gratis = res.tipo === 'gratis';
+    const fmt    = v => v.toLocaleString('es-CL');
+    const ref    = res.tipo === 'referencial' ? '<span class="dq-ref">(referencial)</span>' : '';
+    const diasParts = (res.dias || '').split('-').map(Number);
+    const diasMax   = diasParts[1] || diasParts[0] || 3;
+    const diasLabel = res.dias ? `${res.dias} día${diasMax > 1 ? 's' : ''} hábil${diasMax > 1 ? 'es' : ''}` : '';
+
+    inner.innerHTML = `
+      <div class="dq-row">
+        <svg class="dq-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="3" width="15" height="13" rx="1"/>
+          <path d="M16 8h4l3 5v4h-7V8z"/>
+          <circle cx="5.5" cy="18.5" r="2.5"/>
+          <circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+        <div class="dq-info">
+          <span class="dq-comuna">Despacho a <strong>${comuna}</strong></span>
+          <span class="dq-precio ${gratis ? 'dq-precio--gratis' : ''}">${gratis ? 'Gratis' : '$' + fmt(res.precio)}${ref}</span>
+        </div>
+        ${diasLabel ? `<div class="dq-dias-badge">${diasLabel}</div>` : ''}
+      </div>`;
+  } catch (e) {
+    inner.innerHTML = '<span class="dq-loading">No se pudo cotizar el despacho.</span>';
+  }
+}
 
 // ═════════════════════════════════════════
 // INIT
@@ -1170,7 +1253,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Paso 3: sincronizar state.formulario en tiempo real ──
-  // Así cualquier cambio en los campos queda guardado aunque no se presione "Siguiente"
   const camposFormulario = ['empresa','region','ciudad','direccion','contacto','cargo','telefono','email','notas'];
   camposFormulario.forEach(id => {
     const el = document.getElementById(id);
@@ -1178,8 +1260,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const eventType = (el.tagName === 'SELECT') ? 'change' : 'input';
     el.addEventListener(eventType, () => {
       collectFormulario();
-      // Si el resumen (paso 4) ya está visible, regenerarlo en vivo
       if (currentStep === 4) generateFinalSummary();
     });
   });
+
+  // ── Paso 3: región → poblar comunas; comuna → cotizar despacho ──
+  // Esperar a que rut-prefill.js (defer) termine de setear los valores
+  setTimeout(() => {
+    const regionVal = (document.getElementById('region') || {}).value;
+    if (regionVal) popularComunas(regionVal);
+  }, 400);
 });

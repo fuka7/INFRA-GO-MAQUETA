@@ -70,9 +70,9 @@ window.buildCatalogTable = function buildCatalogTable() {
       <span class="flat-col-label center">Prov.</span>
       <span class="flat-col-label center">Cat.</span>
       <span class="flat-col-label center">N° Parte</span>
-      <span class="flat-col-label right">P. Lista Unit.</span>
+      <span class="flat-col-label right">P. Lista</span>
       <span class="flat-col-label center">Cant.</span>
-      <span class="flat-col-label right">P. con dto.</span>
+      <span class="flat-col-label right">P. dto.</span>
       <span class="flat-col-label right">Subtotal</span>
     </div>
     <div id="flatRowsBody"></div>
@@ -514,10 +514,16 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     totalListaAcum  += subtotalLista;
     totalAhorroAcum += ahorro;
 
+    /* Precios para display (sin IVA) */
+    const priceDisp        = price;
+    const precioConDtoDisp = precioConDto;
+    const subtotalDisp     = qty * precioConDtoDisp;
+    const ahorroDisp       = ahorro;
+
     /* Precio lista (tachado si hay dto y qty > 0) */
     const elBase = document.getElementById(`plista-${id}`);
     if (elBase) {
-      elBase.textContent = `$${flatFmt(price)}`;
+      elBase.textContent = `$${flatFmt(priceDisp)}`;
       elBase.classList.toggle('tachado', pctEfectivo > 0 && qty > 0);
     }
 
@@ -529,7 +535,7 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const elDto   = document.getElementById(`pdto-${id}`);
     const elBadge = document.getElementById(`dtobadge-${id}`);
     if (elDto) {
-      elDto.textContent = qty > 0 ? `$${flatFmt(precioConDto)}` : '—';
+      elDto.textContent = qty > 0 ? `$${flatFmt(precioConDtoDisp)}` : '—';
       if (pctEfectivo > 0 && qty > 0) {
         elDto.classList.remove('sin-dto');
         if (elBadge) { elBadge.textContent = `-${pctEfectivo}%`; elBadge.classList.remove('oculto'); }
@@ -543,7 +549,7 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const elSub = document.getElementById(`psub-${id}`);
     if (elSub) {
       if (qty > 0) {
-        elSub.textContent = `$${flatFmt(subtotal)}`;
+        elSub.textContent = `$${flatFmt(subtotalDisp)}`;
         elSub.classList.remove('inactive');
       } else {
         elSub.textContent = '—';
@@ -555,7 +561,7 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const elAhorro = document.getElementById(`pahorro-${id}`);
     if (elAhorro) {
       if (qty > 0 && ahorro > 0) {
-        elAhorro.textContent = `$${flatFmt(ahorro)}`;
+        elAhorro.textContent = `$${flatFmt(ahorroDisp)}`;
         elAhorro.classList.remove('cero');
       } else if (qty > 0) {
         elAhorro.textContent = '$0';
@@ -906,21 +912,23 @@ function _overrideCollectEquipos() {
     if (!window.state) { _orig(); return; }
     window.state.equipos = {};
 
-    const totalQtyAll = _flatRows.filter(x => x.productName).reduce((s, x) => s + x.qty, 0);
-    const pct = flatObtenerPct(totalQtyAll);
+    // Descuento solo sobre hardware (excluye servicio-tic)
+    const totalQtyHw = _flatRows.filter(x => x.productName && x.qty > 0).reduce((s, x) => {
+      const prod = (window.CATALOGO || []).find(p => p.name === x.productName);
+      return prod && prod.tipo !== 'servicio-tic' ? s + x.qty : s;
+    }, 0);
+    const pct = flatObtenerPct(totalQtyHw);
 
     _flatRows.forEach(r => {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto) return;
+      if (producto.tipo === 'servicio-tic') return; // va a state.servicios vía collectServicios()
 
       const tc = window.tipoCambio || 900;
       const basePrice = (producto.priceUSD && producto.priceUSD > 0)
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
-      const getPrice = (typeof window.getProductPrice === 'function')
-        ? window.getProductPrice
-        : (p) => p.price || 0;
       const price = Math.round(basePrice * (1 - pct / 100));
       const key   = r.productName + (r.serviceValue ? ` (+svc:${r.serviceValue})` : '');
 

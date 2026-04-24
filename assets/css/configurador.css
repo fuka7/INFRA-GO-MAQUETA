@@ -893,6 +893,63 @@ body {
 }
 .config-textarea { min-height: 80px; resize: vertical; }
 
+/* ── Despacho quote ── */
+.despacho-quote {
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-s);
+  padding: 12px 16px;
+  min-height: 52px;
+}
+.dq-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.dq-truck {
+  width: 24px; height: 24px;
+  color: var(--c-text-3);
+  flex-shrink: 0;
+}
+.dq-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+.dq-comuna {
+  font-size: 12px;
+  color: var(--c-text-2);
+}
+.dq-precio {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--c-text);
+}
+.dq-precio--gratis { color: #22c55e; }
+.dq-ref {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--c-text-3);
+  margin-left: 5px;
+}
+.dq-dias-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--orange);
+  background: var(--orange-dim);
+  border-radius: 20px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+.dq-loading {
+  font-size: 13px;
+  color: var(--c-text-3);
+  font-style: italic;
+  padding: 4px 0;
+  display: block;
+}
+
 
 /* ════════════════════════════════════════════
    PASO 3 — RESUMEN
