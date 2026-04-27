@@ -1533,7 +1533,7 @@ footer {
 .slide-3 {
   background:
     linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-    url('/img/hero\ 3.jpeg') center/cover no-repeat;
+    url('/img/hero2.png') center/cover no-repeat;
 }
 
 /* Grid overlay en cada slide */
