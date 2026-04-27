@@ -63,12 +63,34 @@ function changeQty(delta) {
 /* ── Renderizar página completa ── */
 function renderProducto(p) {
   const catLabel = {
-    notebooks: 'Notebooks',
+    pc:         'PC',
+    notebooks:  'Notebooks',
     servidores: 'Servidores',
     impresoras: 'Impresoras',
-    monitores: 'Monitores',
-    redes: 'Redes'
+    accesorios: 'Accesorios',
+    redes:      'Redes'
   }[p.cat] || p.cat;
+
+  // Breadcrumb
+  const breadCat  = document.getElementById('prdBreadcrumbCat');
+  const breadName = document.getElementById('prdBreadcrumbName');
+  if (breadCat)  breadCat.textContent  = catLabel;
+  if (breadName) breadName.textContent = p.nombre;
+
+  // Botón "Volver a la tienda": usa history.back() si venimos de tienda
+  const backLink = document.getElementById('prdBackLink');
+  if (backLink) {
+    const ref = document.referrer;
+    const fromTienda = ref && ref.includes('tienda.html');
+    backLink.onclick = function(e) {
+      e.preventDefault();
+      if (fromTienda && history.length > 1) {
+        history.back();
+      } else {
+        window.location.href = '/tienda.html?cat=' + p.cat;
+      }
+    };
+  }
 
 
   // Galería

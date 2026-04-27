@@ -7,22 +7,25 @@
 
 /* ── BREADCRUMB ── */
 .prd-breadcrumb {
-  padding: 14px 48px;
-  font-size: 12px;
-  color: rgba(17,17,17,0.45);
+  padding: 18px 48px;
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(17,17,17,0.5);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   border-bottom: 1px solid rgba(17,17,17,0.07);
   background: #fff;
 }
 .prd-breadcrumb a {
-  color: rgba(17,17,17,0.55);
+  color: #e8920a;
   text-decoration: none;
+  font-weight: 800;
   transition: color 0.2s;
 }
-.prd-breadcrumb a:hover { color: #e8920a; }
-.prd-breadcrumb svg { width: 12px; height: 12px; color: rgba(17,17,17,0.3); }
+.prd-breadcrumb a:hover { color: #cf7e08; }
+.prd-breadcrumb svg { width: 14px; height: 14px; color: rgba(17,17,17,0.25); }
+.prd-breadcrumb #prdBreadcrumbName { color: rgba(17,17,17,0.75); }
 
 /* ── LAYOUT PRINCIPAL ── */
 .prd-layout {

@@ -101,6 +101,7 @@ function applyFilters() {
   document.getElementById('productosGrid').style.display = count === 0 ? 'none' : '';
 
   updateActiveFilters();
+  updateUrl();
 }
 
 function filterByPrice(val) {
@@ -168,6 +169,15 @@ function updateActiveFilters() {
   ).join('');
 }
 
+function updateUrl() {
+  const params = new URLSearchParams();
+  if (currentCat !== 'todos') params.set('cat', currentCat);
+  if (currentSearch)          params.set('q',   currentSearch);
+  if (currentMax < 200000)    params.set('max', currentMax);
+  const qs = params.toString();
+  history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+}
+
 function resetFilters() {
   currentCat    = 'todos';
   currentSearch = '';
@@ -209,8 +219,9 @@ window.addEventListener('DOMContentLoaded', () => {
     cb.addEventListener('change', applyFilters);
   });
 
-  // 3. Leer ?cat= de la URL y aplicar filtro inicial
+  // 3. Restaurar estado desde URL (?cat=, ?q=, ?max=)
   const params = new URLSearchParams(window.location.search);
+
   const cat = params.get('cat');
   if (cat) {
     const radio = document.querySelector(`#filtroCategorias input[value="${cat}"]`);
@@ -220,6 +231,22 @@ window.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
       radio.closest('.filtro-check').classList.add('active');
     }
+  }
+
+  const q = params.get('q');
+  if (q) {
+    currentSearch = q.toLowerCase();
+    const inp = document.getElementById('searchInput');
+    if (inp) inp.value = q;
+  }
+
+  const max = params.get('max');
+  if (max) {
+    currentMax = parseInt(max);
+    const rng = document.getElementById('precioRange');
+    if (rng) rng.value = max;
+    const lbl = document.getElementById('rangeMax');
+    if (lbl) lbl.textContent = '$' + parseInt(max).toLocaleString('es-CL');
   }
 
   applyFilters();

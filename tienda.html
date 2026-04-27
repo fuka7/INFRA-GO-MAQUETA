@@ -79,6 +79,12 @@ document.addEventListener('DOMContentLoaded',function(){
           <span class="filtro-check-box"></span>
           Todos los productos
         </label>
+        <label class="filtro-check" data-cat="pc">
+          <input type="radio" name="categoria" value="pc">
+          <span class="filtro-check-box"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="8" height="20" rx="1"/><circle cx="8" cy="18" r="1"/><rect x="5" y="5" width="6" height="4" rx="0.5"/></svg>
+          PC
+        </label>
         <label class="filtro-check" data-cat="notebooks">
           <input type="radio" name="categoria" value="notebooks">
           <span class="filtro-check-box"></span>
@@ -97,17 +103,17 @@ document.addEventListener('DOMContentLoaded',function(){
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Impresoras
         </label>
-        <label class="filtro-check" data-cat="monitores">
-          <input type="radio" name="categoria" value="monitores">
-          <span class="filtro-check-box"></span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Monitores
-        </label>
         <label class="filtro-check" data-cat="redes">
           <input type="radio" name="categoria" value="redes">
           <span class="filtro-check-box"></span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v3M8.5 17l3.5-6M15.5 17L12 11"/></svg>
           Redes
+        </label>
+        <label class="filtro-check" data-cat="accesorios">
+          <input type="radio" name="categoria" value="accesorios">
+          <span class="filtro-check-box"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 11h.01M12 11h.01"/></svg>
+          Accesorios
         </label>
       </div>
     </div>
@@ -139,6 +145,11 @@ document.addEventListener('DOMContentLoaded',function(){
           <input type="checkbox" value="Cisco" checked>
           <span class="filtro-check-box"></span>
           Cisco
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Logitech" checked>
+          <span class="filtro-check-box"></span>
+          Logitech
         </label>
       </div>
     </div>

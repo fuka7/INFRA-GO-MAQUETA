@@ -325,7 +325,7 @@ const PRODUCTOS_DB = [
     nombre: "Dell P2423D",
     nombreLargo: "Monitor P2423D",
     marca: "Dell",
-    cat: "monitores",
+    cat: "accesorios",
     precio: 10417,
     badge: "",
     partNumber: "DELL-P2423D",
@@ -352,7 +352,7 @@ const PRODUCTOS_DB = [
     nombre: "HP M27fw",
     nombreLargo: "Monitor M27fw",
     marca: "HP",
-    cat: "monitores",
+    cat: "accesorios",
     precio: 8333,
     badge: "",
     partNumber: "HP-M27FW",
@@ -371,6 +371,61 @@ const PRODUCTOS_DB = [
     specsResumen: ["27\" FHD 1920×1080","Panel IPS","HDMI + VGA","Sin marcos laterales"],
     images: 2,
     svg: `<svg viewBox="0 0 120 84" fill="none"><rect x="18" y="6" width="84" height="56" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="26" y="14" width="68" height="40" rx="1" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="50" y="62" width="20" height="10" rx="1" fill="rgba(255,255,255,0.08)"/><rect x="38" y="72" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>`
+  },
+
+  /* ══════════════ PC ══════════════ */
+  {
+    id: "hp-prodesk-400-g9",
+    nombre: "HP ProDesk 400 G9",
+    nombreLargo: "ProDesk 400 G9 SFF",
+    marca: "HP",
+    cat: "pc",
+    precio: 15000,
+    badge: "",
+    partNumber: "6A7U5LT#ABM",
+    description: "PC de escritorio empresarial compacto con procesador Intel Core i5 de 12a generacion. Ideal para puestos de trabajo de oficina con alto rendimiento y bajo consumo.",
+    specs: [
+      ["Procesador",       "Intel Core i5-12500 (6 nucleos, hasta 4.6 GHz)"],
+      ["Memoria RAM",      "8 GB DDR4-3200 MHz"],
+      ["Almacenamiento",   "256 GB SSD NVMe PCIe Gen4"],
+      ["Factor de Forma",  "Small Form Factor (SFF)"],
+      ["Graficos",         "Intel UHD Graphics 770"],
+      ["Conectividad",     "Wi-Fi 6, Bluetooth 5.2, Gigabit LAN"],
+      ["Puertos",          "USB-A x6, USB-C x1, HDMI, DisplayPort x2, RJ-45"],
+      ["Sistema Operativo","Windows 11 Pro"],
+      ["Dimensiones",      "34.5 x 9.6 x 31.1 cm"],
+      ["Garantia",         "3 anos on-site HP"]
+    ],
+    specsResumen: ["Intel Core i5-12500","8GB DDR4","256GB SSD NVMe","Small Form Factor"],
+    images: 2,
+    svg: `<svg viewBox="0 0 120 84" fill="none"><rect x="38" y="4" width="44" height="76" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="45" y="12" width="30" height="20" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="45" y="38" width="30" height="3" rx="1" fill="rgba(255,255,255,0.08)"/><circle cx="60" cy="56" r="7" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="60" cy="56" r="3" fill="rgba(34,197,94,0.5)"/></svg>`
+  },
+
+  {
+    id: "dell-optiplex-7000",
+    nombre: "Dell OptiPlex 7000",
+    nombreLargo: "OptiPlex 7000 SFF",
+    marca: "Dell",
+    cat: "pc",
+    precio: 20000,
+    badge: "Nuevo",
+    partNumber: "D15S-7000-SFF",
+    description: "PC empresarial de alto rendimiento con procesador Intel Core i7 de 12a generacion. Diseno compacto con maxima capacidad de expansion para entornos corporativos.",
+    specs: [
+      ["Procesador",       "Intel Core i7-12700 (12 nucleos, hasta 4.9 GHz)"],
+      ["Memoria RAM",      "16 GB DDR4-3200 MHz"],
+      ["Almacenamiento",   "512 GB SSD NVMe PCIe Gen4"],
+      ["Factor de Forma",  "Small Form Factor (SFF)"],
+      ["Graficos",         "Intel UHD Graphics 770"],
+      ["Conectividad",     "Wi-Fi 6E, Bluetooth 5.2, Gigabit LAN"],
+      ["Puertos",          "USB-A x8, USB-C x2, DisplayPort x2, HDMI, RJ-45"],
+      ["Sistema Operativo","Windows 11 Pro"],
+      ["Dimensiones",      "29.0 x 9.3 x 29.4 cm"],
+      ["Garantia",         "3 anos ProSupport Dell"]
+    ],
+    specsResumen: ["Intel Core i7-12700","16GB DDR4","512GB SSD NVMe","Small Form Factor"],
+    images: 2,
+    svg: `<svg viewBox="0 0 120 84" fill="none"><rect x="38" y="4" width="44" height="76" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="45" y="12" width="30" height="20" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="45" y="38" width="30" height="3" rx="1" fill="rgba(255,255,255,0.08)"/><circle cx="60" cy="56" r="7" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="60" cy="56" r="3" fill="rgba(34,197,94,0.5)"/></svg>`
   },
 
   /* ══════════════ REDES ══════════════ */
@@ -422,6 +477,106 @@ const PRODUCTOS_DB = [
     specsResumen: ["Dual WAN Gigabit","4 puertos LAN","VPN IPSec/SSL","Firewall integrado"],
     images: 2,
     svg: `<svg viewBox="0 0 120 84" fill="none"><rect x="20" y="28" width="80" height="28" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><path d="M60 14 L60 28" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M40 10 L60 14 L80 10" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-linecap="round"/><circle cx="100" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="92" cy="42" r="3" fill="rgba(240,165,0,0.7)"/></svg>`
+  },
+
+  /* ══════════════ ACCESORIOS ══════════════ */
+  {
+    id: "logitech-mx-master-3",
+    nombre: "Logitech MX Master 3S",
+    nombreLargo: "MX Master 3S Inalámbrico",
+    marca: "Logitech",
+    cat: "accesorios",
+    precio: 3500,
+    badge: "Más vendido",
+    partNumber: "910-006559",
+    description: "Mouse inalambrico ergonomico de alta precision con sensor optico de 8.000 DPI. Ideal para productividad intensiva con scroll MagSpeed ultrasilencioso.",
+    specs: [
+      ["Tipo",             "Mouse inalambrico ergonomico"],
+      ["Sensor",           "Darkfield, hasta 8.000 DPI"],
+      ["Conectividad",     "Logi Bolt USB + Bluetooth"],
+      ["Bateria",          "Recargable USB-C, hasta 70 dias"],
+      ["Botones",          "7 botones programables"],
+      ["Scroll",           "MagSpeed electromagnetico"],
+      ["Compatibilidad",   "Windows, macOS, Linux"],
+      ["Garantia",         "2 anos Logitech"]
+    ],
+    specsResumen: ["Sensor 8.000 DPI","Bluetooth + USB","Batería 70 días","7 botones prog."],
+    images: 2,
+    svg: `<svg viewBox="0 0 120 84" fill="none"><ellipse cx="60" cy="47" rx="24" ry="29" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><path d="M60 18 L60 47" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/><ellipse cx="60" cy="30" rx="9" ry="7" stroke="rgba(59,130,246,0.3)" stroke-width="1" fill="rgba(59,130,246,0.06)"/><circle cx="60" cy="34" r="2.5" fill="rgba(59,130,246,0.4)"/></svg>`
+  },
+
+  {
+    id: "logitech-mx-keys-s",
+    nombre: "Logitech MX Keys S",
+    nombreLargo: "MX Keys S Teclado Inalámbrico",
+    marca: "Logitech",
+    cat: "accesorios",
+    precio: 3500,
+    badge: "",
+    partNumber: "920-011593",
+    description: "Teclado inalambrico premium con teclas esfericas de precision y retroiluminacion inteligente. Perfecto para escritura prolongada con maxima comodidad.",
+    specs: [
+      ["Tipo",             "Teclado inalambrico de perfil bajo"],
+      ["Conectividad",     "Logi Bolt USB + Bluetooth (hasta 3 dispositivos)"],
+      ["Retroiluminacion", "Adaptativa por luz ambiental"],
+      ["Bateria",          "Recargable USB-C, hasta 10 dias"],
+      ["Teclas",           "Esfericas de precision, recorrido 1.8 mm"],
+      ["Compatibilidad",   "Windows, macOS, Linux"],
+      ["Idioma",           "Espanol Latino"],
+      ["Garantia",         "2 anos Logitech"]
+    ],
+    specsResumen: ["Bluetooth + USB","Retroiluminación LED","Batería 10 días","Multi-dispositivo"],
+    images: 2,
+    svg: `<svg viewBox="0 0 120 84" fill="none"><rect x="8" y="24" width="104" height="36" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="16" y="32" width="7" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="27" y="32" width="7" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="38" y="32" width="7" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="49" y="32" width="7" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="60" y="32" width="7" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="71" y="32" width="7" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="82" y="32" width="7" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="93" y="32" width="15" height="6" rx="1" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.35)" stroke-width="1"/><rect x="16" y="42" width="12" height="6" rx="1" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/><rect x="32" y="42" width="7" height="6" rx="1" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/><rect x="43" y="42" width="36" height="6" rx="1" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/><rect x="83" y="42" width="25" height="6" rx="1" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/></svg>`
+  },
+
+  {
+    id: "logitech-desk-mat",
+    nombre: "Logitech Desk Mat Studio",
+    nombreLargo: "Desk Mat Studio Mousepad XL",
+    marca: "Logitech",
+    cat: "accesorios",
+    precio: 2500,
+    badge: "",
+    partNumber: "956-000001",
+    description: "Mousepad de escritorio XL con superficie de microtextura para mayor precision. Base antideslizante y bordes cosidos para durabilidad.",
+    specs: [
+      ["Tipo",             "Mousepad de escritorio XL"],
+      ["Dimensiones",      "700 x 300 x 2 mm"],
+      ["Superficie",       "Microtextura para mayor precision"],
+      ["Base",             "Goma antideslizante"],
+      ["Bordes",           "Cosidos para durabilidad"],
+      ["Material",         "Polyester tejido"],
+      ["Garantia",         "2 anos Logitech"]
+    ],
+    specsResumen: ["700 × 300 mm XL","Superficie microtextura","Base antideslizante","Bordes cosidos"],
+    images: 2,
+    svg: `<svg viewBox="0 0 120 84" fill="none"><rect x="10" y="12" width="100" height="60" rx="10" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="18" y="20" width="84" height="44" rx="6" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.12)" stroke-width="1"/></svg>`
+  },
+
+  {
+    id: "hp-usbc-dock-g5",
+    nombre: "HP USB-C Dock G5",
+    nombreLargo: "USB-C Dock G5 Hub",
+    marca: "HP",
+    cat: "accesorios",
+    precio: 5000,
+    badge: "",
+    partNumber: "5TW10AA#ABM",
+    description: "Docking station USB-C con carga de 100W, triple video y multiples puertos. Conecta tu notebook a un entorno completo de escritorio con un solo cable.",
+    specs: [
+      ["Conexion",         "USB-C (1 cable para datos, video y carga)"],
+      ["Carga",            "Hasta 100W pass-through"],
+      ["Video",            "Triple display: 2x DisplayPort 1.4 + 1x HDMI 2.0"],
+      ["Puertos USB",      "USB-A 3.2 x4, USB-C x2"],
+      ["Red",              "Gigabit Ethernet RJ-45"],
+      ["Audio",            "Jack 3.5mm combo"],
+      ["Compatibilidad",   "Windows, macOS, Chrome OS"],
+      ["Garantia",         "3 anos HP"]
+    ],
+    specsResumen: ["USB-C 1 cable","Carga 100W","Triple video","Gigabit LAN"],
+    images: 2,
+    svg: `<svg viewBox="0 0 120 84" fill="none"><rect x="20" y="28" width="80" height="28" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="30" y="36" width="8" height="8" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="44" y="36" width="8" height="8" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="58" y="36" width="8" height="8" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="72" y="36" width="8" height="8" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="86" y="36" width="8" height="8" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><path d="M60 28 L60 18" stroke="rgba(255,255,255,0.12)" stroke-width="2" stroke-linecap="round"/></svg>`
   }
 
 ];
