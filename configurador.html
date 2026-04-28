@@ -244,6 +244,63 @@ window.clsSetCat = function(tipo, btn) {
       <!-- Catálogo (buildCatalogTable lo inyecta aquí) -->
       <div id="catalogoProductos"></div>
 
+      <!-- ── SIDEBAR DERECHO — RESUMEN (Movido al paso 1) ── -->
+      <aside class="right-sidebar" id="bottomBar">
+        <div class="bb-col bb-col--equipos">
+          <div class="bb-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            PRODUCTOS
+          </div>
+          <div class="bb-value">$<span id="totalEquipos">0</span></div>
+          <div class="bb-sub"><span id="countEquipos">0</span> unid.</div>
+        </div>
+
+        <div class="bb-divider"></div>
+
+        <div class="bb-col bb-col--servicios">
+          <div class="bb-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Servicios
+          </div>
+          <div class="bb-value">$<span id="totalServicios">0</span><span class="bb-period">/mes</span></div>
+          <div class="bb-sub"><span id="countServicios">0</span> activos</div>
+        </div>
+
+        <div class="bb-divider"></div>
+
+        <div class="bb-col bb-col--dcto">
+          <div class="bb-label bb-label--green">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            Descuento
+          </div>
+          <div class="bb-value bb-value--green">−$<span id="ahorroTotal">0</span></div>
+          <div class="bb-sub"><span id="descuentoPct">—</span> vol.</div>
+        </div>
+
+        <div class="bb-divider"></div>
+
+        <div class="bb-col bb-col--total">
+          <div class="bb-label">Total</div>
+          <div class="bb-value bb-value--orange">$<span id="totalGeneral">0</span></div>
+          <div class="bb-sub bb-sub--iva">
+            Neto $<span id="totalNeto">0</span> + IVA $<span id="totalIVA">0</span>
+          </div>
+        </div>
+
+        <div class="bb-divider"></div>
+
+        <div class="bb-col bb-actions">
+          <div class="bb-cuotas-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            ¿Cómo quieres pagar en cuotas?
+          </div>
+          <button class="bb-btn-next" id="btnNext" onclick="nextStep()">
+            Simular financiamiento
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </aside>
+
     </div><!-- /paso 1 -->
 
     <!-- ╔══════════════════════════════╗
@@ -488,6 +545,14 @@ window.clsSetCat = function(tipo, btn) {
       <!-- Bloque de info de contacto generado por generateFinalSummary() -->
       <div id="summaryInfo"></div>
 
+      <!-- Botones de acciones del paso 4 -->
+      <div class="resumen-actions">
+        <button class="wizard-btn wizard-btn--pdf" onclick="descargarCotizacionPDF()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          Descargar PDF
+        </button>
+      </div>
+
     </div><!-- /paso 4 -->
 
     <!-- ── NAVEGACIÓN (siempre debajo del contenido) ── -->
@@ -497,63 +562,6 @@ window.clsSetCat = function(tipo, btn) {
     </div>
 
     </div><!-- /config-main -->
-
-  <!-- ── SIDEBAR DERECHO — RESUMEN ── -->
-  <aside class="right-sidebar" id="bottomBar">
-    <div class="bb-col bb-col--equipos">
-      <div class="bb-label">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        PRODUCTOS
-      </div>
-      <div class="bb-value">$<span id="totalEquipos">0</span></div>
-      <div class="bb-sub"><span id="countEquipos">0</span> unid.</div>
-    </div>
-
-    <div class="bb-divider"></div>
-
-    <div class="bb-col bb-col--servicios">
-      <div class="bb-label">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Servicios
-      </div>
-      <div class="bb-value">$<span id="totalServicios">0</span><span class="bb-period">/mes</span></div>
-      <div class="bb-sub"><span id="countServicios">0</span> activos</div>
-    </div>
-
-    <div class="bb-divider"></div>
-
-    <div class="bb-col bb-col--dcto">
-      <div class="bb-label bb-label--green">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        Descuento
-      </div>
-      <div class="bb-value bb-value--green">−$<span id="ahorroTotal">0</span></div>
-      <div class="bb-sub"><span id="descuentoPct">—</span> vol.</div>
-    </div>
-
-    <div class="bb-divider"></div>
-
-    <div class="bb-col bb-col--total">
-      <div class="bb-label">Total</div>
-      <div class="bb-value bb-value--orange">$<span id="totalGeneral">0</span></div>
-      <div class="bb-sub bb-sub--iva">
-        Neto $<span id="totalNeto">0</span> + IVA $<span id="totalIVA">0</span>
-      </div>
-    </div>
-
-    <div class="bb-divider"></div>
-
-    <div class="bb-col bb-actions">
-      <div class="bb-cuotas-hint">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        ¿Cómo quieres pagar en cuotas?
-      </div>
-      <button class="bb-btn-next" id="btnNext" onclick="nextStep()">
-        Simular financiamiento
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-  </aside>
 
 </div><!-- /config-layout -->
 

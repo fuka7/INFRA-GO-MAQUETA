@@ -20,7 +20,6 @@
 <div class="igb-comunas-modal" id="igbComunasModal" role="dialog" aria-modal="true" aria-label="Comunas con despacho gratis">
   <div class="igb-comunas-header">
     <div class="igb-comunas-title">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 12l4-4M5 12l4 4"/><rect x="3" y="3" width="18" height="18" rx="2" style="display:none"/></svg>
       <span>🚚 Despacho Gratis en Santiago</span>
     </div>
     <button class="igb-comunas-close" onclick="igbCloseComunas()" aria-label="Cerrar">
@@ -83,27 +82,39 @@
     </button>
 
     <div class="igb-dropdown">
+      <a class="igb-dropdown-item" href="/tienda.html?cat=pc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="4" y="2" width="8" height="20" rx="1"/><circle cx="8" cy="18" r="1"/><rect x="5" y="5" width="6" height="4" rx="0.5"/>
+        </svg>
+        PC
+      </a>
       <a class="igb-dropdown-item" href="/tienda.html?cat=notebooks">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
         </svg>
         Notebooks
       </a>
-      <a class="igb-dropdown-item" href="/tienda.html?cat=all-in-one">
+      <a class="igb-dropdown-item" href="/tienda.html?cat=servidores">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <rect x="2" y="3" width="20" height="15" rx="2"/><circle cx="12" cy="11" r="3"/><path d="M8 21h8M12 18v3"/>
+          <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/>
         </svg>
-        All in One (AIO)
+        Servidores
       </a>
-      <a class="igb-dropdown-item" href="/tienda.html?cat=pcs">
+      <a class="igb-dropdown-item" href="/tienda.html?cat=impresoras">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
         </svg>
-        PCs de Escritorio
+        Impresoras
+      </a>
+      <a class="igb-dropdown-item" href="/tienda.html?cat=redes">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v3M8.5 17l3.5-6M15.5 17L12 11"/>
+        </svg>
+        Redes
       </a>
       <a class="igb-dropdown-item" href="/tienda.html?cat=accesorios">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3v4M8 3v4"/>
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 11h.01M12 11h.01"/>
         </svg>
         Accesorios
       </a>
@@ -162,9 +173,11 @@
   <a href="/configurador.html" onclick="return igbCotizar(event)">Configurador</a>
   <a href="/tienda.html">Tienda Virtual</a>
   <hr class="igb-mobile-sep">
+  <a href="/tienda.html?cat=pc">PC</a>
   <a href="/tienda.html?cat=notebooks">Notebooks</a>
-  <a href="/tienda.html?cat=all-in-one">All in One (AIO)</a>
-  <a href="/tienda.html?cat=pcs">PCs de Escritorio</a>
+  <a href="/tienda.html?cat=servidores">Servidores</a>
+  <a href="/tienda.html?cat=impresoras">Impresoras</a>
+  <a href="/tienda.html?cat=redes">Redes</a>
   <a href="/tienda.html?cat=accesorios">Accesorios</a>
   <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
     Agendar reunión

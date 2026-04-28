@@ -847,120 +847,396 @@ function descargarCotizacionPDF() {
   const f = state.formulario;
   const fmt = n => (n || 0).toLocaleString('es-CL');
 
-  // Construir items de productos
-  const eqRows = Object.entries(state.equipos)
+  // Calcular totales
+  const eqEntries = Object.entries(state.equipos)
     .filter(([name]) => {
       const prod = (window.CATALOGO || []).find(p => p.name === name);
       return !prod || prod.tipo !== 'servicio-tic';
-    })
-    .map(([name, v]) => {
-      const priceIVA = Math.round(v.price * 1.19);
-      return `
-      <tr>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">${name}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:center;">${v.qty}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;">$${fmt(priceIVA)}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(v.qty * priceIVA)}</td>
-      </tr>`;
-    }).join('');
+    });
 
-  const svcRows = Object.entries(state.servicios).map(([name, svc]) => {
-    const price = typeof svc === 'object' ? svc.price : svc;
-    const freq  = typeof svc === 'object' ? svc.frecuencia : '/mes';
+  const svcEntries = Object.entries(state.servicios);
+
+  const totalQty = eqEntries.reduce((sum, [, v]) => sum + v.qty, 0);
+  const totalEqNeto = eqEntries.reduce((s, [, v]) => s + v.qty * v.price, 0);
+  const totalSvcNeto = svcEntries.reduce((s, [, v]) => s + (typeof v === 'object' ? v.price : v), 0);
+  const pctDescuento = obtenerPctDescuento(totalQty);
+  const totalEqNetoConDescto = Math.round(totalEqNeto * (1 - pctDescuento / 100));
+  const ahorroEq = totalEqNeto - totalEqNetoConDescto;
+  const totalEqIVA = Math.round(totalEqNetoConDescto * 1.19);
+  const totalSvcIVA = Math.round(totalSvcNeto * 1.19);
+  const totalGenNeto = totalEqNetoConDescto + totalSvcNeto;
+  const totalGenIVA = totalEqIVA + totalSvcIVA;
+  const cuotaMensual = Math.round(totalGenIVA / simPlazo);
+  const ahorro = ahorroEq;
+
+  // Generar filas de productos
+  let numItem = 1;
+  const eqRows = eqEntries.map(([name, v]) => {
+    const priceUnit = v.price;
+    const priceUnitIVA = Math.round(priceUnit * 1.19);
+    const subtotal = v.qty * priceUnitIVA;
+    const ahorroItem = Math.round(v.qty * priceUnit * (pctDescuento / 100) * 1.19);
     return `
-      <tr>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;" colspan="3">${name}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600;">$${fmt(Math.round(price * 1.19))}${freq}</td>
-      </tr>`;
+    <tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;font-weight:600;">${numItem++}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;"><strong>${name}</strong></td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">HW</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">${v.qty}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">$${fmt(priceUnitIVA)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">${pctDescuento}%</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">$${fmt(Math.round(priceUnit * 0.81 * 1.19))}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;font-weight:600;">$${fmt(subtotal)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">$${fmt(ahorroItem)}</td>
+    </tr>`;
   }).join('');
 
-  const totalEqNeto = Object.entries(state.equipos)
-    .filter(([name]) => { const p = (window.CATALOGO||[]).find(x=>x.name===name); return !p||p.tipo!=='servicio-tic'; })
-    .reduce((s, [, v]) => s + v.qty * v.price, 0);
-  const totalSvcNeto = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
-  const totalEq  = Math.round(totalEqNeto * 1.19);
-  const totalSvc = Math.round(totalSvcNeto * 1.19);
-  const totalGen = totalEq + totalSvc;
+  const svcRows = svcEntries.map(([name, svc]) => {
+    const price = typeof svc === 'object' ? svc.price : svc;
+    const freq  = typeof svc === 'object' ? svc.frecuencia : '/mes';
+    const priceIVA = Math.round(price * 1.19);
+    return `
+    <tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;font-weight:600;">${numItem++}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;"><strong>${name}</strong></td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">SVC</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">1</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">$${fmt(priceIVA)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">—</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">$${fmt(priceIVA)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;font-weight:600;">$${fmt(priceIVA)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">—</td>
+    </tr>`;
+  }).join('');
 
-  const fecha = new Date().toLocaleDateString('es-CL', { year:'numeric', month:'long', day:'numeric' });
+  const fecha = new Date();
+  const fechaEmision = fecha.toLocaleDateString('es-CL', { year:'numeric', month:'long', day:'numeric' });
+  const fechaVencimiento = new Date(fecha.getTime() + 30*24*60*60*1000).toLocaleDateString('es-CL', { year:'numeric', month:'long', day:'numeric' });
 
   const htmlPDF = `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Cotización InfraGo — ${f.empresa || 'Cliente'}</title>
+  <title>Cotización — ${f.empresa || 'Cliente'}</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: Arial, sans-serif; font-size: 13px; color: #1a2540; background: #fff; padding: 32px; }
-    .header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:32px; }
-    .logo { font-size:28px; font-weight:900; color:#1a2540; }
-    .logo span { color:#e6a817; }
-    .meta { text-align:right; color:#666; font-size:12px; }
-    .meta strong { display:block; font-size:16px; font-weight:700; color:#1a2540; margin-bottom:4px; }
-    .divider { height:3px; background: linear-gradient(90deg,#1a2540,#e6a817); border-radius:2px; margin-bottom:28px; }
-    .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#e6a817; margin-bottom:12px; }
-    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin-bottom:28px; background:#f8f9fc; padding:16px; border-radius:8px; }
-    .info-field label { display:block; font-size:10px; font-weight:700; text-transform:uppercase; color:#999; margin-bottom:2px; }
-    .info-field span { font-size:13px; font-weight:600; }
-    table { width:100%; border-collapse:collapse; margin-bottom:20px; }
-    thead th { background:#1a2540; color:#fff; padding:10px 12px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
-    thead th:last-child { text-align:right; }
-    thead th:nth-child(2) { text-align:center; }
-    thead th:nth-child(3) { text-align:right; }
-    .totals-box { background:#f8f9fc; border-radius:8px; padding:16px 20px; margin-top:8px; }
-    .total-row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; }
-    .total-row.main { font-size:18px; font-weight:800; color:#e6a817; border-top:2px solid #e0e0e0; padding-top:12px; margin-top:4px; }
-    .footer-note { margin-top:32px; font-size:11px; color:#999; border-top:1px solid #f0f0f0; padding-top:16px; }
+    body { font-family:'Arial', sans-serif; font-size:12px; color:#0a1628; background:#fff; line-height:1.5; }
+    .page { page-break-after:always; }
+    .header-banner { background:linear-gradient(135deg,#0a1628 0%,#1e3a5f 100%); color:#fff; padding:48px 40px; margin-bottom:40px; }
+    .header-banner-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:32px; }
+    .header-banner-logo { font-size:32px; font-weight:900; }
+    .header-banner-logo span { color:#ff7a00; }
+    .header-banner-meta { font-size:11px; line-height:1.8; }
+    .header-banner-meta strong { font-size:13px; display:block; margin-bottom:4px; }
+    .header-banner-title { font-size:32px; font-weight:700; margin-bottom:8px; font-style:italic; }
+    .header-banner-subtitle { font-size:13px; opacity:0.9; margin-bottom:24px; }
+    .header-banner-detail { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; font-size:11px; }
+    .header-banner-detail-item strong { display:block; font-size:13px; color:#ff7a00; margin-bottom:2px; }
+    .main-content { padding:0 40px; }
+    .section { margin-bottom:36px; }
+    .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:#ff7a00; margin-bottom:12px; border-bottom:2px solid #ff7a00; padding-bottom:6px; }
+    .info-box { background:#f0f2f5; border-radius:4px; padding:16px; margin-bottom:16px; }
+    .info-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:12px; }
+    .info-row.full { grid-template-columns:1fr; }
+    .info-field { font-size:11px; }
+    .info-field-label { font-weight:700; text-transform:uppercase; color:#666; margin-bottom:2px; }
+    .info-field-value { font-size:13px; font-weight:600; color:#0a1628; }
+    .summary-box { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; margin-bottom:24px; }
+    .summary-card { background:#f0f2f5; border-left:4px solid #ff7a00; padding:16px; border-radius:4px; }
+    .summary-card.blue { border-left-color:#0a1628; background:#e8f0f8; }
+    .summary-card.green { border-left-color:#28a745; background:#e8f5e9; }
+    .summary-card.orange { border-left-color:#ff7a00; background:#fff3e0; }
+    .summary-card-label { font-size:10px; font-weight:700; text-transform:uppercase; color:#666; margin-bottom:4px; }
+    .summary-card-value { font-size:18px; font-weight:800; color:#ff7a00; }
+    .summary-card.blue .summary-card-value { color:#0a1628; }
+    .summary-card.green .summary-card-value { color:#28a745; }
+    table { width:100%; border-collapse:collapse; margin:16px 0; }
+    thead { background:#0a1628; color:#fff; }
+    thead th { padding:12px 8px; text-align:left; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+    thead th:nth-child(3),thead th:nth-child(4),thead th:nth-child(5),thead th:nth-child(6),thead th:nth-child(7),thead th:nth-child(8),thead th:nth-child(9) { text-align:right; }
+    tbody td { padding:10px 8px; border-bottom:1px solid #e0e0e0; font-size:11px; }
+    tbody td:nth-child(3),tbody td:nth-child(4),tbody td:nth-child(5),tbody td:nth-child(6),tbody td:nth-child(7),tbody td:nth-child(8),tbody td:nth-child(9) { text-align:right; }
+    .totals-breakdown { background:#f0f2f5; border-radius:4px; padding:16px; margin:16px 0; }
+    .totals-row { display:flex; justify-content:space-between; padding:8px 0; font-size:12px; }
+    .totals-row.main { font-size:16px; font-weight:800; color:#ff7a00; border-top:2px solid #0a1628; padding-top:12px; margin-top:8px; }
+    .totals-row.sub { color:#666; font-size:11px; }
+    .totals-row.highlight { background:#fff; padding:8px; margin:8px -8px; border-left:3px solid #ff7a00; }
+    .financing-options { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin:16px 0; }
+    .financing-option { background:#f0f2f5; border-radius:4px; padding:16px; text-align:center; }
+    .financing-option.active { background:#0a1628; color:#fff; }
+    .financing-option strong { display:block; font-size:14px; margin-bottom:4px; }
+    .financing-option small { display:block; font-size:10px; color:#666; margin-top:4px; }
+    .financing-option.active small { color:#ccc; }
+    .conditions { background:#f8f9fc; border-radius:4px; padding:16px; margin:16px 0; font-size:11px; line-height:1.8; }
+    .conditions ul { margin-left:20px; margin-top:8px; }
+    .conditions li { margin-bottom:6px; }
+    .signatures { display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:40px; text-align:center; font-size:11px; }
+    .signature-line { border-top:1px solid #0a1628; padding-top:8px; margin-top:24px; }
+    .footer { text-align:center; font-size:10px; color:#666; margin-top:32px; border-top:1px solid #e0e0e0; padding-top:16px; }
+    .discount-table { margin:16px 0; }
+    .discount-table-row { display:flex; justify-content:space-between; padding:8px 12px; border-bottom:1px solid #e0e0e0; font-size:11px; }
+    .discount-table-row.active { background:#fff3e0; font-weight:600; }
+    .discount-table-row span:last-child { text-align:right; }
+    @media print { body { padding:0; } .page { page-break-after:always; } }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">Infra<span>Go</span></div>
-    <div class="meta">
-      <strong>Cotización Formal</strong>
-      Fecha: ${fecha}<br>
-      contacto@infrago.cl
+
+<!-- PÁGINA 1 -->
+<div class="page">
+
+  <!-- HEADER BANNER -->
+  <div class="header-banner">
+    <div class="header-banner-top">
+      <div class="header-banner-logo">Infra<span>Go</span></div>
+      <div class="header-banner-meta">
+        <strong>COTIZACIÓN FORMAL</strong>
+        InfraGo — TIC Manager's
+      </div>
+    </div>
+    <div class="header-banner-title">Propuesta comercial</div>
+    <div class="header-banner-subtitle">tecnología empresarial</div>
+    <div class="header-banner-detail">
+      <div class="header-banner-detail-item">
+        <strong>FECHA DE EMISIÓN</strong>
+        ${fechaEmision}
+      </div>
+      <div class="header-banner-detail-item">
+        <strong>VÁLIDO HASTA</strong>
+        ${fechaVencimiento}
+      </div>
+      <div class="header-banner-detail-item">
+        <strong>TOTAL COTIZADO</strong>
+        $${fmt(totalGenIVA)}
+      </div>
     </div>
   </div>
-  <div class="divider"></div>
 
-  <div class="section-title">Datos del cliente</div>
-  <div class="info-grid">
-    ${f.empresa   ? `<div class="info-field"><label>Empresa</label><span>${f.empresa}</span></div>` : ''}
-    ${f.contacto  ? `<div class="info-field"><label>Contacto</label><span>${f.contacto}</span></div>` : ''}
-    ${f.cargo     ? `<div class="info-field"><label>Cargo</label><span>${f.cargo}</span></div>` : ''}
-    ${f.email     ? `<div class="info-field"><label>Email</label><span>${f.email}</span></div>` : ''}
-    ${f.telefono  ? `<div class="info-field"><label>Teléfono</label><span>${f.telefono}</span></div>` : ''}
-    ${f.region    ? `<div class="info-field"><label>Región</label><span>${f.region}</span></div>` : ''}
-    ${f.ciudad    ? `<div class="info-field"><label>Ciudad</label><span>${f.ciudad}</span></div>` : ''}
+  <div class="main-content">
+
+    <!-- PROVEEDOR & CLIENTE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:40px;">
+      <div>
+        <div class="section-title">PROVEEDOR</div>
+        <div class="info-box" style="background:transparent;padding:0;">
+          <div class="info-field">
+            <div class="info-field-label">Nombre</div>
+            <div class="info-field-value" style="font-size:16px;">TIC Manager's — InfraGo</div>
+          </div>
+          <div class="info-field" style="margin-top:12px;">
+            <div class="info-field-label">RUT</div>
+            <div class="info-field-value">76.XXX.XXX-X</div>
+          </div>
+          <div class="info-field" style="margin-top:8px;">
+            <div class="info-field-label">Dirección</div>
+            <div class="info-field-value">Providencia 1208, Of. 307, Santiago</div>
+          </div>
+          <div class="info-field" style="margin-top:8px;">
+            <div class="info-field-label">Contacto</div>
+            <div class="info-field-value">contacto@ticmanagers.cl</div>
+          </div>
+          <div class="info-field" style="margin-top:8px;">
+            <div class="info-field-label">Teléfono</div>
+            <div class="info-field-value">+56 9 6572 0213</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">CLIENTE</div>
+        <div class="info-box" style="background:transparent;padding:0;">
+          <div class="info-field">
+            <div class="info-field-label">Empresa</div>
+            <div class="info-field-value" style="font-size:16px;">${f.empresa || '—'}</div>
+          </div>
+          <div class="info-field" style="margin-top:12px;">
+            <div class="info-field-label">Área / Departamento</div>
+            <div class="info-field-value">${f.cargo || '—'}</div>
+          </div>
+          <div class="info-field" style="margin-top:8px;">
+            <div class="info-field-label">Contacto</div>
+            <div class="info-field-value">${f.contacto || '—'}</div>
+          </div>
+          <div class="info-field" style="margin-top:8px;">
+            <div class="info-field-label">Email</div>
+            <div class="info-field-value">${f.email || '—'}</div>
+          </div>
+          <div class="info-field" style="margin-top:8px;">
+            <div class="info-field-label">Teléfono</div>
+            <div class="info-field-value">${f.telefono || '—'}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESUMEN EJECUTIVO -->
+    <div class="section">
+      <div class="section-title">RESUMEN EJECUTIVO</div>
+      <div class="summary-box">
+        <div class="summary-card blue">
+          <div class="summary-card-label">Total a Pagar</div>
+          <div class="summary-card-value">$${fmt(totalGenIVA)}</div>
+          <small style="display:block;margin-top:4px;font-size:10px;">CLP con IVA · ${totalQty} unidades</small>
+        </div>
+        <div class="summary-card orange">
+          <div class="summary-card-label">Ahorro Obtenido</div>
+          <div class="summary-card-value">$${fmt(ahorro)}</div>
+          <small style="display:block;margin-top:4px;font-size:10px;">vs. precio lista · dto. ${pctDescuento}%</small>
+        </div>
+        <div class="summary-card green">
+          <div class="summary-card-label">Financiamiento 24M</div>
+          <div class="summary-card-value">$${fmt(cuotaMensual)}</div>
+          <small style="display:block;margin-top:4px;font-size:10px;">Cuota mensual · CAE 8.13%</small>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Tipo de Cambio</div>
+          <div class="summary-card-value">$${fmt(tipoCambio)}</div>
+          <small style="display:block;margin-top:4px;font-size:10px;">Dólar observado BCCh + $5</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA DE PRODUCTOS -->
+    <div class="section">
+      <div class="section-title">DETALLE DE PRODUCTOS Y SERVICIOS</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:center;">#</th>
+            <th>PRODUCTO / SERVICIO</th>
+            <th style="text-align:center;">CAT.</th>
+            <th style="text-align:center;">CANT.</th>
+            <th>P. LISTA UNIT.</th>
+            <th>DTO.</th>
+            <th style="color:#ff7a00;">P. CON DTO.</th>
+            <th>SUBTOTAL</th>
+            <th style="color:#ff7a00;">AHORRO \$</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${eqRows}
+          ${svcRows}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ESCALA DE DESCUENTOS -->
+    <div class="section">
+      <div class="section-title">ESCALA DE DESCUENTOS POR VOLUMEN</div>
+      <div class="discount-table">
+        <div class="discount-table-row ${totalQty >= 10 && totalQty < 20 ? 'active' : ''}">
+          <span>10 – 19 unidades</span><span>1%</span>
+        </div>
+        <div class="discount-table-row ${totalQty >= 20 && totalQty < 30 ? 'active' : ''}">
+          <span>20 – 29 unidades</span><span>2%</span>
+        </div>
+        <div class="discount-table-row ${totalQty >= 30 && totalQty < 40 ? 'active' : ''}">
+          <span>30 – 39 unidades</span><span>3%</span>
+        </div>
+        <div class="discount-table-row ${totalQty >= 40 && totalQty < 50 ? 'active' : ''}">
+          <span>40 – 49 unidades</span><span>4%</span>
+        </div>
+        <div class="discount-table-row ${totalQty >= 50 ? 'active' : ''}">
+          <span>50 unidades +</span><span>5%</span>
+        </div>
+      </div>
+      <div style="background:#fff3e0;padding:12px;border-radius:4px;margin-top:12px;font-size:11px;">
+        <strong>Total pedido: ${totalQty} unidades → ${pctDescuento}% sobre todos los ítems</strong>
+      </div>
+    </div>
+
+    <!-- DESGLOSE DE PRECIOS -->
+    <div class="section">
+      <div class="section-title">DESGLOSE DE PRECIOS</div>
+      <div class="totals-breakdown">
+        <div class="totals-row">
+          <span>Precio lista total (sin dto.)</span>
+          <span>$${fmt(totalEqNeto + totalSvcNeto)}</span>
+        </div>
+        <div class="totals-row highlight">
+          <span>Descuento por volumen (${pctDescuento}%)</span>
+          <span style="color:#e74c3c;">– $${fmt(ahorro)}</span>
+        </div>
+        <div class="totals-row">
+          <span>Neto antes de IVA</span>
+          <span>$${fmt(totalGenNeto)}</span>
+        </div>
+        <div class="totals-row">
+          <span>IVA (19%)</span>
+          <span>$${fmt(totalGenIVA - totalGenNeto)}</span>
+        </div>
+        <div class="totals-row main">
+          <span>Total a pagar (CLP)</span>
+          <span>$${fmt(totalGenIVA)}</span>
+        </div>
+        <div class="totals-row sub" style="margin-top:8px;">
+          <span style="color:#28a745;">✓ Usted ahorra en este pedido</span>
+          <span style="color:#28a745;font-weight:600;">$${fmt(ahorro)} CLP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPCIONES DE FINANCIAMIENTO -->
+    <div class="section">
+      <div class="section-title">OPCIONES DE FINANCIAMIENTO</div>
+      <div class="financing-options">
+        <div class="financing-option">
+          <strong>12 CUOTAS</strong>
+          <div style="font-size:16px;font-weight:800;color:#0a1628;margin:8px 0;">$${fmt(Math.round(totalGenIVA / 12))}</div>
+          <small>CAE 5.41% anual</small>
+        </div>
+        <div class="financing-option active">
+          <strong>24 CUOTAS — RECOMENDADO</strong>
+          <div style="font-size:16px;font-weight:800;margin:8px 0;">$${fmt(cuotaMensual)}</div>
+          <small>CAE 8.13% anual</small>
+        </div>
+        <div class="financing-option">
+          <strong>36 CUOTAS</strong>
+          <div style="font-size:16px;font-weight:800;color:#0a1628;margin:8px 0;">$${fmt(Math.round(totalGenIVA / 36))}</div>
+          <small>CAE 9.74% anual</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONDICIONES COMERCIALES -->
+    <div class="section">
+      <div class="section-title">CONDICIONES COMERCIALES</div>
+      <div class="conditions">
+        <ul>
+          <li>Precios en pesos chilenos (CLP) con IVA incluido</li>
+          <li>Tipo de cambio dólar observado BCCh + \$5 TIC Manager's = \$${fmt(tipoCambio)}</li>
+          <li>Vigencia de la cotización: 30 días corridos desde emisión</li>
+          <li>Stock sujeto a disponibilidad al momento de la orden de compra</li>
+          <li>Descuento por volumen sobre pedido consolidado de ${totalQty} unidades</li>
+          <li>Entrega estimada: 5 a 10 días hábiles desde aprobación</li>
+          <li>Instalación coordinada con el área TI del cliente</li>
+          <li>Pago contado: transferencia o cheque a 30 días</li>
+          <li>Financiamiento sujeto a evaluación crediticia del cliente</li>
+          <li>Garantía fabricante incluida en todos los equipos</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FIRMAS -->
+    <div class="signatures">
+      <div>
+        <strong>AUTORIZA PROVEEDOR</strong>
+        <div class="signature-line">Ejecutivo Comercial TIC Manager's<br>Firma y timbre</div>
+      </div>
+      <div>
+        <strong>APRUEBA CLIENTE</strong>
+        <div class="signature-line">${f.cargo || 'Gerente'}<br>Firma, timbre y fecha</div>
+      </div>
+    </div>
+
   </div>
 
-  ${eqRows ? `
-  <div class="section-title">Productos</div>
-  <table>
-    <thead><tr><th>Producto</th><th style="text-align:center;">Cant.</th><th style="text-align:right;">P. Unit.</th><th style="text-align:right;">Subtotal</th></tr></thead>
-    <tbody>${eqRows}</tbody>
-  </table>` : ''}
-
-  ${svcRows ? `
-  <div class="section-title">Servicios</div>
-  <table>
-    <thead><tr><th colspan="3">Servicio</th><th style="text-align:right;">Precio</th></tr></thead>
-    <tbody>${svcRows}</tbody>
-  </table>` : ''}
-
-  <div class="totals-box">
-    <div class="total-row"><span>Subtotal productos</span><span>$${fmt(totalEq)}</span></div>
-    <div class="total-row"><span>Subtotal servicios/mes</span><span>$${fmt(totalSvc)}/mes</span></div>
-    <div class="total-row main"><span>Total estimado</span><span>$${fmt(totalGen)}</span></div>
-    <div class="total-row" style="font-size:12px;color:#666;"><span>Cuota en ${simPlazo} meses</span><span>≈ $${fmt(Math.round(totalGen / simPlazo))}/mes</span></div>
+  <div class="footer">
+    TIC Manager's — InfraGo · contacto@ticmanagers.cl · +56 9 6572 0213 · Providencia 1208, Of. 307, Santiago, Chile
+    <br>COTIZACIÓN VÁLIDA HASTA ${fechaVencimiento}
   </div>
 
-  ${f.notas ? `<div class="footer-note"><strong>Notas:</strong> ${f.notas}</div>` : ''}
-  <div class="footer-note" style="margin-top:16px;">
-    Esta cotización es referencial y válida por 30 días. Los precios incluyen IVA (19%). Sujeto a disponibilidad de stock.<br>
-    InfraGo SpA — Una empresa de TIC Manager's · contacto@infrago.cl
-  </div>
+</div>
+
 </body>
 </html>`;
 
