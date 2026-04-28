@@ -262,6 +262,9 @@
     overlay.style.pointerEvents = 'none';
     setTimeout(function() { if (overlay) overlay.style.pointerEvents = ''; }, 50);
     if (clearRedirect !== false) window._authRedirect = null;
+    if (window.location.pathname.includes('configurador') && !currentUser) {
+      window.location.href = '/index.html';
+    }
   }
 
   function switchTab(tab) {
@@ -334,7 +337,11 @@
       closeModal();
       window.supabase.auth.signOut().then(function() {
         currentUser = null;
-        window.location.reload();
+        if (window.location.pathname.includes('configurador')) {
+          window.location.href = '/index.html';
+        } else {
+          window.location.reload();
+        }
       });
     });
   }
