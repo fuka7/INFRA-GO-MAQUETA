@@ -491,7 +491,7 @@
       '  width: 100%;',
       '}',
       '.igs-field select:focus, .igs-field input:focus {',
-      '  border-color: #e8920a; box-shadow: 0 0 0 3px rgba(232,146,10,.1);',
+      '  border-color: #FF7A00; box-shadow: 0 0 0 3px rgba(255,122,0,.1);',
       '}',
 
       '.igs-autocomplete {',
@@ -643,7 +643,7 @@
         '    <div style="font-size:17px;font-weight:800;color:' + (gratis ? '#16a34a' : '#0d1e36') + ';">' +
              (gratis ? 'Gratis' : '~$' + (r.precio || 0).toLocaleString('es-CL')) + ref + '</div>',
         '  </div>',
-        diasLabel ? '  <div style="font-size:12px;font-weight:600;color:#e8920a;background:#fff3dc;border-radius:20px;padding:5px 12px;white-space:nowrap;">' + diasLabel + '</div>' : '',
+        diasLabel ? '  <div style="font-size:12px;font-weight:600;color:#FF7A00;background:#fff3dc;border-radius:20px;padding:5px 12px;white-space:nowrap;">' + diasLabel + '</div>' : '',
         '</div>'
       ].join('\n');
     } catch(e) {

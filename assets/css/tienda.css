@@ -16,7 +16,7 @@
 ───────────────────────────────────────────── */
 .tienda-header {
   padding-top: 68px;
-  background: linear-gradient(135deg, #f0f2f5 0%, #ffffff 60%, rgba(232,146,10,0.04) 100%);
+  background: linear-gradient(135deg, #f0f2f5 0%, #ffffff 60%, rgba(255,122,0,0.04) 100%);
   border-bottom: 1px solid rgba(17,17,17,0.07);
 }
 
@@ -51,13 +51,13 @@
 .tienda-breadcrumb span { color: rgba(17,17,17,0.6); }
 
 .tienda-header-text h1 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(28px, 5vw, 48px);
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(22px, 3.5vw, 36px);
   font-weight: 800;
   text-transform: uppercase;
   color: #111111;
   margin: 0 0 10px;
-  letter-spacing: 0.5px;
+  letter-spacing: -0.5px;
 }
 
 .tienda-header-text p {
@@ -82,9 +82,10 @@
 }
 
 .tienda-stat-num {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
   font-weight: 800;
+  letter-spacing: -0.5px;
   color: var(--gold);
   line-height: 1;
 }
@@ -158,7 +159,7 @@
 }
 
 .filtro-check.active {
-  background: rgba(232,146,10,0.1);
+  background: rgba(255,122,0,0.1);
   color: var(--gold);
 }
 
@@ -216,7 +217,7 @@
   border-radius: 8px;
   padding: 8px 12px;
   color: rgba(17,17,17,0.75);
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   cursor: pointer;
   width: 100%;
@@ -224,7 +225,7 @@
   transition: border-color 0.2s;
 }
 
-.filtro-select:focus { border-color: rgba(232,146,10,0.4); }
+.filtro-select:focus { border-color: rgba(255,122,0,0.4); }
 
 .filtro-cta {
   display: flex;
@@ -245,7 +246,7 @@
 }
 
 .filtro-cta:hover {
-  background: var(--gold-bright, #f0a500);
+  background: var(--gold-bright, #FF9933);
   transform: translateY(-1px);
 }
 
@@ -276,7 +277,7 @@
   transition: border-color 0.2s;
 }
 
-.tienda-search-wrap:focus-within { border-color: rgba(232,146,10,0.4); }
+.tienda-search-wrap:focus-within { border-color: rgba(255,122,0,0.4); }
 .tienda-search-wrap svg { color: rgba(17,17,17,0.45); flex-shrink: 0; }
 
 .tienda-search {
@@ -284,7 +285,7 @@
   border: none;
   outline: none;
   color: #111111;
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   width: 100%;
 }
@@ -340,8 +341,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(232,146,10,0.1);
-  border: 1px solid rgba(232,146,10,0.25);
+  background: rgba(255,122,0,0.1);
+  border: 1px solid rgba(255,122,0,0.25);
   color: var(--gold);
   font-size: 12px;
   font-weight: 600;
@@ -426,12 +427,18 @@
 .productos-list .prod-specs-list { display: none; }
 
 .productos-list .prod-footer {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
   margin-top: 0;
   border-top: none;
   padding-top: 0;
   flex-shrink: 0;
   margin-left: auto;
 }
+
+.productos-list .prod-btns { width: auto; }
 
 /* Badge */
 .prod-badge {
@@ -450,7 +457,7 @@
 .prod-badge--hot {
   background: rgba(240,165,0,0.2);
   color: var(--gold);
-  border: 1px solid rgba(232,146,10,0.3);
+  border: 1px solid rgba(255,122,0,0.3);
 }
 
 .prod-badge--new {
@@ -520,9 +527,9 @@
 
 .prod-footer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
   margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid rgba(17,17,17,0.07);
@@ -542,7 +549,7 @@
 }
 
 .prod-price-val {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 18px;
   font-weight: 800;
   color: var(--gold);
@@ -554,8 +561,8 @@
 }
 
 .prod-btn {
-  background: rgba(232,146,10,0.1);
-  border: 1px solid rgba(232,146,10,0.3);
+  background: rgba(255,122,0,0.1);
+  border: 1px solid rgba(255,122,0,0.3);
   color: var(--gold);
   padding: 7px 14px;
   border-radius: 8px;
@@ -615,7 +622,7 @@
    CTA BANNER
 ───────────────────────────────────────────── */
 .tienda-cta-banner {
-  background: linear-gradient(135deg, rgba(232,146,10,0.06), rgba(37,99,196,0.04));
+  background: linear-gradient(135deg, rgba(255,122,0,0.06), rgba(37,99,196,0.04));
   border-top: 1px solid rgba(17,17,17,0.07);
   border-bottom: 1px solid rgba(17,17,17,0.07);
   padding: 40px;
@@ -632,7 +639,7 @@
 }
 
 .tienda-cta-content h3 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: #111111;
@@ -685,7 +692,7 @@
 }
 
 .tp-hstat-num {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 26px;
   font-weight: 800;
   color: var(--gold);
@@ -731,7 +738,7 @@
 .tp-card:hover {
   border-color: rgba(240,165,0,0.3);
   transform: translateY(-5px);
-  box-shadow: 0 20px 48px rgba(17,17,17,0.1), 0 0 0 1px rgba(232,146,10,0.08);
+  box-shadow: 0 20px 48px rgba(17,17,17,0.1), 0 0 0 1px rgba(255,122,0,0.08);
 }
 
 /* Glow interno que aparece en hover */
@@ -762,9 +769,9 @@
   letter-spacing: 0.5px;
   padding: 4px 10px 4px 8px;
   border-radius: 20px;
-  background: rgba(232,146,10,0.12);
+  background: rgba(255,122,0,0.12);
   color: var(--gold);
-  border: 1px solid rgba(232,146,10,0.35);
+  border: 1px solid rgba(255,122,0,0.35);
   backdrop-filter: blur(8px);
 }
 
@@ -797,7 +804,7 @@
 
 .tp-img-glow--blue  { background: #2563c4; }
 .tp-img-glow--green { background: #22c55e; }
-.tp-img-glow--gold  { background: #f0a500; }
+.tp-img-glow--gold  { background: #FF9933; }
 
 .tp-device-svg {
   width: 100%;
@@ -852,7 +859,7 @@
 }
 
 .tp-category-tag--gold {
-  background: rgba(232,146,10,0.1);
+  background: rgba(255,122,0,0.1);
   color: rgba(240,165,0,0.8);
   border-color: rgba(240,165,0,0.2);
 }
@@ -911,7 +918,7 @@
 }
 
 .tp-price-val {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 21px;
   font-weight: 800;
   color: var(--gold);
@@ -928,8 +935,8 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  background: rgba(232,146,10,0.1);
-  border: 1px solid rgba(232,146,10,0.28);
+  background: rgba(255,122,0,0.1);
+  border: 1px solid rgba(255,122,0,0.28);
   color: var(--gold);
   border-radius: 9px;
   font-weight: 700;

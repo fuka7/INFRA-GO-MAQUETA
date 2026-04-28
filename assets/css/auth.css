@@ -10,7 +10,7 @@
   position: fixed;
   inset: 0;
   z-index: 9000;
-  background: rgba(5,18,55,0.7);
+  background: rgba(10,20,38,0.7);
   backdrop-filter: blur(6px);
   align-items: center;
   justify-content: center;
@@ -33,7 +33,7 @@
   max-width: 460px;
   max-height: calc(100dvh - 40px);
   overflow-y: auto;
-  box-shadow: 0 32px 80px rgba(5,18,55,0.25);
+  box-shadow: 0 32px 80px rgba(10,20,38,0.25);
   animation: authSlideUp 0.3s cubic-bezier(0.22,1,0.36,1);
   position: relative;
   margin: auto;
@@ -46,20 +46,20 @@
 
 /* ── HEADER ── */
 .auth-header {
-  background: linear-gradient(135deg, #051237 0%, #0a2260 100%);
+  background: linear-gradient(135deg, #0A1426 0%, #101D33 100%);
   padding: 32px 36px 28px;
   position: relative;
 }
 
 .auth-logo {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: 24px;
   color: #ffffff;
   margin-bottom: 20px;
   display: block;
 }
-.auth-logo span { color: #e8920a; }
+.auth-logo span { color: #FF7A00; }
 
 /* Tabs login / registro */
 .auth-tabs {
@@ -75,7 +75,7 @@
   border: none;
   background: none;
   border-radius: 7px;
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: rgba(255,255,255,0.55);
@@ -84,7 +84,7 @@
   letter-spacing: 0.3px;
 }
 .auth-tab.active {
-  background: #e8920a;
+  background: #FF7A00;
   color: #ffffff;
 }
 .auth-tab:not(.active):hover {
@@ -120,7 +120,7 @@
 .auth-panel.active { display: block; }
 
 .auth-title {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
   font-size: 20px;
   color: #111;
@@ -138,7 +138,7 @@
 .auth-field { display: flex; flex-direction: column; gap: 5px; }
 
 .auth-label {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 12px;
   font-weight: 700;
   color: rgba(17,17,17,0.6);
@@ -158,7 +158,7 @@
   border: 1.5px solid rgba(17,17,17,0.15);
   border-radius: 9px;
   padding: 0 40px 0 14px;
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   color: #111;
   background: #f8f9fb;
@@ -166,9 +166,9 @@
   transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 .auth-input:focus {
-  border-color: #e8920a;
+  border-color: #FF7A00;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(232,146,10,0.12);
+  box-shadow: 0 0 0 3px rgba(255,122,0,0.12);
 }
 .auth-input.error {
   border-color: #ef4444;
@@ -262,12 +262,12 @@
 .auth-terms input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #e8920a;
+  accent-color: #FF7A00;
   flex-shrink: 0;
   margin-top: 1px;
   cursor: pointer;
 }
-.auth-terms a { color: #e8920a; text-decoration: none; font-weight: 600; }
+.auth-terms a { color: #FF7A00; text-decoration: none; font-weight: 600; }
 .auth-terms a:hover { text-decoration: underline; }
 
 /* ¿Olvidaste contraseña? */
@@ -277,7 +277,7 @@
 }
 .auth-forgot a {
   font-size: 12px;
-  color: #e8920a;
+  color: #FF7A00;
   text-decoration: none;
   font-weight: 600;
 }
@@ -287,11 +287,11 @@
 .auth-submit {
   width: 100%;
   height: 48px;
-  background: linear-gradient(135deg, #c47200, #e8920a);
+  background: linear-gradient(135deg, #CC6200, #FF7A00);
   color: #ffffff;
   border: none;
   border-radius: 10px;
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
@@ -300,14 +300,14 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 20px rgba(232,146,10,0.3);
+  box-shadow: 0 4px 20px rgba(255,122,0,0.3);
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
   letter-spacing: 0.3px;
 }
 .auth-submit:hover {
-  background: linear-gradient(135deg, #d47f0a, #f0a500);
+  background: linear-gradient(135deg, #d47f0a, #FF9933);
   transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(232,146,10,0.4);
+  box-shadow: 0 8px 28px rgba(255,122,0,0.4);
 }
 .auth-submit:disabled {
   opacity: 0.5;

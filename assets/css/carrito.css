@@ -202,7 +202,7 @@
 .igc-mini-img-large svg { width: 70px; height: 56px; }
 .igc-mini-detail { flex: 1; min-width: 0; }
 .igc-mini-marca {
-  font-size: 11px; font-weight: 800; color: #e8920a;
+  font-size: 11px; font-weight: 800; color: #FF7A00;
   letter-spacing: .05em; text-transform: uppercase; margin-bottom: 3px;
 }
 .igc-mini-nombre-rich {
@@ -362,7 +362,7 @@
   color: #7a8fa6; font-size: 16px; line-height: 1;
   padding: 0 2px; transition: color .15s;
 }
-.igc-page-qty button:hover { color: #e8920a; }
+.igc-page-qty button:hover { color: #FF7A00; }
 .igc-page-qty span {
   font-size: 15px; font-weight: 800; color: #0d1e36;
   min-width: 20px; text-align: center;
@@ -429,7 +429,7 @@
   display: flex; justify-content: space-between; align-items: center;
   font-size: 16px; font-weight: 800; color: #0d1e36;
 }
-.igc-panel-total-val { font-size: 22px; color: #e8920a; }
+.igc-panel-total-val { font-size: 22px; color: #FF7A00; }
 
 .igc-panel-iva {
   font-size: 10px; color: #b0bcc9;
@@ -444,18 +444,18 @@
 
 .igc-panel-btn-comprar {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  background: linear-gradient(135deg, #e8920a 0%, #f0a500 100%);
+  background: linear-gradient(135deg, #FF7A00 0%, #FF9933 100%);
   border: none; border-radius: 9px;
   padding: 15px; color: #fff;
   font-size: 15px; font-weight: 800; cursor: pointer;
   transition: all .18s; width: 100%;
   font-family: inherit;
-  box-shadow: 0 4px 16px rgba(232,146,10,0.30);
+  box-shadow: 0 4px 16px rgba(255,122,0,0.30);
   letter-spacing: 0.02em;
 }
 .igc-panel-btn-comprar:hover {
-  background: linear-gradient(135deg, #cf7e08 0%, #e8920a 100%);
-  box-shadow: 0 6px 20px rgba(232,146,10,0.42);
+  background: linear-gradient(135deg, #cf7e08 0%, #FF7A00 100%);
+  box-shadow: 0 6px 20px rgba(255,122,0,0.42);
   transform: translateY(-1px);
 }
 
@@ -487,7 +487,7 @@
 .prod-btn--sec:hover { border-color: #1a4fa0; color: #1a4fa0; }
 .prod-btn--cart {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
-  background: #e8920a; border: none; border-radius: 7px;
+  background: #FF7A00; border: none; border-radius: 7px;
   color: #fff; font-size: 12px; font-weight: 800; cursor: pointer;
   padding: 8px 10px; transition: background .15s; font-family: inherit;
 }
@@ -666,7 +666,7 @@
   font-size: 22px; font-weight: 900; color: #0a1628;
   text-decoration: none; letter-spacing: -.5px;
 }
-.igc-checkout-logo span { color: #e8920a; }
+.igc-checkout-logo span { color: #FF7A00; }
 
 .igc-checkout-crumbs {
   display: flex; align-items: center; gap: 6px;
@@ -908,11 +908,11 @@
 }
 .igc-co-header-left { display: flex; align-items: center; gap: 20px; }
 .igc-co-logo {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.5px;
   white-space: nowrap;
 }
-.igc-co-logo span { color: #e8920a; }
+.igc-co-logo span { color: #FF7A00; }
 
 .igc-co-crumbs { display: flex; align-items: center; gap: 6px; }
 .igc-co-crumbs .igc-crumb {
@@ -920,7 +920,7 @@
   background: none; border: none; cursor: default; padding: 0; font-family: inherit;
 }
 .igc-co-crumbs .igc-crumb--active { color: #fff; font-weight: 700; }
-.igc-co-crumbs .igc-crumb--done   { color: #e8920a; cursor: pointer; }
+.igc-co-crumbs .igc-crumb--done   { color: #FF7A00; cursor: pointer; }
 .igc-co-crumbs .igc-crumb--done:hover { text-decoration: underline; }
 .igc-co-crumbs svg { color: rgba(255,255,255,.3); }
 

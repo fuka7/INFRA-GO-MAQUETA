@@ -457,8 +457,8 @@
     'starken':      { bg:'#7B1010', fg:'#fff' },
     'chilexpress':  { bg:'#FFCD00', fg:'#000' },
     'shippify':     { bg:'#00B09B', fg:'#fff' },
-    'infrago':      { bg:'#e8920a', fg:'#fff' },
-    'infrago express': { bg:'#e8920a', fg:'#fff' },
+    'infrago':      { bg:'#FF7A00', fg:'#fff' },
+    'infrago express': { bg:'#FF7A00', fg:'#fff' },
   };
 
   function _courierStyle(name) {

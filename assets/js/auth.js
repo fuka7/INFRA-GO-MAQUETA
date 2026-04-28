@@ -293,7 +293,7 @@
           ? (nombre + (apellido ? ' ' + apellido : ''))
           : currentUser.email.split('@')[0];
         link.innerHTML =
-          '<span style="width:32px;height:32px;background:#e8920a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Barlow,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
+          '<span style="width:32px;height:32px;background:#FF7A00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
           '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
         link.dataset.igbState = 'logged';
       } else {
@@ -315,13 +315,13 @@
     el.innerHTML = '<div id="igbLogoutOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;display:flex;align-items:center;justify-content:center;">' +
       '<div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">' +
         '<div style="width:52px;height:52px;background:#fff3e0;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">' +
-          '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e8920a" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>' +
+          '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF7A00" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>' +
         '</div>' +
-        '<h3 style="margin:0 0 8px;font-family:Barlow,sans-serif;font-size:18px;font-weight:700;color:#0f172a;">¿Cerrar sesión?</h3>' +
-        '<p style="margin:0 0 24px;font-family:Barlow,sans-serif;font-size:14px;color:#64748b;">Tu sesión se cerrará en este dispositivo.</p>' +
+        '<h3 style="margin:0 0 8px;font-family:Montserrat,sans-serif;font-size:18px;font-weight:700;color:#0f172a;">¿Cerrar sesión?</h3>' +
+        '<p style="margin:0 0 24px;font-family:Montserrat,sans-serif;font-size:14px;color:#64748b;">Tu sesión se cerrará en este dispositivo.</p>' +
         '<div style="display:flex;gap:10px;justify-content:center;">' +
-          '<button id="igbLogoutCancel" style="flex:1;padding:10px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-family:Barlow,sans-serif;font-size:14px;font-weight:600;color:#64748b;cursor:pointer;">Cancelar</button>' +
-          '<button id="igbLogoutConfirm" style="flex:1;padding:10px;border:none;border-radius:8px;background:#e8920a;font-family:Barlow,sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">Cerrar sesión</button>' +
+          '<button id="igbLogoutCancel" style="flex:1;padding:10px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-family:Montserrat,sans-serif;font-size:14px;font-weight:600;color:#64748b;cursor:pointer;">Cancelar</button>' +
+          '<button id="igbLogoutConfirm" style="flex:1;padding:10px;border:none;border-radius:8px;background:#FF7A00;font-family:Montserrat,sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">Cerrar sesión</button>' +
         '</div>' +
       '</div>' +
     '</div>';

@@ -6,7 +6,7 @@
 
 /* ── VARIABLES ── */
 :root {
-  --gold: #E8920A;
+  --gold: #FF7A00;
   --footer-dark: #0d0d0d;
   --footer-bottom-bg: #0a0a0a;
   --footer-border: rgba(255, 255, 255, 0.06);
@@ -18,7 +18,7 @@
 
 /* ── ROOT WRAPPER ── */
 .ig-footer-root {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   background: var(--footer-dark);
   color: #ffffff;
 }
@@ -55,7 +55,7 @@
 }
 
 .ig-footer-root .cta-text h3 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -75,7 +75,7 @@
   border: none;
   border-radius: 8px;
   padding: 11px 22px;
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 1px;
@@ -86,13 +86,13 @@
   gap: 8px;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(232,146,10,0.3);
+  box-shadow: 0 4px 20px rgba(255,122,0,0.3);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .ig-footer-root .cta-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(232,146,10,0.4);
+  box-shadow: 0 8px 28px rgba(255,122,0,0.4);
 }
 
 /* ── PULSE DOT ── */
@@ -127,7 +127,7 @@
 }
 
 .ig-footer-root .brand-logo span {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -294,6 +294,9 @@
   transition: background 0.2s, color 0.2s;
   font-weight: 500;
   letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .ig-footer-root .social-link:hover {

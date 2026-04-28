@@ -257,22 +257,22 @@ window.addEventListener('DOMContentLoaded', () => {
   var s = document.createElement('style');
   s.id = 'igc-card-btn-styles';
   s.textContent = [
-    '.prod-btns { display:flex; gap:6px; }',
+    '.prod-btns { display:flex; gap:6px; width:100%; }',
     '.prod-btn--sec {',
-    '  flex:0 0 auto; padding:8px 12px;',
+    '  flex:0 0 auto; padding:8px 16px;',
     '  background:transparent; border:1.5px solid #dde1e8;',
     '  border-radius:7px; color:#4a6080; font-size:12px; font-weight:700;',
     '  text-decoration:none; transition:all .15s; cursor:pointer; display:inline-flex;',
     '  align-items:center;',
     '}',
-    '.prod-btn--sec:hover { border-color:#1a4fa0; color:#1a4fa0; }',
+    '.prod-btn--sec:hover { border-color:#0083FF; color:#0083FF; }',
     '.prod-btn--cart {',
     '  flex:1; display:flex; align-items:center; justify-content:center; gap:5px;',
-    '  background:#e8920a; border:none; border-radius:7px;',
+    '  background:#FF7A00; border:none; border-radius:7px;',
     '  color:#fff; font-size:12px; font-weight:800; cursor:pointer;',
     '  padding:8px 10px; transition:background .15s; font-family:inherit;',
     '}',
-    '.prod-btn--cart:hover { background:#cf7e08; }',
+    '.prod-btn--cart:hover { background:#CC6200; }',
   ].join('\n');
   document.head.appendChild(s);
 })();
