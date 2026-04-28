@@ -1747,13 +1747,20 @@ footer {
 }
 
 .brand-logo-strip {
-  height: 28px;
-  width: auto;
+  height: 34px;
+  width: 100px;
   object-fit: contain;
-  opacity: 0.8;
+  object-position: center;
+  opacity: 0.72;
   transition: opacity 0.2s;
   flex-shrink: 0;
   display: block;
+}
+
+.brand-logo-strip[alt="HP"] {
+  height: 50px;
+  width: 50px;
+  opacity: 1;
 }
 
 .brand-logo-strip:hover {
@@ -2248,6 +2255,19 @@ footer {
 .about-stat-row-num span {
   font-size: 36px;
   color: rgba(232,146,10,0.65);
+}
+
+.stat-desde {
+  display: block;
+  font-family: 'Barlow', sans-serif;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(232,146,10,0.7);
+  margin-bottom: 4px;
+  line-height: 1;
 }
 
 .about-stat-row-label {
