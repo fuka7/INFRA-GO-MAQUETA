@@ -113,9 +113,8 @@
   <!-- Links principales -->
   <ul class="igb-links">
     <li><a href="/index.html">Inicio</a></li>
-    <li><a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a></li>
-    <li><a href="/tienda.html">Tienda</a></li>
-    <li><a href="/index.html#quienes-somos">Quiénes Somos</a></li>
+    <li><a href="/configurador.html" onclick="return igbCotizar(event)">Configurador</a></li>
+    <li><a href="/tienda.html">Tienda Virtual</a></li>
   </ul>
 
   <div class="igb-actions">
@@ -160,9 +159,8 @@
 <div class="igb-overlay" id="igbOverlay" onclick="igbCloseMenu()"></div>
 <div class="igb-mobile" id="igbMobile">
   <a href="/index.html">Inicio</a>
-  <a href="/configurador.html" onclick="return igbCotizar(event)">Cotizador</a>
-  <a href="/tienda.html">Tienda</a>
-  <a href="/index.html#quienes-somos">Quiénes Somos</a>
+  <a href="/configurador.html" onclick="return igbCotizar(event)">Configurador</a>
+  <a href="/tienda.html">Tienda Virtual</a>
   <hr class="igb-mobile-sep">
   <a href="/tienda.html?cat=notebooks">Notebooks</a>
   <a href="/tienda.html?cat=all-in-one">All in One (AIO)</a>
