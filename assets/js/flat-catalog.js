@@ -31,12 +31,14 @@ function flatObtenerPct(totalQty) {
 
 /* Tipo → badge CSS class y abreviatura */
 const TIPO_META = {
+  'pc':           { abbr: 'PC',  cls: 'pr-cat-badge--pc'         },
   'notebook':     { abbr: 'NB',  cls: 'pr-cat-badge--notebook'   },
   'servidor':     { abbr: 'SRV', cls: 'pr-cat-badge--servidor'   },
   'impresora':    { abbr: 'IMP', cls: 'pr-cat-badge--impresora'  },
   'networking':   { abbr: 'NET', cls: 'pr-cat-badge--networking' },
   'storage':      { abbr: 'LIC', cls: 'pr-cat-badge--storage'    },
   'servicio-tic': { abbr: 'SVC', cls: 'pr-cat-badge--servicio-tic'},
+  'accesorios':   { abbr: 'ACC', cls: 'pr-cat-badge--accesorios' },
 };
 
 /* ─── estado: filas del pedido ──────────────────────────────── */
@@ -207,7 +209,8 @@ function _applyCatFilterToSelect(sel) {
   const tipoMap = {
     'pc':'PC','notebook':'Notebook','servidor':'Server & Storage',
     'impresora':'Impresoras','networking':'Networking',
-    'storage':'Licencias & Atach','servicio-tic':'Servicios TIC'
+    'storage':'Licencias & Atach','servicio-tic':'Servicios TIC',
+    'accesorios':'Accesorios'
   };
   sel.querySelectorAll('optgroup').forEach(og => {
     const show = cat === 'todos' || og.label === (tipoMap[cat] || cat);
@@ -228,9 +231,10 @@ function _buildSelectOptions() {
     'networking':   'Networking',
     'storage':      'Licencias & Atach',
     'servicio-tic': 'Servicios TIC',
+    'accesorios':   'Accesorios',
   };
 
-  const orden = ['pc', 'notebook', 'servidor', 'impresora', 'networking', 'storage', 'servicio-tic'];
+  const orden = ['pc', 'notebook', 'servidor', 'impresora', 'networking', 'storage', 'servicio-tic', 'accesorios'];
 
   window.CATALOGO.forEach(p => {
     const g = p.tipo || 'otros';
@@ -475,12 +479,12 @@ function _clearRowDisplay(id) {
 window.flatRefreshPrices = function flatRefreshPrices() {
   const tc = window.tipoCambio || 900;
 
-  /* 1. Total unidades SOLO hardware para calcular % descuento (excluye servicio-tic) */
+  /* 1. Total unidades SOLO hardware para calcular % descuento (excluye servicio-tic y accesorios) */
   let totalQty = 0;
   _flatRows.forEach(r => {
     if (!r.productName) return;
     const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-    if (prod && prod.tipo !== 'servicio-tic') totalQty += r.qty;
+    if (prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios') totalQty += r.qty;
   });
   const pct = flatObtenerPct(totalQty);
 
@@ -496,8 +500,8 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const producto = (window.CATALOGO || []).find(p => p.name === productName);
     if (!producto) return;
 
-    // Servicios TIC: sin descuento por volumen
-    const esSvc        = producto.tipo === 'servicio-tic';
+    // Servicios TIC y accesorios: sin descuento por volumen
+    const esSvc        = producto.tipo === 'servicio-tic' || producto.tipo === 'accesorios';
     const pctEfectivo  = esSvc ? 0 : pct;
 
     // Precio CLP dinámico: si el producto tiene priceUSD → priceUSD × tipoCambio
@@ -998,7 +1002,8 @@ function patchFlatFilters() {
     const tipoMap = {
       'pc':'PC','notebook':'Notebook','servidor':'Server & Storage',
       'impresora':'Impresoras','networking':'Networking',
-      'storage':'Licencias & Atach','servicio-tic':'Servicios TIC'
+      'storage':'Licencias & Atach','servicio-tic':'Servicios TIC',
+      'accesorios':'Accesorios'
     };
 
     /* Mostrar / ocultar botón de limpiar */
@@ -1126,6 +1131,7 @@ function _injectStyles() {
     .pr-prov-badge--qnap        { border-color:#009641; color:#009641; background:rgba(0,150,65,.07); }
     .pr-prov-badge--canon       { border-color:#cc0000; color:#cc0000; background:rgba(204,0,0,.06); }
     .pr-prov-badge--tic-managers{ border-color:#FF7A00; color:#FF7A00; background:rgba(255,122,0,.09); }
+    .pr-prov-badge--logitech    { border-color:#00b0f0; color:#0080c0; background:rgba(0,128,192,.07); }
 
     /* Badge Cat */
     .pr-cat { display: flex; align-items: center; justify-content: center; }
@@ -1136,12 +1142,14 @@ function _injectStyles() {
       border: 1px solid #dde1e8;
       white-space: nowrap;
     }
+    .pr-cat-badge--pc          { background:rgba(100,116,139,.1); color:#475569; border-color:rgba(100,116,139,.3);}
     .pr-cat-badge--notebook    { background:rgba(59,130,246,.1);  color:#2563eb; border-color:rgba(59,130,246,.3);  }
     .pr-cat-badge--servidor    { background:rgba(139,92,246,.1);  color:#7c3aed; border-color:rgba(139,92,246,.3);  }
     .pr-cat-badge--impresora   { background:rgba(16,185,129,.1);  color:#059669; border-color:rgba(16,185,129,.3);  }
     .pr-cat-badge--networking  { background:rgba(245,158,11,.1);  color:#d97706; border-color:rgba(245,158,11,.3);  }
     .pr-cat-badge--storage     { background:rgba(236,72,153,.1);  color:#db2777; border-color:rgba(236,72,153,.3);  }
     .pr-cat-badge--servicio-tic{ background:rgba(255,122,0,.12); color:#b45309; border-color:rgba(255,122,0,.35); }
+    .pr-cat-badge--accesorios  { background:rgba(20,184,166,.1);  color:#0d9488; border-color:rgba(20,184,166,.3);  }
 
     /* Part Number */
     .pr-partnum { display: flex; align-items: center; justify-content: center; }
@@ -1188,9 +1196,9 @@ function _injectStyles() {
     }
     .qty-value {
       font-family: 'Montserrat', sans-serif;
-      font-size: 18px; font-weight: 800;
+      font-size: 15px; font-weight: 800;
       color: #0d1e36;
-      width: 42px;
+      width: 36px;
       text-align: center;
       line-height: 1;
       border: none;

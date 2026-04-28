@@ -83,13 +83,13 @@ function obtenerPctDescuento(totalQty) {
 }
 
 function actualizarDescuento() {
-  // Contar SOLO hardware (no servicio-tic) para el descuento por volumen
+  // Contar SOLO hardware (no servicio-tic ni accesorios) para el descuento por volumen
   let totalQty = 0;
   if (typeof window._flatRows !== 'undefined') {
     window._flatRows.forEach(r => {
       if (!r.productName) return;
       const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-      if (prod && prod.tipo !== 'servicio-tic') totalQty += r.qty;
+      if (prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios') totalQty += r.qty;
     });
   } else {
     // Fallback: accordion oculto
@@ -344,12 +344,12 @@ function collectEquipos() {
     // Fuente de verdad: flat-catalog rows
     state.equipos = {};
 
-    // Calcular total hardware para descuento por volumen (igual lógica que updateSidebar)
+    // Calcular total hardware para descuento por volumen (excluye servicio-tic y accesorios)
     const totalQtyHw = window._flatRows
       .filter(r => r.productName && r.qty > 0)
       .reduce((s, r) => {
         const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-        return prod && prod.tipo !== 'servicio-tic' ? s + r.qty : s;
+        return prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios' ? s + r.qty : s;
       }, 0);
     const pct = obtenerPctDescuento(totalQtyHw);
 
@@ -361,8 +361,8 @@ function collectEquipos() {
       const basePrice = (producto.priceUSD && producto.priceUSD > 0)
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
-      // Aplicar descuento por volumen solo a hardware (servicio-tic no descuenta)
-      const price = (producto.tipo !== 'servicio-tic')
+      // Aplicar descuento por volumen solo a hardware (servicio-tic y accesorios no descuentan)
+      const price = (producto.tipo !== 'servicio-tic' && producto.tipo !== 'accesorios')
         ? Math.round(basePrice * (1 - pct / 100))
         : basePrice;
       state.equipos[r.productName] = { qty: r.qty, price };

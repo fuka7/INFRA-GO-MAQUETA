@@ -142,12 +142,14 @@
   padding: 2px 6px;
   white-space: nowrap;
 }
+.pr-cat-badge--pc        { background: rgba(100,116,139,0.1); color: #64748b; }
 .pr-cat-badge--notebook  { background: rgba(59,130,246,0.1);  color: #3b82f6; }
 .pr-cat-badge--servidor  { background: rgba(139,92,246,0.1);  color: #8b5cf6; }
 .pr-cat-badge--impresora { background: rgba(16,185,129,0.1);  color: #10b981; }
 .pr-cat-badge--networking{ background: rgba(245,158,11,0.12); color: #d97706; }
 .pr-cat-badge--storage   { background: rgba(239,68,68,0.1);   color: #ef4444; }
 .pr-cat-badge--servicio-tic { background: rgba(255,122,0,0.12); color: var(--orange); }
+.pr-cat-badge--accesorios{ background: rgba(20,184,166,0.1);  color: #0d9488; }
 
 /* ─── CELDA: PRECIO LISTA ────────────────────── */
 .pr-precio-lista { text-align: right; padding-right: 4px; }
@@ -178,7 +180,8 @@
 .pr-precio-dto { text-align: right; padding-right: 4px; }
 .pr-precio-dto .precio-dto-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px; font-weight: 800; color: #16a34a; display: block;
+  font-size: 12px; font-weight: 700; color: #16a34a; display: block;
+  letter-spacing: -0.2px;
 }
 .pr-precio-dto .precio-dto-val.sin-dto { color: var(--orange); }
 .pr-precio-dto .dto-badge {
@@ -192,7 +195,8 @@
 .pr-subtotal { text-align: right; padding-right: 4px; }
 .pr-subtotal .subtotal-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px; font-weight: 800; color: var(--c-text); display: block;
+  font-size: 12px; font-weight: 700; color: var(--c-text); display: block;
+  letter-spacing: -0.2px;
 }
 .pr-subtotal .subtotal-val.inactive { color: var(--c-text-4); font-size: 12px; font-family: inherit; font-weight: 400; }
 
@@ -200,7 +204,8 @@
 .pr-ahorro { text-align: right; }
 .pr-ahorro .ahorro-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 14px; font-weight: 800; color: var(--orange); display: block;
+  font-size: 12px; font-weight: 700; color: var(--orange); display: block;
+  letter-spacing: -0.2px;
 }
 .pr-ahorro .ahorro-val.cero { color: var(--c-text-4); font-size: 12px; font-family: inherit; font-weight: 400; }
 

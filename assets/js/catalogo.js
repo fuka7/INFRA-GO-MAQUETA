@@ -24,10 +24,10 @@
    Los servicios TIC y licencias SaaS no tienen priceUSD y usan `price` fijo en CLP.
 
    TIPOS VÁLIDOS (deben coincidir con los filtros del HTML):
-     pc | notebook | servidor | impresora | networking | storage | servicio-tic
+     pc | notebook | servidor | impresora | networking | storage | servicio-tic | accesorios
 
    MARCAS VÁLIDAS (deben coincidir con los chips de filtro del HTML):
-     HP | Dell | Lenovo | Apple | Brother | Cisco | Fortinet | Ubiquiti | Synology | QNAP | Canon | TIC Managers
+     HP | Dell | Lenovo | Apple | Brother | Cisco | Fortinet | Ubiquiti | Synology | QNAP | Canon | Logitech | TIC Managers
    ═══════════════════════════════════════════════════════════════ */
 
 const CATALOGO = [
@@ -390,6 +390,89 @@ const CATALOGO = [
     servicios: [],
   },
 
+  /* ──────────────────────────────────────────
+     ACCESORIOS — Monitores, periféricos y más
+  ─────────────────────────────────────────── */
+  {
+    name:       "Dell Monitor P2423D",
+    marca:      "Dell",
+    tipo:       "accesorios",
+    partNumber: "210-BDEG",
+    priceUSD:   280,
+    servicios: [],
+  },
+  {
+    name:       "Dell Monitor P2723D",
+    marca:      "Dell",
+    tipo:       "accesorios",
+    partNumber: "210-BDDV",
+    priceUSD:   360,
+    servicios: [],
+  },
+  {
+    name:       "HP Monitor M27fw",
+    marca:      "HP",
+    tipo:       "accesorios",
+    partNumber: "1C4Z1AA#ABA",
+    priceUSD:   200,
+    servicios: [],
+  },
+  {
+    name:       "HP Monitor E24 G5",
+    marca:      "HP",
+    tipo:       "accesorios",
+    partNumber: "64X68AA#ABA",
+    priceUSD:   240,
+    servicios: [],
+  },
+  {
+    name:       "Logitech MX Master 3S Mouse Inalámbrico",
+    marca:      "Logitech",
+    tipo:       "accesorios",
+    partNumber: "910-006556",
+    price:      89990,
+    servicios: [],
+  },
+  {
+    name:       "Logitech MX Keys S Teclado Inalámbrico",
+    marca:      "Logitech",
+    tipo:       "accesorios",
+    partNumber: "920-011559",
+    price:      89990,
+    servicios: [],
+  },
+  {
+    name:       "Logitech MX Keys Mini Teclado Compacto",
+    marca:      "Logitech",
+    tipo:       "accesorios",
+    partNumber: "920-010474",
+    price:      69990,
+    servicios: [],
+  },
+  {
+    name:       "HP USB-C Dock G5",
+    marca:      "HP",
+    tipo:       "accesorios",
+    partNumber: "5TW10AA#ABA",
+    priceUSD:   180,
+    servicios: [],
+  },
+  {
+    name:       "Dell Dock WD19S USB-C",
+    marca:      "Dell",
+    tipo:       "accesorios",
+    partNumber: "DELL-WD19S180W",
+    priceUSD:   190,
+    servicios: [],
+  },
+  {
+    name:       "HP Elite Presenter Mouse",
+    marca:      "HP",
+    tipo:       "accesorios",
+    partNumber: "2CE30AA#ABA",
+    price:      59990,
+    servicios: [],
+  },
 
 ];
 

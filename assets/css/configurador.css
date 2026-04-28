@@ -175,7 +175,7 @@ body {
   margin: 0 auto;
   padding: 28px 32px 80px;
   display: grid;
-  grid-template-columns: 210px 1fr 210px;
+  grid-template-columns: 220px 1fr 230px;
   gap: 20px;
   align-items: start;
 }
@@ -227,20 +227,21 @@ body {
 .bb-cuotas-hint {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 10px;
+  gap: 4px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--orange);
   text-transform: uppercase;
-  letter-spacing: .4px;
+  letter-spacing: .2px;
   opacity: .85;
+  line-height: 1.35;
 }
 .bb-cuotas-hint svg { flex-shrink: 0; color: var(--orange); }
 .right-sidebar .bb-btn-next {
   width: 100%;
   justify-content: center;
-  padding: 11px 16px;
-  font-size: 13px;
+  padding: 10px 10px;
+  font-size: 11px;
 }
 
 
@@ -363,7 +364,8 @@ body {
 }
 .cls-dark-title {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 6px;
+  font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px;
+  letter-spacing: -0.3px;
 }
 .cls-dark-text { font-size: 11px; color: rgba(255,255,255,.55); line-height: 1.5; margin: 0 0 12px; }
 .cls-dark-btn {
@@ -387,13 +389,13 @@ body {
 .flat-cat-chip {
   display: inline-flex; align-items: center; gap: 5px;
   background: var(--c-surface); border: 1px solid var(--c-border);
-  border-radius: 20px; padding: 8px 18px;
-  font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;
+  border-radius: 20px; padding: 6px 14px;
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600;
   color: var(--c-text-2); cursor: pointer; transition: all .18s; white-space: nowrap;
 }
 .flat-cat-chip span {
-  font-size: 12px; background: var(--c-surface-2); color: var(--c-text-4);
-  padding: 2px 7px; border-radius: 8px; font-weight: 700;
+  font-size: 10px; background: var(--c-surface-2); color: var(--c-text-4);
+  padding: 1px 6px; border-radius: 8px; font-weight: 700;
 }
 .flat-cat-chip:hover { border-color: rgba(255,122,0,.4); background: var(--orange-dim); color: var(--c-text); }
 .flat-cat-chip.active { background: var(--orange-dim); border-color: var(--orange); color: var(--orange); font-weight: 700; }
@@ -492,8 +494,9 @@ body {
 .step-intro { margin-bottom: 28px; }
 .step-intro h2 {
   font-family: 'Montserrat', sans-serif;
-  font-size: 26px; font-weight: 800;
+  font-size: 22px; font-weight: 800;
   color: var(--c-text); margin: 0 0 4px;
+  letter-spacing: -0.5px;
 }
 .step-intro p { font-size: 14px; color: var(--c-text-2); margin: 0; }
 
@@ -1053,8 +1056,9 @@ body {
 }
 .resumen-total-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 28px; font-weight: 800;
+  font-size: 23px; font-weight: 800;
   color: var(--orange);
+  letter-spacing: -0.5px;
 }
 .resumen-total-divider {
   border: none;
@@ -1069,8 +1073,9 @@ body {
 }
 .resumen-total-cuota {
   font-family: 'Montserrat', sans-serif;
-  font-size: 22px; font-weight: 800;
+  font-size: 18px; font-weight: 800;
   color: var(--orange);
+  letter-spacing: -0.3px;
 }
 .resumen-total-sub {
   font-size: 13px; font-weight: 500;
@@ -1121,10 +1126,11 @@ body {
 }
 .sim-amount {
   font-family: 'Montserrat', sans-serif;
-  font-size: 40px; font-weight: 800;
+  font-size: 32px; font-weight: 800;
   color: var(--c-text);
+  letter-spacing: -1px;
 }
-.sim-amount--svc { font-size: 28px; color: var(--c-text-2); }
+.sim-amount--svc { font-size: 22px; color: var(--c-text-2); letter-spacing: -0.5px; }
 
 .sim-plazo-btns {
   display: grid;
@@ -1135,9 +1141,9 @@ body {
   background: var(--c-surface-2);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-s);
-  padding: 14px 6px;
+  padding: 11px 4px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 15px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   color: var(--c-text-2);
   cursor: pointer;
   text-align: center;
@@ -1204,9 +1210,10 @@ body {
 }
 .sim-result-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 72px; font-weight: 800;
+  font-size: 58px; font-weight: 800;
   color: var(--orange);
   line-height: 1;
+  letter-spacing: -2px;
 }
 .sim-result-grid {
   display: grid;
@@ -1254,8 +1261,9 @@ body {
 }
 .sim-total-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 26px; font-weight: 800;
+  font-size: 21px; font-weight: 800;
   color: #fff;
+  letter-spacing: -0.5px;
 }
 
 .sim-toggle-tabla {
@@ -1395,10 +1403,11 @@ body {
 
 .bb-value {
   font-family: 'Montserrat', sans-serif;
-  font-size: 20px; font-weight: 800;
+  font-size: 17px; font-weight: 800;
   color: #fff;
   line-height: 1;
   white-space: nowrap;
+  letter-spacing: -0.3px;
 }
 .bb-value--orange { color: var(--orange); }
 .bb-value--green  { color: #4ade80; }
@@ -1415,10 +1424,11 @@ body {
 
 .bb-cuota-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 26px; font-weight: 800;
+  font-size: 21px; font-weight: 800;
   color: var(--orange);
   line-height: 1;
   white-space: nowrap;
+  letter-spacing: -0.5px;
 }
 .bb-cuota-period {
   font-size: 13px; font-weight: 400;
@@ -1560,7 +1570,7 @@ body {
    RESPONSIVE
 ════════════════════════════════════════════ */
 @media (max-width: 1200px) {
-  .config-layout { grid-template-columns: 180px 1fr 180px; padding: 20px 20px 60px; gap: 16px; }
+  .config-layout { grid-template-columns: 195px 1fr 205px; padding: 20px 20px 60px; gap: 16px; }
 }
 @media (max-width: 1024px) {
   .config-layout { grid-template-columns: 1fr 180px; }
