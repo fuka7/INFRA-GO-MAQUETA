@@ -1542,6 +1542,9 @@ footer {
     linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
     url('/img/hero2.png') center/cover no-repeat;
 }
+.slide-4 {
+  background: url('/img/SOMOS%20ITIL%204.png') center/cover no-repeat;
+}
 
 /* Grid overlay en cada slide */
 .slide-grid {
