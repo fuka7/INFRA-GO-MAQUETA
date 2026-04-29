@@ -225,11 +225,11 @@ body {
 }
 .right-sidebar .bb-actions {
   padding: 14px 18px;
-  flex-direction: row;
+  flex-direction: column;
   gap: 8px;
-  flex: 1;
+  flex: 0 0 auto;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 .bb-cuotas-hint {
   display: flex;
@@ -242,12 +242,12 @@ body {
   letter-spacing: .2px;
   opacity: .85;
   line-height: 1.35;
-  flex: 1;
+  white-space: nowrap;
 }
 .bb-cuotas-hint svg { flex-shrink: 0; color: var(--orange); }
 .right-sidebar .bb-btn-next {
-  width: auto;
-  min-width: 200px;
+  width: 100%;
+  min-width: 180px;
   justify-content: center;
   padding: 10px 16px;
   font-size: 11px;
