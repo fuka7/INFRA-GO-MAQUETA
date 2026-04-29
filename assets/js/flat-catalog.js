@@ -248,8 +248,7 @@ function _buildSelectOptions() {
       const label = labelMap[tipo];
       html += `<optgroup label="${label}">`;
       grupos[tipo].forEach(p => {
-        const part = p.partNumber ? ` · ${p.partNumber}` : '';
-        html += `<option value="${encodeURIComponent(p.name)}" data-tipo="${tipo}">${p.name}${part}</option>`;
+        html += `<option value="${encodeURIComponent(p.name)}" data-tipo="${tipo}">${p.name}</option>`;
       });
       html += `</optgroup>`;
     }
@@ -285,6 +284,7 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
   const productName  = decodeURIComponent(val);
   row.productName    = productName;
   row.serviceValue   = null;
+  selectEl.title     = productName;
 
   const producto = (window.CATALOGO || []).find(p => p.name === productName);
   if (!producto) return;
@@ -304,11 +304,12 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     provBadge.className   = `pr-prov-badge pr-prov-badge--${flatSlugify(producto.marca || '')}`;
   }
 
-  /* Badge de part number */
+  /* Badge de part number (oculto para licencias y servicios) */
   const partBadge = document.getElementById(`partnumbadge-${id}`);
   if (partBadge) {
-    partBadge.textContent = producto.partNumber || '—';
-    partBadge.className   = producto.partNumber ? 'pr-partnum-val has-part' : 'pr-partnum-val';
+    const sinPart = producto.tipo === 'storage' || producto.tipo === 'servicio-tic';
+    partBadge.textContent = sinPart ? '—' : (producto.partNumber || '—');
+    partBadge.className   = (!sinPart && producto.partNumber) ? 'pr-partnum-val has-part' : 'pr-partnum-val';
   }
 
   /* Habilitar spinner de cantidad y poner 1 automáticamente */
@@ -1045,8 +1046,9 @@ function _injectStyles() {
     /* ── Cabecera de columnas ── */
     .flat-col-headers {
       display: grid;
-      grid-template-columns: 40px minmax(180px,270px) 70px 60px 110px 100px 90px 100px 110px;
+      grid-template-columns: 40px minmax(180px,270px) 90px 60px 110px 100px 90px 100px 110px;
       align-items: center;
+      justify-content: space-between;
       padding: 10px 20px;
       background: #f8f9fb;
       border-bottom: 2px solid #dde1e8;
@@ -1064,9 +1066,10 @@ function _injectStyles() {
     .flat-order-row {
       position: relative;
       display: grid;
-      grid-template-columns: 40px minmax(180px,270px) 70px 60px 110px 100px 90px 100px 110px;
+      grid-template-columns: 40px minmax(180px,270px) 90px 60px 110px 100px 90px 100px 110px;
       align-items: center;
-      padding: 10px 44px 10px 20px;
+      justify-content: space-between;
+      padding: 14px 44px 14px 20px;
       border-bottom: 1px solid #eaecf0;
       transition: background 0.15s, opacity 0.2s, transform 0.2s;
       gap: 8px;
@@ -1113,11 +1116,12 @@ function _injectStyles() {
     .pr-prov-badge {
       font-size: 10px; font-weight: 800;
       letter-spacing: .3px;
-      padding: 2px 7px; border-radius: 4px;
+      padding: 2px 6px; border-radius: 4px;
       border: 1px solid #dde1e8;
       background: #f4f5f7;
       color: #3d5068;
       white-space: nowrap;
+      max-width: 100%; overflow: hidden; text-overflow: ellipsis;
     }
     .pr-prov-badge--hp          { border-color:#0096d6; color:#0096d6; background:rgba(0,150,214,.07); }
     .pr-prov-badge--dell        { border-color:#0076ce; color:#0076ce; background:rgba(0,118,206,.07); }
@@ -1157,7 +1161,7 @@ function _injectStyles() {
       font-size: 10px; font-weight: 600;
       color: #b0bcc9;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      max-width: 96px;
+      max-width: 115px;
     }
     .pr-partnum-val.has-part {
       background: #f0f2f5;
@@ -1344,8 +1348,7 @@ function _injectStyles() {
     /* Responsive */
     @media (max-width: 1400px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 36px minmax(160px,1fr) 64px 56px 100px 90px 84px 90px; gap: 6px; }
-      .pr-partnum, .flat-col-headers span:nth-child(5) { display: none; }
+      .flat-order-row { grid-template-columns: 36px minmax(180px,300px) 90px 56px 120px 100px 90px 84px 90px; gap: 12px; }
     }
     @media (max-width: 1100px) {
       .flat-col-headers,
