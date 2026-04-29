@@ -16,8 +16,8 @@
 ───────────────────────────────────────────── */
 .tienda-header {
   padding-top: 68px;
-  background: linear-gradient(135deg, #f0f2f5 0%, #ffffff 60%, rgba(255,122,0,0.04) 100%);
-  border-bottom: 1px solid rgba(17,17,17,0.07);
+  background: #0a1628;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
 .tienda-header-content {
@@ -36,33 +36,33 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: rgba(17,17,17,0.45);
+  color: rgba(255,255,255,0.35);
   margin-bottom: 14px;
 }
 
 .tienda-breadcrumb a {
-  color: rgba(17,17,17,0.45);
+  color: rgba(255,255,255,0.35);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .tienda-breadcrumb a:hover { color: var(--gold); }
 .tienda-breadcrumb svg { opacity: 0.4; }
-.tienda-breadcrumb span { color: rgba(17,17,17,0.6); }
+.tienda-breadcrumb span { color: rgba(255,255,255,0.6); }
 
 .tienda-header-text h1 {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(22px, 3.5vw, 36px);
   font-weight: 800;
   text-transform: uppercase;
-  color: #111111;
+  color: #ffffff;
   margin: 0 0 10px;
   letter-spacing: -0.5px;
 }
 
 .tienda-header-text p {
   font-size: 15px;
-  color: rgba(17,17,17,0.6);
+  color: rgba(255,255,255,0.55);
   margin: 0;
   max-width: 500px;
   line-height: 1.5;
@@ -92,7 +92,7 @@
 
 .tienda-stat-label {
   font-size: 11px;
-  color: rgba(17,17,17,0.45);
+  color: rgba(255,255,255,0.45);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.4px;
