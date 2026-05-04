@@ -215,6 +215,93 @@
 
 </div><!-- /prd-layout -->
 
+<!-- ════════════════════════════════════════
+     RECOMENDADOS
+════════════════════════════════════════ -->
+<section class="prd-rec-section" id="prdRecSection" style="display:none;">
+  <div class="prd-rec-container">
+
+    <!-- Accesorios compatibles -->
+    <div class="prd-rec-block" id="prdAccBlock" style="display:none;">
+      <div class="prd-rec-header">
+        <div class="prd-rec-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          También te puede interesar
+        </div>
+        <a href="/tienda.html" class="prd-rec-ver-todo">Ver catálogo completo →</a>
+      </div>
+      <div class="prd-rec-scroll">
+        <div class="prd-rec-grid" id="prdAccGrid"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     RESEÑAS
+════════════════════════════════════════ -->
+<section class="prd-rev-section" id="prdRevSection">
+  <div class="prd-rev-container">
+
+    <div class="prd-rev-top">
+
+      <!-- Resumen: número grande + estrellas + total -->
+      <div class="prd-rev-summary">
+        <div class="prd-rev-avg-num" id="prdRevAvgNum">4.6</div>
+        <div class="prd-rev-avg-stars" id="prdRevAvgStars"></div>
+        <div class="prd-rev-avg-count" id="prdRevAvgCount">0 reseñas</div>
+      </div>
+
+      <!-- Barras de distribución 5→1 -->
+      <div class="prd-rev-bars" id="prdRevBars"></div>
+
+      <!-- Botón escribir -->
+      <button class="prd-rev-write-btn" id="prdRevWriteBtn" onclick="prdToggleForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Escribir reseña
+      </button>
+    </div>
+
+    <!-- Formulario (oculto por defecto) -->
+    <div class="prd-rev-form" id="prdRevForm">
+      <div class="prd-rev-form-title">Tu opinión sobre este producto</div>
+      <div class="prd-rev-form-row">
+        <div class="prd-rev-field">
+          <label class="prd-rev-label">Tu nombre</label>
+          <input class="prd-rev-input" id="prdRevNombre" type="text" placeholder="Ej: Carlos M.">
+        </div>
+        <div class="prd-rev-field">
+          <label class="prd-rev-label">Empresa (opcional)</label>
+          <input class="prd-rev-input" id="prdRevEmpresa" type="text" placeholder="Ej: ACME SpA">
+        </div>
+      </div>
+      <div class="prd-rev-field">
+        <label class="prd-rev-label">Calificación</label>
+        <div class="prd-rev-star-input" id="prdRevStarInput">
+          <svg class="prd-rev-star-pick" data-val="1" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <svg class="prd-rev-star-pick" data-val="2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <svg class="prd-rev-star-pick" data-val="3" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <svg class="prd-rev-star-pick" data-val="4" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          <svg class="prd-rev-star-pick" data-val="5" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+        </div>
+      </div>
+      <div class="prd-rev-field">
+        <label class="prd-rev-label">Comentario</label>
+        <textarea class="prd-rev-textarea" id="prdRevComentario" rows="4" placeholder="¿Qué te pareció el producto? ¿Lo recomendarías?"></textarea>
+      </div>
+      <div class="prd-rev-form-actions">
+        <button class="prd-rev-cancel-btn" onclick="prdToggleForm()">Cancelar</button>
+        <button class="prd-rev-submit-btn" onclick="prdSubmitReview()">Publicar reseña</button>
+      </div>
+    </div>
+
+    <!-- Lista de reseñas -->
+    <div class="prd-rev-list" id="prdRevList"></div>
+
+  </div>
+</section>
+
 <div id="footer-placeholder"></div>
 
 <script>
