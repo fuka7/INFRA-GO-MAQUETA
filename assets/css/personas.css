@@ -1,0 +1,286 @@
+/* ═══════════════════════════════════════════════
+   Sección "Para quién es InfraGo" — index.html
+   ═══════════════════════════════════════════════ */
+
+.personas-section {
+  background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+  padding: 88px 20px 96px;
+}
+
+.personas-container {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+/* ── Encabezado ── */
+.personas-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.personas-section .section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.personas-section .section-heading {
+  color: #0A1426;
+  font-size: 42px;
+  font-weight: 800;
+  margin: 12px 0 16px;
+  line-height: 1.2;
+}
+
+.personas-gradient {
+  background: linear-gradient(135deg, var(--gold, #FF7A00), var(--gold-bright, #FF9933));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.personas-section .section-sub {
+  color: rgba(17,17,17,0.55);
+  max-width: 580px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ── Grid ── */
+.personas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Card base ── */
+.persona-card {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 4px 24px rgba(10,20,38,0.07), 0 1px 4px rgba(10,20,38,0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform .25s, box-shadow .25s;
+}
+
+.persona-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(10,20,38,0.13), 0 2px 8px rgba(10,20,38,0.06);
+}
+
+/* Card destacada */
+.persona-card--featured {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 56px rgba(255,122,0,0.18), 0 4px 12px rgba(10,20,38,0.08);
+}
+.persona-card--featured:hover {
+  transform: translateY(-14px);
+  box-shadow: 0 28px 64px rgba(255,122,0,0.22), 0 4px 16px rgba(10,20,38,0.1);
+}
+
+/* ── Header de cada card (franja de color) ── */
+.persona-card-header {
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+.persona-card--ti      .persona-card-header { background: linear-gradient(135deg, #0A1426, #1a3a6e); }
+.persona-card--compras .persona-card-header { background: linear-gradient(135deg, #cc5500, #FF7A00); }
+.persona-card--finanzas .persona-card-header { background: linear-gradient(135deg, #064e3b, #059669); }
+
+.persona-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.15);
+}
+
+.persona-icon-wrap svg {
+  width: 26px;
+  height: 26px;
+  stroke: rgba(255,255,255,0.9);
+}
+
+.persona-role {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.persona-role-sub {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  margin-top: 2px;
+}
+
+/* ── Tag "Más frecuente" ── */
+.persona-featured-tag {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ── Cuerpo de la card ── */
+.persona-card-body {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+
+/* Cita de dolor */
+.persona-pain {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0A1426;
+  line-height: 1.55;
+  margin: 0;
+  font-style: italic;
+  padding-left: 14px;
+  border-left: 3px solid;
+  position: relative;
+}
+
+.persona-card--ti      .persona-pain { border-color: #0083FF; }
+.persona-card--compras .persona-pain { border-color: #FF7A00; }
+.persona-card--finanzas .persona-pain { border-color: #22c55e; }
+
+/* Lista de problemas */
+.persona-problems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.persona-problems li {
+  font-size: 13px;
+  color: rgba(17,17,17,0.55);
+  line-height: 1.45;
+  padding-left: 20px;
+  position: relative;
+}
+
+.persona-problems li::before {
+  content: '✕';
+  position: absolute;
+  left: 0;
+  color: #f87171;
+  font-size: 10px;
+  font-weight: 800;
+  top: 2px;
+}
+
+/* Divisor */
+.persona-divider {
+  height: 1px;
+  background: rgba(17,17,17,0.07);
+}
+
+/* Solución */
+.persona-solution {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.persona-solution-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: rgba(17,17,17,0.35);
+}
+
+.persona-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.persona-checks li {
+  font-size: 13px;
+  color: rgba(17,17,17,0.75);
+  font-weight: 600;
+  line-height: 1.45;
+  padding-left: 20px;
+  position: relative;
+}
+
+.persona-checks li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  font-size: 12px;
+  font-weight: 800;
+  top: 0;
+}
+
+.persona-card--ti      .persona-checks li::before { color: #0083FF; }
+.persona-card--compras .persona-checks li::before { color: #FF7A00; }
+.persona-card--finanzas .persona-checks li::before { color: #22c55e; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+═════════════════════════════════════════════ */
+
+@media (max-width: 960px) {
+  .personas-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .persona-card--featured {
+    transform: none;
+  }
+
+  .personas-section .section-heading {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .personas-section {
+    padding: 60px 16px 72px;
+  }
+
+  .personas-section .section-heading {
+    font-size: 26px;
+  }
+
+  .persona-card-header,
+  .persona-card-body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
