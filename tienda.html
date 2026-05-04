@@ -47,11 +47,11 @@ document.addEventListener('DOMContentLoaded',function(){
   <div class="tienda-header-content">
     <div class="tienda-header-text">
       <h1>Tienda Virtual</h1>
-      <p>Hardware empresarial en arriendo mensual. Soporte técnico y mantenimiento incluidos en cada equipo.</p>
+      <p>Hardware empresarial con pago por tarjeta. Cotiza, elige y compra en minutos — con garantía de fábrica incluida.</p>
     </div>
     <div class="tienda-header-stats">
       <div class="tienda-stat">
-        <span class="tienda-stat-num">+50</span>
+        <span class="tienda-stat-num">27</span>
         <span class="tienda-stat-label">Productos disponibles</span>
       </div>
       <div class="tienda-stat">
@@ -151,16 +151,46 @@ document.addEventListener('DOMContentLoaded',function(){
           <span class="filtro-check-box"></span>
           Logitech
         </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Fortinet" checked>
+          <span class="filtro-check-box"></span>
+          Fortinet
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Ubiquiti" checked>
+          <span class="filtro-check-box"></span>
+          Ubiquiti
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Brother" checked>
+          <span class="filtro-check-box"></span>
+          Brother
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Canon" checked>
+          <span class="filtro-check-box"></span>
+          Canon
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="Synology" checked>
+          <span class="filtro-check-box"></span>
+          Synology
+        </label>
+        <label class="filtro-checkbox">
+          <input type="checkbox" value="QNAP" checked>
+          <span class="filtro-check-box"></span>
+          QNAP
+        </label>
       </div>
     </div>
 
     <div class="filtro-section">
-      <div class="filtro-title">Precio mensual</div>
+      <div class="filtro-title">Precio máximo</div>
       <div class="filtro-range-labels">
         <span id="rangeMin">$0</span>
-        <span id="rangeMax">$200.000</span>
+        <span id="rangeMax">$5.000.000</span>
       </div>
-      <input type="range" class="filtro-range" id="precioRange" min="0" max="200000" step="5000" value="200000"
+      <input type="range" class="filtro-range" id="precioRange" min="0" max="5000000" step="50000" value="5000000"
         oninput="filterByPrice(this.value)">
     </div>
 
@@ -190,7 +220,7 @@ document.addEventListener('DOMContentLoaded',function(){
         <input type="text" class="tienda-search" id="searchInput" placeholder="Buscar productos..." oninput="searchProducts()">
       </div>
       <div class="tienda-topbar-right">
-        <span class="tienda-count" id="productCount">18 productos</span>
+        <span class="tienda-count" id="productCount">40 productos</span>
         <div class="tienda-view-btns">
           <button class="tienda-view-btn active" id="viewGrid" onclick="setView('grid')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -207,375 +237,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     <!-- GRID DE PRODUCTOS -->
     <div class="productos-grid" id="productosGrid">
-      <!-- Notebooks -->
-      <div class="prod-card" data-cat="notebooks" data-marca="HP" data-precio="18750" data-nombre="HP EliteBook 640" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=hp-elitebook-640'">
-        <div class="prod-badge prod-badge--hot">Más vendido</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">EliteBook 640 G10</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i5-1335U</span>
-            <span>16GB DDR4</span>
-            <span>512GB SSD NVMe</span>
-            <span>14" FHD</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$18.750</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=hp-elitebook-640" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="HP" data-precio="22500" data-nombre="HP EliteBook 840" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=hp-elitebook-840'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">EliteBook 840 G10</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i7-1355U</span>
-            <span>16GB DDR5</span>
-            <span>512GB SSD NVMe</span>
-            <span>14" FHD IPS</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$22.500</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=hp-elitebook-840" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Dell" data-precio="21667" data-nombre="Dell Inspiron 15" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=dell-inspiron-15'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">Inspiron 15 3530</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i7-1355U</span>
-            <span>16GB DDR4</span>
-            <span>512GB SSD</span>
-            <span>15.6" FHD</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$21.667</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=dell-inspiron-15" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Dell" data-precio="27083" data-nombre="Dell Latitude 5540" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=dell-latitude-5540'">
-        <div class="prod-badge prod-badge--new">Nuevo</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">Latitude 5540</div>
-          <div class="prod-specs-list">
-            <span>Intel Core i7-1365U</span>
-            <span>16GB DDR4</span>
-            <span>256GB SSD</span>
-            <span>15.6" FHD</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$27.083</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=dell-latitude-5540" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Lenovo" data-precio="19583" data-nombre="Lenovo ThinkPad E14" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=lenovo-thinkpad-e14'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Lenovo</div>
-          <div class="prod-name">ThinkPad E14 Gen 5</div>
-          <div class="prod-specs-list">
-            <span>AMD Ryzen 5 7530U</span>
-            <span>16GB DDR4</span>
-            <span>512GB SSD</span>
-            <span>14" FHD IPS</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$19.583</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=lenovo-thinkpad-e14" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="notebooks" data-marca="Apple" data-precio="50000" data-nombre="MacBook Pro 14" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=macbook-pro-14'">
-        <div class="prod-badge prod-badge--premium">Premium</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="20" y="14" width="80" height="44" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/><rect x="42" y="66" width="36" height="5" rx="1.5" fill="rgba(255,255,255,0.08)"/><rect x="30" y="71" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Apple</div>
-          <div class="prod-name">MacBook Pro 14"</div>
-          <div class="prod-specs-list">
-            <span>Apple M3 Pro</span>
-            <span>18GB RAM</span>
-            <span>512GB SSD</span>
-            <span>14" Liquid Retina XDR</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$50.000</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=macbook-pro-14" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Servidores -->
-      <div class="prod-card" data-cat="servidores" data-marca="Dell" data-precio="104167" data-nombre="Dell PowerEdge R650" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=dell-poweredge-r650'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="6" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="32" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="58" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="18" cy="16" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="68" r="3" fill="rgba(255,255,255,0.2)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">PowerEdge R650</div>
-          <div class="prod-specs-list">
-            <span>Intel Xeon Silver 4314</span>
-            <span>64GB DDR4 ECC</span>
-            <span>1TB SSD RAID</span>
-            <span>1U Rack</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$104.167</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=dell-poweredge-r650" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="servidores" data-marca="HP" data-precio="133333" data-nombre="HP ProLiant DL380" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=hp-proliant-dl380'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="6" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="32" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="6" y="58" width="108" height="20" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><circle cx="18" cy="16" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="18" cy="68" r="3" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">ProLiant DL380 Gen10</div>
-          <div class="prod-specs-list">
-            <span>Intel Xeon Gold 5218</span>
-            <span>128GB DDR4 ECC</span>
-            <span>2TB SSD RAID</span>
-            <span>2U Rack</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$133.333</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=hp-proliant-dl380" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="servidores" data-marca="Dell" data-precio="62500" data-nombre="Dell PowerEdge T350" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=dell-poweredge-t350'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="30" y="4" width="60" height="76" rx="4" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="38" y="12" width="44" height="28" rx="2" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><circle cx="60" cy="56" r="8" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">PowerEdge T350</div>
-          <div class="prod-specs-list">
-            <span>Intel Xeon E-2356G</span>
-            <span>32GB DDR4 ECC</span>
-            <span>1TB SATA</span>
-            <span>Torre</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$62.500</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=dell-poweredge-t350" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Impresoras -->
-      <div class="prod-card" data-cat="impresoras" data-marca="HP" data-precio="14583" data-nombre="HP LaserJet M110w" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=hp-laserjet-m110w'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="20" width="80" height="44" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="30" y="8" width="60" height="18" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="30" y="64" width="60" height="12" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="38" y="32" width="44" height="3" rx="1.5" fill="rgba(59,130,246,0.3)"/><circle cx="90" cy="33.5" r="3" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">LaserJet M110w</div>
-          <div class="prod-specs-list">
-            <span>Impresión B/N</span>
-            <span>21 ppm</span>
-            <span>Wi-Fi + USB</span>
-            <span>Tóner incluido</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$14.583</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=hp-laserjet-m110w" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="impresoras" data-marca="HP" data-precio="20833" data-nombre="HP LaserJet MFP M236sdw" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=hp-laserjet-mfp-m236sdw'">
-        <div class="prod-badge prod-badge--hot">Popular</div>
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="20" width="80" height="44" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="30" y="8" width="60" height="18" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="30" y="64" width="60" height="12" rx="2" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><rect x="38" y="32" width="44" height="3" rx="1.5" fill="rgba(59,130,246,0.3)"/><circle cx="90" cy="33.5" r="3" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">LaserJet MFP M236sdw</div>
-          <div class="prod-specs-list">
-            <span>Impresión / Copia / Scan</span>
-            <span>29 ppm</span>
-            <span>Wi-Fi + LAN + USB</span>
-            <span>Tóner incluido</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$20.833</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=hp-laserjet-mfp-m236sdw" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Monitores -->
-      <div class="prod-card" data-cat="monitores" data-marca="Dell" data-precio="10417" data-nombre="Dell P2423D" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=dell-p2423d'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="18" y="6" width="84" height="56" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="26" y="14" width="68" height="40" rx="1" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="50" y="62" width="20" height="10" rx="1" fill="rgba(255,255,255,0.08)"/><rect x="38" y="72" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Dell</div>
-          <div class="prod-name">Monitor P2423D</div>
-          <div class="prod-specs-list">
-            <span>23.8" QHD 2560×1440</span>
-            <span>Panel IPS</span>
-            <span>USB-C + HDMI + DP</span>
-            <span>Ajuste de altura</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$10.417</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=dell-p2423d" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="monitores" data-marca="HP" data-precio="8333" data-nombre="HP M27fw" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=hp-m27fw'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="18" y="6" width="84" height="56" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><rect x="26" y="14" width="68" height="40" rx="1" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="1"/><rect x="50" y="62" width="20" height="10" rx="1" fill="rgba(255,255,255,0.08)"/><rect x="38" y="72" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">HP</div>
-          <div class="prod-name">Monitor M27fw</div>
-          <div class="prod-specs-list">
-            <span>27" FHD 1920×1080</span>
-            <span>Panel IPS</span>
-            <span>HDMI + VGA</span>
-            <span>Sin marcos laterales</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$8.333</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=hp-m27fw" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Redes -->
-      <div class="prod-card" data-cat="redes" data-marca="Cisco" data-precio="25000" data-nombre="Cisco Catalyst 2960" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=cisco-catalyst-2960'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="6" y="28" width="108" height="28" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><g><rect x="14" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="24" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="34" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/><rect x="44" y="36" width="6" height="12" rx="1" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.4)" stroke-width="1"/></g><circle cx="100" cy="42" r="4" fill="rgba(34,197,94,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Cisco</div>
-          <div class="prod-name">Catalyst 2960-X 24</div>
-          <div class="prod-specs-list">
-            <span>24 puertos GbE</span>
-            <span>4 uplinks SFP+</span>
-            <span>PoE+ 370W</span>
-            <span>Gestionable</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$25.000</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=cisco-catalyst-2960" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="prod-card" data-cat="redes" data-marca="Cisco" data-precio="16667" data-nombre="Cisco RV340 Router" style="cursor:pointer;" onclick="window.location.href='/producto.html?id=cisco-rv340-router'">
-        <div class="prod-img">
-          <svg viewBox="0 0 120 84" fill="none"><rect x="20" y="28" width="80" height="28" rx="3" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" fill="rgba(255,255,255,0.03)"/><path d="M60 14 L60 28" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M40 10 L60 14 L80 10" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-linecap="round"/><circle cx="100" cy="42" r="3" fill="rgba(34,197,94,0.7)"/><circle cx="92" cy="42" r="3" fill="rgba(240,165,0,0.7)"/></svg>
-        </div>
-        <div class="prod-info">
-          <div class="prod-brand">Cisco</div>
-          <div class="prod-name">RV340 Dual WAN</div>
-          <div class="prod-specs-list">
-            <span>Dual WAN Gigabit</span>
-            <span>4 puertos LAN</span>
-            <span>VPN IPSec/SSL</span>
-            <span>Firewall integrado</span>
-          </div>
-          <div class="prod-footer">
-            <div class="prod-price">
-              <span class="prod-price-from">Desde</span>
-              <span class="prod-price-val">$16.667</span>
-              <span class="prod-price-period">/mes</span>
-            </div>
-            <a href="/producto.html?id=cisco-rv340-router" class="prod-btn" onclick="event.stopPropagation()">Ver producto</a>
-          </div>
-        </div>
-      </div>
-
+      <!-- Generado dinámicamente por tienda.js desde catalogo.js -->
     </div>
 
     <!-- SIN RESULTADOS -->
@@ -709,8 +371,6 @@ document.addEventListener('DOMContentLoaded',function(){
     </div>
   </div>
 </div>
-<script src="/assets/js/productos-DB.js"></script>
-
 <!-- Supabase + Auth (DEBE estar antes de tienda.js) -->
 <script type="module" src="/assets/js/config.js"></script>
 <script src="/assets/js/auth.js"></script>
@@ -771,6 +431,7 @@ document.addEventListener('keydown',function(e){
 </script>
 
 <!-- Tienda y otros scripts -->
+<script src="/assets/js/catalogo.js"></script>
 <script src="/assets/js/tienda.js"></script>
 <script src="/assets/js/navbar-inline.js"></script>
 <script src="/assets/js/footer-inline.js"></script>

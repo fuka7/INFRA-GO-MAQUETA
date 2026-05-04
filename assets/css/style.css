@@ -2190,6 +2190,110 @@ footer {
   margin-top: 52px;
 }
 
+/* ──────────────────────────────────────
+   SECCIÓN FINANCIAMIENTO
+────────────────────────────────────── */
+.financing-section {
+  padding: 60px 32px;
+  background: #f8f9fb;
+}
+
+.financing-banner {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #030d1f 0%, #071530 55%, #0a1a3a 100%);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  min-height: 380px;
+  box-shadow: 0 32px 80px rgba(5,20,70,0.22);
+}
+
+.financing-banner-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.financing-content {
+  position: relative;
+  z-index: 2;
+  padding: 56px 56px 56px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.financing-banks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 36px;
+  list-style: none;
+  padding: 0;
+}
+
+.financing-banks li {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.financing-stats {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  min-width: 200px;
+}
+
+.financing-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+}
+
+.financing-stat:last-child {
+  border-bottom: none;
+}
+
+.financing-stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
+}
+
+.financing-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .cats-footer-cta {
   font-size: 15px;
   padding: 16px 40px;
@@ -2664,6 +2768,11 @@ footer {
   .cats-banner        { min-height: 500px; }
   .cats-banner-title  { font-size: 24px; }
   .cats-banner-content { padding: 56px 56px; }
+  .financing-section  { padding: 48px 32px; }
+  .financing-banner   { grid-template-columns: 1fr; }
+  .financing-stats    { flex-direction: row; border-left: none; border-top: 1px solid rgba(255,255,255,0.08); min-width: 0; }
+  .financing-stat     { border-bottom: none; border-right: 1px solid rgba(255,255,255,0.08); padding: 24px 32px; }
+  .financing-stat:last-child { border-right: none; }
   .store-section      { padding: 80px 48px; }
   .store-bento        { grid-template-columns: repeat(2, 1fr); grid-template-rows: 260px 220px 180px; }
   .bento-a            { grid-column: 1 / 3; grid-row: 1; }
@@ -2699,6 +2808,10 @@ footer {
   .cats-banner-content { padding: 48px 36px; max-width: 100%; }
   .cats-banner-title  { font-size: 20px; }
   .cats-banner-sub    { font-size: 12px; }
+  .financing-section  { padding: 32px 16px; }
+  .financing-content  { padding: 40px 28px; }
+  .financing-stat-num { font-size: 32px; }
+  .financing-stat     { padding: 16px 20px; }
   .store-section      { padding: 64px 24px; }
   .store-bento        { grid-template-columns: 1fr; grid-template-rows: 240px 200px 200px 180px 180px; gap: 12px; }
   .bento-a            { grid-column: 1; grid-row: 1; }

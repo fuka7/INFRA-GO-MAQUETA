@@ -1,0 +1,334 @@
+/* ═══════════════════════════════════════════════
+   Calculadora de Financiamiento — index.html
+   ═══════════════════════════════════════════════ */
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, var(--blue-bright, #0083FF), #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.finc-section {
+  background: #f4f7fb;
+  padding: 80px 20px;
+}
+
+.finc-container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.finc-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.finc-header .section-sub {
+  max-width: 560px;
+  margin: 0 auto;
+  color: rgba(17,17,17,0.6);
+}
+
+/* ── Tarjeta principal ── */
+.finc-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.09);
+}
+
+/* ── Panel izquierdo: controles ── */
+.finc-controls {
+  background: #fff;
+  padding: 44px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.finc-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(17,17,17,0.45);
+  margin-bottom: 10px;
+}
+
+/* Cuota value display */
+.finc-slider-val {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--blue-bright, #0083FF);
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+/* Slider */
+.finc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(to right, #0083FF 13.3%, #dde3ed 13.3%);
+  transition: background .05s;
+}
+
+.finc-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+}
+
+.finc-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: #dde3ed;
+}
+
+.finc-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: #0083FF;
+}
+
+.finc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-bright, #0083FF);
+  cursor: pointer;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 10px rgba(0,131,255,0.35);
+  transition: transform .15s;
+  margin-top: -8px;
+}
+
+.finc-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.finc-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-bright, #0083FF);
+  cursor: pointer;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 10px rgba(0,131,255,0.35);
+}
+
+.finc-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(17,17,17,0.35);
+  margin-top: 6px;
+}
+
+/* Plazo buttons */
+.finc-plazo-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.finc-plazo-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 9px;
+  border: 1.5px solid #dde3ed;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(17,17,17,0.45);
+  cursor: pointer;
+  transition: all .15s;
+  font-family: inherit;
+}
+
+.finc-plazo-btn:hover {
+  border-color: var(--blue-bright, #0083FF);
+  color: var(--blue-bright, #0083FF);
+}
+
+.finc-plazo-btn--active {
+  background: var(--blue-bright, #0083FF);
+  border-color: var(--blue-bright, #0083FF);
+  color: #fff;
+}
+
+/* Logos bancos */
+.finc-banks-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(17,17,17,0.35);
+  margin-bottom: 10px;
+}
+
+.finc-bank-logos {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.finc-bank {
+  padding: 4px 11px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.finc-bank--santander { background: #ec0000; color: #fff; }
+.finc-bank--bci       { background: #003087; color: #fff; }
+.finc-bank--be        { background: #15720b; color: #fff; }
+.finc-bank--hp        { background: #0096d6; color: #fff; }
+
+/* ── Panel derecho: resultados ── */
+.finc-results {
+  background: var(--dark-1, #0A1426);
+  padding: 44px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.finc-result-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+}
+
+.finc-result-amount {
+  font-size: 44px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 6px;
+  transition: opacity .1s;
+}
+
+.finc-result-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.5;
+}
+
+/* Sugerencia */
+.finc-suggestion {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.finc-suggestion-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.finc-suggestion-text {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.55;
+}
+
+/* CTA */
+.finc-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #FF7A00;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background .15s, transform .15s;
+  text-align: center;
+}
+
+.finc-cta:hover {
+  background: #e06900;
+  transform: translateY(-1px);
+  color: #fff;
+}
+
+.finc-disclaimer {
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.25);
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+═════════════════════════════════════════════ */
+
+@media (max-width: 860px) {
+  .finc-card {
+    grid-template-columns: 1fr;
+  }
+
+  .finc-controls {
+    padding: 32px 28px;
+    gap: 24px;
+  }
+
+  .finc-results {
+    padding: 32px 28px;
+    gap: 20px;
+  }
+
+  .finc-result-amount {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .finc-section {
+    padding: 56px 16px;
+  }
+
+  .finc-controls,
+  .finc-results {
+    padding: 28px 20px;
+  }
+
+  .finc-slider-val {
+    font-size: 30px;
+  }
+
+  .finc-result-amount {
+    font-size: 30px;
+  }
+
+  .finc-plazo-btn {
+    font-size: 12px;
+    padding: 9px 0;
+  }
+
+  .finc-cta {
+    font-size: 13px;
+  }
+}

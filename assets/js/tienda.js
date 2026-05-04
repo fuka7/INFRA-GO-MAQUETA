@@ -8,7 +8,7 @@
 /* ── Estado de filtros ── */
 let currentView   = 'grid';
 let currentCat    = 'todos';
-let currentMax    = 200000;
+let currentMax    = 5000000;
 let currentSearch = '';
 let currentOrder  = 'relevancia';
 
@@ -64,7 +64,10 @@ function buildCard(p) {
 function renderCards() {
   const grid = document.getElementById('productosGrid');
   if (!grid) return;
-  grid.innerHTML = PRODUCTOS_DB.map(buildCard).join('');
+  const catalog = (window.CATALOGO || [])
+    .filter(p => p.cat !== 'licencias' && p.cat !== 'servicios')
+    .map(p => ({ ...p, precio: p.precioVenta }));
+  grid.innerHTML = catalog.map(buildCard).join('');
 }
 
 /* ── Filtros ── */
@@ -151,12 +154,12 @@ function updateActiveFilters() {
     }
   });
 
-  if (currentMax < 200000) tags.push({
+  if (currentMax < 5000000) tags.push({
     label: `Hasta $${currentMax.toLocaleString('es-CL')}`,
     clear: () => {
-      currentMax = 200000;
-      document.getElementById('precioRange').value = 200000;
-      document.getElementById('rangeMax').textContent = '$200.000';
+      currentMax = 5000000;
+      document.getElementById('precioRange').value = 5000000;
+      document.getElementById('rangeMax').textContent = '$5.000.000';
       applyFilters();
     }
   });
@@ -181,13 +184,13 @@ function updateUrl() {
 function resetFilters() {
   currentCat    = 'todos';
   currentSearch = '';
-  currentMax    = 200000;
+  currentMax    = 5000000;
   document.querySelector('#filtroCategorias input[value="todos"]').checked = true;
   document.querySelectorAll('.filtro-check[data-cat]').forEach(l => l.classList.remove('active'));
   document.querySelector('.filtro-check[data-cat="todos"]').classList.add('active');
   document.getElementById('searchInput').value = '';
-  document.getElementById('precioRange').value = 200000;
-  document.getElementById('rangeMax').textContent = '$200.000';
+  document.getElementById('precioRange').value = 5000000;
+  document.getElementById('rangeMax').textContent = '$5.000.000';
   document.querySelectorAll('#filtroMarcas input').forEach(c => c.checked = true);
   applyFilters();
 }
@@ -202,7 +205,7 @@ function setView(v) {
 
 /* ── Init ── */
 window.addEventListener('DOMContentLoaded', () => {
-  // 1. Generar cards desde PRODUCTOS_DB
+  // 1. Generar cards desde CATALOGO
   renderCards();
 
   // 2. Conectar listeners de filtros

@@ -1,0 +1,271 @@
+/* ═══════════════════════════════════════════════
+   ITIL 4 Section — rediseño dos columnas
+   ═══════════════════════════════════════════════ */
+
+.itil-section {
+  background: var(--dark-1, #0A1426);
+  padding: 90px 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Glow decorativo de fondo */
+.itil-section::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  right: -80px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0,131,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.itil-container {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+/* ── Encabezado superior ── */
+.itil-top-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+/* ── Grid dos columnas ── */
+.itil-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+/* ── Columna imagen ── */
+.itil-img-col {
+  position: relative;
+}
+
+.itil-img-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: visible;
+}
+
+.itil-image {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  display: block;
+  box-shadow:
+    0 0 0 1px rgba(0,131,255,0.15),
+    0 24px 64px rgba(0,0,0,0.5),
+    0 0 80px rgba(0,131,255,0.1);
+  transition: transform 0.4s ease;
+}
+
+.itil-image:hover {
+  transform: scale(1.02);
+}
+
+.itil-img-badge {
+  position: absolute;
+  bottom: -16px;
+  right: -16px;
+  background: #0A1426;
+  border: 1px solid rgba(0,131,255,0.3);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.itil-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34,197,94,0.7);
+  animation: itil-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes itil-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.85); }
+}
+
+/* ── Columna texto ── */
+.itil-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.itil-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gold-bright, #FF9933);
+  background: rgba(255,122,0,0.1);
+  border: 1px solid rgba(255,122,0,0.25);
+  padding: 6px 14px;
+  border-radius: 20px;
+  width: fit-content;
+  margin: 0;
+}
+
+.itil-heading {
+  font-size: 52px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.itil-gradient {
+  background: linear-gradient(135deg, var(--gold, #FFB800), var(--gold-bright, #FFD700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.itil-desc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Beneficios ── */
+.itil-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.itil-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: background .2s, border-color .2s;
+}
+
+.itil-benefit:hover {
+  background: rgba(0,131,255,0.08);
+  border-color: rgba(0,131,255,0.25);
+}
+
+.itil-benefit-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(0,131,255,0.12);
+  border: 1px solid rgba(0,131,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0083FF;
+  flex-shrink: 0;
+}
+
+.itil-benefit-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.itil-benefit-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.4;
+}
+
+/* ── CTA ── */
+.itil-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 13px 22px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color .2s, color .2s, background .2s;
+  width: fit-content;
+}
+
+.itil-cta:hover {
+  border-color: #0083FF;
+  color: #0083FF;
+  background: rgba(0,131,255,0.06);
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+═════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .itil-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .itil-img-col {
+    order: 1;
+  }
+
+  .itil-text-col {
+    order: 2;
+    gap: 20px;
+  }
+
+  .itil-heading {
+    font-size: 36px;
+  }
+
+  .itil-top-header {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .itil-section {
+    padding: 60px 16px;
+  }
+
+  .itil-heading {
+    font-size: 28px;
+  }
+
+  .itil-desc {
+    font-size: 14px;
+  }
+
+  .itil-img-badge {
+    bottom: -12px;
+    right: -4px;
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+}

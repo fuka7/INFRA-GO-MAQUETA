@@ -15,7 +15,18 @@ function getProducto() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   if (!id) return null;
-  return PRODUCTOS_DB.find(p => p.id === id) || null;
+
+  const base = (window.CATALOGO || []).find(p => p.id === id);
+  if (!base) return null;
+
+  const detalle = (window.PRODUCTO_DETALLE || {})[id] || {};
+  return {
+    ...base,
+    description: detalle.description || base.specsResumen.join(' · '),
+    specs:       detalle.specs       || base.specsResumen.map((s, i) => [`Especificación ${i + 1}`, s]),
+    images:      detalle.images      || 2,
+    precio:      base.precioVenta,
+  };
 }
 
 /* ── Generar miniaturas SVG (variantes de opacidad) ── */
