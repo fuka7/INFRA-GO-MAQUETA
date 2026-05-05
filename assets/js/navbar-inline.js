@@ -39,7 +39,7 @@
 
 <!-- BARRA SUPERIOR -->
 <div class="igb-top">
-  <span>🚚 Despacho GRATIS en Santiago en compras desde $75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span>
+  <span class="igb-top-full">🚚 Despacho GRATIS en Santiago en compras desde $75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span><span class="igb-top-short">🚚 Envío GRATIS +$75.000 — <button class="igb-top-link" onclick="igbOpenComunas()">Ver comunas</button></span>
 </div>
 
 <!-- MODAL COMUNAS -->
@@ -275,8 +275,10 @@ function igbSearch(){
   if(q) window.location.href='/tienda.html?q='+encodeURIComponent(q);
 }
 function igbCotizar(e){
-  e.preventDefault();
-  window.location.href='/configurador.html';
+  var p=null;try{p=JSON.parse(localStorage.getItem('ig_profile')||'null');}catch(_){}
+  if(p&&p.email) return true; // sesión cacheada → navegar normal
+  if(e) e.preventDefault();
+  if(window.igbAuth) window.igbAuth.open('login','/configurador.html');
   return false;
 }
 document.addEventListener('DOMContentLoaded',function(){

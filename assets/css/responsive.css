@@ -8,6 +8,12 @@
 /* Navbar: ver navbar.css */
 
 /* ══════════════════════════════════════════════
+   FIX GLOBAL — .hero-carousel hereda padding de <section>
+   lo que genera la franja blanca en móvil
+══════════════════════════════════════════════ */
+.hero-carousel { padding: 0 !important; }
+
+/* ══════════════════════════════════════════════
    TABLET — max-width: 1024px
 ══════════════════════════════════════════════ */
 @media (max-width: 1024px) {
@@ -289,6 +295,77 @@
   .configurador-header h1 { font-size: 28px; }
   .progress-steps { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .progress-container { padding: 16px; }
+}
+
+/* ══════════════════════════════════════════════
+   TABLET — max-width: 768px — ADICIONES
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Hero carousel: reducir padding inferior */
+  .hero-slide { padding: 0 20px 80px !important; }
+  .slide-title { font-size: clamp(22px, 7vw, 30px) !important; line-height: 1.1; }
+  .slide-cta { font-size: 14px; padding: 12px 24px; }
+
+  /* Brands strip */
+  .hero-brands-strip { overflow: hidden; }
+
+  /* ── SERVICIOS PAGE ── */
+  .srv-hero            { padding: 60px 16px 48px; }
+  .srv-hero h1         { font-size: clamp(26px, 7vw, 36px); }
+  .srv-hero-sub        { font-size: 15px; max-width: 100%; }
+  .srv-hero-badges     { gap: 8px; }
+  .srv-section         { padding: 52px 16px; }
+  .srv-section-header  { margin-bottom: 32px; }
+  .srv-heading         { font-size: clamp(22px, 6vw, 30px); }
+  .srv-sub             { font-size: 14px; }
+  .srv-cards           { grid-template-columns: 1fr; }
+  .sla-grid            { grid-template-columns: 1fr; }
+  .sla-info-grid       { grid-template-columns: 1fr; }
+  .srv-catalog-grid,
+  .srv-catalog-grid--3 { grid-template-columns: 1fr; }
+  .srv-stats           { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .escalation-steps    { grid-template-columns: 1fr; }
+  .escalation-steps::before { display: none; }
+  .warranty-grid       { grid-template-columns: 1fr; }
+  .warranty-card       { flex-direction: column; }
+  .srv-card            { padding: 24px 20px; }
+  .srv-group-label     { font-size: 13px; }
+
+  /* ── PRODUCTO PAGE ── */
+  .prd-layout { grid-template-columns: 1fr !important; }
+  .prd-right  { width: 100% !important; max-width: 100% !important; }
+  .prd-gallery { max-height: 300px; }
+  .prd-thumbs  { gap: 6px; }
+  .prd-thumb   { width: 56px; height: 56px; }
+
+  /* ── CARRITO PAGE ── */
+  .igc-page-panel { max-width: 100% !important; width: 100% !important; }
+}
+
+/* ══════════════════════════════════════════════
+   MÓVIL PEQUEÑO — max-width: 480px — ADICIONES
+══════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  /* Hero carousel */
+  .hero-slide { padding: 0 16px 56px !important; }
+  .slide-title { font-size: clamp(20px, 8vw, 26px) !important; }
+  .slide-cta  { width: 100%; justify-content: center; }
+
+  /* ── SERVICIOS PAGE ── */
+  .srv-hero        { padding: 48px 16px 40px; }
+  .srv-section     { padding: 40px 16px; }
+  .srv-stats       { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .srv-hero-badges { flex-direction: column; align-items: center; }
+  .escalation-steps { gap: 20px; }
+  .srv-card-title  { font-size: 15px; }
+
+  /* ── INDEX — secciones especiales ── */
+  .bento-stat-num      { font-size: clamp(32px, 8vw, 48px); }
+  .financing-stat-num  { font-size: clamp(24px, 6vw, 32px); }
+  .cats-banner-title   { font-size: 18px; }
+  .cats-banner-content { padding: 36px 20px; }
 }
 
 /* ══════════════════════════════════════════════

@@ -350,8 +350,11 @@
      GUARDIA CONFIGURADOR
   ════════════════════════════════════════════ */
   function guardConfigurador() {
-    if (window.location.pathname.includes('configurador') && !currentUser) {
-      openAuth('login', window.location.pathname + window.location.search);
+    if (!window.location.pathname.includes('configurador')) return;
+    if (!currentUser) {
+      // Redirige al origen en lugar de mostrar el configurador al fondo del modal
+      sessionStorage.setItem('ig_open_login', '/configurador.html');
+      window.location.replace('/index.html');
     }
   }
 
@@ -551,9 +554,15 @@
           currentUser = igBuildProfile(session.user.email, pr.data, session.user.user_metadata);
           igSaveProfileCache(currentUser);
           updateNavbar();
+          // Si venía de configurador y ya tiene sesión, va directo
+          var pending = sessionStorage.getItem('ig_open_login');
+          if (pending) { sessionStorage.removeItem('ig_open_login'); window.location.href = pending; return; }
           guardConfigurador();
         });
       } else {
+        // Si fue redirigido desde configurador sin sesión, abre el modal aquí
+        var pending = sessionStorage.getItem('ig_open_login');
+        if (pending) { sessionStorage.removeItem('ig_open_login'); openAuth('login', pending); return; }
         guardConfigurador();
       }
     });
@@ -587,8 +596,9 @@
      Uso en cualquier HTML: onclick="return igbCotizar(event)"
      No requiere lógica adicional en cada página.              ── */
   window.igbCotizar = function(e) {
-    if (currentUser) return true; // tiene sesión → navegar normal
-    if (e) e.preventDefault();
+    var p=null;try{p=JSON.parse(localStorage.getItem('ig_profile')||'null');}catch(_){}
+    if(currentUser||(p&&p.email)) return true; // sesión activa → navegar normal
+    if(e) e.preventDefault();
     openAuth('login', '/configurador.html');
     return false;
   };

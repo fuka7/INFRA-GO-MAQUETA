@@ -13,6 +13,12 @@
   <link rel="stylesheet" href="/assets/css/footer.css">
   <link rel="stylesheet" href="/assets/css/responsive.css">
   <link rel="stylesheet" href="/assets/css/auth.css">
+  <script>
+  (function(){
+    var p=null;try{p=JSON.parse(localStorage.getItem('ig_profile')||'null');}catch(e){}
+    if(!p||!p.email){sessionStorage.setItem('ig_open_login','/configurador.html');window.location.replace('/index.html');}
+  })();
+  </script>
 </head>
 <body>
 

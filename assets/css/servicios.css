@@ -999,13 +999,44 @@
   }
 }
 
+@media (max-width: 768px) {
+  .srv-hero            { padding: 72px 16px 56px; }
+  .srv-hero h1         { font-size: clamp(26px, 7vw, 36px); }
+  .srv-hero-sub        { font-size: 15px; }
+  .srv-section         { padding: 56px 16px; }
+  .srv-section-header  { margin-bottom: 32px; }
+  .srv-cards           { grid-template-columns: 1fr; }
+  .sla-grid            { grid-template-columns: 1fr; }
+  .sla-info-grid       { grid-template-columns: 1fr; }
+  .srv-catalog-grid,
+  .srv-catalog-grid--3 { grid-template-columns: 1fr; }
+  .srv-stats           { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .escalation-steps    { grid-template-columns: 1fr; }
+  .escalation-steps::before { display: none; }
+  .warranty-grid       { grid-template-columns: 1fr; }
+  .warranty-card       { flex-direction: column; }
+  .srv-card            { padding: 24px 20px; }
+}
+
 @media (max-width: 600px) {
-  .srv-hero { padding: 80px 16px 60px; }
-  .srv-section { padding: 56px 16px; }
+  .srv-hero { padding: 60px 16px 48px; }
+  .srv-section { padding: 48px 16px; }
 
   .escalation-steps { grid-template-columns: 1fr; }
 
   .srv-stats { grid-template-columns: 1fr 1fr; }
 
   .warranty-card { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .srv-hero        { padding: 48px 16px 36px; }
+  .srv-hero h1     { font-size: clamp(24px, 8vw, 30px); }
+  .srv-hero-sub    { font-size: 14px; }
+  .srv-section     { padding: 40px 16px; }
+  .srv-section-header { margin-bottom: 24px; }
+  .srv-stats       { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .srv-hero-badges { flex-direction: column; align-items: center; gap: 8px; }
+  .srv-card-title  { font-size: 15px; }
+  .srv-card-desc   { font-size: 13px; }
 }

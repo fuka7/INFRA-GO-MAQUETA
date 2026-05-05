@@ -7,6 +7,8 @@
 /* ── NAVBAR INLINE — prefijo igb- ── */
 .igb-top{position:fixed;top:0;left:0;right:0;z-index:1002;height:36px;background:#0A1426;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,0.07);}
 .igb-top span{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);}
+.igb-top-short{display:none;}
+@media(max-width:480px){.igb-top-full{display:none;}.igb-top-short{display:inline;}}
 .igb-top-link{background:none;border:none;color:#FF9933;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;padding:0;margin-left:4px;transition:color .2s;}
 .igb-top-link:hover{color:#ffc94d;}
 .igb-main{position:fixed;top:36px;left:0;right:0;z-index:1001;height:60px;background:#0a1628;display:flex;align-items:center;gap:20px;padding:0 48px;border-bottom:1px solid rgba(255,255,255,0.06);}
@@ -75,9 +77,11 @@
 .igb-mobile a:hover{background:rgba(0,0,0,0.05);color:#111;}
 .igb-mobile .igb-cta{margin-top:10px;text-align:center;border-radius:8px;padding:13px 20px;}
 .igb-mobile-sep{border:none;border-top:1px solid rgba(0,0,0,0.08);margin:8px 0;}
+/* Evita parpadeo: ocupa el espacio de la navbar con el fondo oscuro antes de que el JS inyecte el contenido */
+#navbar-placeholder{position:fixed;top:0;left:0;right:0;height:96px;background:#0a1628;z-index:999;}
 /* Reservar espacio */
 body{padding-top:96px;}
 .hero-carousel{height:calc(100vh - 96px);}
 /* Responsive */
 @media(max-width:1024px){.igb-actions{display:none;}.igb-links{display:none;}.igb-categories{display:none;}.igb-burger{display:flex;}.igb-main{padding:0 24px;}body{padding-top:96px;}.hero-carousel{height:calc(100vh - 96px);}}
-@media(max-width:768px){.igb-top{height:32px;}.igb-main{top:32px;height:56px;padding:0 20px;}.igb-overlay{top:88px;}.igb-mobile{top:88px;}body{padding-top:88px;}.hero-carousel{height:calc(100vh - 88px);}}
+@media(max-width:768px){#navbar-placeholder{height:88px;}.igb-top{height:32px;}.igb-main{top:32px;height:56px;padding:0 20px;}.igb-overlay{top:88px;}.igb-mobile{top:88px;}body{padding-top:88px;}.hero-carousel{height:calc(100vh - 88px);}}
