@@ -476,6 +476,23 @@ document.addEventListener('keydown',function(e){
 }
 .wsp-fab svg { flex-shrink: 0; }
 .wsp-fab-label { white-space: nowrap; }
+
+/* Pantallas pequeñas — solo ícono */
+@media (max-width: 768px) {
+  .wsp-fab {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 50%;
+    gap: 0;
+    justify-content: center;
+    bottom: 20px;
+    right: 20px;
+  }
+  .wsp-fab-label {
+    display: none;
+  }
+}
 </style>
 </body>
 </html>

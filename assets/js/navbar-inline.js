@@ -11,6 +11,7 @@
 
   // Generar HTML del account sin parpadeo
   var accountHTML = '';
+  var accountHTMLMobile = '';
   if (cachedProfile && cachedProfile.email) {
     var nombre = (cachedProfile.nombre || '').trim();
     var apellido = (cachedProfile.apellido || '').trim();
@@ -24,12 +25,14 @@
       : cachedProfile.email.split('@')[0];
     accountHTML = '<span style="width:32px;height:32px;background:#FF7A00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
       '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
+    accountHTMLMobile = '<div style="padding:12px 0;border-top:1px solid #eee;margin-top:12px;"><div style="font-size:13px;color:#333;margin-bottom:8px;"><strong>' + displayName + '</strong><br><small style="color:#666;">Sesión activa</small></div><button onclick="igbLogout()" style="width:100%;padding:8px;background:#FF7A00;color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Cerrar sesión</button></div>';
   } else {
     accountHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
       '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>' +
       '<circle cx="12" cy="7" r="4"/>' +
       '</svg>' +
       '<span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>';
+    accountHTMLMobile = '<a href="#" onclick="igbCloseMenu();if(window.igbAuth)window.igbAuth.open(\'login\');return false;" style="display:block;padding:12px;text-align:center;color:#FF7A00;font-weight:600;border-top:1px solid #eee;margin-top:12px;">Iniciar Sesión</a>';
   }
 
   var NAVBAR_HTML = `<!-- ╔══════════════════════════════════════════════════╗
@@ -174,7 +177,7 @@
       <span><small>Mi</small><strong>Carro</strong></span>
     </a>
 
-    <a class="igb-account" href="#">
+    <a class="igb-account" href="#" onclick="return igbHandleAccount(event);">
       ${accountHTML}
     </a>
   </div>
@@ -204,6 +207,7 @@
   <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
     Agendar reunión
   </a>
+  ${accountHTMLMobile}
 </div>`;
 
   function injectNavbar() {
@@ -280,6 +284,41 @@ function igbCotizar(e){
   if(e) e.preventDefault();
   if(window.igbAuth) window.igbAuth.open('login','/configurador.html');
   return false;
+}
+function igbHandleAccount(e){
+  e.preventDefault();
+  var btn = e.target.closest('.igb-account');
+  if(!btn) return false;
+  
+  // Esperar a que igbAuth esté listo (máximo 100ms)
+  var attempts = 0;
+  var tryOpen = function() {
+    if(window.igbAuth && window.igbAuth.open) {
+      var state = btn.dataset.igbState;
+      if(state === 'logged') {
+        window.igbAuth.open('logout');
+      } else {
+        window.igbAuth.open('login');
+      }
+    } else if(attempts < 50) {
+      attempts++;
+      setTimeout(tryOpen, 2);
+    }
+  };
+  tryOpen();
+  return false;
+}
+function igbLogout(){
+  igbCloseMenu();
+  if(window.supabase && window.supabase.auth){
+    window.supabase.auth.signOut().then(function(){
+      localStorage.removeItem('ig_profile');
+      location.reload();
+    });
+  } else {
+    localStorage.removeItem('ig_profile');
+    location.reload();
+  }
 }
 document.addEventListener('DOMContentLoaded',function(){
   var search = document.querySelector('.igb-search-input');
