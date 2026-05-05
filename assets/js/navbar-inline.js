@@ -1,14 +1,41 @@
 /**
  * ════════════════════════════════════════════════════════════
- * NAVBAR — InfraGo (inline, sin fetch)
+ * NAVBAR — InfraGo (inline, sin fetch, sin parpadeo)
  * ════════════════════════════════════════════════════════════
  */
 (function () {
 
+  // Obtener perfil cacheado ANTES de generar navbar
+  var cachedProfile = null;
+  try { cachedProfile = JSON.parse(localStorage.getItem('ig_profile') || 'null'); } catch(e) {}
+
+  // Generar HTML del account sin parpadeo
+  var accountHTML = '';
+  if (cachedProfile && cachedProfile.email) {
+    var nombre = (cachedProfile.nombre || '').trim();
+    var apellido = (cachedProfile.apellido || '').trim();
+    var initials = nombre && apellido
+      ? (nombre[0] + apellido[0]).toUpperCase()
+      : nombre
+        ? nombre.slice(0, 2).toUpperCase()
+        : cachedProfile.email.slice(0, 2).toUpperCase();
+    var displayName = nombre
+      ? (nombre + (apellido ? ' ' + apellido : ''))
+      : cachedProfile.email.split('@')[0];
+    accountHTML = '<span style="width:32px;height:32px;background:#FF7A00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
+      '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
+  } else {
+    accountHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+      '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>' +
+      '<circle cx="12" cy="7" r="4"/>' +
+      '</svg>' +
+      '<span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>';
+  }
+
   var NAVBAR_HTML = `<!-- ╔══════════════════════════════════════════════════╗
      NAVBAR — InfraGo
      Inyectado por /assets/js/navbar-inline.js en todas las páginas
-     ╚══════════════════════════════════════════════════╝ -->
+     ╚══════════════════════════════════════════════╝ -->
 
 <!-- BARRA SUPERIOR -->
 <div class="igb-top">
@@ -126,6 +153,7 @@
     <li><a href="/index.html">Inicio</a></li>
     <li><a href="/configurador.html" onclick="return igbCotizar(event)">Configurador</a></li>
     <li><a href="/tienda.html">Tienda Virtual</a></li>
+    <li><a href="/servicios.html">Nuestros Servicios</a></li>
   </ul>
 
   <div class="igb-actions">
@@ -147,14 +175,7 @@
     </a>
 
     <a class="igb-account" href="#">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-      <span class="igb-account-text">
-        <small>Iniciar Sesión</small>
-        <strong>Mi cuenta</strong>
-      </span>
+      ${accountHTML}
     </a>
   </div>
 
@@ -172,6 +193,7 @@
   <a href="/index.html">Inicio</a>
   <a href="/configurador.html" onclick="return igbCotizar(event)">Configurador</a>
   <a href="/tienda.html">Tienda Virtual</a>
+  <a href="/servicios.html">Nuestros Servicios</a>
   <hr class="igb-mobile-sep">
   <a href="/tienda.html?cat=pc">PC</a>
   <a href="/tienda.html?cat=notebooks">Notebooks</a>
@@ -189,6 +211,12 @@
     if (!placeholder) return;
     placeholder.innerHTML = NAVBAR_HTML;
 
+    // Establecer estado en atributo data
+    var accountLink = document.querySelector('.igb-account');
+    if (accountLink) {
+      accountLink.dataset.igbState = cachedProfile && cachedProfile.email ? 'logged' : 'guest';
+    }
+
     document.dispatchEvent(new CustomEvent('componentInjected', {
       detail: { component: 'navbar-placeholder' }
     }));
@@ -201,3 +229,59 @@
   }
 
 })();
+
+/* ════════════════════════════════════════════════════════════
+   FUNCIONES NAVBAR GLOBAL — Modal de comunas y menú
+════════════════════════════════════════════════════════════ */
+function igbOpenComunas(){
+  document.getElementById('igbComunasOverlay').classList.add('open');
+  document.getElementById('igbComunasModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function igbCloseComunas(){
+  document.getElementById('igbComunasOverlay').classList.remove('open');
+  document.getElementById('igbComunasModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function igbToggleCats(){
+  document.getElementById('igbCats').classList.toggle('open');
+}
+function igbToggleMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  var open=menu.classList.toggle('open');
+  if(btn)btn.classList.toggle('open',open);
+  if(ov)ov.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    igbCloseMenu();
+    igbCloseComunas();
+  }
+});
+function igbCloseMenu(){
+  var btn=document.querySelector('.igb-burger');
+  var menu=document.getElementById('igbMobile');
+  var ov=document.getElementById('igbOverlay');
+  menu.classList.remove('open');
+  ov.classList.remove('open');
+  if(btn)btn.classList.remove('open');
+  document.body.style.overflow='';
+}
+function igbSearch(){
+  var q=document.querySelector('.igb-search-input').value.trim();
+  if(q) window.location.href='/tienda.html?q='+encodeURIComponent(q);
+}
+function igbCotizar(e){
+  e.preventDefault();
+  window.location.href='/configurador.html';
+  return false;
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var search = document.querySelector('.igb-search-input');
+  if(search) search.addEventListener('keydown',function(e){
+    if(e.key==='Enter') igbSearch();
+  });
+});
