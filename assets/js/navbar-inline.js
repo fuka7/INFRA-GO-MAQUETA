@@ -32,7 +32,23 @@
       '<circle cx="12" cy="7" r="4"/>' +
       '</svg>' +
       '<span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>';
-    accountHTMLMobile = '<a href="#" onclick="igbCloseMenu();if(window.igbAuth)window.igbAuth.open(\'login\');return false;" style="display:block;padding:12px;text-align:center;color:#FF7A00;font-weight:600;border-top:1px solid #eee;margin-top:12px;">Iniciar Sesión</a>';
+    accountHTMLMobile = '<div style="padding:16px 0 4px;border-top:1px solid rgba(0,0,0,0.08);margin-top:12px;">' +
+      '<button onclick="igbMobileLogin()" style="' +
+        'width:100%;padding:13px 20px;' +
+        'background:linear-gradient(135deg,#FF7A00,#FF9933);' +
+        'color:#fff;border:none;border-radius:10px;' +
+        'font-family:Montserrat,sans-serif;font-size:15px;font-weight:700;' +
+        'cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;' +
+        'box-shadow:0 4px 14px rgba(255,122,0,0.35);' +
+        'transition:opacity .2s;"' +
+        'onmousedown="this.style.opacity=.85" onmouseup="this.style.opacity=1">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
+          '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>' +
+          '<circle cx="12" cy="7" r="4"/>' +
+        '</svg>' +
+        'Iniciar Sesión' +
+      '</button>' +
+    '</div>';
   }
 
   var NAVBAR_HTML = `<!-- ╔══════════════════════════════════════════════════╗
@@ -204,7 +220,18 @@
   <a href="/tienda.html?cat=impresoras">Impresoras</a>
   <a href="/tienda.html?cat=redes">Redes</a>
   <a href="/tienda.html?cat=accesorios">Accesorios</a>
-  <a class="igb-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
+  <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" style="
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-top:10px;padding:13px 20px;border-radius:10px;box-sizing:border-box;
+    background:linear-gradient(135deg,#FF7A00,#FF9933);border:none;
+    color:#fff !important;font-family:Montserrat,sans-serif;
+    font-size:15px;font-weight:700;text-decoration:none;
+    box-shadow:0 4px 14px rgba(0,0,0,0.2);
+    transition:opacity .2s;"
+    onmousedown="this.style.opacity=.8" onmouseup="this.style.opacity=1">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
     Agendar reunión
   </a>
   ${accountHTMLMobile}
@@ -258,6 +285,21 @@ function igbToggleMenu(){
   if(btn)btn.classList.toggle('open',open);
   if(ov)ov.classList.toggle('open',open);
   document.body.style.overflow=open?'hidden':'';
+  igbSetWidgetsBlocked(open);
+}
+function igbSetWidgetsBlocked(block){
+  var selectors = [
+    'body > iframe',
+    'body > div > iframe',
+    'body > div[id*="assist"]',
+    'body > div[id*="chat"]',
+    'body > div[class*="assist"]',
+    'body > div[class*="widget"]'
+  ];
+  document.querySelectorAll(selectors.join(',')).forEach(function(el){
+    el.style.visibility = block ? 'hidden' : '';
+    el.style.pointerEvents = block ? 'none' : '';
+  });
 }
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
@@ -273,6 +315,7 @@ function igbCloseMenu(){
   ov.classList.remove('open');
   if(btn)btn.classList.remove('open');
   document.body.style.overflow='';
+  igbSetWidgetsBlocked(false);
 }
 function igbSearch(){
   var q=document.querySelector('.igb-search-input').value.trim();
@@ -320,6 +363,25 @@ function igbLogout(){
     location.reload();
   }
 }
+function igbMobileLogin(){
+  igbCloseMenu();
+  var attempts = 0;
+  var tryOpen = function(){
+    if(window.igbAuth && window.igbAuth.open){
+      window.igbAuth.open('login');
+    } else if(attempts < 100){
+      attempts++;
+      setTimeout(tryOpen, 10);
+    }
+  };
+  tryOpen();
+}
+// Cerrar menú mobile al redimensionar a pantalla grande
+window.addEventListener('resize', function(){
+  if(window.innerWidth > 1024){
+    igbCloseMenu();
+  }
+});
 document.addEventListener('DOMContentLoaded',function(){
   var search = document.querySelector('.igb-search-input');
   if(search) search.addEventListener('keydown',function(e){

@@ -69,9 +69,9 @@
 .igb-comunas-req-item{display:flex;align-items:center;gap:8px;font-family:'Montserrat',sans-serif;font-size:13px;color:#333;font-weight:600;}
 .igb-comunas-req-item svg{color:#FF7A00;flex-shrink:0;}
 @media(max-width:480px){.igb-comunas-list{grid-template-columns:repeat(2,1fr);}}
-.igb-overlay{display:none;position:fixed;inset:0;top:96px;background:rgba(0,0,0,0.4);z-index:1500;}
+.igb-overlay{display:none;position:fixed;inset:0;top:96px;background:rgba(0,0,0,0.4);z-index:2147483645;}
 .igb-overlay.open{display:block;}
-.igb-mobile{position:fixed;top:96px;left:0;right:0;z-index:1600;background:#fff;display:flex;flex-direction:column;padding:12px 16px 24px;gap:2px;border-bottom:2px solid rgba(255,122,0,0.3);box-shadow:0 8px 24px rgba(0,0,0,0.1);transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform .3s,opacity .25s;}
+.igb-mobile{position:fixed;top:96px;left:0;right:0;z-index:2147483646;background:#fff;display:flex;flex-direction:column;padding:12px 16px 24px;gap:2px;border-bottom:2px solid rgba(255,122,0,0.3);box-shadow:0 8px 24px rgba(0,0,0,0.1);transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform .3s,opacity .25s;}
 .igb-mobile.open{transform:translateY(0);opacity:1;visibility:visible;}
 .igb-mobile a{display:block;padding:11px 16px;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:600;color:rgba(0,0,0,0.7);text-decoration:none;border-radius:8px;transition:background .15s,color .15s;}
 .igb-mobile a:hover{background:rgba(0,0,0,0.05);color:#111;}

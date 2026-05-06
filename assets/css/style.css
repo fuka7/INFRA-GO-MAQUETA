@@ -1732,7 +1732,7 @@ footer {
   z-index: 6;
   display: flex;
   align-items: center;
-
+  white-space: nowrap;
 }
 
 /* Wrapper que contiene los dos tracks lado a lado */
@@ -1740,6 +1740,13 @@ footer {
   display: flex;
   align-items: center;
   width: max-content;
+  flex-shrink: 0;
+  animation: scrollBrands 28s linear infinite;
+  will-change: transform;
+}
+
+.brands-track-wrapper:hover {
+  animation-play-state: paused;
 }
 
 
@@ -1754,7 +1761,7 @@ footer {
 
 @keyframes scrollBrands {
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to   { transform: translateX(-25%); }
 }
 
 .brand-logo-strip {
@@ -2789,9 +2796,26 @@ footer {
 }
 
 @media (max-width: 768px) {
-  .hero-slide { padding: 0 24px 120px; }
-  .carousel-controls  { left: 24px; right: 24px; bottom: 70px; }
-  .slide-title { font-size: 28px; letter-spacing: -1px; }
+  .hero-carousel { min-height: 380px; }
+  .hero-slide {
+    padding: 0 24px 0;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 110px;
+  }
+  .carousel-controls { left: 24px; right: 24px; bottom: 72px; }
+  .slide-title { font-size: 26px; letter-spacing: -0.5px; }
+  .slide-inner { width: 100%; }
+  .slide-cta {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin-top: 16px;
+  }
   .why-section-new    { padding: 64px 24px; }
   .why-grid           { grid-template-columns: 1fr; border-radius: 14px; }
   .why-card-new       { padding: 20px 20px; gap: 14px; }
@@ -2827,6 +2851,15 @@ footer {
   .about-partner-new  { padding-left: 0; border-left: none; padding-top: 24px; border-top: 1px solid rgba(17,17,17,0.08); }
   .cta-final          { padding: 64px 24px; }
   .hero-brands-strip  { height: 60px; display: flex; }
+}
+
+@media (max-width: 480px) {
+  .hero-carousel { min-height: 340px; }
+  .hero-slide { padding-bottom: 100px; }
+  .slide-title { font-size: 22px; line-height: 1.2; }
+  .slide-tag { font-size: 10px; letter-spacing: 1.5px; margin-bottom: 10px; }
+  .carousel-controls { bottom: 66px; }
+  .hero-brands-strip { height: 52px; }
 }
 /* ── SLIDE CHECKLIST (hero carrusel) ── */
 .slide-checklist { display: none; }

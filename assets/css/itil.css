@@ -52,6 +52,30 @@
   position: relative;
   border-radius: 20px;
   overflow: visible;
+  cursor: zoom-in;
+}
+
+/* Ícono de lupa que aparece al pasar el mouse */
+.itil-img-frame::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  background: rgba(0,131,255,0.85) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='22' y2='22'/%3E%3Cline x1='11' y1='8' x2='11' y2='14'/%3E%3Cline x1='8' y1='11' x2='14' y2='11'/%3E%3C/svg%3E") center/18px no-repeat;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  z-index: 2;
+}
+
+.itil-img-frame:hover::after {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .itil-image {
@@ -63,11 +87,18 @@
     0 0 0 1px rgba(0,131,255,0.15),
     0 24px 64px rgba(0,0,0,0.5),
     0 0 80px rgba(0,131,255,0.1);
-  transition: transform 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.4s ease,
+              box-shadow 0.4s ease;
 }
 
-.itil-image:hover {
-  transform: scale(1.02);
+.itil-img-frame:hover .itil-image {
+  transform: scale(1.07);
+  filter: brightness(1.08) contrast(1.05);
+  box-shadow:
+    0 0 0 1px rgba(0,131,255,0.3),
+    0 32px 80px rgba(0,0,0,0.55),
+    0 0 120px rgba(0,131,255,0.18);
 }
 
 .itil-img-badge {
@@ -101,6 +132,11 @@
 @keyframes itil-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: 0.6; transform: scale(0.85); }
+}
+
+@keyframes itil-lb-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 /* ── Columna texto ── */
