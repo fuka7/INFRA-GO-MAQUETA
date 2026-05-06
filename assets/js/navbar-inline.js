@@ -339,7 +339,7 @@ function igbHandleAccount(e){
     if(window.igbAuth && window.igbAuth.open) {
       var state = btn.dataset.igbState;
       if(state === 'logged') {
-        window.igbAuth.open('logout');
+        window.igbAuth.logout();
       } else {
         window.igbAuth.open('login');
       }
