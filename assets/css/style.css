@@ -1827,14 +1827,16 @@ footer {
 
 .why-card-new {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
-  padding: 28px 32px;
+  padding: 28px 32px 28px 32px;
+  padding-bottom: 80px;
   background: #ffffff;
   border-bottom: 1px solid rgba(17,17,17,0.07);
   border-right: none;
   transition: background 0.2s;
   position: relative;
+  min-height: 120px;
 }
 
 /* Separador vertical entre las dos columnas */
@@ -1872,6 +1874,7 @@ footer {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-top: 0;
 }
 
 .why-icon-new svg { width: 22px; height: 22px; }
@@ -1893,18 +1896,22 @@ footer {
   font-weight: 700;
   font-size: 16px;
   color: #111;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  min-height: 24px;
 }
 
 .why-desc-new {
   font-size: 16px;
   color: rgba(17,17,17,0.55);
-  line-height: 1.6;
+  line-height: 1.5;
   margin-bottom: 0;
 }
 
 .why-stat-new {
-  flex-shrink: 0;
+  position: absolute;
+  bottom: 28px;
+  right: 32px;
   font-size: 14px;
   font-weight: 700;
   color: var(--gold);

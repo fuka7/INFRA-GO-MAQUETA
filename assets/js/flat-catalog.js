@@ -1352,13 +1352,47 @@ function _injectStyles() {
     }
     @media (max-width: 1100px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 32px minmax(160px,240px) 58px 52px 82px 78px 82px; gap: 4px; }
+      .flat-order-row { grid-template-columns: 32px minmax(160px,240px) 58px 52px 82px 78px 82px 80px; gap: 4px; }
       .pr-subtotal, .flat-col-headers span:nth-child(9) { display: none; }
     }
+
+    /* ── Tablet / mobile: ocultar Prov, Cat, N°Parte, P.Dto y Subtotal ── */
     @media (max-width: 760px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 28px 1fr 50px 66px; gap: 4px; }
-      .pr-prov, .pr-cat, .pr-precio-dto { display: none; }
+      .flat-order-row { grid-template-columns: 22px 1fr 84px 62px; gap: 4px; }
+
+      /* Ocultar celdas de fila */
+      .pr-prov, .pr-cat, .pr-partnum, .pr-precio-dto, .pr-subtotal { display: none; }
+
+      /* Ocultar cabeceras correspondientes: Prov(3) Cat(4) N°Parte(5) P.Dto(8) Subtotal(9) */
+      .flat-col-headers span:nth-child(3),
+      .flat-col-headers span:nth-child(4),
+      .flat-col-headers span:nth-child(5),
+      .flat-col-headers span:nth-child(8),
+      .flat-col-headers span:nth-child(9) { display: none; }
+
+      .flat-order-row { padding: 10px 12px; }
+      .precio-base { font-size: 13px; }
+      .pr-precio-lista { align-items: flex-end; }
+    }
+
+    /* ── Móvil pequeño ── */
+    @media (max-width: 520px) {
+      .flat-col-headers,
+      .flat-order-row { grid-template-columns: 18px 1fr 78px 56px; gap: 3px; }
+
+      .flat-order-row { padding: 8px 10px; }
+      .flat-product-select { font-size: 11px; padding: 4px 22px 4px 7px; }
+      .precio-base { font-size: 12px; }
+      .qty-value { font-size: 13px; width: 28px; }
+      .qty-spinner-wrap { padding: 2px 4px; gap: 2px; }
+
+      /* Zona inferior: botones en columna */
+      .flat-add-row { flex-direction: column; align-items: stretch; gap: 8px; }
+      .flat-del-row-wrap { margin-left: 0; flex-direction: column; gap: 6px; align-items: stretch; }
+      .flat-delete-select { min-width: 0; width: 100%; max-width: 100%; }
+      .flat-del-row-btn { justify-content: center; }
+      #btnAddFlatRow { justify-content: center; }
     }
 
     /* ══════════════════════════════════════════════════════

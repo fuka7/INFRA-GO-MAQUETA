@@ -399,8 +399,8 @@ body {
 .flat-cat-chip {
   display: inline-flex; align-items: center; gap: 5px;
   background: var(--c-surface); border: 1px solid var(--c-border);
-  border-radius: 20px; padding: 6px 14px;
-  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600;
+  border-radius: 20px; padding: 7px 15px;
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
   color: var(--c-text-2); cursor: pointer; transition: all .18s; white-space: nowrap;
 }
 .flat-cat-chip span {
@@ -511,11 +511,11 @@ body {
 .step-intro { margin-bottom: 28px; }
 .step-intro h2 {
   font-family: 'Montserrat', sans-serif;
-  font-size: 22px; font-weight: 800;
+  font-size: 26px; font-weight: 800;
   color: var(--c-text); margin: 0 0 4px;
   letter-spacing: -0.5px;
 }
-.step-intro p { font-size: 14px; color: var(--c-text-2); margin: 0; }
+.step-intro p { font-size: 15px; color: var(--c-text-2); margin: 0; }
 
 
 /* ════════════════════════════════════════════
@@ -681,7 +681,7 @@ body {
 .category-header h3 {
   flex: 1;
   font-family: 'Montserrat', sans-serif;
-  font-size: 15px; font-weight: 700;
+  font-size: 16px; font-weight: 700;
   text-transform: uppercase; letter-spacing: .4px;
   color: var(--c-text); margin: 0;
 }
@@ -727,17 +727,17 @@ body {
 }
 .product-details { flex: 1; min-width: 0; }
 .product-name {
-  font-size: 14px; font-weight: 700;
+  font-size: 15px; font-weight: 700;
   color: var(--c-text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .product-specs {
-  font-size: 11px; color: var(--c-text-3);
+  font-size: 12px; color: var(--c-text-3);
   margin-top: 2px;
 }
 .product-price-tag {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px; font-weight: 800;
+  font-size: 21px; font-weight: 800;
   color: var(--orange);
   white-space: nowrap;
   flex-shrink: 0;
@@ -766,7 +766,7 @@ body {
 }
 .qty-value {
   font-family: 'Montserrat', sans-serif;
-  font-size: 20px; font-weight: 800;
+  font-size: 23px; font-weight: 800;
   color: var(--c-text);
   min-width: 28px;
   text-align: center;
@@ -1003,11 +1003,11 @@ body {
   align-items: center;
   padding: 12px 20px;
   border-top: 1px solid var(--c-border-s);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--c-text-2);
   background: var(--c-surface-2);
 }
-.resumen-card-footer strong { font-size: 15px; color: var(--orange); }
+.resumen-card-footer strong { font-size: 17px; color: var(--orange); }
 
 .resumen-line-item {
   display: flex;
@@ -1022,7 +1022,7 @@ body {
 .resumen-line-item:hover { background: var(--c-surface-2); }
 .resumen-line-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .resumen-line-name {
-  font-size: 14px; font-weight: 600;
+  font-size: 15px; font-weight: 600;
   color: var(--c-text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -1034,7 +1034,7 @@ body {
   white-space: nowrap; flex-shrink: 0;
 }
 .resumen-line-price {
-  font-size: 14px; font-weight: 700;
+  font-size: 16px; font-weight: 700;
   color: var(--orange); white-space: nowrap; flex-shrink: 0;
 }
 .resumen-empty {
@@ -1065,7 +1065,7 @@ body {
   color: var(--c-text-2);
 }
 .resumen-total-main {
-  font-size: 16px; font-weight: 800;
+  font-size: 18px; font-weight: 800;
   color: var(--c-text);
   border-top: 1px solid var(--c-border);
   padding-top: 10px;
@@ -1073,7 +1073,7 @@ body {
 }
 .resumen-total-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 23px; font-weight: 800;
+  font-size: 27px; font-weight: 800;
   color: var(--orange);
   letter-spacing: -0.5px;
 }
@@ -1090,7 +1090,7 @@ body {
 }
 .resumen-total-cuota {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px; font-weight: 800;
+  font-size: 22px; font-weight: 800;
   color: var(--orange);
   letter-spacing: -0.3px;
 }
@@ -1143,11 +1143,11 @@ body {
 }
 .sim-amount {
   font-family: 'Montserrat', sans-serif;
-  font-size: 32px; font-weight: 800;
+  font-size: 38px; font-weight: 800;
   color: var(--c-text);
   letter-spacing: -1px;
 }
-.sim-amount--svc { font-size: 22px; color: var(--c-text-2); letter-spacing: -0.5px; }
+.sim-amount--svc { font-size: 26px; color: var(--c-text-2); letter-spacing: -0.5px; }
 
 .sim-plazo-btns {
   display: grid;
@@ -1227,7 +1227,7 @@ body {
 }
 .sim-result-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 58px; font-weight: 800;
+  font-size: 66px; font-weight: 800;
   color: var(--orange);
   line-height: 1;
   letter-spacing: -2px;
@@ -1253,7 +1253,7 @@ body {
 }
 .sim-result-item-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 18px; font-weight: 800;
+  font-size: 21px; font-weight: 800;
   color: #fff;
 }
 
@@ -1278,7 +1278,7 @@ body {
 }
 .sim-total-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 21px; font-weight: 800;
+  font-size: 24px; font-weight: 800;
   color: #fff;
   letter-spacing: -0.5px;
 }
@@ -1438,7 +1438,7 @@ body {
 
 .bb-value {
   font-family: 'Montserrat', sans-serif;
-  font-size: 17px; font-weight: 800;
+  font-size: 20px; font-weight: 800;
   color: #fff;
   line-height: 1;
   white-space: nowrap;
@@ -1459,14 +1459,14 @@ body {
 
 .bb-cuota-val {
   font-family: 'Montserrat', sans-serif;
-  font-size: 21px; font-weight: 800;
+  font-size: 24px; font-weight: 800;
   color: var(--orange);
   line-height: 1;
   white-space: nowrap;
   letter-spacing: -0.5px;
 }
 .bb-cuota-period {
-  font-size: 13px; font-weight: 400;
+  font-size: 14px; font-weight: 400;
   color: rgba(255,122,0,.6);
   margin-left: 2px;
 }
@@ -1662,6 +1662,9 @@ body {
   .flat-table-header { flex-direction: column; gap: 8px; }
   .flat-cat-chips-bar { gap: 4px; }
   .flat-cat-chip { font-size: 12px; padding: 6px 12px; }
+  .sim-result-val { font-size: 50px; }
+  .sim-amount { font-size: 30px; }
+  .sim-amount--svc { font-size: 22px; }
 }
 @media (max-width: 480px) {
   .progress-step-dot { width: 28px; height: 28px; }
@@ -1669,4 +1672,9 @@ body {
   .right-sidebar .bb-col { flex: 1 1 100%; }
   /* En pantallas muy pequeñas los widgets van en columna única */
   .config-left-sidebar { grid-template-columns: 1fr; }
+  .sim-result-val { font-size: 40px; letter-spacing: -1px; }
+  .sim-amount { font-size: 26px; }
+  .bb-value { font-size: 17px; }
+  .product-price-tag { font-size: 18px; }
+  .qty-value { font-size: 20px; }
 }
