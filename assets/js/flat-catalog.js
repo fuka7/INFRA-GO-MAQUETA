@@ -1371,6 +1371,7 @@ function _injectStyles() {
       .flat-col-headers span:nth-child(8),
       .flat-col-headers span:nth-child(9) { display: none; }
 
+      .flat-col-headers { padding: 10px 12px; }
       .flat-order-row { padding: 10px 12px; }
       .precio-base { font-size: 13px; }
       .pr-precio-lista { align-items: flex-end; }
@@ -1381,6 +1382,7 @@ function _injectStyles() {
       .flat-col-headers,
       .flat-order-row { grid-template-columns: 18px 1fr 78px 56px; gap: 3px; }
 
+      .flat-col-headers { padding: 8px 10px; }
       .flat-order-row { padding: 8px 10px; }
       .flat-product-select { font-size: 11px; padding: 4px 22px 4px 7px; }
       .precio-base { font-size: 12px; }

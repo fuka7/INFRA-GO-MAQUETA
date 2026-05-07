@@ -12,12 +12,7 @@
     <!-- Marca -->
     <div class="footer-brand">
       <div class="brand-logo">
-        <svg width="30" height="30" viewBox="0 0 34 34" fill="none">
-          <path d="M4 17L12 8L20 17L12 26Z" fill="#1a4fa0"/>
-          <path d="M14 17L22 8L30 17L22 26Z" fill="#2563c4" opacity="0.85"/>
-          <path d="M9 17L17 8L25 17L17 26Z" fill="#3b82f6" opacity="0.65"/>
-        </svg>
-        <span>InfraGo</span>
+        <img src="/img/logo infrago.png" alt="InfraGo" class="footer-logo-img">
       </div>
       <p class="brand-tagline">Operación TI inteligente. Sin fricción.<br>Una empresa de TIC Manager's.</p>
       <div class="brand-badges">

@@ -125,6 +125,11 @@
   gap: 10px;
   margin-bottom: 18px;
 }
+.ig-footer-root .footer-logo-img {
+  height: 100px;
+  width: auto;
+  display: block;
+}
 
 .ig-footer-root .brand-logo span {
   font-family: 'Montserrat', sans-serif;

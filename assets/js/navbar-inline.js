@@ -110,7 +110,7 @@
 <header class="igb-main">
 
   <a class="igb-logo" href="/index.html">
-    Infra<span>Go</span>
+    <img src="/img/logo infrago.png" alt="InfraGo" class="igb-logo-img">
   </a>
 
   <!-- Dropdown categorías -->

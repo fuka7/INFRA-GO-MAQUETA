@@ -493,6 +493,7 @@ body {
   border-top: none;
   border-radius: 0 0 var(--radius) var(--radius);
   overflow: hidden;
+  overflow-x: auto;
   background: var(--c-surface);
 }
 .wizard-step { display: none; animation: fadeIn .3s ease; }
@@ -1669,7 +1670,10 @@ body {
 @media (max-width: 480px) {
   .progress-step-dot { width: 28px; height: 28px; }
   .progress-step-dot svg { width: 13px; height: 13px; }
-  .right-sidebar .bb-col { flex: 1 1 100%; }
+  /* Mantener layout 2 columnas en el bottom bar — evita barra de 300px de alto */
+  .right-sidebar .bb-col { flex: 1 1 calc(50% - 1px); min-width: 0; padding: 10px 10px; }
+  .right-sidebar .bb-actions { flex: 1 1 100%; }
+  .bb-sub--iva { font-size: 9px; }
   /* En pantallas muy pequeñas los widgets van en columna única */
   .config-left-sidebar { grid-template-columns: 1fr; }
   .sim-result-val { font-size: 40px; letter-spacing: -1px; }
