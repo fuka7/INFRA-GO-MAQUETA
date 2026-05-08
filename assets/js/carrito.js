@@ -36,8 +36,17 @@
     });
   })();
 
+  /* ── Servicios logísticos (fijos) ── */
+  var SERVICIOS_LOGISTICOS = [
+    { id: 'log-instalacion',   label: 'Instalación en sitio',          desc: 'Técnico se desplaza e instala los equipos en su ubicación', price: 49990 },
+    { id: 'log-rack',          label: 'Rack mounting y cableado',       desc: 'Montaje de equipos en rack y cableado estructurado',         price: 89990 },
+    { id: 'log-config-red',    label: 'Configuración de red',           desc: 'Setup de red local, WiFi y conectividad de los equipos',     price: 69990 },
+    { id: 'log-express',       label: 'Despacho express (24h)',         desc: 'Entrega garantizada al siguiente día hábil en Región Metropolitana', price: 9990 },
+  ];
+
   /* ── Estado de servicios y método de pago ── */
   var _selectedSvc = {};   /* { id: true/false } */
+  var _selectedLog = {};   /* { id: true/false } */
   var _metodo = 'transferencia';
 
   /* ── Estado de envío ── */
@@ -64,6 +73,42 @@
 
   function _totalQty()   { return _items.reduce(function(s,i){ return s+i.qty; }, 0); }
   function _subtotal()   { return _items.reduce(function(s,i){ return s+i.precio*i.qty; }, 0); }
+
+  /* ── Descuentos por volumen (igual que configurador) ── */
+  var DCTO_TRAMOS_TIENDA = [
+    { min:10, max:19,   pct:1 },
+    { min:20, max:29,   pct:2 },
+    { min:30, max:39,   pct:3 },
+    { min:40, max:49,   pct:4 },
+    { min:50, max:9999, pct:5 },
+  ];
+
+  function _descuentoPct() {
+    var qty = _totalQty();
+    var t = DCTO_TRAMOS_TIENDA.find(function(t){ return qty >= t.min && qty <= t.max; });
+    return t ? t.pct : 0;
+  }
+
+  function _subtotalConDescuento() {
+    var pct = _descuentoPct();
+    if (pct === 0) return _subtotal();
+    return _items.reduce(function(s, i){
+      return s + Math.round(i.precio * (1 - pct / 100)) * i.qty;
+    }, 0);
+  }
+
+  function _updateDctoSidebarWidget() {
+    var pct = _descuentoPct();
+    var qty = _totalQty();
+    var activo = document.getElementById('filtroDctoActivo');
+    var pctEl  = document.getElementById('filtroDctoPct');
+    if (activo) { activo.style.display = pct > 0 ? '' : 'none'; }
+    if (pctEl)  pctEl.textContent = pct + '%';
+    document.querySelectorAll('.filtro-dcto-row').forEach(function(row, i) {
+      var tramo = DCTO_TRAMOS_TIENDA[i];
+      row.classList.toggle('filtro-dcto-row--activo', !!(tramo && qty >= tramo.min && qty <= tramo.max));
+    });
+  }
   function _fmt(n)       { return '$' + (n||0).toLocaleString('es-CL'); }
   function _esc(str)     { return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function _defaultImg() { return '<svg viewBox="0 0 24 24" fill="none" stroke="#b0bcc9" stroke-width="1.5" width="32" height="32"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>'; }
@@ -238,11 +283,20 @@
 
     var bodyHtml = '<div class="igc-mini-items">' + allItemsHtml + '</div>';
 
+    var _pct  = _descuentoPct();
+    var _subD = _subtotalConDescuento();
+    var _subO = _subtotal();
+    var _ahorro = _subO - _subD;
+    _updateDctoSidebarWidget();
+
     var footerHtml = [
+      _pct > 0 ? '<div class="igc-mini-dcto-badge">−' + _pct + '% descuento por volumen</div>' : '',
       '<div class="igc-mini-total">',
       '  <span>Total:</span>',
-      '  <span class="igc-mini-total-val">' + _fmt(_subtotal()) + '</span>',
+      _pct > 0 ? '  <span class="igc-mini-total-tachado">' + _fmt(_subO) + '</span>' : '',
+      '  <span class="igc-mini-total-val">' + _fmt(_subD) + '</span>',
       '</div>',
+      _pct > 0 ? '<div class="igc-mini-ahorro">Ahorras ' + _fmt(_ahorro) + '</div>' : '',
       '<div class="igc-mini-btns">',
       '  <a href="/carrito.html" class="igc-mini-btn-ver">Ver carro</a>',
       '  <button class="igc-mini-btn-cotizar" onclick="window.location.href=\'/carrito.html\'">Comprar</button>',
@@ -347,15 +401,23 @@
       return;
     }
 
+    var _pct = _descuentoPct();
+    _updateDctoSidebarWidget();
+
     container.innerHTML = _items.map(function(item) {
-      var sub = item.precio * item.qty;
+      var precioDto = _pct > 0 ? Math.round(item.precio * (1 - _pct / 100)) : item.precio;
+      var sub = precioDto * item.qty;
       return [
         '<div class="igc-page-item">',
         '  <div class="igc-page-img">' + (item.svg || _defaultImg()) + '</div>',
         '  <div class="igc-page-info">',
         '    <div class="igc-page-marca">InfraGo</div>',
         '    <div class="igc-page-nombre">' + _esc(item.nombre) + '</div>',
-        '    <div class="igc-page-precio">' + _fmt(item.precio) + '</div>',
+        '    <div class="igc-page-precio">',
+        _pct > 0 ? '      <span class="igc-page-precio-original">' + _fmt(item.precio) + '</span>' : '',
+        '      ' + _fmt(precioDto),
+        _pct > 0 ? '      <span class="igc-page-dto-badge">−' + _pct + '%</span>' : '',
+        '    </div>',
         '    <div class="igc-page-disponible">Disponible · Todo medio de pago</div>',
         '  </div>',
         '  <div class="igc-page-qty">',
@@ -372,56 +434,74 @@
       ].join('');
     }).join('');
 
-    _updatePanel(_subtotal());
+    _updatePanel(_subtotalConDescuento());
     _renderServicios();
   }
 
   /* ── Subtotal de servicios seleccionados ── */
   function _subtotalSvc() {
-    return SERVICIOS_TIENDA.reduce(function(s, svc) {
+    var tic = SERVICIOS_TIENDA.reduce(function(s, svc) {
       return s + (_selectedSvc[svc.id] ? svc.price : 0);
     }, 0);
+    var log = SERVICIOS_LOGISTICOS.reduce(function(s, svc) {
+      return s + (_selectedLog[svc.id] ? svc.price : 0);
+    }, 0);
+    return tic + log;
   }
 
-  /* ── Renderizar sección de servicios opcionales ── */
+  function _svcItemHtml(svc, checked, toggleFn, rowPrefix) {
+    var frecLabel = svc.frecuencia === 'mensual' ? '/mes' : svc.frecuencia === 'anual' ? '/año' : 'pago único';
+    return [
+      '<label class="igc-svc-item' + (checked ? ' igc-svc-selected' : '') + '" id="' + rowPrefix + svc.id + '">',
+      '  <input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="' + toggleFn + '(\'' + svc.id + '\', this.checked)">',
+      '  <div class="igc-svc-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg></div>',
+      '  <div class="igc-svc-body">',
+      '    <div class="igc-svc-label">' + _esc(svc.label) + '</div>',
+      '    <div class="igc-svc-desc">' + _esc(svc.desc) + '</div>',
+      '  </div>',
+      '  <div class="igc-svc-price">',
+      '    <span class="igc-svc-price-val">' + _fmt(svc.price) + '</span>',
+      '    <span class="igc-svc-price-unit">' + frecLabel + '</span>',
+      '  </div>',
+      '</label>'
+    ].join('');
+  }
+
+  /* ── Renderizar servicios TIC ── */
   function _renderServicios() {
-    var container = document.getElementById('igcServiciosContainer');
     var list = document.getElementById('igcServiciosList');
     if (!list) return;
-    if (!_items.length) {
-      if (container) { container.style.display = 'none'; container.classList.remove('open'); }
-      return;
-    }
-    if (container) container.style.display = '';
-
     list.innerHTML = SERVICIOS_TIENDA.map(function(svc) {
-      var checked = _selectedSvc[svc.id] ? 'checked' : '';
-      var frecLabel = svc.frecuencia === 'mensual' ? '/mes' : svc.frecuencia === 'anual' ? '/año' : 'pago único';
-      return [
-        '<label class="igc-svc-item' + (checked ? ' igc-svc-selected' : '') + '" id="igcSvcRow_' + svc.id + '">',
-        '  <input type="checkbox" ' + checked + ' onchange="igcToggleSvc(\'' + svc.id + '\', this.checked)">',
-        '  <div class="igc-svc-check">',
-        '    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>',
-        '  </div>',
-        '  <div class="igc-svc-body">',
-        '    <div class="igc-svc-label">' + _esc(svc.label) + '</div>',
-        '    <div class="igc-svc-desc">' + _esc(svc.desc) + '</div>',
-        '  </div>',
-        '  <div class="igc-svc-price">',
-        '    <span class="igc-svc-price-val">' + _fmt(svc.price) + '</span>',
-        '    <span class="igc-svc-price-unit">' + frecLabel + '</span>',
-        '  </div>',
-        '</label>'
-      ].join('');
+      return _svcItemHtml(svc, !!_selectedSvc[svc.id], 'igcToggleSvc', 'igcSvcRow_');
     }).join('');
   }
 
-  window.igcToggleServicios = function() {
-    var container = document.getElementById('igcServiciosContainer');
-    if (!container) return;
-    var isOpen = container.classList.toggle('open');
-    var cta = container.querySelector('.igc-servicios-toggle-cta');
-    if (cta) cta.textContent = isOpen ? 'Ocultar servicios' : 'Ver servicios';
+  /* ── Renderizar servicios logísticos ── */
+  function _renderLogisticos() {
+    var list = document.getElementById('igcLogisticosList');
+    if (!list) return;
+    list.innerHTML = SERVICIOS_LOGISTICOS.map(function(svc) {
+      return _svcItemHtml(svc, !!_selectedLog[svc.id], 'igcToggleLog', 'igcLogRow_');
+    }).join('');
+  }
+
+  /* ── Abrir / cerrar panel de servicios ── */
+  window.igcAbrirServicios = function() {
+    var overlay = document.getElementById('igcSvcOverlay');
+    var panel   = document.getElementById('igcSvcPanel');
+    if (overlay) overlay.classList.add('open');
+    if (panel)   panel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    _renderServicios();
+    _renderLogisticos();
+  };
+
+  window.igcCerrarServicios = function() {
+    var overlay = document.getElementById('igcSvcOverlay');
+    var panel   = document.getElementById('igcSvcPanel');
+    if (overlay) overlay.classList.remove('open');
+    if (panel)   panel.classList.remove('open');
+    document.body.style.overflow = '';
   };
 
   window.igcToggleSvc = function(id, checked) {
@@ -431,8 +511,17 @@
     _updatePanel();
   };
 
+  window.igcToggleLog = function(id, checked) {
+    _selectedLog[id] = !!checked;
+    var row = document.getElementById('igcLogRow_' + id);
+    if (row) row.classList.toggle('igc-svc-selected', !!checked);
+    _updatePanel();
+  };
+
   function _updatePanel(sub) {
-    if (sub === undefined) sub = _subtotal();
+    if (sub === undefined) sub = _subtotalConDescuento();
+    var pct    = _descuentoPct();
+    var ahorro = pct > 0 ? (_subtotal() - sub) : 0;
     var subSvc = _subtotalSvc();
     var base   = sub + subSvc;
     var total  = _metodo === 'tarjeta' ? Math.round(base * 1.03) : base;
@@ -442,6 +531,14 @@
     el = document.getElementById('igcPanelTotal');       if(el) el.textContent = _fmt(total);
     el = document.getElementById('igcPanelRowSvc');
     if (el) el.style.display = subSvc > 0 ? '' : 'none';
+    el = document.getElementById('igcPanelRowDcto');
+    if (el) {
+      el.style.display = pct > 0 ? '' : 'none';
+      var pctEl    = document.getElementById('igcPanelDctoPct');
+      var ahorroEl = document.getElementById('igcPanelAhorro');
+      if (pctEl)    pctEl.textContent    = pct + '% dto.';
+      if (ahorroEl) ahorroEl.textContent = '−' + _fmt(ahorro);
+    }
     if (window.igShipping && typeof window.igShipping.updateTotal === 'function') {
       window.igShipping.updateTotal(total);
     }
@@ -636,7 +733,7 @@
 
   function _cksRefresh() {
     _load();
-    var sub    = _subtotal();
+    var sub    = _subtotalConDescuento();
     var subSvc = _subtotalSvc();
     var base   = sub + subSvc;
     var total  = _metodo === 'tarjeta' ? Math.round(base * 1.03) : base;

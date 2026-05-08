@@ -128,7 +128,7 @@ window.clsSetCat = function(tipo, btn) {
     <div class="cls-widget cls-widget--dolar">
       <div class="cls-widget-header">
         <span class="cls-dolar-dot"></span>
-        <span class="cls-widget-title">Dólar TIC</span>
+        <span class="cls-widget-title">Dólar TIC <span class="cls-dolar-hoy">hoy</span></span>
       </div>
       <div class="cls-dolar-row">
         <div class="cls-dolar-input-wrap">
@@ -143,7 +143,37 @@ window.clsSetCat = function(tipo, btn) {
         <span class="cls-dolar-unit">CLP/USD</span>
       </div>
       <p class="cls-dolar-note" id="dolarNote">Obteniendo tipo de cambio…</p>
-      <p class="cls-dolar-source">Dólar observado BCCh + $5 TIC · Se actualiza al abrir</p>
+      <p class="cls-dolar-tagline">Modifica tu tipo de cambio y proyecta tu inversión</p>
+    </div>
+
+    <!-- Widget Región de despacho -->
+    <div class="cls-widget cls-widget--despacho">
+      <div class="cls-widget-header">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);flex-shrink:0"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span class="cls-widget-title">Región de despacho</span>
+      </div>
+      <select class="cls-despacho-select" id="despachoRegion" onchange="actualizarDespachoRegion(this.value)">
+        <option value="Región Metropolitana" selected>Región Metropolitana</option>
+        <option value="Región de Valparaíso">Región de Valparaíso</option>
+        <option value="Región de O'Higgins">Región de O'Higgins</option>
+        <option value="Región del Maule">Región del Maule</option>
+        <option value="Región de Ñuble">Región de Ñuble</option>
+        <option value="Región del Biobío">Región del Biobío</option>
+        <option value="Región de La Araucanía">Región de La Araucanía</option>
+        <option value="Región de Los Ríos">Región de Los Ríos</option>
+        <option value="Región de Los Lagos">Región de Los Lagos</option>
+        <option value="Región de Coquimbo">Región de Coquimbo</option>
+        <option value="Región de Atacama">Región de Atacama</option>
+        <option value="Región de Antofagasta">Región de Antofagasta</option>
+        <option value="Región de Tarapacá">Región de Tarapacá</option>
+        <option value="Región de Arica y Parinacota">Región de Arica y Parinacota</option>
+        <option value="Región de Aysén">Región de Aysén</option>
+        <option value="Región de Magallanes">Región de Magallanes</option>
+      </select>
+      <div class="cls-despacho-result">
+        <span class="cls-despacho-val" id="despachoRegionVal">—</span>
+        <span class="cls-despacho-info" id="despachoRegionInfo">sin productos</span>
+      </div>
     </div>
 
     <!-- Widget Descuentos por volumen -->
@@ -172,19 +202,7 @@ window.clsSetCat = function(tipo, btn) {
       </div>
     </div>
 
-    <!-- Widget Financiamiento corporativo -->
-    <div class="cls-widget cls-widget--fin">
-      <div class="cls-widget-title cls-widget-title--plain cls-widget-title--fin">Financiamiento corporativo</div>
-      <div class="cls-fin-logos">
-        <span class="cls-fin-logo cls-fin-logo--santander">Santander</span>
-        <span class="cls-fin-logo cls-fin-logo--bci">BCI</span>
-        <span class="cls-fin-logo cls-fin-logo--chile">B. Chile</span>
-        <span class="cls-fin-logo cls-fin-logo--hp">HP Fin.</span>
-      </div>
-      <p class="cls-fin-text">Leasing financiero u operativo de 12 a 60 meses. Cuota fija mensual para empresas.</p>
-    </div>
-
-    <!-- Widget +50 unidades -->
+<!-- Widget +50 unidades -->
     <div class="cls-widget cls-widget--dark">
       <div class="cls-dark-title">+50 unidades</div>
       <p class="cls-dark-text">Propuesta personalizada, mejores condiciones y financiamiento a medida.</p>
@@ -239,12 +257,9 @@ window.clsSetCat = function(tipo, btn) {
       <div class="flat-table-header">
         <div class="flat-table-header-left">
           <div class="flat-table-title">
-            Configurador de precios por volumen — <span>Portafolio TIC Managers</span>
+            Configurador de precios por volumen
           </div>
           <div class="flat-table-sub">Ítems ilimitados — descuento sobre total consolidado del pedido</div>
-        </div>
-        <div class="flat-table-header-right">
-          <span class="flat-table-year">Portafolio 2026</span>
         </div>
       </div>
 
@@ -259,7 +274,7 @@ window.clsSetCat = function(tipo, btn) {
             PRODUCTOS
           </div>
           <div class="bb-value">$<span id="totalEquipos">0</span></div>
-          <div class="bb-sub"><span id="countEquipos">0</span> unid.</div>
+          <div class="bb-sub"><span id="countEquipos">0</span> unid. · c/IVA</div>
         </div>
 
         <div class="bb-divider"></div>
@@ -270,7 +285,7 @@ window.clsSetCat = function(tipo, btn) {
             Servicios
           </div>
           <div class="bb-value">$<span id="totalServicios">0</span><span class="bb-period">/mes</span></div>
-          <div class="bb-sub"><span id="countServicios">0</span> activos</div>
+          <div class="bb-sub"><span id="countServicios">0</span> activos · c/IVA</div>
         </div>
 
         <div class="bb-divider"></div>
@@ -281,13 +296,24 @@ window.clsSetCat = function(tipo, btn) {
             Descuento
           </div>
           <div class="bb-value bb-value--green">−$<span id="ahorroTotal">0</span></div>
-          <div class="bb-sub"><span id="descuentoPct">—</span> vol.</div>
+          <div class="bb-sub"><span id="descuentoPct">—</span> vol. · c/IVA</div>
+        </div>
+
+        <div class="bb-divider"></div>
+
+        <div class="bb-col bb-col--despacho">
+          <div class="bb-label">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Despacho RM
+          </div>
+          <div class="bb-value" id="despachoEstimado">—</div>
+          <div class="bb-sub" id="despachoEstimadoSub">estimado · c/IVA</div>
         </div>
 
         <div class="bb-divider"></div>
 
         <div class="bb-col bb-col--total">
-          <div class="bb-label">Total</div>
+          <div class="bb-label">Total c/IVA</div>
           <div class="bb-value bb-value--orange">$<span id="totalGeneral">0</span></div>
           <div class="bb-sub bb-sub--iva">
             Neto $<span id="totalNeto">0</span> + IVA $<span id="totalIVA">0</span>
@@ -387,6 +413,28 @@ window.clsSetCat = function(tipo, btn) {
         </div>
 
       </div>
+
+      <!-- Carrusel financiamiento -->
+      <div class="trust-card">
+        <span class="trust-card-title">Financia con las principales entidades</span>
+        <div class="trust-card-nav">
+          <button class="trust-nav-btn" onclick="trustScroll(this,-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="trust-logos-track">
+            <span class="trust-logo trust-logo--bci">✕ Bci</span>
+            <span class="trust-logo trust-logo--chile">Banco de Chile</span>
+            <span class="trust-logo trust-logo--hp-fin">HP Financial</span>
+            <span class="trust-logo trust-logo--santander">Santander</span>
+            <span class="trust-logo trust-logo--security">BANCO security</span>
+            <span class="trust-logo trust-logo--itau">itaú</span>
+          </div>
+          <button class="trust-nav-btn" onclick="trustScroll(this,1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
     </div><!-- /paso 4 -->
 
   <!-- ╔══════════════════════════════╗
@@ -400,47 +448,11 @@ window.clsSetCat = function(tipo, btn) {
 
       <div class="config-form-grid">
         <div class="config-field config-field--full">
-          <label class="config-label">Empresa <span class="req">*</span></label>
-          <input type="text" id="empresa" class="config-input" placeholder="Nombre de tu empresa" autocomplete="organization">
-        </div>
-        <div class="config-field">
-          <label class="config-label">Región</label>
-          <select id="region" class="config-input" onchange="popularComunas(this.value)">
-            <option value="">Selecciona región</option>
-            <option>Región Metropolitana</option>
-            <option>Región de Valparaíso</option>
-            <option>Región de O'Higgins</option>
-            <option>Región del Maule</option>
-            <option>Región de Ñuble</option>
-            <option>Región del Biobío</option>
-            <option>Región de La Araucanía</option>
-            <option>Región de Los Ríos</option>
-            <option>Región de Los Lagos</option>
-            <option>Región de Aysén</option>
-            <option>Región de Magallanes</option>
-            <option>Región de Coquimbo</option>
-            <option>Región de Atacama</option>
-            <option>Región de Antofagasta</option>
-            <option>Región de Tarapacá</option>
-            <option>Región de Arica y Parinacota</option>
-          </select>
-        </div>
-        <div class="config-field">
-          <label class="config-label">Comuna</label>
-          <select id="ciudad" class="config-input" onchange="cotizarDespachoForm()">
-            <option value="">Selecciona comuna</option>
-          </select>
+          <label class="config-label">Razón Social <span class="req">*</span></label>
+          <input type="text" id="empresa" class="config-input" placeholder="Razón social de tu empresa" autocomplete="organization">
         </div>
 
-        <div id="despacho-quote-wrap" class="config-field config-field--full" style="display:none">
-          <label class="config-label">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:4px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            Cotización de despacho
-          </label>
-          <div id="despacho-quote-inner" class="despacho-quote"></div>
-        </div>
-
-        <div class="config-field config-field--full">
+<div class="config-field config-field--full">
           <label class="config-label">Dirección</label>
           <input type="text" id="direccion" class="config-input" placeholder="Calle, número, oficina">
         </div>
@@ -466,6 +478,45 @@ window.clsSetCat = function(tipo, btn) {
           <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
         </div>
       </div>
+
+      <!-- Despacho estimado desde paso 1 -->
+      <div class="despacho-form-card" id="despachoFormCard">
+        <div class="despacho-form-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+            <rect x="1" y="3" width="15" height="13" rx="1"/>
+            <path d="M16 8h4l3 5v4h-7V8z"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <div class="despacho-form-info">
+          <span class="despacho-form-label">Despacho estimado</span>
+          <span class="despacho-form-val" id="despachoFormVal">—</span>
+        </div>
+        <div class="despacho-form-note" id="despachoFormNote">Calculado según tu pedido en el paso de productos · Zona RM</div>
+      </div>
+
+      <!-- Carrusel confianza -->
+      <div class="trust-card">
+        <span class="trust-card-title">Confían en InfraGo</span>
+        <div class="trust-card-nav">
+          <button class="trust-nav-btn" onclick="trustScroll(this,-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="trust-logos-track">
+            <span class="trust-logo trust-logo--bci">✕ Bci</span>
+            <span class="trust-logo trust-logo--chile">Banco de Chile</span>
+            <span class="trust-logo trust-logo--hp-fin">HP Financial</span>
+            <span class="trust-logo trust-logo--santander">Santander</span>
+            <span class="trust-logo trust-logo--security">BANCO security</span>
+            <span class="trust-logo trust-logo--itau">itaú</span>
+          </div>
+          <button class="trust-nav-btn" onclick="trustScroll(this,1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
     </div><!-- /paso 2 -->
 
     <!-- ╔══════════════════════════════╗
@@ -792,6 +843,12 @@ document.addEventListener('keydown',function(e){
 <!-- FIN Footer -->
 
 <!-- Pre-relleno paso 3 desde perfil Supabase + SimpleAPI -->
+<script>
+function trustScroll(btn, dir) {
+  const track = btn.closest('.trust-card-nav').querySelector('.trust-logos-track');
+  track.scrollBy({ left: dir * 160, behavior: 'smooth' });
+}
+</script>
 <script src="/assets/js/rut-prefill.js" defer></script>
 <!-- Inyector de componentes reutilizables -->
 <script src="/assets/js/navbar-inline.js"></script>

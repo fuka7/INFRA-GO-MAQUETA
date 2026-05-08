@@ -20,6 +20,35 @@ async function initSupabase() {
 }
 
 // ═════════════════════════════════════════
+// TARIFAS DE DESPACHO POR REGIÓN
+// ═════════════════════════════════════════
+const TARIFAS_REGIONES = {
+  'Región Metropolitana':         { precio: 3490,  gratis75k: true  },
+  'Región de Valparaíso':         { precio: 4990,  gratis75k: false },
+  "Región de O'Higgins":          { precio: 4990,  gratis75k: false },
+  'Región del Maule':             { precio: 5490,  gratis75k: false },
+  'Región de Ñuble':              { precio: 5490,  gratis75k: false },
+  'Región del Biobío':            { precio: 5490,  gratis75k: false },
+  'Región de La Araucanía':       { precio: 5990,  gratis75k: false },
+  'Región de Los Ríos':           { precio: 6490,  gratis75k: false },
+  'Región de Los Lagos':          { precio: 6490,  gratis75k: false },
+  'Región de Coquimbo':           { precio: 5490,  gratis75k: false },
+  'Región de Atacama':            { precio: 5990,  gratis75k: false },
+  'Región de Antofagasta':        { precio: 6490,  gratis75k: false },
+  'Región de Tarapacá':           { precio: 6990,  gratis75k: false },
+  'Región de Arica y Parinacota': { precio: 7490,  gratis75k: false },
+  'Región de Aysén':              { precio: 8990,  gratis75k: false },
+  'Región de Magallanes':         { precio: 9990,  gratis75k: false },
+};
+
+window._despachoRegion = 'Región Metropolitana';
+
+window.actualizarDespachoRegion = function(region) {
+  window._despachoRegion = region || 'Región Metropolitana';
+  updateSidebar();
+};
+
+// ═════════════════════════════════════════
 // TIPO DE CAMBIO (DÓLAR TIC)
 // ═════════════════════════════════════════
 let tipoCambio = 900;
@@ -512,16 +541,60 @@ function updateSidebar() {
     if (el) el.textContent = val;
   };
 
+  /* ── Despacho: calcular ANTES del total para sumarlo ── */
+  const region      = window._despachoRegion || 'Región Metropolitana';
+  const tarifa      = TARIFAS_REGIONES[region] || { precio: 5990, gratis75k: false };
+  const esGratis    = tarifa.gratis75k && totalConIVA >= 75000;
+  const despPrecio  = (totalConIVA > 0 && !esGratis) ? tarifa.precio : 0;
+  const regionCorta = region.replace(/^Región (de(l?|) )?/i, '');
+  const totalFinal  = totalConIVA + despPrecio;
+
+  let despValText, despSubText;
+  if (totalConIVA === 0) {
+    despValText = '—';      despSubText = 'estimado · c/IVA';
+  } else if (esGratis) {
+    despValText = 'Gratis'; despSubText = regionCorta + ' · InfraGo';
+  } else {
+    despValText = '~$' + tarifa.precio.toLocaleString('es-CL');
+    despSubText = 'estimado · ' + regionCorta;
+  }
+
   setTxt('countEquipos',   totalQty);
   setTxt('countServicios', countSvc);
   setTxt('totalEquipos',   Math.round(totalEqCLP * 1.19).toLocaleString('es-CL'));
   setTxt('totalServicios', Math.round(totalSvc * 1.19).toLocaleString('es-CL'));
   setTxt('totalNeto',      totalNeto.toLocaleString('es-CL'));
   setTxt('totalIVA',       iva.toLocaleString('es-CL'));
-  setTxt('totalGeneral',   totalConIVA.toLocaleString('es-CL'));
+  setTxt('totalGeneral',   totalFinal.toLocaleString('es-CL'));
   setTxt('ahorroTotal',    Math.round(descuento * 1.19).toLocaleString('es-CL'));
   setTxt('descuentoPct',   pctDcto > 0 ? pctDcto + '%' : '—');
   setTxt('plazoSidebarLabel', simPlazo);
+
+  /* Etiqueta del total: indica si incluye despacho */
+  const totalLabelEl = document.querySelector('.bb-col--total .bb-label');
+  if (totalLabelEl) totalLabelEl.textContent = (despPrecio > 0) ? 'Total c/IVA + despacho' : 'Total c/IVA';
+
+  /* Columna despacho en la barra */
+  const despEl    = document.getElementById('despachoEstimado');
+  const despSubEl = document.getElementById('despachoEstimadoSub');
+  if (despEl)    { despEl.textContent = despValText; despEl.className = esGratis ? 'bb-value bb-value--green' : 'bb-value'; }
+  if (despSubEl)  despSubEl.textContent = despSubText;
+
+  /* Widget sidebar región */
+  const despRegValEl  = document.getElementById('despachoRegionVal');
+  const despRegInfoEl = document.getElementById('despachoRegionInfo');
+  if (despRegValEl)  { despRegValEl.textContent = despValText; despRegValEl.className = 'cls-despacho-val' + (esGratis ? ' cls-despacho-val--gratis' : ''); }
+  if (despRegInfoEl)  despRegInfoEl.textContent = totalConIVA > 0 ? (esGratis ? 'Despacho sin costo' : 'estimado · c/IVA') : 'sin productos';
+
+  /* Card paso 3 */
+  const despFormVal  = document.getElementById('despachoFormVal');
+  const despFormNote = document.getElementById('despachoFormNote');
+  const despFormCard = document.getElementById('despachoFormCard');
+  if (despFormVal)  { despFormVal.textContent = despValText; despFormVal.className = esGratis ? 'despacho-form-val despacho-form-val--gratis' : 'despacho-form-val'; }
+  if (despFormNote)  despFormNote.textContent = totalConIVA > 0
+    ? (esGratis ? 'Tu pedido supera los $75.000 · Despacho gratis en Zona RM' : 'Estimado para ' + regionCorta + ' · Puede variar según comuna')
+    : 'Agrega productos en el paso anterior para ver el despacho estimado';
+  if (despFormCard)  despFormCard.className = esGratis ? 'despacho-form-card despacho-form-card--gratis' : 'despacho-form-card';
 
   // Lista de productos en sidebar
   const list = document.getElementById('productsListSidebar');

@@ -1027,3 +1027,22 @@
   .tienda-cta-actions { width: 100%; }
   .tienda-cta-actions a, .tienda-cta-actions button { flex: 1; }
 }
+/* ── Descuentos por volumen (sidebar tienda) ── */
+.filtro-dcto-widget { border-top: 1px solid var(--border, #eaecf0); }
+.filtro-dcto-list { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.filtro-dcto-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 8px; border-radius: 6px; font-size: 12px;
+  color: #6b7a8f; transition: background .15s, color .15s;
+}
+.filtro-dcto-row--activo {
+  background: rgba(255,122,0,.12); color: #cc5a00; font-weight: 700;
+}
+.filtro-dcto-pct { font-weight: 700; font-size: 11px; }
+.filtro-dcto-activo {
+  display: flex; align-items: center; gap: 5px;
+  margin-top: 8px; padding: 6px 8px;
+  background: rgba(22,163,74,.08); border-radius: 6px;
+  font-size: 11px; color: #16a34a; font-weight: 600;
+}
+.filtro-dcto-activo svg { flex-shrink: 0; }

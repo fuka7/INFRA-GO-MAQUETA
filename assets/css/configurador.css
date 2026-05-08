@@ -274,21 +274,32 @@ body {
   padding: 14px 16px;
 }
 .cls-widget--dolar {
-  border-color: rgba(255,122,0,.35);
-  background: linear-gradient(135deg, rgba(255,122,0,.05), var(--c-surface));
+  border-color: rgba(255,122,0,.4);
+  background: linear-gradient(145deg, rgba(255,122,0,.07) 0%, var(--c-surface) 60%);
+  box-shadow: 0 0 0 1px rgba(255,122,0,.08) inset;
 }
 .cls-widget-header {
-  display: flex; align-items: center; gap: 7px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 7px; margin-bottom: 12px;
 }
 .cls-dolar-dot {
   width: 8px; height: 8px; border-radius: 50%;
-  background: var(--orange); box-shadow: 0 0 8px var(--orange);
-  animation: pulse-dot 2s infinite;
+  background: var(--orange); box-shadow: 0 0 10px var(--orange);
+  animation: pulse-dot 2s infinite; flex-shrink: 0;
 }
 @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:.35; } }
 .cls-widget-title {
   font-size: 11px; font-weight: 800;
   text-transform: uppercase; letter-spacing: .6px; color: var(--c-text-2);
+  display: flex; align-items: center; gap: 5px;
+}
+.cls-dolar-hoy {
+  display: inline-block;
+  background: var(--orange);
+  color: #fff;
+  font-size: 8px; font-weight: 800;
+  letter-spacing: .5px; text-transform: uppercase;
+  border-radius: 4px; padding: 2px 6px;
+  vertical-align: middle; line-height: 1;
 }
 .cls-widget-title--plain { margin-bottom: 10px; }
 .cls-widget-title--fin { color: var(--c-text-3); }
@@ -328,8 +339,51 @@ body {
   font-size: 10px; font-weight: 700; color: var(--c-text-3);
   text-transform: uppercase; letter-spacing: .4px;
 }
-.cls-dolar-note { font-size: 10px; color: #e07b00; line-height: 1.4; margin: 0 0 3px; }
-.cls-dolar-source { font-size: 9px; color: var(--c-text-4); line-height: 1.4; margin: 0; }
+.cls-dolar-note { font-size: 10px; color: #e07b00; line-height: 1.4; margin: 0 0 6px; }
+.cls-dolar-tagline {
+  font-size: 9px; font-weight: 700; color: var(--c-text-3); line-height: 1.45;
+  margin: 0; font-style: italic;
+  border-top: 1px solid rgba(255,122,0,.18);
+  padding-top: 7px; margin-top: 2px;
+}
+
+/* Widget Región de despacho */
+.cls-widget--despacho {
+  border-color: rgba(255,122,0,.25);
+}
+.cls-despacho-select {
+  width: 100%;
+  background: var(--c-surface-2);
+  border: 1px solid rgba(255,122,0,.35);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text);
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: border-color .18s;
+}
+.cls-despacho-select:focus { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-dim); }
+.cls-despacho-result {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.cls-despacho-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--c-text);
+  line-height: 1;
+}
+.cls-despacho-val--gratis { color: #16a34a; }
+.cls-despacho-info {
+  font-size: 10px;
+  color: var(--c-text-4);
+  font-weight: 600;
+}
 
 /* Descuentos */
 .cls-dcto-list { display: flex; flex-direction: column; gap: 2px; }
@@ -1601,6 +1655,124 @@ body {
 }
 .modal-btn--pdf:hover { background: #0d1e36; transform: translateY(-1px); }
 
+
+/* ════════════════════════════════════════════
+   DESPACHO ESTIMADO — PASO 3
+════════════════════════════════════════════ */
+.despacho-form-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  transition: background .2s, border-color .2s;
+}
+.despacho-form-card--gratis {
+  background: rgba(22,163,74,.06);
+  border-color: rgba(22,163,74,.3);
+}
+.despacho-form-icon {
+  flex-shrink: 0;
+  color: var(--c-text-3);
+}
+.despacho-form-card--gratis .despacho-form-icon { color: #16a34a; }
+.despacho-form-info {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex: 1;
+}
+.despacho-form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--c-text-3);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.despacho-form-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--c-text);
+}
+.despacho-form-val--gratis { color: #16a34a; }
+.despacho-form-note {
+  font-size: 10px;
+  color: var(--c-text-4);
+  line-height: 1.4;
+  text-align: right;
+  max-width: 200px;
+}
+
+/* ════════════════════════════════════════════
+   CARRUSEL DE CONFIANZA / FINANCIAMIENTO
+════════════════════════════════════════════ */
+.trust-card {
+  margin-top: 28px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+}
+.trust-card-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c-text-2);
+  margin-bottom: 12px;
+}
+.trust-card-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.trust-nav-btn {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--c-border);
+  background: var(--c-surface-2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-text-2);
+  transition: all .15s;
+}
+.trust-nav-btn:hover { background: var(--c-surface-3); border-color: var(--c-text-3); }
+.trust-logos-track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+  scroll-behavior: smooth;
+}
+.trust-logos-track::-webkit-scrollbar { display: none; }
+.trust-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 16px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,.1);
+  background: #fff;
+  color: #222;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+}
+.trust-logo--bci        { color: #e8192c; }
+.trust-logo--chile      { font-family: Georgia, serif; font-style: italic; color: #db0032; }
+.trust-logo--hp-fin     { background: #0096d6; color: #fff; border-color: transparent; }
+.trust-logo--santander  { color: #ec0000; }
+.trust-logo--security   { background: #1c2b4a; color: #fff; border-color: transparent; font-size: 10px; letter-spacing: .3px; }
+.trust-logo--itau       { background: #ec7000; color: #fff; border-color: transparent; }
 
 /* ════════════════════════════════════════════
    RESPONSIVE

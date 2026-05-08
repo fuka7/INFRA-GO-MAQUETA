@@ -7,7 +7,7 @@
   <title>Carrito — InfraGo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="stylesheet" href="/assets/css/navbar.css">
   <link rel="stylesheet" href="/assets/css/carrito.css">
@@ -26,33 +26,70 @@
     <h1 class="igc-page-title">Carro de Compras</h1>
     <div class="igc-page-items" id="igcPageContainer"></div>
 
-    <div class="igc-servicios" id="igcServiciosContainer" style="display:none;">
-      <button class="igc-servicios-toggle" onclick="igcToggleServicios()" type="button">
-        <div class="igc-servicios-toggle-left">
-          <div class="igc-servicios-toggle-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div>
-            <div class="igc-servicios-title">¿Necesitas servicios adicionales?</div>
-            <div class="igc-servicios-subtitle">Instalación, soporte técnico, garantía extendida y más</div>
+    <!-- Banner financiamiento Banco de Chile -->
+    <div class="igc-finance-banner">
+      <div class="igc-finance-left">
+        <div class="igc-finance-brand-name">Banco<br>de Chile</div>
+        <div class="igc-finance-sep"></div>
+        <div class="igc-finance-body">
+          <p class="igc-finance-pre">Paga hasta en</p>
+          <h3 class="igc-finance-headline">6 cuotas<br>precio contado</h3>
+          <p class="igc-finance-sub">Con tus tarjetas Banco de Chile</p>
+          <div class="igc-finance-footer">
+            <div class="igc-finance-mc">
+              <svg width="36" height="22" viewBox="0 0 36 22">
+                <circle cx="13" cy="11" r="10" fill="#EB001B"/>
+                <circle cx="23" cy="11" r="10" fill="#F79E1B"/>
+                <path d="M18 3.8a10 10 0 0 1 0 14.4A10 10 0 0 1 18 3.8z" fill="#FF5F00"/>
+              </svg>
+              <span>mastercard</span>
+            </div>
+            <a href="https://www.bancochile.cl" target="_blank" class="igc-finance-cta">Conoce más →</a>
           </div>
         </div>
-        <div class="igc-servicios-toggle-right">
-          <span class="igc-servicios-toggle-cta">Ver servicios</span>
-          <svg class="igc-servicios-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <!-- Wave SVG separador -->
+      <div class="igc-finance-wave" aria-hidden="true">
+        <svg viewBox="0 0 40 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,0 L40,0 C20,40 20,120 40,160 L0,160 Z" fill="#1c3f9e"/>
+        </svg>
+      </div>
+
+      <div class="igc-finance-right">
+        <!-- Laptop background lines -->
+        <div class="igc-finance-bg-lines"></div>
+        <!-- Tarjeta Banco de Chile -->
+        <div class="igc-finance-card">
+          <div class="igc-finance-card-top">
+            <span class="igc-finance-card-issuer">Banco de Chile</span>
+            <!-- Contactless icon -->
+            <svg class="igc-finance-card-tap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path d="M6.3 6.3a8 8 0 0 0 0 11.4"/>
+              <path d="M9.2 9.2a4 4 0 0 0 0 5.6"/>
+              <circle cx="12" cy="12" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="igc-finance-card-chip"></div>
+          <div class="igc-finance-card-num">•••• •••• •••• 1234</div>
+          <div class="igc-finance-card-bottom">
+            <span class="igc-finance-card-holder">TITULAR</span>
+            <svg width="32" height="20" viewBox="0 0 36 22">
+              <circle cx="13" cy="11" r="10" fill="#EB001B" opacity=".9"/>
+              <circle cx="23" cy="11" r="10" fill="#F79E1B" opacity=".9"/>
+              <path d="M18 3.8a10 10 0 0 1 0 14.4A10 10 0 0 1 18 3.8z" fill="#FF5F00" opacity=".9"/>
+            </svg>
+          </div>
         </div>
-      </button>
-      <div class="igc-servicios-body" id="igcServiciosBody">
-        <div class="igc-servicios-list" id="igcServiciosList"></div>
       </div>
     </div>
   </div>
 
   <div class="igc-page-panel" id="igcPagePanel">
     <div class="igc-panel-title">Resumen del pedido</div>
-    <div class="igc-panel-row">
-      <span>Subtotal equipos</span>
-      <strong id="igcPanelSubtotal">$0</strong>
+    <div class="igc-panel-row igc-panel-row--dcto" id="igcPanelRowDcto" style="display:none;">
+      <span>Descuento (<span id="igcPanelDctoPct"></span>)</span>
+      <strong id="igcPanelAhorro" class="igc-panel-ahorro"></strong>
     </div>
     <div class="igc-panel-row" id="igcPanelRowSvc" style="display:none;">
       <span>Servicios</span>
@@ -65,18 +102,51 @@
     </div>
     <div class="igc-panel-iva">IVA incluido</div>
 
-    <button class="igc-panel-btn-comprar" onclick="igcOpenCheckout()">
+    <button class="igc-panel-btn-comprar" onclick="igcAbrirServicios()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      Comprar
+      Continuar
     </button>
-    <a class="igc-panel-btn-cotizar" href="/configurador.html" onclick="return igbCotizar(event)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Crear cotización personalizada
-    </a>
-    <div class="igc-panel-secure">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Pago 100% seguro · ISO 27001
+  </div>
+
+</div>
+
+<!-- ═══════════════ PANEL SERVICIOS (desliza desde la derecha) ═══════════════ -->
+<div class="igc-svc-overlay" id="igcSvcOverlay" onclick="igcCerrarServicios()"></div>
+<div class="igc-svc-panel" id="igcSvcPanel">
+
+  <div class="igc-svc-panel-hdr">
+    <div>
+      <div class="igc-svc-panel-title">Agregar servicios</div>
+      <div class="igc-svc-panel-sub">Opcional — selecciona lo que necesites</div>
     </div>
+    <button class="igc-svc-close" onclick="igcCerrarServicios()" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="igc-svc-panel-body">
+
+    <!-- Servicios TIC -->
+    <div class="igc-svc-section-hdr">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Servicios
+    </div>
+    <div id="igcServiciosList" class="igc-svc-list"></div>
+
+    <!-- Servicios logísticos -->
+    <div class="igc-svc-section-hdr igc-svc-section-hdr--log">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Servicios logísticos
+    </div>
+    <div id="igcLogisticosList" class="igc-svc-list"></div>
+
+  </div>
+
+  <div class="igc-svc-panel-footer">
+    <button class="igc-svc-btn-continuar" onclick="igcCerrarServicios(); igcOpenCheckout()">
+      Continuar al pago
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
   </div>
 
 </div>
@@ -334,7 +404,7 @@ function igbCloseComunas(){var o=document.getElementById('igbComunasOverlay'),m=
 function igbToggleCats(){var c=document.getElementById('igbCats');if(c)c.classList.toggle('open');}
 function igbToggleMenu(){var b=document.querySelector('.igb-burger'),m=document.getElementById('igbMobile'),o=document.getElementById('igbOverlay');if(!m)return;var open=m.classList.toggle('open');if(b)b.classList.toggle('open',open);if(o)o.classList.toggle('open',open);document.body.style.overflow=open?'hidden':'';}
 function igbCloseMenu(){var b=document.querySelector('.igb-burger'),m=document.getElementById('igbMobile'),o=document.getElementById('igbOverlay');if(m)m.classList.remove('open');if(o)o.classList.remove('open');if(b)b.classList.remove('open');document.body.style.overflow='';}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){igbCloseMenu();igbCloseComunas();if(typeof igcCloseCheckout==='function')igcCloseCheckout();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){igbCloseMenu();igbCloseComunas();if(typeof igcCerrarServicios==='function')igcCerrarServicios();if(typeof igcCloseCheckout==='function')igcCloseCheckout();}});
 </script>
 <script src="/assets/js/navbar-inline.js"></script>
 <script src="/assets/js/footer-inline.js"></script>

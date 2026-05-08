@@ -205,6 +205,31 @@ document.addEventListener('DOMContentLoaded',function(){
       </select>
     </div>
 
+    <div class="filtro-section filtro-dcto-widget">
+      <div class="filtro-title">Descuentos por volumen</div>
+      <div class="filtro-dcto-list">
+        <div class="filtro-dcto-row" data-min="10" data-max="19">
+          <span>10 – 19 uds</span><span class="filtro-dcto-pct">1% dto.</span>
+        </div>
+        <div class="filtro-dcto-row" data-min="20" data-max="29">
+          <span>20 – 29 uds</span><span class="filtro-dcto-pct">2% dto.</span>
+        </div>
+        <div class="filtro-dcto-row" data-min="30" data-max="39">
+          <span>30 – 39 uds</span><span class="filtro-dcto-pct">3% dto.</span>
+        </div>
+        <div class="filtro-dcto-row" data-min="40" data-max="49">
+          <span>40 – 49 uds</span><span class="filtro-dcto-pct">4% dto.</span>
+        </div>
+        <div class="filtro-dcto-row" data-min="50" data-max="9999">
+          <span>50 uds +</span><span class="filtro-dcto-pct">5% dto.</span>
+        </div>
+      </div>
+      <div class="filtro-dcto-activo" id="filtroDctoActivo" style="display:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Descuento activo: <strong id="filtroDctoPct"></strong>
+      </div>
+    </div>
+
     <a href="configurador.html" class="filtro-cta" onclick="return igbCotizar(event)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       Configurar solución

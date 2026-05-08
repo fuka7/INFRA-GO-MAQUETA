@@ -41,6 +41,33 @@ const TIPO_META = {
   'accesorios':   { abbr: 'ACC', cls: 'pr-cat-badge--accesorios' },
 };
 
+/* Marcas con logo disponible: slug → ruta de imagen */
+/* Todos los logos como SVG inline — fondo color de marca + ícono/texto blanco */
+const BRAND_LOGOS = {
+  'hp':          '/img/HP_logo_630x630.png',
+  'dell':        '/img/Dell-Logo.png',
+  'lenovo':      '/img/lenovo-white-logo-png-image-701751694772186qprjoasoxm.png',
+  'brother':     '/img/logo-Brother.png',
+  /* TIC Managers — logo imagen */
+  'tic-managers':'/img/logo tic.png',
+  /* Apple — manzana con mordisco */
+  'apple':       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170" class="pr-prov-logo pr-prov-logo--apple"><path d="M150.37 130.25a95.55 95.55 0 01-9.45 17c-5 7.14-9.06 12.08-12.21 14.81-4.87 4.49-10.09 6.79-15.71 6.93-4 0-8.89-1.14-14.6-3.45s-10.93-3.45-15.68-3.45c-5 0-10.33 1.14-16 3.45s-10.14 3.51-13.57 3.64c-5.42.23-10.75-2.13-16-7.09-3.4-2.96-7.61-8.07-12.62-15.32S13.58 132.43 9 123.41A87.67 87.67 0 010 82.79c0-14.89 3.23-27.73 9.7-38.44a56.86 56.86 0 0120.28-20.54 54.72 54.72 0 0127.4-7.75c5.38 0 12.44 1.66 21.2 4.93s14.35 4.93 16.64 4.93c1.82 0 8-1.94 18.45-5.82C119.67 16.35 126.59 15 133 15.65c16.23 1.31 28.44 7.71 36.56 19.27-14.51 8.79-21.7 21.1-21.56 36.86.12 12.29 4.59 22.51 13.36 30.59a43.78 43.78 0 0013.28 8.7q-2.07 6.07-24.27 19.18zM111.87 3.08A35.87 35.87 0 01102 30.52c-6.5 7.53-14.37 11.89-22.86 11.2a23.22 23.22 0 01-.17-2.8 36.75 36.75 0 019.75-24.47C94.21 7.53 101.3 3.54 109.8 2a37.93 37.93 0 012.07 1.08z" fill="#333"/></svg>',
+  /* Cisco — 5 barras verticales formando puente */
+  'cisco':       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 24" class="pr-prov-logo pr-prov-logo--cisco"><g fill="#049fd9"><rect x="0" y="14" width="6" height="10" rx="1.5"/><rect x="9.5" y="8" width="6" height="16" rx="1.5"/><rect x="19" y="2" width="6" height="22" rx="1.5"/><rect x="28.5" y="8" width="6" height="16" rx="1.5"/><rect x="38" y="14" width="6" height="10" rx="1.5"/></g></svg>',
+  /* Fortinet — escudo rojo con F */
+  'fortinet':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 26" class="pr-prov-logo pr-prov-logo--fortinet"><path d="M11 0L0 4.5v8C0 18.5 5 23 11 25c6-2 11-6.5 11-12.5v-8L11 0z" fill="#d32f2f"/><path d="M7 8.5h8v2.5H9.5v2H14v2.5H9.5V19H7z" fill="white"/></svg>',
+  /* Ubiquiti — U blanca en círculo azul */
+  'ubiquiti':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="pr-prov-logo pr-prov-logo--ubiquiti"><circle cx="12" cy="12" r="11.5" fill="#0559c9"/><path d="M7.5 6.5v8a4.5 4.5 0 009 0v-8H14v8a2 2 0 01-4 0v-8H7.5z" fill="white"/></svg>',
+  /* Synology — S en rectángulo rojo oscuro */
+  'synology':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 22" class="pr-prov-logo pr-prov-logo--synology"><rect width="26" height="22" rx="3" fill="#b5202f"/><path d="M17.5 7.5c0-1.5-1.4-2.5-3.5-2.5H9v3h4.5c.8 0 1.5.3 1.5.8 0 .6-.7 1-1.8 1.2l-1.7.3C9.3 10.7 8 11.8 8 13.5 8 15.4 9.5 17 12 17h6v-3h-5.5c-.9 0-1.5-.4-1.5-1s.6-1 1.8-1.2l1.7-.3c2.2-.4 3.5-1.6 3.5-3z" fill="white"/></svg>',
+  /* QNAP — Q en rectángulo verde */
+  'qnap':        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 22" class="pr-prov-logo pr-prov-logo--qnap"><rect width="26" height="22" rx="3" fill="#009641"/><path d="M13 5a6 6 0 100 12 6 6 0 000-12zm0 2a4 4 0 010 8 4 4 0 010-8zm1 5.5l3 2.5-1.5 1-2.5-2.2z" fill="white"/></svg>',
+  /* Canon — "Canon" en rectángulo rojo */
+  'canon':       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 22" class="pr-prov-logo pr-prov-logo--canon"><rect width="42" height="22" rx="3" fill="#cc0000"/><text x="21" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="white" letter-spacing="0.5">Canon</text></svg>',
+  /* Logitech — L blanca en círculo azul */
+  'logitech':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="pr-prov-logo pr-prov-logo--logitech"><circle cx="12" cy="12" r="11.5" fill="#00b0f0"/><path d="M9 6h3v9.5h5V18H9z" fill="white"/></svg>',
+};
+
 /* ─── estado: filas del pedido ──────────────────────────────── */
 // Expuesto en window._flatRows para que configurador.js calcule sidebar y descuentos
 let _flatRows   = [];   // [{ id, productName|null, qty, serviceValue|null }]
@@ -68,14 +95,13 @@ window.buildCatalogTable = function buildCatalogTable() {
   wrap.innerHTML = `
     <div class="flat-col-headers">
       <span class="flat-col-label center">#</span>
+      <span class="flat-col-label center">Marca</span>
       <span class="flat-col-label">Producto del catálogo</span>
-      <span class="flat-col-label center">Prov.</span>
       <span class="flat-col-label center">Cat.</span>
       <span class="flat-col-label center">N° Parte</span>
-      <span class="flat-col-label right">P. Lista</span>
+      <span class="flat-col-label right">P. Lista c/IVA</span>
       <span class="flat-col-label center">Cant.</span>
-      <span class="flat-col-label right">P. dto.</span>
-      <span class="flat-col-label right">Subtotal</span>
+      <span class="flat-col-label right">P. dto. c/IVA</span>
     </div>
     <div id="flatRowsBody"></div>
     <div class="flat-add-row">
@@ -85,20 +111,6 @@ window.buildCatalogTable = function buildCatalogTable() {
         </svg>
         Agregar producto al pedido
       </button>
-      <div class="flat-del-row-wrap">
-        <select id="flatDeleteSelect" class="flat-delete-select">
-          <option value="">— seleccionar fila a eliminar —</option>
-        </select>
-        <button type="button" class="flat-del-row-btn" onclick="flatRemoveSelectedRow()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"/>
-            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            <path d="M10 11v6M14 11v6"/>
-            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-          </svg>
-          Eliminar
-        </button>
-      </div>
     </div>
   `;
 
@@ -138,6 +150,8 @@ function _buildRowEl(id, animate) {
   div.innerHTML = `
     <div class="pr-num row-num"></div>
 
+    <div class="pr-prov"><span class="pr-prov-badge" id="provbadge-${id}"></span></div>
+
     <div class="pr-info pr-info--select">
       <div class="flat-select-wrap">
         <select class="flat-product-select" onchange="flatRowSelectProduct(${id}, this)">
@@ -146,8 +160,6 @@ function _buildRowEl(id, animate) {
         </select>
       </div>
     </div>
-
-    <div class="pr-prov"><span class="pr-prov-badge" id="provbadge-${id}"></span></div>
 
     <div class="pr-cat"><span class="pr-cat-badge" id="catbadge-${id}"></span></div>
 
@@ -177,10 +189,6 @@ function _buildRowEl(id, animate) {
     <div class="pr-precio-dto">
       <span class="precio-dto-val sin-dto" id="pdto-${id}">—</span>
       <span class="dto-badge oculto"       id="dtobadge-${id}"></span>
-    </div>
-
-    <div class="pr-subtotal">
-      <span class="subtotal-val inactive" id="psub-${id}">—</span>
     </div>
 
   `;
@@ -277,7 +285,6 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     _syncAllToOriginal();
     if (typeof window.updateSidebar       === 'function') window.updateSidebar();
     if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
-    _updateDeleteSelect();
     return;
   }
 
@@ -297,11 +304,20 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     badge.className   = `pr-cat-badge ${meta.cls}`;
   }
 
-  /* Badge de marca (PROV.) */
+  /* Logo / badge de marca */
   const provBadge = document.getElementById(`provbadge-${id}`);
   if (provBadge) {
-    provBadge.textContent = (producto.marca || '').toUpperCase();
-    provBadge.className   = `pr-prov-badge pr-prov-badge--${flatSlugify(producto.marca || '')}`;
+    const marcaSlug = flatSlugify(producto.marca || '');
+    const logoSrc   = BRAND_LOGOS[marcaSlug];
+    if (logoSrc) {
+      provBadge.innerHTML = logoSrc.startsWith('<svg')
+        ? logoSrc
+        : `<img src="${logoSrc}" alt="${producto.marca}" class="pr-prov-logo pr-prov-logo--${marcaSlug}">`;
+      provBadge.className = `pr-prov-badge pr-prov-badge--logo pr-prov-badge--${marcaSlug}`;
+    } else {
+      provBadge.textContent = (producto.marca || '').toUpperCase();
+      provBadge.className   = `pr-prov-badge pr-prov-badge--${marcaSlug}`;
+    }
   }
 
   /* Badge de part number (oculto para licencias y servicios) */
@@ -325,8 +341,27 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
   _syncAllToOriginal();
   if (typeof window.updateSidebar        === 'function') window.updateSidebar();
   if (typeof window.actualizarDescuento  === 'function') window.actualizarDescuento();
-  _updateDeleteSelect();
 };
+
+/* ─── limpiar producto de una fila (qty → 0 con producto seleccionado) ── */
+function _clearRowProduct(id) {
+  const row = _flatRows.find(r => r.id === id);
+  if (!row) return;
+  row.productName  = null;
+  row.serviceValue = null;
+  row.qty = 0;
+  const inp = document.getElementById(`qval-${id}`);
+  if (inp) { inp.value = '0'; inp.min = '0'; }
+  const qtyWrap = document.getElementById(`prqty-${id}`);
+  if (qtyWrap) qtyWrap.classList.add('pr-qty--disabled');
+  const sel = document.querySelector(`#orow-${id} .flat-product-select`);
+  if (sel) sel.value = '';
+  _clearRowDisplay(id);
+  flatRefreshPrices();
+  _syncAllToOriginal();
+  if (typeof window.updateSidebar       === 'function') window.updateSidebar();
+  if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
+}
 
 /* ═══════════════════════════════════════════════════════════════
    Cantidad +/−
@@ -346,8 +381,8 @@ window.flatRowIncQty = function flatRowIncQty(id) {
 window.flatRowDecQty = function flatRowDecQty(id) {
   const row = _flatRows.find(r => r.id === id);
   if (!row) return;
-  const minQty = row.productName ? 1 : 0;
-  if (row.qty <= minQty) return;
+  if (row.productName && row.qty <= 1) { _clearRowProduct(id); return; }
+  if (row.qty <= 0) return;
   row.qty--;
   const inp = document.getElementById(`qval-${id}`);
   if (inp) inp.value = row.qty;
@@ -361,11 +396,11 @@ window.flatRowDecQty = function flatRowDecQty(id) {
    flatRowSetQty — escritura directa desde el input de teclado
 ═══════════════════════════════════════════════════════════════ */
 window.flatRowSetQty = function flatRowSetQty(id, inputEl) {
-  /* Permite escritura libre — solo sincroniza si el valor es un número válido */
   const row = _flatRows.find(r => r.id === id);
   if (!row) return;
   const v = parseInt(inputEl.value);
-  if (isNaN(v)) return; // campo vacío o incompleto: no hacer nada todavía
+  if (isNaN(v)) return;
+  if (row.productName && v === 0) { _clearRowProduct(id); return; }
   const minQty = row.productName ? 1 : 0;
   row.qty = v >= minQty ? v : minQty;
   flatRefreshPrices();
@@ -374,11 +409,12 @@ window.flatRowSetQty = function flatRowSetQty(id, inputEl) {
   if (typeof window.actualizarDescuento === 'function') window.actualizarDescuento();
 };
 
-/* Al perder el foco se corrige si quedó vacío o por debajo del mínimo */
+/* Al perder el foco: si quedó en 0 con producto, limpia el producto */
 window.flatRowQtyBlur = function flatRowQtyBlur(id, inputEl) {
   const row = _flatRows.find(r => r.id === id);
   if (!row) return;
   const v = parseInt(inputEl.value);
+  if (row.productName && (!isNaN(v) && v === 0)) { _clearRowProduct(id); return; }
   const minQty = row.productName ? 1 : 0;
   row.qty = (!isNaN(v) && v >= minQty) ? v : minQty;
   inputEl.value = row.qty;
@@ -414,38 +450,6 @@ window.flatRemoveRow = function flatRemoveRow(id) {
   }
 };
 
-/* ─── renumerar filas ─────────────────────────────────────────── */
-/* ═══════════════════════════════════════════════════════════════
-   flatRemoveSelectedRow — elimina la fila elegida en el select
-═══════════════════════════════════════════════════════════════ */
-window.flatRemoveSelectedRow = function flatRemoveSelectedRow() {
-  var sel = document.getElementById('flatDeleteSelect');
-  if (!sel || !sel.value) return;
-  var id = parseInt(sel.value);
-  if (!isNaN(id)) {
-    sel.value = '';
-    window.flatRemoveRow(id);
-  }
-};
-
-/* ─── actualizar opciones del select de eliminación ─────────────── */
-function _updateDeleteSelect() {
-  var sel = document.getElementById('flatDeleteSelect');
-  if (!sel) return;
-  var prevVal = sel.value;
-  sel.innerHTML = '<option value="">— seleccionar producto a eliminar —</option>';
-  _flatRows.forEach(function(r) {
-    if (!r.productName) return; // solo filas con producto elegido
-    var opt = document.createElement('option');
-    opt.value = r.id;
-    opt.textContent = r.productName;
-    sel.appendChild(opt);
-  });
-  if (prevVal && sel.querySelector('option[value="' + prevVal + '"]')) {
-    sel.value = prevVal;
-  }
-}
-
 function _renumberRows() {
   let i = 0;
   document.querySelectorAll('.flat-order-row').forEach(el => {
@@ -453,7 +457,6 @@ function _renumberRows() {
     const num = el.querySelector('.row-num');
     if (num) num.textContent = i;
   });
-  _updateDeleteSelect();
 }
 
 /* ─── limpiar display de una fila vacía ───────────────────────── */
@@ -461,7 +464,7 @@ function _clearRowDisplay(id) {
   const badge = document.getElementById(`catbadge-${id}`);
   if (badge) { badge.textContent = ''; badge.className = 'pr-cat-badge'; }
   const provBadge = document.getElementById(`provbadge-${id}`);
-  if (provBadge) { provBadge.textContent = ''; provBadge.className = 'pr-prov-badge'; }
+  if (provBadge) { provBadge.innerHTML = ''; provBadge.className = 'pr-prov-badge'; }
   const partBadge = document.getElementById(`partnumbadge-${id}`);
   if (partBadge) { partBadge.textContent = ''; partBadge.className = 'pr-partnum-val'; }
   ['plista','pusd','pdto','psub'].forEach(pfx => {
@@ -519,11 +522,11 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     totalListaAcum  += subtotalLista;
     totalAhorroAcum += ahorro;
 
-    /* Precios para display (sin IVA) */
-    const priceDisp        = price;
-    const precioConDtoDisp = precioConDto;
+    /* Precios para display (con IVA 19%) */
+    const priceDisp        = Math.round(price * 1.19);
+    const precioConDtoDisp = Math.round(precioConDto * 1.19);
     const subtotalDisp     = qty * precioConDtoDisp;
-    const ahorroDisp       = ahorro;
+    const ahorroDisp       = Math.round(ahorro * 1.19);
 
     /* Precio lista (tachado si hay dto y qty > 0) */
     const elBase = document.getElementById(`plista-${id}`);
@@ -547,18 +550,6 @@ window.flatRefreshPrices = function flatRefreshPrices() {
       } else {
         elDto.classList.add('sin-dto');
         if (elBadge) elBadge.classList.add('oculto');
-      }
-    }
-
-    /* Subtotal */
-    const elSub = document.getElementById(`psub-${id}`);
-    if (elSub) {
-      if (qty > 0) {
-        elSub.textContent = `$${flatFmt(subtotalDisp)}`;
-        elSub.classList.remove('inactive');
-      } else {
-        elSub.textContent = '—';
-        elSub.classList.add('inactive');
       }
     }
 
@@ -1046,7 +1037,7 @@ function _injectStyles() {
     /* ── Cabecera de columnas ── */
     .flat-col-headers {
       display: grid;
-      grid-template-columns: 40px minmax(180px,270px) 90px 60px 110px 100px 90px 100px 110px;
+      grid-template-columns: 40px 56px minmax(180px,240px) 60px 110px 100px 90px 100px;
       align-items: center;
       justify-content: space-between;
       padding: 10px 20px;
@@ -1066,7 +1057,7 @@ function _injectStyles() {
     .flat-order-row {
       position: relative;
       display: grid;
-      grid-template-columns: 40px minmax(180px,270px) 90px 60px 110px 100px 90px 100px 110px;
+      grid-template-columns: 40px 56px minmax(180px,240px) 60px 110px 100px 90px 100px;
       align-items: center;
       justify-content: space-between;
       padding: 14px 44px 14px 20px;
@@ -1136,6 +1127,39 @@ function _injectStyles() {
     .pr-prov-badge--canon       { border-color:#cc0000; color:#cc0000; background:rgba(204,0,0,.06); }
     .pr-prov-badge--tic-managers{ border-color:#FF7A00; color:#FF7A00; background:rgba(255,122,0,.09); }
     .pr-prov-badge--logitech    { border-color:#00b0f0; color:#0080c0; background:rgba(0,128,192,.07); }
+
+    /* Logo SVG de marca — contenedor unificado sin borde ni fondo propio */
+    .pr-prov-badge--logo {
+      background: transparent;
+      border: none;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pr-prov-logo {
+      display: block;
+      width: auto;
+      max-height: 22px;
+      max-width: 56px;
+      object-fit: contain;
+      border-radius: 3px;
+    }
+    /* Logos con imagen: fondo de color de marca */
+    .pr-prov-badge--logo.pr-prov-badge--hp       { background:#0096d6; border-radius:4px; padding:3px 5px; }
+    .pr-prov-badge--logo.pr-prov-badge--dell      { background:#0076ce; border-radius:4px; padding:3px 5px; }
+    .pr-prov-badge--logo.pr-prov-badge--lenovo    { background:#e2001a; border-radius:4px; padding:3px 5px; }
+    .pr-prov-badge--logo.pr-prov-badge--brother   { background:#003087; border-radius:4px; padding:3px 5px; }
+    .pr-prov-badge--logo.pr-prov-badge--tic-managers { background:#0d1e36; border-radius:4px; padding:3px 5px; }
+    /* Apple: ícono gris oscuro sin fondo */
+    .pr-prov-logo--apple   { width: 18px; height: 18px; }
+    /* Cisco: barras anchas */
+    .pr-prov-logo--cisco   { width: 44px; height: 20px; }
+    /* Fortinet: escudo alto */
+    .pr-prov-logo--fortinet { width: 18px; height: 22px; }
+    /* Ubiquiti / Logitech: círculo */
+    .pr-prov-logo--ubiquiti,
+    .pr-prov-logo--logitech { width: 22px; height: 22px; }
 
     /* Badge Cat */
     .pr-cat { display: flex; align-items: center; justify-content: center; }
@@ -1249,14 +1273,6 @@ function _injectStyles() {
     }
     .dto-badge.oculto { display: none; }
 
-    /* Subtotal */
-    .pr-subtotal { text-align: right; }
-    .subtotal-val {
-      font-size: 13px; font-weight: 800;
-      color: #0d1e36;
-    }
-    .subtotal-val.inactive { color: #b0bcc9; font-weight: 400; }
-
     /* Botón eliminar — columna propia */
     .pr-del {
       position: absolute;
@@ -1291,36 +1307,6 @@ function _injectStyles() {
     }
     #btnAddFlatRow:hover { background: rgba(255,122,0,.18); border-color: #FF7A00; }
     #btnAddFlatRow svg { width: 13px; height: 13px; }
-    .flat-del-row-wrap {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-left: auto;
-    }
-    .flat-delete-select {
-      height: 32px;
-      border: 1px solid #dde1e8;
-      border-radius: 7px;
-      padding: 0 10px;
-      font-size: 12px; color: #4a6080;
-      background: #fff;
-      cursor: pointer;
-      min-width: 220px; max-width: 380px;
-      outline: none;
-      transition: border-color .18s;
-    }
-    .flat-delete-select:focus { border-color: #ef4444; }
-    .flat-del-row-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(239,68,68,.08);
-      border: 1px solid rgba(239,68,68,.35);
-      border-radius: 7px;
-      padding: 6px 14px;
-      color: #ef4444;
-      font-size: 12px; font-weight: 700;
-      cursor: pointer; transition: all .18s;
-      white-space: nowrap;
-    }
-    .flat-del-row-btn:hover { background: rgba(239,68,68,.18); border-color: #ef4444; color: #dc2626; }
-    .flat-del-row-btn svg { width: 13px; height: 13px; }
 
     /* Buscador */
     .filtros-bar--simple { display: flex; align-items: center; padding: 10px 0 20px; gap: 10px; }
@@ -1348,28 +1334,26 @@ function _injectStyles() {
     /* Responsive */
     @media (max-width: 1400px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 36px minmax(180px,300px) 90px 56px 120px 100px 90px 84px 90px; gap: 12px; }
+      .flat-order-row { grid-template-columns: 36px 52px minmax(160px,240px) 56px 120px 100px 90px 84px; gap: 12px; }
     }
     @media (max-width: 1100px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 32px minmax(160px,240px) 58px 52px 82px 78px 82px 80px; gap: 4px; }
-      .pr-subtotal, .flat-col-headers span:nth-child(9) { display: none; }
+      .flat-order-row { grid-template-columns: 32px 46px minmax(140px,200px) 52px 82px 78px 82px 80px; gap: 4px; }
     }
 
-    /* ── Tablet / mobile: ocultar Prov, Cat, N°Parte, P.Dto y Subtotal ── */
+    /* ── Tablet / mobile: ocultar Marca, Cat, N°Parte y P.Dto ── */
     @media (max-width: 760px) {
       .flat-col-headers,
       .flat-order-row { grid-template-columns: 22px 1fr 84px 62px; gap: 4px; }
 
       /* Ocultar celdas de fila */
-      .pr-prov, .pr-cat, .pr-partnum, .pr-precio-dto, .pr-subtotal { display: none; }
+      .pr-prov, .pr-cat, .pr-partnum, .pr-precio-dto { display: none; }
 
-      /* Ocultar cabeceras correspondientes: Prov(3) Cat(4) N°Parte(5) P.Dto(8) Subtotal(9) */
-      .flat-col-headers span:nth-child(3),
+      /* Ocultar cabeceras correspondientes: Marca(2) Cat(4) N°Parte(5) P.Dto(8) */
+      .flat-col-headers span:nth-child(2),
       .flat-col-headers span:nth-child(4),
       .flat-col-headers span:nth-child(5),
-      .flat-col-headers span:nth-child(8),
-      .flat-col-headers span:nth-child(9) { display: none; }
+      .flat-col-headers span:nth-child(8) { display: none; }
 
       .flat-col-headers { padding: 10px 12px; }
       .flat-order-row { padding: 10px 12px; }
@@ -1389,11 +1373,6 @@ function _injectStyles() {
       .qty-value { font-size: 13px; width: 28px; }
       .qty-spinner-wrap { padding: 2px 4px; gap: 2px; }
 
-      /* Zona inferior: botones en columna */
-      .flat-add-row { flex-direction: column; align-items: stretch; gap: 8px; }
-      .flat-del-row-wrap { margin-left: 0; flex-direction: column; gap: 6px; align-items: stretch; }
-      .flat-delete-select { min-width: 0; width: 100%; max-width: 100%; }
-      .flat-del-row-btn { justify-content: center; }
       #btnAddFlatRow { justify-content: center; }
     }
 
