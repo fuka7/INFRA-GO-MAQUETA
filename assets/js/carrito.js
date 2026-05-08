@@ -144,6 +144,29 @@
     _renderPage();
   };
 
+  window.igcSetQty = function(id, inputEl) {
+    _load();
+    var item = _items.find(function(i){ return i.id === id; });
+    if (!item) return;
+    var v = parseInt(inputEl.value);
+    if (isNaN(v) || v < 0) v = 1;
+    if (v === 0) {
+      _items = _items.filter(function(i){ return i.id !== id; });
+    } else {
+      item.qty = v;
+    }
+    _save();
+    _updateNavbarBadge();
+    _renderMini();
+    _renderPage();
+  };
+
+  window.igcQtyKey = function(e, id, inputEl) {
+    if (e.key === 'Enter') { inputEl.blur(); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); igcChangeQty(id, 1); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); igcChangeQty(id, -1); }
+  };
+
   window.igcRemoveItem = function(id) {
     _load();
     _items = _items.filter(function(i){ return i.id !== id; });
@@ -228,7 +251,6 @@
     clearTimeout(_miniTimeout);
     el.classList.add('open');
     _miniOpen = true;
-    _miniTimeout = setTimeout(_closeMini, 4000);
   }
 
   function _closeMini() {
@@ -272,7 +294,10 @@
         '  <div class="igc-mini-qty-col">',
         '    <div class="igc-mini-qty-wrap">',
         '      <button onclick="igcChangeQty(\'' + item.id + '\',-1)">−</button>',
-        '      <span>' + item.qty + '</span>',
+        '      <input type="number" class="igc-qty-input" value="' + item.qty + '" min="0"',
+        '             oninput="igcSetQty(\'' + item.id + '\', this)"',
+        '             onkeydown="igcQtyKey(event, \'' + item.id + '\', this)"',
+        '             onclick="this.select()">',
         '      <button onclick="igcChangeQty(\'' + item.id + '\',1)">+</button>',
         '    </div>',
         '    <button class="igc-mini-del" onclick="igcRemoveItem(\'' + item.id + '\')">Eliminar</button>',
@@ -360,9 +385,6 @@
       if (_miniOpen && !wrap.contains(e.target)) _closeMini();
     });
 
-    /* Mantener abierto al hacer hover sobre el dropdown */
-    drop.addEventListener('mouseenter', function() { clearTimeout(_miniTimeout); });
-    drop.addEventListener('mouseleave', function() { _miniTimeout = setTimeout(_closeMini, 800); });
   }
 
   /* ════════════════════════════════════════════════════════════
@@ -422,7 +444,10 @@
         '  </div>',
         '  <div class="igc-page-qty">',
         '    <button onclick="igcChangeQty(\'' + item.id + '\',-1)">−</button>',
-        '    <span>' + item.qty + '</span>',
+        '    <input type="number" class="igc-qty-input" value="' + item.qty + '" min="0"',
+        '           oninput="igcSetQty(\'' + item.id + '\', this)"',
+        '           onkeydown="igcQtyKey(event, \'' + item.id + '\', this)"',
+        '           onclick="this.select()">',
         '    <button onclick="igcChangeQty(\'' + item.id + '\',1)">+</button>',
         '  </div>',
         '  <div class="igc-page-subtotal">Total:<br>' + _fmt(sub) + '</div>',

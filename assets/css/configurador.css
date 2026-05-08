@@ -1756,23 +1756,24 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 7px 16px;
-  border-radius: 7px;
-  font-size: 12px;
-  font-weight: 800;
-  white-space: nowrap;
+  width: 108px;
+  height: 48px;
+  padding: 8px 12px;
+  border-radius: 8px;
   flex-shrink: 0;
   border: 1px solid rgba(0,0,0,.1);
   background: #fff;
-  color: #222;
   box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  overflow: hidden;
 }
-.trust-logo--bci        { color: #e8192c; }
-.trust-logo--chile      { font-family: Georgia, serif; font-style: italic; color: #db0032; }
-.trust-logo--hp-fin     { background: #0096d6; color: #fff; border-color: transparent; }
-.trust-logo--santander  { color: #ec0000; }
-.trust-logo--security   { background: #1c2b4a; color: #fff; border-color: transparent; font-size: 10px; letter-spacing: .3px; }
-.trust-logo--itau       { background: #ec7000; color: #fff; border-color: transparent; }
+.trust-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+.trust-logo--wide { width: 158px; }
 
 /* ════════════════════════════════════════════
    RESPONSIVE

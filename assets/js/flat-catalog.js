@@ -50,22 +50,26 @@ const BRAND_LOGOS = {
   'brother':     '/img/logo-Brother.png',
   /* TIC Managers — logo imagen */
   'tic-managers':'/img/logo tic.png',
-  /* Apple — manzana con mordisco */
-  'apple':       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170" class="pr-prov-logo pr-prov-logo--apple"><path d="M150.37 130.25a95.55 95.55 0 01-9.45 17c-5 7.14-9.06 12.08-12.21 14.81-4.87 4.49-10.09 6.79-15.71 6.93-4 0-8.89-1.14-14.6-3.45s-10.93-3.45-15.68-3.45c-5 0-10.33 1.14-16 3.45s-10.14 3.51-13.57 3.64c-5.42.23-10.75-2.13-16-7.09-3.4-2.96-7.61-8.07-12.62-15.32S13.58 132.43 9 123.41A87.67 87.67 0 010 82.79c0-14.89 3.23-27.73 9.7-38.44a56.86 56.86 0 0120.28-20.54 54.72 54.72 0 0127.4-7.75c5.38 0 12.44 1.66 21.2 4.93s14.35 4.93 16.64 4.93c1.82 0 8-1.94 18.45-5.82C119.67 16.35 126.59 15 133 15.65c16.23 1.31 28.44 7.71 36.56 19.27-14.51 8.79-21.7 21.1-21.56 36.86.12 12.29 4.59 22.51 13.36 30.59a43.78 43.78 0 0013.28 8.7q-2.07 6.07-24.27 19.18zM111.87 3.08A35.87 35.87 0 01102 30.52c-6.5 7.53-14.37 11.89-22.86 11.2a23.22 23.22 0 01-.17-2.8 36.75 36.75 0 019.75-24.47C94.21 7.53 101.3 3.54 109.8 2a37.93 37.93 0 012.07 1.08z" fill="#333"/></svg>',
+  /* Apple */
+  'apple':       '/img/apple.png',
   /* Cisco — 5 barras verticales formando puente */
   'cisco':       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 24" class="pr-prov-logo pr-prov-logo--cisco"><g fill="#049fd9"><rect x="0" y="14" width="6" height="10" rx="1.5"/><rect x="9.5" y="8" width="6" height="16" rx="1.5"/><rect x="19" y="2" width="6" height="22" rx="1.5"/><rect x="28.5" y="8" width="6" height="16" rx="1.5"/><rect x="38" y="14" width="6" height="10" rx="1.5"/></g></svg>',
   /* Fortinet — escudo rojo con F */
   'fortinet':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 26" class="pr-prov-logo pr-prov-logo--fortinet"><path d="M11 0L0 4.5v8C0 18.5 5 23 11 25c6-2 11-6.5 11-12.5v-8L11 0z" fill="#d32f2f"/><path d="M7 8.5h8v2.5H9.5v2H14v2.5H9.5V19H7z" fill="white"/></svg>',
   /* Ubiquiti — U blanca en círculo azul */
   'ubiquiti':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="pr-prov-logo pr-prov-logo--ubiquiti"><circle cx="12" cy="12" r="11.5" fill="#0559c9"/><path d="M7.5 6.5v8a4.5 4.5 0 009 0v-8H14v8a2 2 0 01-4 0v-8H7.5z" fill="white"/></svg>',
-  /* Synology — S en rectángulo rojo oscuro */
-  'synology':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 22" class="pr-prov-logo pr-prov-logo--synology"><rect width="26" height="22" rx="3" fill="#b5202f"/><path d="M17.5 7.5c0-1.5-1.4-2.5-3.5-2.5H9v3h4.5c.8 0 1.5.3 1.5.8 0 .6-.7 1-1.8 1.2l-1.7.3C9.3 10.7 8 11.8 8 13.5 8 15.4 9.5 17 12 17h6v-3h-5.5c-.9 0-1.5-.4-1.5-1s.6-1 1.8-1.2l1.7-.3c2.2-.4 3.5-1.6 3.5-3z" fill="white"/></svg>',
-  /* QNAP — Q en rectángulo verde */
-  'qnap':        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 22" class="pr-prov-logo pr-prov-logo--qnap"><rect width="26" height="22" rx="3" fill="#009641"/><path d="M13 5a6 6 0 100 12 6 6 0 000-12zm0 2a4 4 0 010 8 4 4 0 010-8zm1 5.5l3 2.5-1.5 1-2.5-2.2z" fill="white"/></svg>',
-  /* Canon — "Canon" en rectángulo rojo */
-  'canon':       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 22" class="pr-prov-logo pr-prov-logo--canon"><rect width="42" height="22" rx="3" fill="#cc0000"/><text x="21" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="white" letter-spacing="0.5">Canon</text></svg>',
-  /* Logitech — L blanca en círculo azul */
-  'logitech':    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="pr-prov-logo pr-prov-logo--logitech"><circle cx="12" cy="12" r="11.5" fill="#00b0f0"/><path d="M9 6h3v9.5h5V18H9z" fill="white"/></svg>',
+  /* Synology */
+  'synology':    '/img/synology.svg',
+  /* QNAP */
+  'qnap':        '/img/qnap.png',
+  /* Canon */
+  'canon':       '/img/Canon.svg',
+  /* Logitech */
+  'logitech':    '/img/logitech.jpg',
+  /* Microsoft */
+  'microsoft':   '/img/Microsoft-logo.png',
+  /* Bitdefender */
+  'bitdefender': '/img/bitdefender.png',
 };
 
 /* ─── estado: filas del pedido ──────────────────────────────── */
@@ -1037,7 +1041,7 @@ function _injectStyles() {
     /* ── Cabecera de columnas ── */
     .flat-col-headers {
       display: grid;
-      grid-template-columns: 40px 56px minmax(180px,240px) 60px 110px 100px 90px 100px;
+      grid-template-columns: 40px 72px minmax(180px,240px) 60px 110px 100px 90px 100px;
       align-items: center;
       justify-content: space-between;
       padding: 10px 20px;
@@ -1057,7 +1061,7 @@ function _injectStyles() {
     .flat-order-row {
       position: relative;
       display: grid;
-      grid-template-columns: 40px 56px minmax(180px,240px) 60px 110px 100px 90px 100px;
+      grid-template-columns: 40px 72px minmax(180px,240px) 60px 110px 100px 90px 100px;
       align-items: center;
       justify-content: space-between;
       padding: 14px 44px 14px 20px;
@@ -1139,27 +1143,10 @@ function _injectStyles() {
     }
     .pr-prov-logo {
       display: block;
-      width: auto;
-      max-height: 22px;
-      max-width: 56px;
+      width: 64px;
+      height: 30px;
       object-fit: contain;
-      border-radius: 3px;
     }
-    /* Logos con imagen: fondo de color de marca */
-    .pr-prov-badge--logo.pr-prov-badge--hp       { background:#0096d6; border-radius:4px; padding:3px 5px; }
-    .pr-prov-badge--logo.pr-prov-badge--dell      { background:#0076ce; border-radius:4px; padding:3px 5px; }
-    .pr-prov-badge--logo.pr-prov-badge--lenovo    { background:#e2001a; border-radius:4px; padding:3px 5px; }
-    .pr-prov-badge--logo.pr-prov-badge--brother   { background:#003087; border-radius:4px; padding:3px 5px; }
-    .pr-prov-badge--logo.pr-prov-badge--tic-managers { background:#0d1e36; border-radius:4px; padding:3px 5px; }
-    /* Apple: ícono gris oscuro sin fondo */
-    .pr-prov-logo--apple   { width: 18px; height: 18px; }
-    /* Cisco: barras anchas */
-    .pr-prov-logo--cisco   { width: 44px; height: 20px; }
-    /* Fortinet: escudo alto */
-    .pr-prov-logo--fortinet { width: 18px; height: 22px; }
-    /* Ubiquiti / Logitech: círculo */
-    .pr-prov-logo--ubiquiti,
-    .pr-prov-logo--logitech { width: 22px; height: 22px; }
 
     /* Badge Cat */
     .pr-cat { display: flex; align-items: center; justify-content: center; }
@@ -1334,11 +1321,12 @@ function _injectStyles() {
     /* Responsive */
     @media (max-width: 1400px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 36px 52px minmax(160px,240px) 56px 120px 100px 90px 84px; gap: 12px; }
+      .flat-order-row { grid-template-columns: 36px 68px minmax(160px,240px) 56px 120px 100px 90px 84px; gap: 12px; }
     }
     @media (max-width: 1100px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 32px 46px minmax(140px,200px) 52px 82px 78px 82px 80px; gap: 4px; }
+      .flat-order-row { grid-template-columns: 32px 60px minmax(140px,200px) 52px 82px 78px 82px 80px; gap: 4px; }
+      .pr-prov-logo { width: 56px; height: 26px; }
     }
 
     /* ── Tablet / mobile: ocultar Marca, Cat, N°Parte y P.Dto ── */
