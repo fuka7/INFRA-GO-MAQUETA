@@ -25,30 +25,14 @@
       : cachedProfile.email.split('@')[0];
     accountHTML = '<span style="width:32px;height:32px;background:#FF7A00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
       '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
-    accountHTMLMobile = '<div style="padding:12px 0;border-top:1px solid #eee;margin-top:12px;"><div style="font-size:13px;color:#333;margin-bottom:8px;"><strong>' + displayName + '</strong><br><small style="color:#666;">Sesión activa</small></div><button onclick="igbLogout()" style="width:100%;padding:8px;background:#FF7A00;color:#fff;border:none;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;">Cerrar sesión</button></div>';
+    accountHTMLMobile = '<div class="igb-mobile-account"><div class="igb-mobile-account-row"><div class="igb-mobile-account-avatar">' + initials + '</div><div class="igb-mobile-account-info"><div class="igb-mobile-account-name">' + displayName + '</div><div class="igb-mobile-account-sub">Sesión activa</div></div></div><button onclick="igbLogout()" class="igb-mobile-logout">Cerrar sesión</button></div>';
   } else {
     accountHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
       '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>' +
       '<circle cx="12" cy="7" r="4"/>' +
       '</svg>' +
       '<span class="igb-account-text"><small>Iniciar Sesión</small><strong>Mi cuenta</strong></span>';
-    accountHTMLMobile = '<div style="padding:16px 0 4px;border-top:1px solid rgba(0,0,0,0.08);margin-top:12px;">' +
-      '<button onclick="igbMobileLogin()" style="' +
-        'width:100%;padding:13px 20px;' +
-        'background:linear-gradient(135deg,#FF7A00,#FF9933);' +
-        'color:#fff;border:none;border-radius:10px;' +
-        'font-family:Montserrat,sans-serif;font-size:15px;font-weight:700;' +
-        'cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;' +
-        'box-shadow:0 4px 14px rgba(255,122,0,0.35);' +
-        'transition:opacity .2s;"' +
-        'onmousedown="this.style.opacity=.85" onmouseup="this.style.opacity=1">' +
-        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">' +
-          '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>' +
-          '<circle cx="12" cy="7" r="4"/>' +
-        '</svg>' +
-        'Iniciar Sesión' +
-      '</button>' +
-    '</div>';
+    accountHTMLMobile = '<div style="margin-top:8px;"><button onclick="igbMobileLogin()" class="igb-mobile-login-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Iniciar Sesión</button></div>';
   }
 
   var NAVBAR_HTML = `<!-- ╔══════════════════════════════════════════════════╗
@@ -209,32 +193,37 @@
 <!-- MENÚ MOBILE -->
 <div class="igb-overlay" id="igbOverlay" onclick="igbCloseMenu()"></div>
 <div class="igb-mobile" id="igbMobile">
+  <span class="igb-mobile-section-label">Menú</span>
   <a href="/index.html">Inicio</a>
   <a href="/configurador.html" onclick="return igbCotizar(event)">Configurador</a>
   <a href="/tienda.html">Tienda Virtual</a>
   <a href="/servicios.html">Nuestros Servicios</a>
+  <a class="igb-mobile-cart" id="igbMobileCart" href="/carrito.html" style="display:none;">
+    <span class="igb-mobile-cart-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span class="igb-cart-count" style="display:none;">0</span>
+    </span>
+    <span class="igb-mobile-cart-label">Mi Carro</span>
+  </a>
   <hr class="igb-mobile-sep">
+  <span class="igb-mobile-section-label">Categorías</span>
   <a href="/tienda.html?cat=pc">PC</a>
   <a href="/tienda.html?cat=notebooks">Notebooks</a>
   <a href="/tienda.html?cat=servidores">Servidores</a>
   <a href="/tienda.html?cat=impresoras">Impresoras</a>
   <a href="/tienda.html?cat=redes">Redes</a>
   <a href="/tienda.html?cat=accesorios">Accesorios</a>
-  <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" style="
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    margin-top:10px;padding:13px 20px;border-radius:10px;box-sizing:border-box;
-    background:linear-gradient(135deg,#FF7A00,#FF9933);border:none;
-    color:#fff !important;font-family:Montserrat,sans-serif;
-    font-size:15px;font-weight:700;text-decoration:none;
-    box-shadow:0 4px 14px rgba(0,0,0,0.2);
-    transition:opacity .2s;"
-    onmousedown="this.style.opacity=.8" onmouseup="this.style.opacity=1">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+  <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" class="igb-mobile-action-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
     </svg>
     Agendar reunión
   </a>
-  ${accountHTMLMobile}
+  <div id="igbMobileAccount">${accountHTMLMobile}</div>
 </div>`;
 
   function injectNavbar() {
@@ -294,7 +283,8 @@ function igbSetWidgetsBlocked(block){
     'body > div[id*="assist"]',
     'body > div[id*="chat"]',
     'body > div[class*="assist"]',
-    'body > div[class*="widget"]'
+    'body > div[class*="widget"]',
+    '.wsp-fab'
   ];
   document.querySelectorAll(selectors.join(',')).forEach(function(el){
     el.style.visibility = block ? 'hidden' : '';

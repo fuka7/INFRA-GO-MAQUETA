@@ -267,7 +267,7 @@
 }
 .igc-qty-input {
   font-size: 14px; font-weight: 800; color: #0d1e36;
-  min-width: 32px; width: 36px; text-align: center;
+  min-width: 40px; width: 48px; text-align: center;
   border: none; background: transparent; outline: none;
   -moz-appearance: textfield;
   padding: 0;
@@ -328,6 +328,47 @@
   text-decoration: none;
 }
 .igc-mini-cotizar-link:hover { text-decoration: underline; }
+
+/* ── Responsive mobile: mini-dropdown ───────────────────── */
+@media (max-width: 540px) {
+  .igc-mini-dropdown {
+    position: fixed;
+    top: 64px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-height: calc(100dvh - 80px);
+    overflow-y: auto;
+    border-radius: 12px;
+    overscroll-behavior: contain;
+  }
+  /* Ocultar flecha decorativa */
+  .igc-mini-dropdown::before { display: none; }
+
+  /* Items: imagen más pequeña */
+  .igc-mini-img-large {
+    width: 60px; height: 50px;
+  }
+  .igc-mini-img-large svg { width: 44px; height: 36px; }
+
+  /* Precio más compacto */
+  .igc-mini-precio-rich { font-size: 15px; }
+
+  /* Nombre más pequeño */
+  .igc-mini-nombre-rich { font-size: 12px; }
+
+  /* Qty col más compacta */
+  .igc-mini-qty-wrap button { width: 28px; height: 28px; font-size: 14px; }
+  .igc-qty-input { width: 40px; min-width: 36px; }
+
+  /* Footer botones en columna */
+  .igc-mini-btns { flex-direction: column; gap: 8px; }
+  .igc-mini-btn-ver,
+  .igc-mini-btn-cotizar { padding: 12px; font-size: 14px; }
+
+  /* Scroll interno desactivado — el dropdown ya scrollea */
+  .igc-mini-items { max-height: none; overflow-y: visible; }
+}
 
 /* ── Página carrito.html ──────────────────────────────────── */
 .igc-page {
@@ -403,7 +444,7 @@
   min-width: 20px; text-align: center;
 }
 .igc-page-qty .igc-qty-input {
-  font-size: 15px; width: 40px; min-width: 20px;
+  font-size: 15px; width: 48px; min-width: 40px;
 }
 
 .igc-page-subtotal {

@@ -592,66 +592,19 @@ function _checkVolumeAlerts() {
   const totalQty = _flatRows.filter(r => r.productName && r.qty > 0)
     .reduce((s, r) => s + r.qty, 0);
 
-  /* Si llegan a 0 productos: ocultar banner y resetear alerta para que pueda volver a aparecer */
+  /* Al quedar sin productos: reiniciar AMBAS alertas */
   if (totalQty === 0) {
-    const existingBanner = document.getElementById('iga-volume-banner');
-    if (existingBanner) {
-      existingBanner.classList.remove('iga-vb--visible');
-      setTimeout(() => existingBanner.remove(), 400);
-    }
     _igaAlertDismissed.volume = false;
+    _igaAlertDismissed.brand = false;
     return;
   }
 
-  /* Si ya fue descartada (y aún quedan productos), no vuelve a aparecer */
-  if (_igaAlertDismissed.volume) return;
-
-  let banner = document.getElementById('iga-volume-banner');
-
-  if (totalQty >= 50) {
-    if (!banner) {
-      banner = document.createElement('div');
-      banner.id = 'iga-volume-banner';
-      banner.className = 'iga-volume-banner';
-      banner.innerHTML = `
-        <div class="iga-vb-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-          </svg>
-        </div>
-        <div class="iga-vb-text">
-          <strong>Su pedido supera las 50 unidades</strong>
-          <span>Podemos mejorar sus condiciones directamente con las marcas — mayor descuento y financiamiento corporativo a medida.</span>
-        </div>
-        <button class="iga-vb-cta" onclick="igaOpenVolumeModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
-            <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.899L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
-          </svg>
-          Hablar con ejecutivo
-        </button>
-        <button class="iga-vb-close" onclick="igaDismissVolumeBanner()" title="Cerrar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      `;
-      const table = document.getElementById('flatCatalogTable');
-      if (table) table.parentNode.insertBefore(banner, table);
-    }
-    banner.classList.add('iga-vb--visible');
+  /* Alerta de volumen — se dispara automáticamente al llegar a 50 unidades */
+  if (!_igaAlertDismissed.volume && totalQty >= 50) {
+    _igaAlertDismissed.volume = true;
+    igaOpenVolumeModal();
   }
-  /* No ocultar al bajar de 50 — solo se oculta al descartar */
 }
-
-/* Descarta el banner de volumen para siempre en esta sesión */
-window.igaDismissVolumeBanner = function() {
-  _igaAlertDismissed.volume = true;
-  const banner = document.getElementById('iga-volume-banner');
-  if (banner) {
-    banner.classList.remove('iga-vb--visible');
-    setTimeout(() => banner.remove(), 400);
-  }
-};
 
 /* ═══════════════════════════════════════════════════════════════
    _calcBrandStats — calcula qty total y marca dominante
@@ -680,18 +633,23 @@ function _calcBrandStats() {
    igaOpenVolumeModal — Modal al avanzar con >50 uds
    Decide qué variante mostrar: alto volumen general vs marca dominante
 ═══════════════════════════════════════════════════════════════ */
-window.igaOpenVolumeModal = function igaOpenVolumeModal() {
+window.igaOpenVolumeModal = function igaOpenVolumeModal(forceBrand) {
   const stats = _calcBrandStats();
+  const tc = (window.state && window.state.tipoCambio) || window._tipoCambio || 950;
   const totalEstimado = _flatRows.filter(r => r.productName && r.qty > 0).reduce((s, r) => {
     const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-    return s + (prod ? prod.price * r.qty : 0);
+    if (!prod) return s;
+    const price = (prod.priceUSD && prod.priceUSD > 0)
+      ? Math.round(prod.priceUSD * tc)
+      : (prod.price || 0);
+    return s + price * r.qty;
   }, 0);
 
   let existing = document.getElementById('iga-modal-overlay');
   if (existing) existing.remove();
 
-  // Variante marca dominante: >50% de una marca con 10+ uds
-  const showBrandVariant = stats.totalQty >= 10 && stats.topPct >= 50 && stats.topBrand;
+  // forceBrand=true → variante marca (desde "Siguiente"), false/undefined → variante volumen
+  const showBrandVariant = forceBrand === true && stats.totalQty >= 10 && stats.topPct >= 50 && stats.topBrand;
 
   const overlay = document.createElement('div');
   overlay.id = 'iga-modal-overlay';
@@ -700,7 +658,7 @@ window.igaOpenVolumeModal = function igaOpenVolumeModal() {
 
   if (showBrandVariant) {
     overlay.innerHTML = `
-      <div class="iga-modal" role="dialog" aria-modal="true">
+      <div class="iga-modal iga-modal--brand" role="dialog" aria-modal="true">
         <div class="iga-modal-header iga-modal-header--brand">
           <div class="iga-modal-header-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -708,72 +666,39 @@ window.igaOpenVolumeModal = function igaOpenVolumeModal() {
             </svg>
           </div>
           <div class="iga-modal-header-text">
-            <strong>Más del 50% de su pedido es ${stats.topBrand}</strong>
-            <span>El PM de ${stats.topBrand} puede mejorar sus condiciones</span>
+            <strong>El ${stats.topPct}% de su pedido es ${stats.topBrand}</strong>
+            <span>Podemos gestionar mejores condiciones directamente con la marca</span>
           </div>
         </div>
-        <div class="iga-modal-body">
-          <div class="iga-modal-persona">
-            <div class="iga-modal-avatar iga-modal-avatar--brand">
-              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-                <circle cx="32" cy="32" r="32" fill="#1a4fa0"/>
-                <ellipse cx="32" cy="26" rx="12" ry="13" fill="#ffd6b0"/>
-                <ellipse cx="32" cy="56" rx="18" ry="14" fill="#2563c4"/>
-                <circle cx="32" cy="24" r="9" fill="#f5c49a"/>
-                <rect x="23" y="30" width="18" height="8" rx="4" fill="#f5c49a"/>
-                <circle cx="27" cy="23" r="2" fill="#c4893a" opacity="0.5"/>
-                <circle cx="37" cy="23" r="2" fill="#c4893a" opacity="0.5"/>
-                <path d="M27 28 Q32 31 37 28" stroke="#c4893a" stroke-width="1.2" fill="none"/>
-                <rect x="20" y="36" width="24" height="18" rx="4" fill="#2563c4"/>
-                <text x="32" y="50" text-anchor="middle" font-size="7" font-weight="800" fill="white" font-family="sans-serif">${stats.topBrand.slice(0,3)}</text>
-              </svg>
-            </div>
-            <div class="iga-modal-persona-info">
-              <strong>Andrea Soto</strong>
-              <span>PM de ${stats.topBrand} en TIC Managers</span>
-            </div>
-            <button class="iga-modal-wsp">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                <path d="M11.999 2.001C6.478 2.001 2 6.478 2 12.001c0 1.847.483 3.574 1.33 5.076L2 22l5.088-1.307A9.95 9.95 0 0012 22c5.522 0 10-4.477 10-10S17.522 2 12 2h-.001z" fill="none" stroke="currentColor" stroke-width="1.5"/>
-              </svg>
-              WhatsApp
-            </button>
+        <div class="iga-brand-body">
+          <div class="iga-brand-highlight">
+            <div class="iga-brand-pill">${stats.topBrand}</div>
+            <div class="iga-brand-pct">${stats.topPct}<span>%</span></div>
+            <div class="iga-brand-pct-label">del pedido — ${stats.topQty} unidades</div>
           </div>
-          <div class="iga-modal-content">
-            <h3>Hable directamente con el PM de ${stats.topBrand} para su proyecto</h3>
-            <p>El ${stats.topPct}% de su pedido es ${stats.topBrand}. El PM de ${stats.topBrand} en TIC Managers puede gestionar descuentos de canal, condiciones especiales y soporte técnico directo con la marca.</p>
-            <div class="iga-modal-stats">
-              <div class="iga-modal-stat">
-                <span class="iga-modal-stat-val">${stats.topPct}%</span>
-                <span class="iga-modal-stat-label">HP del pedido</span>
-              </div>
-              <div class="iga-modal-stat">
-                <span class="iga-modal-stat-val">${stats.topQty} uds</span>
-                <span class="iga-modal-stat-label">% del pedido</span>
-              </div>
-            </div>
-            <button class="iga-modal-primary" onclick="igaCloseVolumeModal()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-                <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.899L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+          <p class="iga-brand-desc">Nuestro equipo puede gestionar <strong>descuentos de canal y condiciones especiales</strong> directamente con ${stats.topBrand} para su proyecto.</p>
+          <div class="iga-vol-actions">
+            <a class="iga-modal-primary" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" onclick="igaCloseVolumeModal()" style="text-decoration:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
               </svg>
-              Reunirme con el PM de ${stats.topBrand} ahora
-            </button>
+              Contactar ejecutivo
+            </a>
             <button class="iga-modal-secondary" onclick="igaCloseVolumeModal(); igaResumeQuote()">
-              Continuar cotizando sin asistencia
+              Continuar sin asistencia
             </button>
-            <p class="iga-modal-footer-note">Reuniones vía HP Poly — sin instalación, directo desde su navegador</p>
           </div>
         </div>
       </div>
     `;
   } else {
+    const totalFmt = totalEstimado > 0 ? '$' + Math.round(totalEstimado).toLocaleString('es-CL') : '—';
     overlay.innerHTML = `
-      <div class="iga-modal" role="dialog" aria-modal="true">
+      <div class="iga-modal iga-modal--vol" role="dialog" aria-modal="true">
         <div class="iga-modal-header iga-modal-header--volume">
           <div class="iga-modal-header-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
             </svg>
           </div>
           <div class="iga-modal-header-text">
@@ -781,60 +706,40 @@ window.igaOpenVolumeModal = function igaOpenVolumeModal() {
             <span>Podemos mejorar sus condiciones directamente con las marcas</span>
           </div>
         </div>
-        <div class="iga-modal-body">
-          <div class="iga-modal-persona">
-            <div class="iga-modal-avatar iga-modal-avatar--volume">
-              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-                <circle cx="32" cy="32" r="32" fill="#1a4fa0"/>
-                <circle cx="32" cy="24" r="10" fill="#f5c49a"/>
-                <ellipse cx="32" cy="48" rx="16" ry="12" fill="#2563c4"/>
-                <circle cx="29" cy="22" r="1.5" fill="#8B5E3C"/>
-                <circle cx="35" cy="22" r="1.5" fill="#8B5E3C"/>
-                <path d="M28 27 Q32 30 36 27" stroke="#8B5E3C" stroke-width="1.2" fill="none"/>
-                <rect x="24" y="14" width="16" height="8" rx="8" fill="#3d2400" opacity="0.4"/>
-                <circle cx="20" cy="24" r="3" fill="#f5c49a"/>
-                <circle cx="44" cy="24" r="3" fill="#f5c49a"/>
-                <text x="32" y="54" text-anchor="middle" font-size="6" font-weight="700" fill="white" font-family="sans-serif">TIC</text>
+        <div class="iga-vol-body">
+          <div class="iga-vol-hero">
+            <div class="iga-vol-hero-icon">
+              <svg viewBox="0 0 48 48" fill="none" width="48" height="48">
+                <rect x="4" y="20" width="40" height="24" rx="4" fill="#e8f0fe" stroke="#1a4fa0" stroke-width="2"/>
+                <path d="M4 28h40" stroke="#1a4fa0" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <rect x="12" y="10" width="24" height="14" rx="3" fill="#c7d9fc" stroke="#1a4fa0" stroke-width="2"/>
+                <rect x="18" y="4" width="12" height="10" rx="2" fill="#1a4fa0"/>
+                <path d="M21 8h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </div>
-            <div class="iga-modal-persona-info">
-              <strong>Ejecutiva TIC</strong>
-              <span>Especialista en soluciones corporativas</span>
-            </div>
-            <button class="iga-modal-polyvideo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12">
-                <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.899L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
-              </svg>
-              Poly Video
-            </button>
+            <div class="iga-vol-hero-number">${stats.totalQty}</div>
+            <div class="iga-vol-hero-label">unidades en su pedido</div>
           </div>
-          <div class="iga-modal-content">
-            <h3>Pedido de alto volumen detectado</h3>
-            <p>Para pedidos mayores a 50 unidades gestionamos descuentos directos con las marcas y financiamiento corporativo a medida.</p>
-            <div class="iga-modal-stats">
-              <div class="iga-modal-stat">
-                <span class="iga-modal-stat-val">${stats.totalQty}</span>
-                <span class="iga-modal-stat-label">Unidades</span>
-              </div>
-              <div class="iga-modal-stat iga-modal-stat--blue">
-                <span class="iga-modal-stat-val">$${Math.round(totalEstimado).toLocaleString('es-CL')}</span>
-                <span class="iga-modal-stat-label">Total est.</span>
-              </div>
-              <div class="iga-modal-stat iga-modal-stat--orange">
-                <span class="iga-modal-stat-val">&gt;5%</span>
-                <span class="iga-modal-stat-label">Dto. potencial</span>
-              </div>
+          <div class="iga-vol-stats">
+            <div class="iga-vol-stat">
+              <span class="iga-vol-stat-val iga-vol-stat-val--blue">${totalFmt}</span>
+              <span class="iga-vol-stat-key">Total estimado</span>
             </div>
-            <button class="iga-modal-primary" onclick="igaCloseVolumeModal()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-                <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.899L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+            <div class="iga-vol-stat-divider"></div>
+            <div class="iga-vol-stat">
+              <span class="iga-vol-stat-val iga-vol-stat-val--orange">&gt;5%</span>
+              <span class="iga-vol-stat-key">Descuento potencial</span>
+            </div>
+          </div>
+          <p class="iga-vol-desc">Para pedidos de este volumen gestionamos <strong>descuentos directos con las marcas</strong> y financiamiento corporativo a medida.</p>
+          <div class="iga-vol-actions">
+            <a class="iga-modal-primary" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" onclick="igaCloseVolumeModal()" style="text-decoration:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
               </svg>
-              Iniciar videollamada HP Poly con ejecutivo
-            </button>
-            <button class="iga-modal-secondary" onclick="igaCloseVolumeModal(); igaResumeQuote()">
-              Continuar con mi cotización sin asistencia
-            </button>
-            <p class="iga-modal-footer-note">HP Poly — videollamada sin instalación, directo desde el navegador</p>
+              Contactar ejecutivo
+            </a>
+            <button class="iga-modal-secondary" onclick="igaCloseVolumeModal()">Salir</button>
           </div>
         </div>
       </div>
@@ -976,7 +881,8 @@ function _overrideValidateStep() {
       if (!_igaAlertDismissed.brand) {
         const stats = _calcBrandStats();
         if (stats.totalQty >= 10 && stats.topPct >= 50 && stats.topBrand) {
-          window.igaOpenVolumeModal();
+          _igaAlertDismissed.brand = true;
+          window.igaOpenVolumeModal(true);
           return false; // el modal ofrece "Continuar sin asistencia" → igaResumeQuote
         }
       }
@@ -1365,59 +1271,6 @@ function _injectStyles() {
     }
 
     /* ══════════════════════════════════════════════════════
-       ALERTA BANNER INLINE — 50+ UNIDADES
-    ══════════════════════════════════════════════════════ */
-    .iga-volume-banner {
-      display: none;
-      align-items: center;
-      gap: 12px;
-      background: linear-gradient(135deg, #0d2e6b 0%, #1a4fa0 100%);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 12px;
-      animation: igaBannerIn .3s ease;
-    }
-    .iga-volume-banner.iga-vb--visible { display: flex; }
-    @keyframes igaBannerIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .iga-vb-icon {
-      flex-shrink: 0;
-      width: 34px; height: 34px;
-      background: rgba(255,255,255,.12);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff;
-    }
-    .iga-vb-icon svg { width: 16px; height: 16px; }
-    .iga-vb-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-    .iga-vb-text strong { font-size: 13px; font-weight: 800; color: #fff; }
-    .iga-vb-text span   { font-size: 11px; color: rgba(255,255,255,.75); line-height: 1.4; }
-    .iga-vb-cta {
-      flex-shrink: 0;
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #FF7A00;
-      border: none; border-radius: 7px;
-      padding: 8px 14px;
-      color: #fff; font-size: 12px; font-weight: 800;
-      cursor: pointer; white-space: nowrap;
-      transition: background .18s;
-    }
-    .iga-vb-cta:hover { background: #cf7e08; }
-    .iga-vb-close {
-      flex-shrink: 0;
-      background: rgba(255,255,255,.1);
-      border: none; border-radius: 5px;
-      width: 26px; height: 26px;
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,.7); cursor: pointer;
-      transition: background .15s;
-    }
-    .iga-vb-close:hover { background: rgba(255,255,255,.2); color: #fff; }
-
-    /* ══════════════════════════════════════════════════════
        MODAL DE ALTO VOLUMEN
     ══════════════════════════════════════════════════════ */
     .iga-modal-overlay {
@@ -1437,14 +1290,18 @@ function _injectStyles() {
       overflow: hidden;
       box-shadow: 0 24px 80px rgba(4,15,35,.35);
       transform: translateY(16px) scale(.98);
-      transition: transform .28s cubic-bezier(.22,.8,.4,1);
+      transition: transform .3s cubic-bezier(.22,.8,.4,1);
     }
     .iga-modal-overlay.iga-modal--visible .iga-modal {
       transform: translateY(0) scale(1);
     }
+    @media (max-width: 600px) {
+      .iga-modal { transform: translateY(100%); transition: transform .35s cubic-bezier(.22,.8,.4,1); }
+      .iga-modal-overlay.iga-modal--visible .iga-modal { transform: translateY(0); }
+    }
     .iga-modal-header {
-      display: flex; align-items: center; gap: 14px;
-      padding: 18px 20px;
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px;
       color: #fff;
     }
     .iga-modal-header--volume { background: linear-gradient(135deg, #0d2e6b 0%, #1a4fa0 100%); }
@@ -1543,8 +1400,8 @@ function _injectStyles() {
     .iga-modal-primary {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       background: #FF7A00; border: none; border-radius: 8px;
-      padding: 13px 20px; color: #fff;
-      font-size: 14px; font-weight: 800; cursor: pointer;
+      padding: 11px 20px; color: #fff;
+      font-size: 13px; font-weight: 800; cursor: pointer;
       transition: background .18s;
       width: 100%;
     }
@@ -1553,8 +1410,8 @@ function _injectStyles() {
       display: block; width: 100%;
       background: transparent;
       border: 1.5px solid #dde1e8;
-      border-radius: 8px; padding: 11px 20px;
-      color: #4a6080; font-size: 13px; font-weight: 600;
+      border-radius: 8px; padding: 9px 20px;
+      color: #4a6080; font-size: 12px; font-weight: 600;
       cursor: pointer; transition: border-color .18s, color .18s;
     }
     .iga-modal-secondary:hover { border-color: #aab8cc; color: #0d1e36; }
@@ -1562,10 +1419,86 @@ function _injectStyles() {
       font-size: 11px; color: #aab8cc; text-align: center; margin: 0;
     }
 
+    /* ── MODAL MARCA — layout propio ── */
+    .iga-modal--brand { max-width: 380px; }
+    .iga-brand-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .iga-brand-highlight {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: linear-gradient(135deg, #0e5a8a 0%, #1b82c4 100%);
+      border-radius: 10px; padding: 16px 16px 14px;
+    }
+    .iga-brand-pill {
+      background: rgba(255,255,255,.18); color: #fff;
+      font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,.3);
+    }
+    .iga-brand-pct {
+      font-family: 'Montserrat', sans-serif; font-size: 38px; font-weight: 900;
+      color: #fff; line-height: 1; margin-top: 4px;
+    }
+    .iga-brand-pct span { font-size: 22px; vertical-align: super; }
+    .iga-brand-pct-label { font-size: 11px; color: rgba(255,255,255,.75); font-weight: 600; }
+    .iga-brand-desc { font-size: 12px; color: #4a6080; line-height: 1.55; margin: 0; text-align: center; }
+
+    /* ── MODAL VOLUMEN — layout propio ── */
+    .iga-modal--vol { max-width: 380px; }
+    .iga-vol-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .iga-vol-hero {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: linear-gradient(135deg, #f0f5ff 0%, #e6eeff 100%);
+      border: 1px solid #d0dcf8; border-radius: 10px;
+      padding: 14px 16px 12px;
+    }
+    .iga-vol-hero-icon { margin-bottom: 2px; }
+    .iga-vol-hero-icon svg { width: 36px; height: 36px; }
+    .iga-vol-hero-number {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px; font-weight: 900;
+      color: #1a4fa0; line-height: 1;
+    }
+    .iga-vol-hero-label { font-size: 11px; font-weight: 600; color: #5a7294; text-transform: uppercase; letter-spacing: .04em; }
+    .iga-vol-stats {
+      display: flex; align-items: center; gap: 0;
+      background: #f8faff; border: 1px solid #dde6f5; border-radius: 8px;
+      overflow: hidden;
+    }
+    .iga-vol-stat { flex: 1; text-align: center; padding: 10px 8px; }
+    .iga-vol-stat-divider { width: 1px; background: #dde6f5; align-self: stretch; }
+    .iga-vol-stat-val { display: block; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; line-height: 1; }
+    .iga-vol-stat-val--blue  { color: #1a4fa0; }
+    .iga-vol-stat-val--orange { color: #FF7A00; }
+    .iga-vol-stat-key { display: block; font-size: 9px; font-weight: 600; color: #7a8fa6; text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
+    .iga-vol-desc { font-size: 12px; color: #4a6080; line-height: 1.55; margin: 0; text-align: center; }
+    .iga-vol-actions { display: flex; flex-direction: column; gap: 7px; }
+
     @media (max-width: 600px) {
-      .iga-modal-body { flex-direction: column; }
-      .iga-modal-persona { width: 100%; flex-direction: row; padding: 14px 16px; }
-      .iga-modal-stats { flex-direction: column; }
+      /* Overlay — ocupa toda la pantalla sin margen lateral */
+      .iga-modal-overlay { padding: 0; align-items: flex-end; }
+      /* Modal base — bottom sheet en mobile */
+      .iga-modal {
+        border-radius: 18px 18px 0 0;
+        max-width: 100%;
+        transform: translateY(100%);
+      }
+      .iga-modal-overlay.iga-modal--visible .iga-modal { transform: translateY(0); }
+      /* Header */
+      .iga-modal-header { padding: 14px 16px; gap: 10px; }
+      .iga-modal-header-text strong { font-size: 13px; }
+      .iga-modal-header-icon { width: 32px; height: 32px; }
+      /* Modal volumen */
+      .iga-modal--vol { max-width: 100%; }
+      .iga-vol-body { padding: 20px 16px 28px; gap: 16px; }
+      .iga-vol-hero { padding: 16px 12px 14px; }
+      .iga-vol-hero-number { font-size: 40px; }
+      .iga-vol-hero-icon svg { width: 36px; height: 36px; }
+      .iga-vol-stat-val { font-size: 15px; }
+      /* Modal marca */
+      .iga-modal--brand { max-width: 100%; }
+      .iga-brand-body { padding: 20px 16px 28px; gap: 16px; }
+      .iga-brand-highlight { padding: 18px 12px 14px; }
+      .iga-brand-pct { font-size: 40px; }
+      .iga-brand-pct span { font-size: 24px; }
     }
   `;
   document.head.appendChild(style);

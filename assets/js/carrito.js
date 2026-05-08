@@ -157,8 +157,7 @@
     }
     _save();
     _updateNavbarBadge();
-    _renderMini();
-    _renderPage();
+    setTimeout(function() { _renderMini(); _renderPage(); }, 0);
   };
 
   window.igcQtyKey = function(e, id, inputEl) {
@@ -295,7 +294,7 @@
         '    <div class="igc-mini-qty-wrap">',
         '      <button onclick="igcChangeQty(\'' + item.id + '\',-1)">−</button>',
         '      <input type="number" class="igc-qty-input" value="' + item.qty + '" min="0"',
-        '             oninput="igcSetQty(\'' + item.id + '\', this)"',
+        '             onchange="igcSetQty(\'' + item.id + '\', this)"',
         '             onkeydown="igcQtyKey(event, \'' + item.id + '\', this)"',
         '             onclick="this.select()">',
         '      <button onclick="igcChangeQty(\'' + item.id + '\',1)">+</button>',
@@ -326,13 +325,7 @@
       '  <a href="/carrito.html" class="igc-mini-btn-ver">Ver carro</a>',
       '  <button class="igc-mini-btn-cotizar" onclick="window.location.href=\'/carrito.html\'">Comprar</button>',
       '</div>',
-      '<div class="igc-mini-cotizar-row">',
-      '  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">',
-      '    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/>',
-      '    <polyline points="14 2 14 8 20 8"/>',
-      '  </svg>',
-      '  <a href="/configurador.html" class="igc-mini-cotizar-link">Crear Cotización</a>',
-      '</div>'
+      ''
     ].join('');
 
     el.innerHTML = _miniShell(bodyHtml, footerHtml);
@@ -360,9 +353,6 @@
     if (!cartBtn) return;
     cartBtn.style.display = '';
 
-    /* Corregir href del botón del carrito */
-    cartBtn.href = '/carrito.html';
-
     /* Envolver en wrapper relativo */
     var wrap = document.createElement('div');
     wrap.className = 'igc-mini-wrap';
@@ -374,15 +364,26 @@
     drop.className = 'igc-mini-dropdown';
     wrap.appendChild(drop);
 
-    /* Click en ícono del carro → ir a carrito.html */
+    /* Click en ícono del carro → abrir/cerrar dropdown */
     cartBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      window.location.href = '/carrito.html';
+      if (_miniOpen) {
+        _closeMini();
+      } else {
+        _renderMini();
+        _openMini();
+      }
     });
 
-    /* Cerrar al hacer click fuera */
+    /* Cerrar al hacer click fuera — usa composedPath para detectar clicks
+       dentro del dropdown incluso si el target fue removido del DOM por un re-render */
     document.addEventListener('click', function(e) {
-      if (_miniOpen && !wrap.contains(e.target)) _closeMini();
+      if (!_miniOpen) return;
+      var path = e.composedPath ? e.composedPath() : [];
+      var clickDentro = path.length > 0
+        ? path.some(function(el) { return el === wrap; })
+        : wrap.contains(e.target);
+      if (!clickDentro) _closeMini();
     });
 
   }
@@ -445,7 +446,7 @@
         '  <div class="igc-page-qty">',
         '    <button onclick="igcChangeQty(\'' + item.id + '\',-1)">−</button>',
         '    <input type="number" class="igc-qty-input" value="' + item.qty + '" min="0"',
-        '           oninput="igcSetQty(\'' + item.id + '\', this)"',
+        '           onchange="igcSetQty(\'' + item.id + '\', this)"',
         '           onkeydown="igcQtyKey(event, \'' + item.id + '\', this)"',
         '           onclick="this.select()">',
         '    <button onclick="igcChangeQty(\'' + item.id + '\',1)">+</button>',
@@ -974,7 +975,12 @@
     var enProducto  = !!document.getElementById('prdBtnCotizar');
     var enCarrito   = !!document.getElementById('igcPageContainer');
 
-    /* Mostrar ícono del carro en tienda y producto */
+    function _showMobileCart() {
+      var el = document.getElementById('igbMobileCart');
+      if (el) el.style.display = '';
+    }
+
+    /* Mostrar ícono del carro solo en tienda y producto (con dropdown) */
     if (enTienda || enProducto) {
       function _activateCart() {
         var cartIcon = document.querySelector('.igb-cart');
@@ -982,12 +988,11 @@
           cartIcon.style.display = '';
           _buildMiniDropdown();
         }
+        _showMobileCart();
       }
-      /* Si el navbar ya fue inyectado (tienda.html lo carga antes), activar ya */
       if (document.querySelector('.igb-cart')) {
         _activateCart();
       } else {
-        /* Si no, esperar el evento que navbar-inline.js dispara al terminar */
         document.addEventListener('componentInjected', function handler(e) {
           if (e.detail && e.detail.component === 'navbar-placeholder') {
             document.removeEventListener('componentInjected', handler);
@@ -997,15 +1002,26 @@
       }
     }
 
-    /* FIX: en index.html y cualquier otra página, corregir href del carrito */
-    if (!enTienda && !enProducto && !enCarrito) {
-      var cartLink = document.querySelector('.igb-cart');
-      if (cartLink && (!cartLink.href || cartLink.href === '#' || cartLink.href.endsWith('#'))) {
-        cartLink.href = '/carrito.html';
-      }
-    }
-
+    /* En carrito.html mostrar el ícono enlazado a la misma página */
     if (enCarrito) {
+      function _showCartIcon() {
+        var cartIcon = document.querySelector('.igb-cart');
+        if (cartIcon) {
+          cartIcon.style.display = '';
+          cartIcon.href = '/carrito.html';
+        }
+        _showMobileCart();
+      }
+      if (document.querySelector('.igb-cart')) {
+        _showCartIcon();
+      } else {
+        document.addEventListener('componentInjected', function handler2(e) {
+          if (e.detail && e.detail.component === 'navbar-placeholder') {
+            document.removeEventListener('componentInjected', handler2);
+            _showCartIcon();
+          }
+        });
+      }
       _renderPage();
     }
   });

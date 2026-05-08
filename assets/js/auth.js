@@ -279,6 +279,18 @@
   /* ════════════════════════════════════════════
      NAVBAR
   ════════════════════════════════════════════ */
+  function _mobileAccountHTML(user) {
+    if (user) {
+      var nombre = (user.nombre || '').trim();
+      var apellido = (user.apellido || '').trim();
+      var initials = nombre && apellido ? (nombre[0] + apellido[0]).toUpperCase() : nombre ? nombre.slice(0,2).toUpperCase() : user.email.slice(0,2).toUpperCase();
+      var displayName = nombre ? (nombre + (apellido ? ' ' + apellido : '')) : user.email.split('@')[0];
+      return '<div class="igb-mobile-account"><div class="igb-mobile-account-row"><div class="igb-mobile-account-avatar">' + initials + '</div><div class="igb-mobile-account-info"><div class="igb-mobile-account-name">' + displayName + '</div><div class="igb-mobile-account-sub">Sesión activa</div></div></div><button onclick="igbLogout()" class="igb-mobile-logout">Cerrar sesión</button></div>';
+    } else {
+      return '<div style="margin-top:8px;"><button onclick="igbMobileLogin()" class="igb-mobile-login-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Iniciar Sesión</button></div>';
+    }
+  }
+
   function updateNavbar() {
     document.querySelectorAll('.igb-account').forEach(function(link) {
       if (currentUser) {
@@ -300,6 +312,8 @@
         link.dataset.igbState = 'guest';
       }
     });
+    var mobileAccount = document.getElementById('igbMobileAccount');
+    if (mobileAccount) mobileAccount.innerHTML = _mobileAccountHTML(currentUser);
   }
 
   /* ════════════════════════════════════════════
