@@ -235,6 +235,7 @@
 .ig-footer-root .contact-item {
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .ig-footer-root .contact-label {

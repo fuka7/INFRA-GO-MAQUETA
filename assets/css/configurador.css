@@ -1756,9 +1756,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 108px;
-  height: 48px;
-  padding: 8px 12px;
+  width: 140px;
+  height: 64px;
+  padding: 10px 16px;
   border-radius: 8px;
   flex-shrink: 0;
   border: 1px solid rgba(0,0,0,.1);
@@ -1773,7 +1773,6 @@ body {
   object-position: center;
   display: block;
 }
-.trust-logo--wide { width: 158px; }
 
 /* ════════════════════════════════════════════
    RESPONSIVE

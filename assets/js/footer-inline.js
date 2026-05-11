@@ -38,11 +38,11 @@
     <div class="footer-col">
       <div class="col-label">Empresa</div>
       <ul class="col-links">
-        <li><a href="/index.html">Inicio</a></li>
         <li><a href="/index.html#por-que">Por qué InfraGo</a></li>
         <li><a href="/index.html#como-funciona">Cómo funciona</a></li>
-        <li><a href="/index.html#quienes-somos">Quiénes somos</a></li>
-        <li><a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" rel="noopener">Agendar reunión</a></li>
+        <li><a href="/index.html#catalogo">Catálogo</a></li>
+        <li><a href="/index.html#financiamiento">Financiamiento</a></li>
+        <li><a href="/index.html#faq">Preguntas frecuentes</a></li>
       </ul>
     </div>
 
@@ -59,7 +59,7 @@
         <li>
           <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" rel="noopener" class="contact-item">
             <span class="contact-label">Reuniones</span>
-            <span class="contact-val">Agenda online</span>
+            <span class="contact-val">Agendar reunión</span>
           </a>
         </li>
         <li>
