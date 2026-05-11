@@ -592,7 +592,7 @@
         '    <path d="M16 8h4l3 5v3h-7V8z"/>',
         '    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
         '  </svg>',
-        '  <h3>Despacho referencial</h3>',
+        '  <h3>Despacho estimado</h3>',
         '</div>',
         '<div class="resumen-card-body" id="igs-cfg-result-body" style="padding:16px 20px;min-height:52px;">',
         '  <span style="font-size:13px;color:#9aa9bb;font-style:italic;">Selecciona una comuna en el paso anterior para ver el costo de despacho.</span>',
@@ -611,10 +611,41 @@
     var comunaVal = (document.getElementById('ciudad') || {}).value || '';
     var regionVal = (document.getElementById('region') || {}).value || '';
 
-    if (!comunaVal || !regionVal) return;
+    /* Fallback: usar la región elegida en el paso 1 */
+    if (!regionVal) regionVal = window._despachoRegion || '';
+    if (!regionVal) {
+      window._igDespachoResult = null;
+      if (typeof window.refreshResumenTotales === 'function') window.refreshResumenTotales();
+      body.innerHTML = '<span style="font-size:13px;color:#9aa9bb;font-style:italic;">Selecciona una región en el paso 1 para ver el costo de despacho estimado.</span>';
+      return;
+    }
 
     var totalEl     = document.getElementById('summaryTotal');
     var totalCompra = totalEl ? parseInt((totalEl.textContent || '0').replace(/\D/g, '')) || 0 : 0;
+
+    /* Sin comuna: mostrar estimado por región usando TARIFAS_REGIONES */
+    if (!comunaVal) {
+      var tarifas  = window.TARIFAS_REGIONES || {};
+      var tarifa   = tarifas[regionVal] || { precio: 5990, gratis75k: false };
+      var gratis   = tarifa.gratis75k && totalCompra >= 75000;
+      var rCorta   = regionVal.replace(/^Región (de(l?|) )?/i, '');
+      window._igDespachoResult = { tipo: gratis ? 'gratis' : 'estimado', precio: gratis ? 0 : tarifa.precio };
+      if (typeof window.refreshResumenTotales === 'function') window.refreshResumenTotales();
+      body.innerHTML = [
+        '<div style="display:flex;align-items:center;gap:14px;">',
+        '  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="' + (gratis ? '#16a34a' : '#d97706') + '" stroke-width="2">',
+        '    <rect x="1" y="3" width="15" height="13" rx="1"/>',
+        '    <path d="M16 8h4l3 5v4h-7V8z"/>',
+        '    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+        '  </svg>',
+        '  <div style="flex:1;">',
+        '    <div style="font-size:12px;color:#7a8fa6;margin-bottom:2px;">Estimado para <strong>' + _escHtml(rCorta) + '</strong></div>',
+        '    <div style="font-size:17px;font-weight:800;color:' + (gratis ? '#16a34a' : '#0d1e36') + ';">' + (gratis ? 'Gratis' : '~$' + tarifa.precio.toLocaleString('es-CL')) + '</div>',
+        '  </div>',
+        '</div>'
+      ].join('\n');
+      return;
+    }
 
     body.innerHTML = '<span class="igs-loading"><span class="igs-spinner"></span> Consultando tarifas…</span>';
     _injectStyles();
@@ -627,8 +658,6 @@
       if (typeof window.refreshResumenTotales === 'function') window.refreshResumenTotales();
 
       var gratis = r.tipo === 'gratis';
-      var ref    = r.tipo === 'referencial'
-        ? ' <span style="font-size:11px;font-weight:400;color:#9aa9bb;">(referencial)</span>' : '';
       var diasLabel = r.dias ? r.dias + ' días hábiles' : '';
 
       body.innerHTML = [
@@ -641,7 +670,7 @@
         '  <div style="flex:1;">',
         '    <div style="font-size:12px;color:#7a8fa6;margin-bottom:2px;">Despacho a <strong>' + _escHtml(comunaVal) + '</strong> &mdash; ' + _escHtml(regionVal) + '</div>',
         '    <div style="font-size:17px;font-weight:800;color:' + (gratis ? '#16a34a' : '#0d1e36') + ';">' +
-             (gratis ? 'Gratis' : '~$' + (r.precio || 0).toLocaleString('es-CL')) + ref + '</div>',
+             (gratis ? 'Gratis' : '~$' + (r.precio || 0).toLocaleString('es-CL')) + '</div>',
         '  </div>',
         diasLabel ? '  <div style="font-size:12px;font-weight:600;color:#FF7A00;background:#fff3dc;border-radius:20px;padding:5px 12px;white-space:nowrap;">' + diasLabel + '</div>' : '',
         '</div>'

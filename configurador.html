@@ -153,7 +153,8 @@ window.clsSetCat = function(tipo, btn) {
         <span class="cls-widget-title">Región de despacho</span>
       </div>
       <select class="cls-despacho-select" id="despachoRegion" onchange="actualizarDespachoRegion(this.value)">
-        <option value="Región Metropolitana" selected>Región Metropolitana</option>
+        <option value="" selected disabled>Selecciona una región</option>
+        <option value="Región Metropolitana">Región Metropolitana</option>
         <option value="Región de Valparaíso">Región de Valparaíso</option>
         <option value="Región de O'Higgins">Región de O'Higgins</option>
         <option value="Región del Maule">Región del Maule</option>
@@ -477,23 +478,6 @@ window.clsSetCat = function(tipo, btn) {
           <label class="config-label">Notas adicionales</label>
           <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
         </div>
-      </div>
-
-      <!-- Despacho estimado desde paso 1 -->
-      <div class="despacho-form-card" id="despachoFormCard">
-        <div class="despacho-form-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
-            <rect x="1" y="3" width="15" height="13" rx="1"/>
-            <path d="M16 8h4l3 5v4h-7V8z"/>
-            <circle cx="5.5" cy="18.5" r="2.5"/>
-            <circle cx="18.5" cy="18.5" r="2.5"/>
-          </svg>
-        </div>
-        <div class="despacho-form-info">
-          <span class="despacho-form-label">Despacho estimado</span>
-          <span class="despacho-form-val" id="despachoFormVal">—</span>
-        </div>
-        <div class="despacho-form-note" id="despachoFormNote">Calculado según tu pedido en el paso de productos · Zona RM</div>
       </div>
 
       <!-- Carrusel confianza -->
