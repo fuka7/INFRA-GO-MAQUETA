@@ -60,6 +60,11 @@
 
   <div class="igc-page-panel" id="igcPagePanel">
     <div class="igc-panel-title">Resumen del pedido</div>
+
+    <div class="igc-panel-row">
+      <span>Productos (<span id="igcPanelQty">0</span>)</span>
+      <strong id="igcPanelSubtotal">$0</strong>
+    </div>
     <div class="igc-panel-row igc-panel-row--dcto" id="igcPanelRowDcto" style="display:none;">
       <span>Descuento (<span id="igcPanelDctoPct"></span>)</span>
       <strong id="igcPanelAhorro" class="igc-panel-ahorro"></strong>
@@ -68,7 +73,19 @@
       <span>Servicios</span>
       <strong id="igcPanelSubtotalSvc">$0</strong>
     </div>
+
     <div class="igc-panel-divider"></div>
+
+    <div class="igc-panel-row">
+      <span>Subtotal neto</span>
+      <strong id="igcPanelNeto">$0</strong>
+    </div>
+    <div class="igc-panel-row">
+      <span>IVA (19%)</span>
+      <strong id="igcPanelIVA">$0</strong>
+    </div>
+    <div class="igc-panel-divider"></div>
+
     <div class="igc-panel-total">
       <span>Total</span>
       <span class="igc-panel-total-val" id="igcPanelTotal">$0</span>
@@ -278,7 +295,7 @@
             </div>
             <div class="igc-metodo-info">
               <div class="igc-metodo-label">Transferencia bancaria</div>
-              <div class="igc-metodo-desc">Sin costo adicional · 2–4 días hábiles</div>
+              <div class="igc-metodo-desc">Sin costo adicional</div>
             </div>
             <div class="igc-metodo-badge igc-metodo-badge--free">Gratis</div>
           </label>

@@ -551,10 +551,15 @@
     var subSvc = _subtotalSvc();
     var base   = sub + subSvc;
     var total  = _metodo === 'tarjeta' ? Math.round(base * 1.03) : base;
+    var neto   = Math.round(base / 1.19);
+    var iva    = base - neto;
     var el;
     el = document.getElementById('igcPanelSubtotal');    if(el) el.textContent = _fmt(sub);
     el = document.getElementById('igcPanelSubtotalSvc'); if(el) el.textContent = _fmt(subSvc);
     el = document.getElementById('igcPanelTotal');       if(el) el.textContent = _fmt(total);
+    el = document.getElementById('igcPanelNeto');        if(el) el.textContent = _fmt(neto);
+    el = document.getElementById('igcPanelIVA');         if(el) el.textContent = _fmt(iva);
+    el = document.getElementById('igcPanelQty');         if(el) el.textContent = _totalQty();
     el = document.getElementById('igcPanelRowSvc');
     if (el) el.style.display = subSvc > 0 ? '' : 'none';
     el = document.getElementById('igcPanelRowDcto');
