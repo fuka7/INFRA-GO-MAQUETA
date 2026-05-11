@@ -296,8 +296,14 @@ function prdGetStorageKey() {
 }
 
 function prdLoadReviews(cat) {
-  const stored = JSON.parse(localStorage.getItem(prdGetStorageKey()) || '[]');
-  const seed   = (REV_SEED[cat] || REV_SEED.accesorios).map(r => ({ ...r, seed: true }));
+  let stored = JSON.parse(localStorage.getItem(prdGetStorageKey()) || '[]');
+  let changed = false;
+  stored = stored.map((r, i) => {
+    if (!r.id) { r = { ...r, id: Date.now() + i }; changed = true; }
+    return r;
+  });
+  if (changed) localStorage.setItem(prdGetStorageKey(), JSON.stringify(stored));
+  const seed = (REV_SEED[cat] || REV_SEED.accesorios).map(r => ({ ...r, seed: true }));
   return [...stored, ...seed].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 }
 
@@ -352,11 +358,20 @@ function prdRenderReviews(cat) {
               <div class="prd-rev-card-stars">${prdStarsHtml(r.rating, 14)}</div>
             </div>
             <div class="prd-rev-card-fecha">${prdFmtFecha(r.fecha)}</div>
+            ${!r.seed ? `<button class="prd-rev-delete-btn" onclick="prdDeleteReview(${r.id})" title="Eliminar reseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>` : ''}
           </div>
           <p class="prd-rev-card-text">${r.comentario}</p>
         </div>`).join('');
     }
   }
+}
+
+function prdDeleteReview(id) {
+  const key     = prdGetStorageKey();
+  const stored  = JSON.parse(localStorage.getItem(key) || '[]');
+  localStorage.setItem(key, JSON.stringify(stored.filter(r => r.id !== id)));
+  const p = getProducto();
+  prdRenderReviews(p ? p.cat : 'accesorios');
 }
 
 function prdToggleForm() {
@@ -366,7 +381,26 @@ function prdToggleForm() {
   btn.innerHTML = open
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancelar'
     : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Escribir reseña';
-  if (open) form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (open) {
+    const user         = window.igbAuth && window.igbAuth.current();
+    const nombreField  = document.getElementById('prdRevNombreField');
+    const nombreInput  = document.getElementById('prdRevNombre');
+    const sessionLabel = document.getElementById('prdRevSessionLabel');
+    if (user) {
+      const n = (user.nombre || '').trim();
+      const a = (user.apellido || '').trim();
+      const displayName = n ? (n + (a ? ' ' + a : '')) : user.email.split('@')[0];
+      nombreInput.value = displayName;
+      nombreField.style.display  = 'none';
+      sessionLabel.textContent   = 'Publicando como: ' + displayName;
+      sessionLabel.style.display = '';
+    } else {
+      nombreInput.value          = '';
+      nombreField.style.display  = '';
+      sessionLabel.style.display = 'none';
+    }
+    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
 function prdSetStar(val) {
@@ -379,7 +413,15 @@ function prdSetStar(val) {
 }
 
 function prdSubmitReview() {
-  const nombre     = document.getElementById('prdRevNombre').value.trim();
+  const user = window.igbAuth && window.igbAuth.current();
+  let nombre;
+  if (user) {
+    const n = (user.nombre || '').trim();
+    const a = (user.apellido || '').trim();
+    nombre = n ? (n + (a ? ' ' + a : '')) : user.email.split('@')[0];
+  } else {
+    nombre = document.getElementById('prdRevNombre').value.trim();
+  }
   const empresa    = document.getElementById('prdRevEmpresa').value.trim();
   const comentario = document.getElementById('prdRevComentario').value.trim();
 
@@ -391,7 +433,7 @@ function prdSubmitReview() {
   const stored  = JSON.parse(localStorage.getItem(key) || '[]');
   const p       = getProducto();
 
-  stored.unshift({ nombre, empresa, rating: prdRevRating, comentario, fecha: new Date().toISOString().slice(0,10) });
+  stored.unshift({ id: Date.now(), nombre, empresa, rating: prdRevRating, comentario, fecha: new Date().toISOString().slice(0,10) });
   localStorage.setItem(key, JSON.stringify(stored));
 
   document.getElementById('prdRevNombre').value     = '';

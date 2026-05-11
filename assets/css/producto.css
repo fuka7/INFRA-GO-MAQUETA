@@ -1328,6 +1328,22 @@
   white-space: nowrap;
 }
 
+.prd-rev-delete-btn {
+  background: rgba(17,17,17,0.06);
+  border: none;
+  cursor: pointer;
+  padding: 7px;
+  border-radius: 8px;
+  color: rgba(17,17,17,0.45);
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity .2s, color .2s, background .15s;
+  flex-shrink: 0;
+}
+.prd-rev-card:hover .prd-rev-delete-btn { opacity: 1; }
+.prd-rev-delete-btn:hover { color: #e53e3e; background: rgba(229,62,62,0.12); }
+
 .prd-rev-card-text {
   font-size: 14px;
   color: rgba(17,17,17,0.7);
