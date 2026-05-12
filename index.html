@@ -765,18 +765,17 @@
 ══════════════════════════════════════ -->
 <section class="faq-section" id="faq">
 
-  <!-- Glow decorativo -->
   <div class="faq-glow"></div>
 
-  <div class="faq-container">
+  <div class="faq-wrap">
 
-    <!-- Columna izquierda -->
-    <div class="faq-left">
+    <!-- Encabezado centrado -->
+    <div class="faq-header">
       <p class="faq-eyebrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Preguntas frecuentes
       </p>
-      <h2 class="faq-heading">¿Tienes<br><span class="faq-gradient">dudas?</span></h2>
+      <h2 class="faq-heading">¿Tienes <span class="faq-gradient">dudas?</span></h2>
       <p class="faq-sub">Todo lo que necesitas saber antes de cotizar o comprar con InfraGo.</p>
       <a href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" class="faq-cta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -784,8 +783,8 @@
       </a>
     </div>
 
-    <!-- Columna derecha: acordeón -->
-    <div class="faq-list">
+    <!-- Grid 3 columnas -->
+    <div class="faq-grid">
 
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
@@ -1094,21 +1093,13 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="/assets/js/footer-inline.js"></script>
 
 <script>
-/* FAQ acordeón */
+/* FAQ — toggle independiente por tarjeta */
 document.querySelectorAll('.faq-trigger').forEach(function(btn) {
   btn.addEventListener('click', function() {
     var expanded = this.getAttribute('aria-expanded') === 'true';
     var body = this.nextElementSibling;
-    // Cerrar todos
-    document.querySelectorAll('.faq-trigger').forEach(function(b) {
-      b.setAttribute('aria-expanded', 'false');
-      b.nextElementSibling.classList.remove('open');
-    });
-    // Abrir el clickeado si estaba cerrado
-    if (!expanded) {
-      this.setAttribute('aria-expanded', 'true');
-      body.classList.add('open');
-    }
+    this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    body.classList.toggle('open', !expanded);
   });
 });
 </script>
