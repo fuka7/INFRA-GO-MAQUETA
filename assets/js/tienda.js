@@ -39,7 +39,7 @@ function buildCard(p) {
       style="cursor:pointer;"
       onclick="window.location.href='/producto.html?id=${p.id}'">
       ${badgeHtml}
-      <div class="prod-img">${p.svg}</div>
+      <div class="prod-img">${p.img ? `<img src="${p.img}" alt="${p.nombre}" loading="lazy">` : p.svg}</div>
       <div class="prod-info">
         <div class="prod-brand">${p.marca}</div>
         <div class="prod-name">${p.nombreLargo}</div>
@@ -68,16 +68,17 @@ function renderCards() {
     .filter(p => p.cat !== 'licencias' && p.cat !== 'servicios')
     .map(p => ({ ...p, precio: p.precioVenta }));
   grid.innerHTML = catalog.map(buildCard).join('');
+  [...grid.querySelectorAll('.prod-card')].forEach((card, i) => card.dataset.idx = i);
 }
 
 /* ── Filtros ── */
 function applyFilters() {
-  const marcasActivas = [...document.querySelectorAll('#filtroMarcas input:checked')].map(c => c.value);
+  const marcasActivas = [...document.querySelectorAll('#filtroMarcas .marca-pill.active')].map(b => b.dataset.marca);
   let cards = [...document.querySelectorAll('.prod-card')];
 
   cards.forEach(card => {
     const catOk    = currentCat === 'todos' || card.dataset.cat === currentCat;
-    const marcaOk  = marcasActivas.includes(card.dataset.marca);
+    const marcaOk  = marcasActivas.length === 0 || marcasActivas.includes(card.dataset.marca);
     const precioOk = parseInt(card.dataset.precio) <= currentMax;
     const searchOk = card.dataset.nombre.toLowerCase().includes(currentSearch);
 
@@ -94,6 +95,8 @@ function applyFilters() {
     visible.sort((a, b) => parseInt(b.dataset.precio) - parseInt(a.dataset.precio));
   } else if (currentOrder === 'nombre') {
     visible.sort((a, b) => a.dataset.nombre.localeCompare(b.dataset.nombre));
+  } else {
+    visible.sort((a, b) => parseInt(a.dataset.idx) - parseInt(b.dataset.idx));
   }
   visible.forEach(card => grid.appendChild(card));
 
@@ -191,7 +194,7 @@ function resetFilters() {
   document.getElementById('searchInput').value = '';
   document.getElementById('precioRange').value = 5000000;
   document.getElementById('rangeMax').textContent = '$5.000.000';
-  document.querySelectorAll('#filtroMarcas input').forEach(c => c.checked = true);
+  document.querySelectorAll('#filtroMarcas .marca-pill').forEach(p => p.classList.remove('active'));
   applyFilters();
 }
 
@@ -218,8 +221,16 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  document.querySelectorAll('#filtroMarcas input').forEach(cb => {
-    cb.addEventListener('change', applyFilters);
+  document.querySelectorAll('#filtroMarcas .marca-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      pill.classList.toggle('active');
+      applyFilters();
+    });
+    pill.querySelector('.pill-x').addEventListener('click', e => {
+      e.stopPropagation();
+      pill.classList.remove('active');
+      applyFilters();
+    });
   });
 
   // 3. Restaurar estado desde URL (?cat=, ?q=, ?max=)

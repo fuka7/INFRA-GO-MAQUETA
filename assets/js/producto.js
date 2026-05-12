@@ -29,8 +29,15 @@ function getProducto() {
   };
 }
 
-/* ── Generar miniaturas SVG (variantes de opacidad) ── */
+/* ── Generar miniaturas ── */
 function buildThumbs(producto, n) {
+  if (producto.imgs && producto.imgs.length) {
+    return producto.imgs.map((url, i) =>
+      `<div class="prd-thumb ${i === 0 ? 'active' : ''}" data-idx="${i}" onclick="selectThumb(this, ${i})">
+        <img src="${url}" alt="${producto.nombre}" loading="lazy">
+      </div>`
+    ).join('');
+  }
   const opacities = [1, 0.75, 0.5, 0.35];
   let html = '';
   for (let i = 0; i < Math.min(n, opacities.length); i++) {
@@ -46,9 +53,15 @@ function buildThumbs(producto, n) {
 function selectThumb(el, idx) {
   document.querySelectorAll('.prd-thumb').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  const opacities = [1, 0.75, 0.5, 0.35];
-  const mainSvg = document.querySelector('.prd-img-main');
-  if (mainSvg) mainSvg.style.opacity = opacities[idx] || 1;
+  const thumbImg = el.querySelector('img');
+  const mainEl = document.getElementById('prdImgMain');
+  if (thumbImg) {
+    mainEl.innerHTML = `<img src="${thumbImg.src}" alt="">`;
+  } else {
+    const opacities = [1, 0.75, 0.5, 0.35];
+    const mainSvg = mainEl.querySelector('svg');
+    if (mainSvg) mainSvg.style.opacity = opacities[idx] || 1;
+  }
 }
 
 /* ── Render estrellas ── */
@@ -105,7 +118,12 @@ function renderProducto(p) {
 
 
   // Galería
-  document.getElementById('prdImgMain').innerHTML = p.svg || `<svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" fill="rgba(17,17,17,0.05)"/></svg>`;
+  const mainEl = document.getElementById('prdImgMain');
+  if (p.imgs && p.imgs.length) {
+    mainEl.innerHTML = `<img src="${p.imgs[0]}" alt="${p.nombre}">`;
+  } else {
+    mainEl.innerHTML = p.svg || `<svg viewBox="0 0 120 84" fill="none"><rect x="12" y="6" width="96" height="60" rx="4" fill="rgba(17,17,17,0.05)"/></svg>`;
+  }
   document.getElementById('prdThumbs').innerHTML = buildThumbs(p, p.images);
 
   // Descripción

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.newegg.com)",
+      "WebFetch(domain:store.storeimages.cdn-apple.com)"
+    ]
+  }
+}
