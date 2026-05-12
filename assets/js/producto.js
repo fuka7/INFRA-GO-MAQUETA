@@ -25,6 +25,7 @@ function getProducto() {
     description: detalle.description || base.specsResumen.join(' · '),
     specs:       detalle.specs       || base.specsResumen.map((s, i) => [`Especificación ${i + 1}`, s]),
     images:      detalle.images      || 2,
+    imgs:        detalle.imgs        || null,
     precio:      base.precioVenta,
   };
 }
@@ -104,14 +105,16 @@ function renderProducto(p) {
   // Botón "Volver a la tienda": usa history.back() si venimos de tienda
   const backLink = document.getElementById('prdBackLink');
   if (backLink) {
-    const ref = document.referrer;
-    const fromTienda = ref && ref.includes('tienda.html');
+    const tiendaBack = sessionStorage.getItem('igb_tienda_back');
     backLink.onclick = function(e) {
       e.preventDefault();
-      if (fromTienda && history.length > 1) {
+      sessionStorage.removeItem('igb_tienda_back');
+      if (tiendaBack) {
+        window.location.href = tiendaBack;
+      } else if (history.length > 1) {
         history.back();
       } else {
-        window.location.href = '/tienda.html?cat=' + p.cat;
+        window.location.href = '/tienda.html';
       }
     };
   }
@@ -232,18 +235,39 @@ const REC_EXTRAS = {
 
 function buildRecCard(a) {
   const nombre = (a.nombreLargo || a.nombre).replace(/'/g, "\\'");
+  const imgHtml = a.img
+    ? `<img src="${a.img}" alt="${a.nombre}" loading="lazy" style="width:100%;height:100%;object-fit:contain;">`
+    : a.svg;
   return `
-    <a class="prd-rec-card" href="/producto.html?id=${a.id}">
-      <div class="prd-rec-card-img">${a.svg}</div>
+    <div class="prd-rec-card">
+      <div class="prd-rec-card-img" style="background:#fff;">${imgHtml}</div>
       <div class="prd-rec-card-body">
         <div class="prd-rec-card-brand">${a.marca}</div>
         <div class="prd-rec-card-name">${a.nombreLargo || a.nombre}</div>
         <div class="prd-rec-card-price">$${a.precioVenta.toLocaleString('es-CL')}</div>
       </div>
-      <button class="prd-rec-card-btn" onclick="event.preventDefault();event.stopPropagation();typeof igcAddItem==='function'&&igcAddItem('${a.id}','${nombre}',${a.precioVenta},'')">
-        + Agregar
-      </button>
-    </a>`;
+      <div class="prd-rec-card-btns">
+        <button class="prd-rec-card-btn prd-rec-card-btn--ver" onclick="window.location.href='/producto.html?id=${a.id}'">Ver</button>
+        <button class="prd-rec-card-btn prd-rec-card-btn--add" onclick="typeof igcAddItem==='function'&&igcAddItem('${a.id}','${nombre}',${a.precioVenta},'')">+ Agregar</button>
+      </div>
+    </div>`;
+}
+
+function prdRecScroll(dir) {
+  const scroll = document.getElementById('prdRecScroll');
+  if (!scroll) return;
+  scroll.scrollBy({ left: dir * 432, behavior: 'smooth' });
+}
+
+function updateRecArrows() {
+  const scroll = document.getElementById('prdRecScroll');
+  const prev   = document.getElementById('prdRecPrev');
+  const next   = document.getElementById('prdRecNext');
+  if (!scroll || !prev || !next) return;
+  const atStart = scroll.scrollLeft <= 2;
+  const atEnd   = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 2;
+  prev.classList.toggle('visible', !atStart);
+  next.classList.toggle('visible', !atEnd);
 }
 
 function renderRecommended(p) {
@@ -273,6 +297,12 @@ function renderRecommended(p) {
 
   const section = document.getElementById('prdRecSection');
   if (section && sugeridos.length) section.style.display = '';
+
+  const scrollEl = document.getElementById('prdRecScroll');
+  if (scrollEl) {
+    scrollEl.addEventListener('scroll', updateRecArrows, { passive: true });
+    setTimeout(updateRecArrows, 50);
+  }
 }
 
 /* ══════════════════════════════════════════

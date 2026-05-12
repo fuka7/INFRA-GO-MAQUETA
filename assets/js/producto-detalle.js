@@ -37,9 +37,9 @@ const PRODUCTO_DETALLE = {
   'dell-inspiron-15': {
     images: 3,
     imgs: [
-      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/15-3530-intel/media-gallery/black/notebook-inspiron-15-3530-nt-plastic-black-gallery-2.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=606&qlt=100,1&resMode=sharp2&size=606,402&chrss=full',
-      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/15-3530-intel/media-gallery/black/notebook-inspiron-15-3530-nt-plastic-black-gallery-1.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=606&qlt=100,1&resMode=sharp2&size=606,402&chrss=full',
-      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/15-3530-intel/media-gallery/black/notebook-inspiron-15-3530-nt-plastic-black-gallery-3.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=606&qlt=100,1&resMode=sharp2&size=606,402&chrss=full',
+      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/15-3530-intel/media-gallery/black/notebook-inspiron-15-3530-nt-plastic-black-gallery-2.psd?fmt=jpg&wid=640',
+      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/15-3530-intel/media-gallery/black/notebook-inspiron-15-3530-nt-plastic-black-gallery-3.psd?fmt=jpg&wid=640',
+      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/15-3530-intel/media-gallery/black/notebook-inspiron-15-3530-nt-plastic-black-gallery-5.psd?fmt=jpg&wid=640',
     ],
     description: "Notebook de 15.6 pulgadas con pantalla Full HD y procesador Intel Core i7 de última generación. Versátil y potente para trabajo intensivo y productividad empresarial diaria.",
     specs: [
@@ -194,7 +194,8 @@ const PRODUCTO_DETALLE = {
   'qnap-ts-464': {
     images: 2,
     imgs: [
-      'https://dgi6y9510e51q.cloudfront.net/catalog/product/cache/6f8b68960b249c68ae97c1b9d92c3006/6/3/636_1641439097_photo_ts-464_right.png',
+      'https://c1.neweggimages.com/productimage/nb640/A24GD2305090C6G0M62.jpg',
+      'https://c1.neweggimages.com/productimage/nb640/A24GD2305090C6G72C1.jpg',
     ],
     description: "NAS de 4 bahías con Intel Celeron N5105 quad-core y doble interfaz 2.5GbE. Rendimiento multimedia y virtualización en oficinas que necesitan almacenamiento rápido y confiable.",
     specs: [
@@ -299,9 +300,11 @@ const PRODUCTO_DETALLE = {
   },
 
   'fortinet-fortigate-60f': {
-    images: 2,
+    images: 3,
     imgs: [
-      'https://snpi.dell.com/snp/images/products/large/en-us~AA868965_v1/AA868965_v1.jpg',
+      'https://c1.neweggimages.com/productimage/nb640/22Z-0003-00B40-01.jpg',
+      'https://c1.neweggimages.com/productimage/nb640/22Z-0003-00B40-02.jpg',
+      'https://c1.neweggimages.com/productimage/nb640/22Z-0003-00B40-03.jpg',
     ],
     description: "NGFW Fortinet con SD-WAN integrado para oficinas y sucursales. Protección completa con IPS, filtrado web SSL y VPN de alto rendimiento hasta 10 Gbps sin latencia apreciable.",
     specs: [
@@ -411,11 +414,11 @@ const PRODUCTO_DETALLE = {
   },
 
   'dell-monitor-p2723d': {
-    images: 2,
+    images: 3,
     imgs: [
-      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/peripherals/monitors/p-series/p2723d/media-gallery/monitor-p2723d-gallery-1.psd?fmt=png-alpha&pscan=auto&scl=1&hei=804&wid=839&qlt=100,1&resMode=sharp2&size=839,804&chrss=full',
-      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/peripherals/monitors/p-series/p2723d/media-gallery/monitor-p2723d-gallery-2.psd?fmt=png-alpha&pscan=auto&scl=1&hei=804&wid=839&qlt=100,1&resMode=sharp2&size=839,804&chrss=full',
-      'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/peripherals/monitors/p-series/p2723d/media-gallery/monitor-p2723d-gallery-3.psd?fmt=png-alpha&pscan=auto&scl=1&hei=804&wid=839&qlt=100,1&resMode=sharp2&size=839,804&chrss=full',
+      'https://c1.neweggimages.com/productimage/nb640/24-260-824-V01.jpg',
+      'https://c1.neweggimages.com/productimage/nb640/24-260-824-V02.jpg',
+      'https://c1.neweggimages.com/productimage/nb640/24-260-824-V03.jpg',
     ],
     description: "Monitor QHD 27\" con panel IPS, USB-C con carga de 65W y hub USB 3.2. Para diseñadores y profesionales que necesitan mayor espacio de trabajo con fidelidad cromática comprobada.",
     specs: [

@@ -231,8 +231,16 @@
         </div>
         <a href="/tienda.html" class="prd-rec-ver-todo">Ver catálogo completo →</a>
       </div>
-      <div class="prd-rec-scroll">
-        <div class="prd-rec-grid" id="prdAccGrid"></div>
+      <div class="prd-rec-carousel">
+        <button class="prd-rec-arrow prd-rec-arrow--prev" id="prdRecPrev" onclick="prdRecScroll(-1)" aria-label="Anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="prd-rec-scroll" id="prdRecScroll">
+          <div class="prd-rec-grid" id="prdAccGrid"></div>
+        </div>
+        <button class="prd-rec-arrow prd-rec-arrow--next" id="prdRecNext" onclick="prdRecScroll(1)" aria-label="Siguiente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
       </div>
     </div>
 

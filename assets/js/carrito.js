@@ -112,6 +112,11 @@
   function _fmt(n)       { return '$' + (n||0).toLocaleString('es-CL'); }
   function _esc(str)     { return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function _defaultImg() { return '<svg viewBox="0 0 24 24" fill="none" stroke="#b0bcc9" stroke-width="1.5" width="32" height="32"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>'; }
+  function _itemImg(item) {
+    var src = item.img || ((window.CATALOGO || []).find(function(p){ return p.id === item.id; }) || {}).img || '';
+    if (src) return '<img src="' + src + '" alt="' + _esc(item.nombre) + '" style="width:100%;height:100%;object-fit:contain;">';
+    return item.svg || _defaultImg();
+  }
 
   /* ════════════════════════════════════════════════════════════
      API PÚBLICA
@@ -123,7 +128,9 @@
   window.igcAddItem = function(id, nombre, precio, svg) {
     _load();
     var ex = _items.find(function(i){ return i.id === id; });
-    if (ex) { ex.qty++; } else { _items.push({ id:id, nombre:nombre, precio:precio, qty:1, svg:svg||'' }); }
+    var catalogImg = ((window.CATALOGO || []).find(function(p){ return p.id === id; }) || {}).img || '';
+    if (ex) { ex.qty++; if (!ex.img && catalogImg) ex.img = catalogImg; }
+    else { _items.push({ id:id, nombre:nombre, precio:precio, qty:1, svg:svg||'', img:catalogImg }); }
     _lastAddedId = id;
     _save();
     _updateNavbarBadge();
@@ -279,7 +286,7 @@
       }
       return [
         '<div class="igc-mini-item-rich">',
-        '  <div class="igc-mini-img-large">' + (item.svg || _defaultImg()) + '</div>',
+        '  <div class="igc-mini-img-large">' + _itemImg(item) + '</div>',
         '  <div class="igc-mini-detail">',
         marca ? '    <div class="igc-mini-marca">' + _esc(marca) + '</div>' : '',
         '    <div class="igc-mini-nombre-rich">' + _esc(item.nombre) + '</div>',
@@ -353,16 +360,11 @@
     if (!cartBtn) return;
     cartBtn.style.display = '';
 
-    /* Envolver en wrapper relativo */
-    var wrap = document.createElement('div');
-    wrap.className = 'igc-mini-wrap';
-    cartBtn.parentNode.insertBefore(wrap, cartBtn);
-    wrap.appendChild(cartBtn);
-
+    /* Dropdown directo en body — evita problemas de stacking context del navbar */
     var drop = document.createElement('div');
     drop.id = 'igcMiniDropdown';
     drop.className = 'igc-mini-dropdown';
-    wrap.appendChild(drop);
+    document.body.appendChild(drop);
 
     /* Click en ícono del carro → abrir/cerrar dropdown */
     cartBtn.addEventListener('click', function(e) {
@@ -375,15 +377,13 @@
       }
     });
 
-    /* Cerrar al hacer click fuera — usa composedPath para detectar clicks
-       dentro del dropdown incluso si el target fue removido del DOM por un re-render */
+    /* Cerrar al hacer click fuera */
     document.addEventListener('click', function(e) {
       if (!_miniOpen) return;
       var path = e.composedPath ? e.composedPath() : [];
-      var clickDentro = path.length > 0
-        ? path.some(function(el) { return el === wrap; })
-        : wrap.contains(e.target);
-      if (!clickDentro) _closeMini();
+      var enDropdown = path.some(function(el) { return el === drop; });
+      var enCart     = path.some(function(el) { return el === cartBtn; });
+      if (!enDropdown && !enCart) _closeMini();
     });
 
   }
@@ -432,7 +432,7 @@
       var sub = precioDto * item.qty;
       return [
         '<div class="igc-page-item">',
-        '  <div class="igc-page-img">' + (item.svg || _defaultImg()) + '</div>',
+        '  <div class="igc-page-img">' + _itemImg(item) + '</div>',
         '  <div class="igc-page-info">',
         '    <div class="igc-page-marca">InfraGo</div>',
         '    <div class="igc-page-nombre">' + _esc(item.nombre) + '</div>',
@@ -773,7 +773,7 @@
     var html = _items.map(function(item) {
       return [
         '<div class="igc-cks-item">',
-        '  <div class="igc-cks-item-img">' + (item.svg || _defaultImg()) + '</div>',
+        '  <div class="igc-cks-item-img">' + _itemImg(item) + '</div>',
         '  <div class="igc-cks-item-info">',
         '    <div class="igc-cks-item-nombre">' + _esc(item.nombre) + '</div>',
         '    <div class="igc-cks-item-qty">Cantidad: ' + item.qty + '</div>',

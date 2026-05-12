@@ -37,7 +37,7 @@ function buildCard(p) {
       data-precio="${p.precio}"
       data-nombre="${p.nombre}"
       style="cursor:pointer;"
-      onclick="window.location.href='/producto.html?id=${p.id}'">
+      onclick="sessionStorage.setItem('igb_tienda_back', location.href); window.location.href='/producto.html?id=${p.id}'">
       ${badgeHtml}
       <div class="prod-img">${p.img ? `<img src="${p.img}" alt="${p.nombre}" loading="lazy">` : p.svg}</div>
       <div class="prod-info">
@@ -49,7 +49,7 @@ function buildCard(p) {
             <span class="prod-price-val">$${p.precio.toLocaleString('es-CL')}</span>
           </div>
           <div class="prod-btns">
-            <a href="/producto.html?id=${p.id}" class="prod-btn prod-btn--sec" onclick="event.stopPropagation()">Ver</a>
+            <a href="/producto.html?id=${p.id}" class="prod-btn prod-btn--sec" onclick="event.stopPropagation(); sessionStorage.setItem('igb_tienda_back', location.href)">Ver</a>
             <button class="prod-btn prod-btn--cart" onclick="event.stopPropagation(); typeof igcAddItem==='function' && igcAddItem('${p.id}', '${p.nombre.replace(/'/g, String.fromCharCode(92,39))}', ${p.precio}, '')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
               Agregar

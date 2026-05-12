@@ -152,9 +152,9 @@
 }
 
 .igc-mini-dropdown {
-  position: absolute;
-  top: calc(100% + 14px);
-  right: 0;
+  position: fixed;
+  top: 110px;
+  right: 20px;
   width: 440px;
   background: #fff;
   border-radius: 14px;
@@ -333,7 +333,7 @@
 @media (max-width: 540px) {
   .igc-mini-dropdown {
     position: fixed;
-    top: 64px;
+    top: 102px;
     left: 8px;
     right: 8px;
     width: auto;
