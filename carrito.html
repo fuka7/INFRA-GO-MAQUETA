@@ -33,6 +33,11 @@
     <h1 class="igc-page-title">Carro de Compras</h1>
     <div class="igc-page-items" id="igcPageContainer"></div>
 
+    <!-- Calcular envío -->
+    <div class="igc-cart-ship-wrap" id="igcCartShipWrap" style="display:none">
+      <div id="igcCartShippingWidget"></div>
+    </div>
+
     <!-- Banner financiamiento Banco de Chile -->
     <div class="igc-finance-banner">
       <div class="igc-finance-content">
@@ -83,6 +88,10 @@
     <div class="igc-panel-row">
       <span>IVA (19%)</span>
       <strong id="igcPanelIVA">$0</strong>
+    </div>
+    <div class="igc-panel-row" id="igcPanelRowEnvio" style="display:none">
+      <span>Envío</span>
+      <strong id="igcPanelEnvio"></strong>
     </div>
     <div class="igc-panel-divider"></div>
 
@@ -202,7 +211,7 @@
         <div class="igc-field-row">
           <div class="igc-field-group">
             <label for="igcCoRegion">Región <span class="igc-req">*</span></label>
-            <select id="igcCoRegion" onchange="igcLoadComunas(this.value); igcOnRegionChange()">
+            <select id="igcCoRegion" onchange="igcLoadComunas(this.value)">
               <option value="">Seleccionar región...</option>
               <option value="Región Metropolitana">Región Metropolitana</option>
               <option value="Región de Valparaíso">Región de Valparaíso</option>
@@ -224,14 +233,12 @@
           </div>
           <div class="igc-field-group">
             <label for="igcCoComuna">Comuna <span class="igc-req">*</span></label>
-            <select id="igcCoComuna" disabled onchange="igcOnComunaChange()">
+            <select id="igcCoComuna" disabled>
               <option value="">Selecciona la región primero</option>
             </select>
           </div>
         </div>
 
-        <!-- Resultado de cotización de despacho (se llena automáticamente) -->
-        <div id="igcShippingPreview" style="display:none;"></div>
         <div class="igc-field-group">
           <label for="igcCoNotas">Notas de entrega</label>
           <textarea id="igcCoNotas" rows="2" placeholder="Horario de recepción, instrucciones especiales..."></textarea>

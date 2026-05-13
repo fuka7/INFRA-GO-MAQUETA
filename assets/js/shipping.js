@@ -44,19 +44,20 @@
      Fuente: tarifas referenciales couriers Chile 2025
   ─────────────────────────────────────────────────────────── */
   var TARIFAS_RESPALDO = {
-    'Región Metropolitana':      { precio: 3490,  dias: '1-2' },
-    'Región de Valparaíso':      { precio: 4990,  dias: '2-3' },
-    'Región del Biobío':         { precio: 5490,  dias: '2-4' },
-    'Región de La Araucanía':    { precio: 5990,  dias: '3-5' },
-    'Región de Los Lagos':       { precio: 6490,  dias: '3-5' },
-    'Región de Coquimbo':        { precio: 5490,  dias: '2-4' },
-    'Región de Atacama':         { precio: 5990,  dias: '3-5' },
-    'Región de Antofagasta':     { precio: 6490,  dias: '3-5' },
-    'Región de Tarapacá':        { precio: 6990,  dias: '4-6' },
     'Región de Arica y Parinacota': { precio: 7490, dias: '4-6' },
+    'Región de Tarapacá':        { precio: 6990,  dias: '4-6' },
+    'Región de Antofagasta':     { precio: 6490,  dias: '3-5' },
+    'Región de Atacama':         { precio: 5990,  dias: '3-5' },
+    'Región de Coquimbo':        { precio: 5490,  dias: '2-4' },
+    'Región de Valparaíso':      { precio: 4990,  dias: '2-3' },
+    'Región Metropolitana':      { precio: 3490,  dias: '1-2' },
+    "Región de O'Higgins":       { precio: 4990,  dias: '2-3' },
     'Región del Maule':          { precio: 5490,  dias: '2-4' },
     'Región de Ñuble':           { precio: 5490,  dias: '2-4' },
+    'Región del Biobío':         { precio: 5490,  dias: '2-4' },
+    'Región de La Araucanía':    { precio: 5990,  dias: '3-5' },
     'Región de Los Ríos':        { precio: 6490,  dias: '3-5' },
+    'Región de Los Lagos':       { precio: 6490,  dias: '3-5' },
     'Región de Aysén':           { precio: 8990,  dias: '5-7' },
     'Región de Magallanes':      { precio: 9990,  dias: '5-8' },
   };
@@ -288,28 +289,22 @@
       '      <path d="M16 8h4l3 5v3h-7V8z"/>',
       '      <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
       '    </svg>',
-      '    <strong>Cotizar despacho</strong>',
+      '    <strong>Calcular envío</strong>',
       '  </div>',
       '  <div class="igs-fields">',
       '    <div class="igs-field">',
       '      <label>Región</label>',
       '      <select id="igs-region-' + containerId + '" onchange="igShipping._onRegionChange(\'' + containerId + '\')">',
-      '        <option value="">Selecciona región</option>',
+      '        <option value="">Seleccione una región</option>',
       _buildRegionOptions(regionInicial),
       '      </select>',
       '    </div>',
       '    <div class="igs-field">',
       '      <label>Comuna</label>',
-      '      <input type="text" id="igs-comuna-' + containerId + '"',
-      '        placeholder="Ej: Providencia"',
-      '        value="' + _escHtml(comunaInicial) + '"',
-      '        oninput="igShipping._onComunaInput(\'' + containerId + '\')"',
-      '        autocomplete="off">',
-      '      <div class="igs-autocomplete" id="igs-ac-' + containerId + '"></div>',
+      '      <select id="igs-comuna-' + containerId + '" disabled onchange="igShipping._doCotizar(\'' + containerId + '\',' + totalCompra + ')">',
+      '        <option value="">Seleccionar comuna</option>',
+      '      </select>',
       '    </div>',
-      '    <button class="igs-btn" onclick="igShipping._doCotizar(\'' + containerId + '\',' + totalCompra + ')">',
-      '      Cotizar',
-      '    </button>',
       '  </div>',
       '  <div class="igs-result" id="igs-result-' + containerId + '" style="display:none"></div>',
       '</div>'
@@ -317,29 +312,60 @@
 
     _injectStyles();
 
-    /* Si hay datos iniciales, cotizar automáticamente */
-    if (comunaInicial && regionInicial) {
-      setTimeout(function() {
-        window.igShipping._doCotizar(containerId, totalCompra);
-      }, 100);
+    /* Si hay datos iniciales, pre-rellenar los selects */
+    if (regionInicial) {
+      _populateComunas(containerId, regionInicial, comunaInicial);
+      /* Si también hay comuna pre-cargada, cotizar automáticamente */
+      if (comunaInicial) {
+        setTimeout(function() {
+          window.igShipping._doCotizar(containerId, totalCompra);
+        }, 150);
+      }
     }
   };
 
-  /* ── Construir options de región ── */
+  /* ── Construir options de región (orden geográfico norte→sur) ── */
+  var _REGIONES_ORDEN = [
+    'Región de Arica y Parinacota','Región de Tarapacá','Región de Antofagasta',
+    'Región de Atacama','Región de Coquimbo','Región de Valparaíso',
+    'Región Metropolitana',"Región de O'Higgins",'Región del Maule',
+    'Región de Ñuble','Región del Biobío','Región de La Araucanía',
+    'Región de Los Ríos','Región de Los Lagos','Región de Aysén',
+    'Región de Magallanes'
+  ];
+
   function _buildRegionOptions(selected) {
-    var regiones = Object.keys(TARIFAS_RESPALDO);
-    return regiones.map(function(r) {
+    return _REGIONES_ORDEN.map(function(r) {
       return '<option value="' + r + '"' + (r === selected ? ' selected' : '') + '>' + r + '</option>';
     }).join('');
+  }
+
+  /* ── Poblar select de comunas según región ── */
+  function _populateComunas(containerId, region, selected) {
+    var select = document.getElementById('igs-comuna-' + containerId);
+    if (!select) return;
+    var comunas = (window.COMUNAS_CHILE && window.COMUNAS_CHILE[region]) || [];
+    select.innerHTML = '<option value="">Seleccionar comuna</option>';
+    comunas.forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      if (selected && c === selected) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.disabled = comunas.length === 0;
   }
 
   /* ── Handler cambio región ── */
   window.igShipping._onRegionChange = function(containerId) {
     var regionEl = document.getElementById('igs-region-' + containerId);
     if (!regionEl) return;
-    /* Limpiar resultado anterior */
     var result = document.getElementById('igs-result-' + containerId);
     if (result) result.style.display = 'none';
+    _populateComunas(containerId, regionEl.value, '');
+    /* Notificar reset al panel del carrito */
+    var widget = document.getElementById('igs-widget-' + containerId);
+    if (widget && widget._onReset) widget._onReset();
   };
 
   /* ── Autocomplete comunas básico ── */
@@ -391,21 +417,13 @@
     var comunaEl = document.getElementById('igs-comuna-' + containerId);
     var regionEl = document.getElementById('igs-region-' + containerId);
     var result   = document.getElementById('igs-result-' + containerId);
-    var btn      = document.querySelector('#igs-widget-' + containerId + ' .igs-btn');
     if (!comunaEl || !result) return;
 
-    var comuna = comunaEl.value.trim();
+    var comuna = comunaEl.value;
     var region = regionEl ? regionEl.value : '';
 
-    if (!comuna) {
-      comunaEl.focus();
-      comunaEl.style.borderColor = '#ef4444';
-      setTimeout(function() { comunaEl.style.borderColor = ''; }, 1500);
-      return;
-    }
-
-    /* Loading state */
-    if (btn) { btn.disabled = true; btn.textContent = 'Consultando…'; }
+    if (!region || !comuna) return;
+    if (comunaEl) comunaEl.disabled = true;
     result.style.display = 'block';
     result.innerHTML = '<div class="igs-loading"><span class="igs-spinner"></span> Consultando tarifas…</div>';
 
@@ -425,7 +443,7 @@
     } catch(e) {
       result.innerHTML = '<div class="igs-error">No se pudo cotizar. Intenta de nuevo.</div>';
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = 'Cotizar'; }
+      if (comunaEl) comunaEl.disabled = false;
     }
   };
 
@@ -494,18 +512,6 @@
       '  border-color: #FF7A00; box-shadow: 0 0 0 3px rgba(255,122,0,.1);',
       '}',
 
-      '.igs-autocomplete {',
-      '  position: absolute; top: 100%; left: 0; right: 0; z-index: 100;',
-      '  background: #fff; border: 1px solid #dde1e8; border-top: none;',
-      '  border-radius: 0 0 7px 7px;',
-      '  box-shadow: 0 4px 12px rgba(0,0,0,.1);',
-      '  display: none;',
-      '}',
-      '.igs-ac-item {',
-      '  padding: 8px 10px; font-size: 13px; cursor: pointer;',
-      '  color: #0d1e36; transition: background .12s;',
-      '}',
-      '.igs-ac-item:hover { background: #f4f5f7; }',
 
       '.igs-btn {',
       '  background: #1a4fa0; border: none; border-radius: 7px;',
@@ -685,21 +691,10 @@
      Expone igShipping.mountCarrito(containerId, totalCompra)
   ════════════════════════════════════════════════════════════ */
   window.igShipping.mountCarrito = function(containerId, totalCompra) {
-    /* Intentar pre-rellenar desde perfil en localStorage */
-    var comunaInicial = '';
-    var regionInicial = '';
-    try {
-      var profile = JSON.parse(localStorage.getItem('ig_profile') || 'null');
-      if (profile) {
-        comunaInicial = profile.ciudad  || '';
-        regionInicial = profile.region  || '';
-      }
-    } catch(e) {}
-
     window.igShipping.renderWidget(containerId, {
       totalCompra:   totalCompra  || 0,
-      comunaInicial: comunaInicial,
-      regionInicial: regionInicial
+      comunaInicial: '',
+      regionInicial: ''
     });
   };
 

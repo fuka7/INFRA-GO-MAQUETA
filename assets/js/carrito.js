@@ -20,11 +20,9 @@
   var _selectedLog = {};   /* { id: true/false } */
   var _metodo = 'transferencia';
 
-  /* ── Estado de envío ── */
-  var _shippingCost     = 0;
-  var _shippingTimer    = null;
-  var _shippingOpciones = [];
-  var _shippingSelIdx   = -1;
+  var _cartShipMounted     = false;
+  var _cartShipCost        = 0;
+  var _cartShipCalculated  = false;
 
   /* ── Persistencia ── */
   function _save() {
@@ -45,6 +43,17 @@
   function _totalQty()   { return _items.reduce(function(s,i){ return s+i.qty; }, 0); }
   function _subtotal()   { return _items.reduce(function(s,i){ return s+i.precio*i.qty; }, 0); }
 
+  /* Detecta si un ítem es servicio consultando el catálogo */
+  function _isService(item) {
+    var cat = ((window.CATALOGO || []).find(function(p){ return p.id === item.id; }) || {}).cat || '';
+    return cat === 'servicios';
+  }
+
+  /* Cantidad solo de productos (excluye servicios) — base para el descuento por volumen */
+  function _productQty() {
+    return _items.reduce(function(s, i){ return s + (_isService(i) ? 0 : i.qty); }, 0);
+  }
+
   /* ── Descuentos por volumen (igual que configurador) ── */
   var DCTO_TRAMOS_TIENDA = [
     { min:10, max:19,   pct:1 },
@@ -55,7 +64,7 @@
   ];
 
   function _descuentoPct() {
-    var qty = _totalQty();
+    var qty = _productQty();
     var t = DCTO_TRAMOS_TIENDA.find(function(t){ return qty >= t.min && qty <= t.max; });
     return t ? t.pct : 0;
   }
@@ -64,13 +73,14 @@
     var pct = _descuentoPct();
     if (pct === 0) return _subtotal();
     return _items.reduce(function(s, i){
+      if (_isService(i)) return s + i.precio * i.qty;
       return s + Math.round(i.precio * (1 - pct / 100)) * i.qty;
     }, 0);
   }
 
   function _updateDctoSidebarWidget() {
     var pct = _descuentoPct();
-    var qty = _totalQty();
+    var qty = _productQty();
     var activo = document.getElementById('filtroDctoActivo');
     var pctEl  = document.getElementById('filtroDctoPct');
     if (activo) { activo.style.display = pct > 0 ? '' : 'none'; }
@@ -394,7 +404,11 @@
         '  <a href="/tienda.html">Ir a la tienda</a>',
         '</div>'
       ].join('');
+      _cartShipCost       = 0;
+      _cartShipCalculated = false;
       _updatePanel(0);
+      var shipWrap = document.getElementById('igcCartShipWrap');
+      if (shipWrap) shipWrap.style.display = 'none';
       return;
     }
 
@@ -402,7 +416,8 @@
     _updateDctoSidebarWidget();
 
     container.innerHTML = _items.map(function(item) {
-      var precioDto = _pct > 0 ? Math.round(item.precio * (1 - _pct / 100)) : item.precio;
+      var esSvc    = _isService(item);
+      var precioDto = (_pct > 0 && !esSvc) ? Math.round(item.precio * (1 - _pct / 100)) : item.precio;
       var sub = precioDto * item.qty;
       return [
         '<div class="igc-page-item">',
@@ -411,9 +426,9 @@
         '    <div class="igc-page-marca">InfraGo</div>',
         '    <div class="igc-page-nombre">' + _esc(item.nombre) + '</div>',
         '    <div class="igc-page-precio">',
-        _pct > 0 ? '      <span class="igc-page-precio-original">' + _fmt(item.precio) + '</span>' : '',
+        (_pct > 0 && !esSvc) ? '      <span class="igc-page-precio-original">' + _fmt(item.precio) + '</span>' : '',
         '      ' + _fmt(precioDto),
-        _pct > 0 ? '      <span class="igc-page-dto-badge">−' + _pct + '%</span>' : '',
+        (_pct > 0 && !esSvc) ? '      <span class="igc-page-dto-badge">−' + _pct + '%</span>' : '',
         '    </div>',
         '    <div class="igc-page-disponible">Disponible · Todo medio de pago</div>',
         '  </div>',
@@ -436,6 +451,30 @@
 
     _updatePanel(_subtotalConDescuento());
     _renderServicios();
+
+    /* Mostrar y montar el cotizador de envío */
+    var shipWrap = document.getElementById('igcCartShipWrap');
+    if (shipWrap) {
+      shipWrap.style.display = '';
+      if (!_cartShipMounted && window.igShipping && typeof window.igShipping.mountCarrito === 'function') {
+        window.igShipping.mountCarrito('igcCartShippingWidget', _subtotalConDescuento());
+        _cartShipMounted = true;
+        /* Conectar callback: actualiza panel al cotizar */
+        var widgetEl = document.getElementById('igs-widget-igcCartShippingWidget');
+        if (widgetEl) {
+          widgetEl._onResult = function(cotizacion) {
+            _cartShipCost       = cotizacion.precio || 0;
+            _cartShipCalculated = true;
+            _updatePanel();
+          };
+          widgetEl._onReset = function() {
+            _cartShipCost       = 0;
+            _cartShipCalculated = false;
+            _updatePanel();
+          };
+        }
+      }
+    }
   }
 
   /* ── Subtotal de servicios seleccionados ── */
@@ -527,6 +566,7 @@
     var total  = _metodo === 'tarjeta' ? Math.round(base * 1.03) : base;
     var neto   = Math.round(base / 1.19);
     var iva    = base - neto;
+    total += _cartShipCost;
     var el;
     el = document.getElementById('igcPanelSubtotal');    if(el) el.textContent = _fmt(sub);
     el = document.getElementById('igcPanelSubtotalSvc'); if(el) el.textContent = _fmt(subSvc);
@@ -544,191 +584,27 @@
       if (pctEl)    pctEl.textContent    = pct + '% dto.';
       if (ahorroEl) ahorroEl.textContent = '−' + _fmt(ahorro);
     }
+    var rowEnvio = document.getElementById('igcPanelRowEnvio');
+    el = document.getElementById('igcPanelEnvio');
+    if (rowEnvio && el) {
+      if (_cartShipCalculated) {
+        rowEnvio.style.display = '';
+        if (_cartShipCost > 0) {
+          el.textContent = _fmt(_cartShipCost);
+          el.className = '';
+        } else {
+          el.textContent = 'Gratis';
+          el.className = 'igc-panel-envio-gratis';
+        }
+      } else {
+        rowEnvio.style.display = 'none';
+      }
+    }
     if (window.igShipping && typeof window.igShipping.updateTotal === 'function') {
       window.igShipping.updateTotal(total);
     }
   }
 
-  /* ════════════════════════════════════════════════════════════
-     CÁLCULO DE ENVÍO — se activa en el Step 2 del checkout
-  ════════════════════════════════════════════════════════════ */
-
-  /* Colores de badge por courier */
-  var _COURIER_COLORS = {
-    'blue express': { bg:'#003DA5', fg:'#fff' },
-    'starken':      { bg:'#7B1010', fg:'#fff' },
-    'chilexpress':  { bg:'#FFCD00', fg:'#000' },
-    'shippify':     { bg:'#00B09B', fg:'#fff' },
-    'infrago':      { bg:'#FF7A00', fg:'#fff' },
-    'infrago express': { bg:'#FF7A00', fg:'#fff' },
-  };
-
-  function _courierStyle(name) {
-    var key = (name||'').toLowerCase();
-    for (var k in _COURIER_COLORS) {
-      if (key.includes(k)) return _COURIER_COLORS[k];
-    }
-    return { bg:'#1a4fa0', fg:'#fff' };
-  }
-
-  function _courierInitials(name) {
-    return (name||'').split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2);
-  }
-
-  function _calcShipping() {
-    var cotizarFn = window.igShipping && window.igShipping.cotizarOpciones;
-    if (!cotizarFn) return;
-
-    var comunaEl  = document.getElementById('igcCoComuna');
-    var regionEl  = document.getElementById('igcCoRegion');
-    var previewEl = document.getElementById('igcShippingPreview');
-    var envioEl   = document.getElementById('igcCksEnvioVal');
-    if (!comunaEl || !regionEl) return;
-
-    var comuna = comunaEl.value.trim();
-    var region = regionEl.value;
-
-    if (!comuna) {
-      _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
-      if (previewEl) previewEl.style.display = 'none';
-      if (envioEl)   { envioEl.textContent = 'Por definir'; envioEl.style.color = ''; }
-      _cksRefresh(); return;
-    }
-
-    /* Loading */
-    if (previewEl) {
-      previewEl.style.display = '';
-      previewEl.innerHTML = '<div class="igc-sp-loading"><span class="igc-sp-spinner"></span> Consultando métodos de despacho…</div>';
-    }
-    if (envioEl) { envioEl.textContent = 'Calculando…'; envioEl.style.color = '#b0bcc9'; }
-
-    var totalBase = _subtotal() + _subtotalSvc();
-
-    cotizarFn(comuna, region || 'Región Metropolitana', totalBase)
-      .then(function(opciones) {
-        _shippingOpciones = opciones || [];
-        /* Auto-seleccionar la primera (más barata) */
-        _shippingSelIdx = _shippingOpciones.length > 0 ? 0 : -1;
-        _shippingCost   = _shippingSelIdx >= 0 ? (_shippingOpciones[0].precio || 0) : 0;
-
-        if (previewEl) {
-          previewEl.style.display = '';
-          previewEl.innerHTML = _buildCourierOptions(_shippingOpciones, _shippingSelIdx, totalBase, region);
-        }
-        _updateShippingBadge();
-        _cksRefresh();
-      })
-      .catch(function() {
-        _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
-        if (previewEl) previewEl.style.display = 'none';
-        if (envioEl)   { envioEl.textContent = 'Por definir'; envioEl.style.color = ''; }
-        _cksRefresh();
-      });
-  }
-
-  function _buildCourierOptions(opciones, selIdx, totalBase, region) {
-    var isGratis = opciones.length === 1 && opciones[0].tipo === 'gratis';
-    var esRef    = opciones.length > 0 && opciones[0].tipo === 'referencial';
-
-    var bannerHtml = '';
-    if (isGratis) {
-      bannerHtml = '<div class="igc-couriers-banner igc-couriers-banner--gratis">🎉 ¡Despacho gratuito a tu comuna! En compras sobre $75.000.</div>';
-    } else if (esRef) {
-      bannerHtml = '<div class="igc-couriers-banner">Tarifas referenciales. El precio exacto se confirma al procesar el pedido.</div>';
-    }
-
-    var optsHtml = opciones.map(function(opt, i) {
-      var sel    = i === selIdx;
-      var style  = _courierStyle(opt.courier);
-      var initls = _courierInitials(opt.courier);
-      var precio = opt.tipo === 'gratis' ? 'Gratis' : opt.label;
-      var nota   = opt.tipo === 'referencial' ? '*' : '';
-      return [
-        '<label class="igc-courier-opt' + (sel ? ' igc-courier-opt--sel' : '') + '" onclick="igcSelectCourier(' + i + ')">',
-        '  <input type="radio" name="igcCourierRadio"' + (sel ? ' checked' : '') + ' style="display:none">',
-        '  <div class="igc-courier-radio-dot' + (sel ? ' igc-courier-radio-dot--on' : '') + '"></div>',
-        '  <div class="igc-courier-badge" style="background:' + style.bg + ';color:' + style.fg + '">' + initls + '</div>',
-        '  <div class="igc-courier-info">',
-        opt.estimado ? '    <div class="igc-courier-eta-lbl">Fecha estimada de entrega:</div>' : '',
-        opt.estimado ? '    <div class="igc-courier-eta">' + opt.estimado + '</div>' : '',
-        '    <div class="igc-courier-name">' + _esc(opt.courier) + ' · ' + opt.dias + ' días hábiles</div>',
-        '  </div>',
-        '  <div class="igc-courier-price' + (opt.tipo === 'gratis' ? ' igc-courier-price--gratis' : '') + '">' + precio + nota + '</div>',
-        '</label>'
-      ].join('');
-    }).join('');
-
-    return [
-      '<div class="igc-couriers">',
-      '  <div class="igc-couriers-title">Seleccione el método de despacho:</div>',
-      bannerHtml,
-      optsHtml,
-      esRef ? '<div class="igc-couriers-nota">* Precio referencial, puede variar según peso y dimensiones del pedido.</div>' : '',
-      '</div>'
-    ].join('');
-  }
-
-  function _updateShippingBadge() {
-    var envioEl = document.getElementById('igcCksEnvioVal');
-    if (!envioEl) return;
-    if (_shippingSelIdx < 0 || !_shippingOpciones.length) {
-      envioEl.textContent = 'Por definir'; envioEl.style.color = ''; return;
-    }
-    var opt = _shippingOpciones[_shippingSelIdx];
-    if (opt.tipo === 'gratis') {
-      envioEl.textContent = 'Gratis'; envioEl.style.color = '#16a34a';
-    } else {
-      var sufijo = opt.tipo === 'referencial' ? '*' : '';
-      envioEl.textContent = opt.label + sufijo;
-      envioEl.style.color = opt.tipo === 'referencial' ? '#d97706' : '';
-    }
-  }
-
-  window.igcSelectCourier = function(idx) {
-    _shippingSelIdx = idx;
-    _shippingCost   = _shippingOpciones[idx] ? (_shippingOpciones[idx].precio || 0) : 0;
-
-    /* Actualizar estilos de los botones */
-    document.querySelectorAll('.igc-courier-opt').forEach(function(el, i) {
-      el.classList.toggle('igc-courier-opt--sel', i === idx);
-      var dot = el.querySelector('.igc-courier-radio-dot');
-      if (dot) dot.classList.toggle('igc-courier-radio-dot--on', i === idx);
-      var radio = el.querySelector('input[type="radio"]');
-      if (radio) radio.checked = (i === idx);
-    });
-
-    _updateShippingBadge();
-    _cksRefresh();
-  };
-
-  /* Handlers globales llamados desde onchange del HTML */
-  window.igcOnRegionChange = function() {
-    /* Resetear selección de envío al cambiar región */
-    _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
-    var previewEl = document.getElementById('igcShippingPreview');
-    if (previewEl) previewEl.style.display = 'none';
-    var envioEl = document.getElementById('igcCksEnvioVal');
-    if (envioEl) { envioEl.textContent = 'Por definir'; envioEl.style.color = ''; }
-    _cksRefresh();
-  };
-
-  window.igcOnComunaChange = function() {
-    clearTimeout(_shippingTimer);
-    _calcShipping();
-  };
-
-  function _attachShippingListeners() {
-    var comunaEl = document.getElementById('igcCoComuna');
-    var regionEl = document.getElementById('igcCoRegion');
-
-    /* Ambos son ahora <select> — solo necesitamos el evento change,
-       que ya está en el onchange inline del HTML. Aquí solo
-       recalculamos si al volver al paso 2 ya había valores. */
-    if (!comunaEl || !regionEl) return;
-    if (comunaEl.value && regionEl.value && !_shippingOpciones.length) {
-      _calcShipping();
-    }
-  }
 
   /* ════════════════════════════════════════════════════════════
      CHECKOUT — PASOS (Información → Envío → Pago)
@@ -769,7 +645,7 @@
       ].join('');
     });
 
-    total += _shippingCost;
+    total += _cartShipCost;
 
     var el;
     el = document.getElementById('igcCksItems');    if(el) el.innerHTML = html;
@@ -777,6 +653,16 @@
     el = document.getElementById('igcCksSvc');      if(el) el.textContent = _fmt(subSvc);
     el = document.getElementById('igcCksSvcRow');   if(el) el.style.display = subSvc > 0 ? '' : 'none';
     el = document.getElementById('igcCksTotal');    if(el) el.textContent = _fmt(total);
+    el = document.getElementById('igcCksEnvioVal');
+    if (el) {
+      if (_cartShipCalculated) {
+        el.textContent = _cartShipCost > 0 ? _fmt(_cartShipCost) : 'Gratis';
+        el.style.color = _cartShipCost === 0 ? '#16a34a' : '';
+      } else {
+        el.textContent = 'Por definir';
+        el.style.color = '';
+      }
+    }
   }
 
   function _setCrumbs(step) {
@@ -854,7 +740,6 @@
     if (overlay) { overlay.classList.remove('open'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
     if (panel)   { panel.classList.remove('open');   setTimeout(function(){ panel.style.display   = 'none'; }, 300); }
     document.body.style.overflow = '';
-    _shippingCost = 0; _shippingOpciones = []; _shippingSelIdx = -1;
   };
 
   window.igcOpenCheckout = function() {
