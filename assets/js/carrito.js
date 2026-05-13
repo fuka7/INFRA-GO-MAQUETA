@@ -12,37 +12,8 @@
   var CART_KEY = 'igb_cart';
   var _items = [];
 
-  /* ── Servicios opcionales — derivados de CATALOGO (catalogo.js) ── */
-  var SERVICIOS_TIENDA = (function() {
-    var fuente = window.CATALOGO || [];
-    var tics = fuente.filter(function(p) {
-      return p.tipo === 'servicio-tic'
-        && p.marca === 'TIC Managers'
-        && p.name.indexOf('Cibergestión') === -1
-        && p.name.indexOf('Microsoft') === -1
-        && p.name.indexOf('Bitdefender') === -1;
-    });
-    return tics.map(function(p) {
-      var esMensual = p.name.toLowerCase().indexOf('mensual') !== -1
-                   || p.name.toLowerCase().indexOf('seguro') !== -1;
-      return {
-        id:        p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        label:     p.name.replace('TIC Managers ', ''),
-        desc:      p.desc || '',
-        price:     p.price,
-        unidad:    esMensual ? '/mes' : '',
-        frecuencia: esMensual ? 'mensual' : 'pago único'
-      };
-    });
-  })();
-
-  /* ── Servicios logísticos (fijos) ── */
-  var SERVICIOS_LOGISTICOS = [
-    { id: 'log-instalacion',   label: 'Instalación en sitio',          desc: 'Técnico se desplaza e instala los equipos en su ubicación', price: 49990 },
-    { id: 'log-rack',          label: 'Rack mounting y cableado',       desc: 'Montaje de equipos en rack y cableado estructurado',         price: 89990 },
-    { id: 'log-config-red',    label: 'Configuración de red',           desc: 'Setup de red local, WiFi y conectividad de los equipos',     price: 69990 },
-    { id: 'log-express',       label: 'Despacho express (24h)',         desc: 'Entrega garantizada al siguiente día hábil en Región Metropolitana', price: 9990 },
-  ];
+  var SERVICIOS_TIENDA    = [];
+  var SERVICIOS_LOGISTICOS = [];
 
   /* ── Estado de servicios y método de pago ── */
   var _selectedSvc = {};   /* { id: true/false } */

@@ -20,6 +20,63 @@ const BADGE_CLASS = {
   'Premium':     'prod-badge--premium'
 };
 
+/* ── Íconos y colores por servicio ── */
+const SVC_META = {
+  'tic-instalacion':       { color: '#FF7A00', bg: 'rgba(255,122,0,0.1)',    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>' },
+  'tic-migracion':          { color: '#2563c4', bg: 'rgba(37,99,196,0.1)',    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/><path d="M16 17l3-3-3-3"/><path d="M8 7l-3 3 3 3"/></svg>' },
+  'tic-mesa-ayuda':         { color: '#16a34a', bg: 'rgba(22,163,74,0.1)',   svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>' },
+  'tic-soporte-terreno':    { color: '#7c3aed', bg: 'rgba(124,58,237,0.1)',  svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
+  'tic-seguro-equipos':     { color: '#0891b2', bg: 'rgba(8,145,178,0.1)',   svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>' },
+  'tic-cibgestion-esencial':{ color: '#ca8a04', bg: 'rgba(202,138,4,0.1)',   svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>' },
+  'tic-cibgestion-avanzada':{ color: '#dc2626', bg: 'rgba(220,38,38,0.1)',   svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>' },
+  'tic-cibgestion-enterprise':{ color: '#9333ea', bg: 'rgba(147,51,234,0.1)', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polygon points="12 8 13.5 11 17 11.5 14.5 14 15 17.5 12 16 9 17.5 9.5 14 7 11.5 10.5 11 12 8"/></svg>' },
+};
+
+/* ── Agregar servicio al carro con ícono coloreado para el dropdown ── */
+function igAddService(id, nombre, precio) {
+  if (typeof igcAddItem !== 'function') return;
+  const meta = SVC_META[id] || { color: '#FF7A00', bg: 'rgba(255,122,0,0.1)', svg: '' };
+  const miniSvg = meta.svg.replace(/width="36" height="36"/, 'width="26" height="26"');
+  const iconHtml = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${meta.bg};border-radius:8px;color:${meta.color}">${miniSvg}</div>`;
+  igcAddItem(id, nombre, precio, iconHtml);
+}
+
+/* ── Card especial para servicios (sin foto ni enlace a detalle) ── */
+function buildServiceCard(p) {
+  const badgeHtml = p.badge
+    ? `<div class="prod-badge ${BADGE_CLASS[p.badge] || 'prod-badge--hot'}">${p.badge}</div>`
+    : '';
+  const specsHtml = p.specsResumen.map(s => `<span>${s}</span>`).join('');
+  const meta = SVC_META[p.id] || { color: '#FF7A00', bg: 'rgba(255,122,0,0.1)', svg: '' };
+  return `
+    <div class="prod-card svc-card"
+      data-cat="${p.cat}"
+      data-marca="${p.marca}"
+      data-precio="${p.precio}"
+      data-nombre="${p.nombre}">
+      ${badgeHtml}
+      <div class="svc-icon-area" style="--svc-color:${meta.color};--svc-bg:${meta.bg}">
+        <div class="svc-icon-circle" style="color:${meta.color};background:${meta.bg}">${meta.svg}</div>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">${p.marca}</div>
+        <div class="prod-name">${p.nombreLargo}</div>
+        <div class="prod-specs-list">${specsHtml}</div>
+        <div class="prod-footer">
+          <div class="prod-price">
+            <span class="prod-price-val">$${p.precio.toLocaleString('es-CL')}</span>
+          </div>
+          <div class="prod-btns">
+            <button class="prod-btn prod-btn--cart" onclick="event.stopPropagation(); igAddService('${p.id}', '${p.nombre.replace(/'/g, String.fromCharCode(92,39))}', ${p.precio})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
 /* ── Generar HTML de una card ── */
 function buildCard(p) {
   const badgeHtml = p.badge
@@ -65,9 +122,9 @@ function renderCards() {
   const grid = document.getElementById('productosGrid');
   if (!grid) return;
   const catalog = (window.CATALOGO || [])
-    .filter(p => p.cat !== 'licencias' && p.cat !== 'servicios')
+    .filter(p => p.cat !== 'licencias')
     .map(p => ({ ...p, precio: p.precioVenta }));
-  grid.innerHTML = catalog.map(buildCard).join('');
+  grid.innerHTML = catalog.map(p => p.cat === 'servicios' ? buildServiceCard(p) : buildCard(p)).join('');
   [...grid.querySelectorAll('.prod-card')].forEach((card, i) => card.dataset.idx = i);
 }
 

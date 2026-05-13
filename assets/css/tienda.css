@@ -1103,3 +1103,39 @@
   font-size: 11px; color: #16a34a; font-weight: 600;
 }
 .filtro-dcto-activo svg { flex-shrink: 0; }
+
+/* ── Cards de servicios ── */
+.svc-card { cursor: default; }
+.svc-icon-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px 24px;
+  background: linear-gradient(160deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.01) 100%);
+  border-bottom: 1px solid rgba(17,17,17,0.06);
+  position: relative;
+}
+.svc-icon-area::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--svc-bg, rgba(255,122,0,0.08));
+  opacity: 0.5;
+  border-radius: inherit;
+}
+.svc-icon-circle {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid currentColor;
+  opacity: 0.9;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.svc-card:hover .svc-icon-circle {
+  transform: scale(1.08);
+  opacity: 1;
+}

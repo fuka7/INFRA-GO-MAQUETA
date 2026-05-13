@@ -1535,7 +1535,7 @@ footer {
 .slide-2 {
   background:
     linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-    url('/img/hero\ 2.jpeg') center/cover no-repeat;
+    url('/img/herotienda.jpeg') center 30%/cover no-repeat;
 }
 .slide-3 {
   background:
@@ -1605,6 +1605,17 @@ footer {
 }
 
 .slide-desc { display: none; }
+.slide-2 .slide-desc {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  max-width: 480px;
+}
 
 .slide-cta {
   display: inline-flex;

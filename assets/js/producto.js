@@ -234,7 +234,7 @@ const REC_EXTRAS = {
 };
 
 function buildRecCard(a) {
-  const nombre = (a.nombreLargo || a.nombre).replace(/'/g, "\\'");
+  const nombre = (a.nombreLargo || a.nombre).replace(/'/g, "\\'").replace(/"/g, '&quot;');
   const imgHtml = a.img
     ? `<img src="${a.img}" alt="${a.nombre}" loading="lazy" style="width:100%;height:100%;object-fit:contain;">`
     : a.svg;
@@ -248,7 +248,7 @@ function buildRecCard(a) {
       </div>
       <div class="prd-rec-card-btns">
         <button class="prd-rec-card-btn prd-rec-card-btn--ver" onclick="window.location.href='/producto.html?id=${a.id}'">Ver</button>
-        <button class="prd-rec-card-btn prd-rec-card-btn--add" onclick="typeof igcAddItem==='function'&&igcAddItem('${a.id}','${nombre}',${a.precioVenta},'')">+ Agregar</button>
+        <button class="prd-rec-card-btn prd-rec-card-btn--add" onclick="event.stopPropagation(); typeof igcAddItem==='function'&&igcAddItem('${a.id}','${nombre}',${a.precioVenta},'')">+ Agregar</button>
       </div>
     </div>`;
 }
