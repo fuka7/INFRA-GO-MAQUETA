@@ -715,6 +715,11 @@
   line-height: 1.5;
 }
 
+/* Contenedor de texto — en desktop hereda el flex column del esc-step */
+.esc-step-content {
+  display: contents;
+}
+
 /* ── Stats de uptime ── */
 .srv-stats {
   display: grid;
@@ -972,71 +977,145 @@
 /* ══════════════════════════════════════════════
    RESPONSIVE
 ═════════════════════════════════════════════ */
+
+/* ── Tablet: 960px ────────────────────────── */
 @media (max-width: 960px) {
+  /* Catálogo: 3 cols → 2 cols */
+  .srv-catalog-grid,
+  .srv-catalog-grid--3,
   .srv-cards,
-  .sla-grid,
+  .sla-info-grid    { grid-template-columns: repeat(2, 1fr); }
+
+  /* SLA pricing: 3 cols → 1 col (cards son grandes) */
+  .sla-grid         { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+
+  /* Escalamiento: 4 cols → 2 cols */
+  .escalation-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .escalation-steps::before { display: none; }
+
+  /* Stats: 4 cols → 2x2 */
+  .srv-stats        { grid-template-columns: 1fr 1fr; }
+
+  /* Garantías: 2 cols → 1 col */
+  .warranty-grid    { grid-template-columns: 1fr; }
+}
+
+/* ── Tablet pequeño / Mobile grande: 768px ── */
+@media (max-width: 768px) {
+  .srv-hero           { padding: 72px 20px 56px; }
+  .srv-hero-sub       { font-size: 15px; }
+  .srv-section        { padding: 56px 20px; }
+  .srv-section-header { margin-bottom: 36px; }
+  .srv-sub            { font-size: 15px; }
+
+  /* Todos los grids a 1 columna */
+  .srv-cards,
   .sla-info-grid,
   .srv-catalog-grid,
-  .srv-catalog-grid--3 {
-    grid-template-columns: 1fr;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .escalation-steps {
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-  }
-
-  .escalation-steps::before { display: none; }
-
-  .srv-stats {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .warranty-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .srv-hero            { padding: 72px 16px 56px; }
-  .srv-hero h1         { font-size: clamp(26px, 7vw, 36px); }
-  .srv-hero-sub        { font-size: 15px; }
-  .srv-section         { padding: 56px 16px; }
-  .srv-section-header  { margin-bottom: 32px; }
-  .srv-cards           { grid-template-columns: 1fr; }
-  .sla-grid            { grid-template-columns: 1fr; }
-  .sla-info-grid       { grid-template-columns: 1fr; }
-  .srv-catalog-grid,
   .srv-catalog-grid--3 { grid-template-columns: 1fr; }
-  .srv-stats           { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .escalation-steps    { grid-template-columns: 1fr; }
-  .escalation-steps::before { display: none; }
-  .warranty-grid       { grid-template-columns: 1fr; }
-  .warranty-card       { flex-direction: column; }
-  .srv-card            { padding: 24px 20px; }
+
+  .srv-stats          { grid-template-columns: 1fr 1fr; gap: 2px; }
+  .escalation-steps   { grid-template-columns: 1fr 1fr; gap: 28px; }
+
+  .warranty-card      { flex-direction: column; gap: 14px; padding: 22px; }
+  .warranty-icon      { width: 44px; height: 44px; }
+
+  /* Catálogo: group-label puede ir en columna en móvil */
+  .srv-group-label    { flex-direction: column; gap: 4px; align-items: flex-start; }
+
+  .srv-card           { padding: 24px 20px; }
+  .srv-cat-card       { padding: 20px; }
 }
 
+/* ── Mobile: 600px ───────────────────────── */
 @media (max-width: 600px) {
-  .srv-hero { padding: 60px 16px 48px; }
-  .srv-section { padding: 48px 16px; }
+  .srv-hero           { padding: 60px 16px 48px; }
+  .srv-section        { padding: 48px 16px; }
+  .srv-container      { padding: 0 16px; }
 
-  .escalation-steps { grid-template-columns: 1fr; }
+  /* Stats: 2x2 con padding más compacto */
+  .srv-stats          { border-radius: 14px; }
+  .srv-stat           { padding: 24px 16px; }
+  .srv-stat-num       { font-size: 30px; }
+  .srv-stat-num span  { font-size: 17px; }
+  .srv-stat-label     { font-size: 11px; }
 
-  .srv-stats { grid-template-columns: 1fr 1fr; }
+  /* Escalamiento: 1 columna, layout horizontal número + texto */
+  .escalation-steps   { grid-template-columns: 1fr; gap: 20px; }
+  .esc-step           { flex-direction: row; text-align: left; align-items: flex-start; gap: 16px; padding: 0; }
+  .esc-num            { width: 52px; height: 52px; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .esc-step-content   { display: flex; flex-direction: column; gap: 5px; flex: 1; }
 
-  .warranty-card { flex-direction: column; }
+  /* SLA info cards */
+  .sla-info-card      { padding: 20px; }
+  .sla-info-title     { font-size: 14px; }
+
+  /* Garantías */
+  .warranty-card      { padding: 18px; }
+  .warranty-title     { font-size: 14px; }
+
+  /* CTA */
+  .srv-cta-section    { padding: 56px 16px; }
+  .srv-cta-btns       { flex-direction: column; align-items: stretch; gap: 10px; }
+  .srv-cta-btns a     { text-align: center; justify-content: center; }
 }
 
+/* ── Mobile pequeño: 480px ───────────────── */
 @media (max-width: 480px) {
-  .srv-hero        { padding: 48px 16px 36px; }
-  .srv-hero h1     { font-size: clamp(24px, 8vw, 30px); }
-  .srv-hero-sub    { font-size: 14px; }
-  .srv-section     { padding: 40px 16px; }
+  .srv-hero           { padding: 48px 14px 40px; }
+  .srv-hero-sub       { font-size: 14px; }
+  .srv-section        { padding: 40px 14px; }
   .srv-section-header { margin-bottom: 24px; }
-  .srv-stats       { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .srv-hero-badges { flex-direction: column; align-items: center; gap: 8px; }
-  .srv-card-title  { font-size: 15px; }
-  .srv-card-desc   { font-size: 13px; }
+  .srv-container      { padding: 0 14px; }
+
+  .srv-heading        { font-size: clamp(22px, 6vw, 28px); }
+  .srv-sub            { font-size: 14px; }
+
+  /* Badges del hero: dos por fila */
+  .srv-hero-badges    { gap: 8px; }
+  .srv-hero-badge     { font-size: 11px; padding: 6px 11px; }
+
+  /* Stats: compacto */
+  .srv-stat           { padding: 20px 12px; }
+  .srv-stat-num       { font-size: 26px; }
+  .srv-stat-label     { font-size: 10px; }
+
+  /* Cards catálogo */
+  .srv-cat-card       { padding: 16px; gap: 12px; }
+  .srv-cat-name       { font-size: 13px; }
+  .srv-cat-desc       { font-size: 12px; }
+  .srv-cat-price      { font-size: 15px; }
+  .srv-cat-icon       { width: 38px; height: 38px; border-radius: 10px; }
+  .srv-cat-icon svg   { width: 17px; height: 17px; }
+
+  /* SLA info */
+  .sla-info-card      { padding: 16px; gap: 12px; }
+  .sla-info-icon      { width: 40px; height: 40px; }
+  .sla-info-title     { font-size: 13px; }
+  .sla-info-desc      { font-size: 12px; }
+  .sla-info-val       { font-size: 12px; }
+
+  /* Escalamiento */
+  .esc-num            { width: 46px; height: 46px; font-size: 14px; }
+  .esc-step-title     { font-size: 13px; }
+  .esc-step-desc      { font-size: 11px; }
+
+  /* Garantías */
+  .warranty-card      { padding: 16px; }
+  .warranty-title     { font-size: 13px; }
+  .warranty-desc      { font-size: 12px; }
+  .warranty-icon      { width: 40px; height: 40px; border-radius: 10px; }
+
+  /* CTA */
+  .srv-cta-section    { padding: 48px 14px; }
+  .srv-cta-inner p    { font-size: 14px; }
+}
+
+/* ── Teléfonos muy pequeños: 360px ──────── */
+@media (max-width: 360px) {
+  .srv-hero           { padding: 40px 12px 32px; }
+  .srv-section        { padding: 36px 12px; }
+  .srv-container      { padding: 0 12px; }
+  .srv-hero-badge     { font-size: 10px; padding: 5px 10px; }
+  .srv-stat           { padding: 16px 10px; }
 }

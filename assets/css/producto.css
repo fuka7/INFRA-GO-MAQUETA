@@ -1423,6 +1423,20 @@
 }
 
 @media (max-width: 480px) {
-  .prd-rev-section { padding: 32px 16px 44px; }
-  .prd-rev-card-fecha { display: none; }
+  .prd-layout           { padding: 0 14px 40px; }
+  .prd-breadcrumb       { padding: 10px 14px; font-size: 13px; }
+  .prd-panel-name       { font-size: 16px; }
+  .prd-panel-price      { font-size: clamp(26px, 8vw, 36px); }
+  .prd-panel-btn-cart   { font-size: 14px; padding: 13px; }
+  .prd-gallery          { padding: 14px; }
+  .prd-thumb            { width: 50px; height: 50px; }
+  .prd-rec-section      { padding: 28px 14px 36px; }
+  .prd-rev-section      { padding: 32px 14px 44px; }
+  .prd-rev-card-fecha   { display: none; }
+  .prd-rev-avg-num      { font-size: 36px; }
+}
+
+@media (max-width: 360px) {
+  .prd-layout  { padding: 0 10px 36px; }
+  .prd-breadcrumb { padding: 8px 10px; }
 }

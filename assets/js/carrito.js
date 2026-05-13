@@ -23,6 +23,8 @@
   var _cartShipMounted     = false;
   var _cartShipCost        = 0;
   var _cartShipCalculated  = false;
+  var _cartShipRegion      = '';
+  var _cartShipComuna      = '';
 
   /* ── Persistencia ── */
   function _save() {
@@ -465,11 +467,17 @@
           widgetEl._onResult = function(cotizacion) {
             _cartShipCost       = cotizacion.precio || 0;
             _cartShipCalculated = true;
+            var rEl = document.getElementById('igs-region-igcCartShippingWidget');
+            var cEl = document.getElementById('igs-comuna-igcCartShippingWidget');
+            _cartShipRegion = rEl ? rEl.value : '';
+            _cartShipComuna = cEl ? cEl.value : '';
             _updatePanel();
           };
           widgetEl._onReset = function() {
             _cartShipCost       = 0;
             _cartShipCalculated = false;
+            _cartShipRegion     = '';
+            _cartShipComuna     = '';
             _updatePanel();
           };
         }
@@ -687,14 +695,25 @@
   /* Actualiza los bloques de pago en paso 3 */
   window.igcSelectMetodo = function(metodo) {
     _metodo = metodo;
-    var optT = document.getElementById('igcMetodoTransferencia');
-    var optK = document.getElementById('igcMetodoTarjeta');
-    if (optT) optT.classList.toggle('igc-metodo-selected', metodo === 'transferencia');
-    if (optK) optK.classList.toggle('igc-metodo-selected', metodo === 'tarjeta');
-    var bank   = document.getElementById('igcBankBlock');
-    var webpay = document.getElementById('igcWebpayBlock');
-    if (bank)   bank.style.display   = metodo === 'transferencia' ? '' : 'none';
-    if (webpay) webpay.style.display = metodo === 'tarjeta'       ? '' : 'none';
+    var MAP = {
+      'transferencia': 'Transfer',
+      'bchileMC':      'Bchile',
+      'santanderVisa': 'Santander',
+      'klap':          'Klap',
+      'mercadopago':   'Mercado',
+      'kiphu':         'Kiphu'
+    };
+    var activeKey = MAP[metodo];
+    Object.keys(MAP).forEach(function(m) {
+      var key   = MAP[m];
+      var opt   = document.getElementById('igcPay'      + key);
+      var radio = document.getElementById('igcPayRadio' + key);
+      var isOn  = key === activeKey;
+      if (opt)   opt.classList.toggle('igc-pay-opt--sel',   isOn);
+      if (radio) radio.classList.toggle('igc-pay-radio--on', isOn);
+    });
+    var note = document.getElementById('igcPayNoteTransfer');
+    if (note) note.style.display = metodo === 'transferencia' ? '' : 'none';
     _updatePanel();
     _cksRefresh();
   };
@@ -740,6 +759,11 @@
     if (overlay) { overlay.classList.remove('open'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
     if (panel)   { panel.classList.remove('open');   setTimeout(function(){ panel.style.display   = 'none'; }, 300); }
     document.body.style.overflow = '';
+    /* Re-habilitar selects por si el usuario vuelve a editar el envío */
+    var rSel = document.getElementById('igcCoRegion');
+    var cSel = document.getElementById('igcCoComuna');
+    if (rSel) rSel.disabled = false;
+    if (cSel) cSel.disabled = false;
   };
 
   window.igcOpenCheckout = function() {
@@ -787,7 +811,15 @@
     });
     _setCrumbs(step);
     _cksRefresh();
-    if (step === 2) _attachShippingListeners();
+    var confirmBtn = document.getElementById('igcCksConfirmBtn');
+    if (confirmBtn) confirmBtn.style.display = step === 3 ? '' : 'none';
+    if (step === 2 && _cartShipRegion && _cartShipComuna) {
+      var rSel = document.getElementById('igcCoRegion');
+      var cSel = document.getElementById('igcCoComuna');
+      if (rSel) { rSel.value = _cartShipRegion; rSel.disabled = true; }
+      if (typeof igcLoadComunas === 'function') igcLoadComunas(_cartShipRegion, _cartShipComuna);
+      if (cSel) cSel.disabled = true;
+    }
     var form = document.querySelector('.igc-co-form');
     if (form) form.scrollTop = 0;
   };
@@ -795,24 +827,28 @@
   window.igcSubmitCheckout = function() {
     if (!_validateStep(3)) return;
 
-    if (_metodo === 'tarjeta') {
-      alert('Para completar el pago con tarjeta se requiere integración con el servidor Transbank WebPay Plus.');
-      return;
+    var nombre = (document.getElementById('igcCoNombre') || {}).value || 'cliente';
+    var msg;
+
+    if (_metodo === 'transferencia') {
+      msg = [
+        '<strong>Gracias, ' + _esc(nombre) + '!</strong><br><br>',
+        'Tu pedido fue registrado. Realiza la transferencia a:<br>',
+        '<strong>Banco de Chile · Cta. Cte. 123-456-789</strong><br>',
+        'y envía el comprobante a <strong>pagos@infrago.cl</strong><br>',
+        'con el asunto <em>"Pedido — ' + _esc(nombre) + '"</em>.<br><br>',
+        'Un asesor te contactará en menos de 24 horas hábiles.'
+      ].join('');
+    } else {
+      msg = [
+        '<strong>Gracias, ' + _esc(nombre) + '!</strong><br><br>',
+        'Tu pedido fue registrado y está siendo procesado.<br><br>',
+        'Un asesor te contactará en menos de 24 horas hábiles para coordinar el pago y despacho.'
+      ].join('');
     }
 
-    /* Transferencia: mostrar pantalla de éxito */
-    var nombre = (document.getElementById('igcCoNombre') || {}).value || 'cliente';
-    var msg = [
-      '<strong>Gracias, ' + _esc(nombre) + '!</strong><br><br>',
-      'Tu pedido fue registrado. Realiza la transferencia a:<br>',
-      '<strong>Banco de Chile · Cta. Cte. 123-456-789</strong><br>',
-      'y envía el comprobante a <strong>pagos@infrago.cl</strong><br>',
-      'con el asunto <em>"Pedido — ' + _esc(nombre) + '"</em>.<br><br>',
-      'Un asesor te contactará en menos de 24 horas hábiles.'
-    ].join('');
-
     igcCloseCheckout();
-    var ss  = document.getElementById('igcSuccessScreen');
+    var ss   = document.getElementById('igcSuccessScreen');
     var msg2 = document.getElementById('igcSuccessMsg');
     if (msg2) msg2.innerHTML = msg;
     if (ss)   ss.style.display = 'flex';

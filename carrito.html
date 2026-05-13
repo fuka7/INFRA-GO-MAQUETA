@@ -254,57 +254,95 @@
       <div class="igc-step" id="igcStep3" style="display:none;">
         <h2 class="igc-step-title">Método de pago</h2>
 
-        <div class="igc-metodo-pago">
-          <label class="igc-metodo-option igc-metodo-selected" id="igcMetodoTransferencia">
-            <input type="radio" name="igcMetodo" value="transferencia" checked onchange="igcSelectMetodo('transferencia')">
-            <div class="igc-metodo-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <!-- Sección 1: Transferencia -->
+        <div class="igc-pay-section">
+          <div class="igc-pay-section-label">Transferencia bancaria</div>
+          <div class="igc-pay-opt igc-pay-opt--sel" id="igcPayTransfer" onclick="igcSelectMetodo('transferencia')">
+            <div class="igc-pay-radio igc-pay-radio--on" id="igcPayRadioTransfer"></div>
+            <div class="igc-pay-icon igc-pay-icon--blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             </div>
-            <div class="igc-metodo-info">
-              <div class="igc-metodo-label">Transferencia bancaria</div>
-              <div class="igc-metodo-desc">Sin costo adicional</div>
+            <div class="igc-pay-info">
+              <div class="igc-pay-name">Transferencia bancaria</div>
+              <div class="igc-pay-desc">Sin costo adicional · Cualquier banco</div>
             </div>
-            <div class="igc-metodo-badge igc-metodo-badge--free">Gratis</div>
-          </label>
-          <label class="igc-metodo-option" id="igcMetodoTarjeta">
-            <input type="radio" name="igcMetodo" value="tarjeta" onchange="igcSelectMetodo('tarjeta')">
-            <div class="igc-metodo-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            </div>
-            <div class="igc-metodo-info">
-              <div class="igc-metodo-label">Tarjeta · WebPay Plus (Transbank)</div>
-              <div class="igc-metodo-desc">Visa, Mastercard, Redcompra · +3% comisión</div>
-            </div>
-            <div class="igc-metodo-badge igc-metodo-badge--fee">+3%</div>
-          </label>
-        </div>
-
-        <div class="igc-bank-block" id="igcBankBlock">
-          <div class="igc-bank-title">Datos para la transferencia</div>
-          <div class="igc-bank-grid">
-            <div class="igc-bank-row"><span>Banco</span><strong>Banco de Chile</strong></div>
-            <div class="igc-bank-row"><span>Tipo de cuenta</span><strong>Cuenta Corriente</strong></div>
-            <div class="igc-bank-row"><span>N° de cuenta</span><strong>123-456-789</strong></div>
-            <div class="igc-bank-row"><span>RUT titular</span><strong>76.543.210-0</strong></div>
-            <div class="igc-bank-row"><span>Titular</span><strong>InfraGo SpA</strong></div>
-            <div class="igc-bank-row"><span>Email comprobante</span><strong>pagos@infrago.cl</strong></div>
+            <div class="igc-pay-badge igc-pay-badge--green">Gratis</div>
           </div>
-          <div class="igc-bank-note">
-            Envía el comprobante a <strong>pagos@infrago.cl</strong> con el asunto <em>"Pedido — [tu nombre]"</em>. Tu pedido se procesará en 24 horas hábiles.
+          <div class="igc-pay-note" id="igcPayNoteTransfer">
+            Recibirás los datos de nuestra cuenta al confirmar el pedido. El despacho se activa al verificar el abono (1–2 días hábiles).
           </div>
         </div>
 
-        <div class="igc-webpay-block" id="igcWebpayBlock" style="display:none;">
-          <div class="igc-bank-title">Pago seguro con WebPay Plus</div>
-          <p class="igc-webpay-desc">Al confirmar serás redirigido a <strong>WebPay Plus</strong> de Transbank para completar el pago con tu tarjeta de forma segura.</p>
-          <div class="igc-webpay-cards">
-            <span>Visa</span><span>Mastercard</span><span>Redcompra</span><span>Prepago</span>
+        <!-- Sección 2: Cuotas -->
+        <div class="igc-pay-section">
+          <div class="igc-pay-section-label">Cuotas precio contado (sin interés)</div>
+          <div class="igc-pay-opt" id="igcPayBchile" onclick="igcSelectMetodo('bchileMC')">
+            <div class="igc-pay-radio" id="igcPayRadioBchile"></div>
+            <div class="igc-pay-icon igc-pay-icon--yellow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="igc-pay-info">
+              <div class="igc-pay-name">Banco de Chile · Mastercard</div>
+              <div class="igc-pay-desc">6 cuotas precio contado · Se selecciona en WebPay</div>
+            </div>
+            <div class="igc-pay-badge">6 cuotas</div>
           </div>
+          <div class="igc-pay-opt" id="igcPaySantander" onclick="igcSelectMetodo('santanderVisa')">
+            <div class="igc-pay-radio" id="igcPayRadioSantander"></div>
+            <div class="igc-pay-icon igc-pay-icon--red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="igc-pay-info">
+              <div class="igc-pay-name">Santander · Visa</div>
+              <div class="igc-pay-desc">6 cuotas precio contado · Se selecciona en WebPay</div>
+            </div>
+            <div class="igc-pay-badge">6 cuotas</div>
+          </div>
+        </div>
+
+        <!-- Sección 3: Otras opciones -->
+        <div class="igc-pay-section">
+          <div class="igc-pay-section-label">Otras opciones de pago</div>
+          <div class="igc-pay-opt" id="igcPayKlap" onclick="igcSelectMetodo('klap')">
+            <div class="igc-pay-radio" id="igcPayRadioKlap"></div>
+            <div class="igc-pay-icon igc-pay-icon--green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg>
+            </div>
+            <div class="igc-pay-info">
+              <div class="igc-pay-name">Klap</div>
+              <div class="igc-pay-desc">QR, tarjeta o app Klap · Pago inmediato</div>
+            </div>
+          </div>
+          <div class="igc-pay-opt" id="igcPayMercado" onclick="igcSelectMetodo('mercadopago')">
+            <div class="igc-pay-radio" id="igcPayRadioMercado"></div>
+            <div class="igc-pay-icon igc-pay-icon--lblue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <div class="igc-pay-info">
+              <div class="igc-pay-name">Mercado Pago</div>
+              <div class="igc-pay-desc">Tarjetas, cuotas o saldo MP</div>
+            </div>
+          </div>
+          <div class="igc-pay-opt" id="igcPayKiphu" onclick="igcSelectMetodo('kiphu')">
+            <div class="igc-pay-radio" id="igcPayRadioKiphu"></div>
+            <div class="igc-pay-icon igc-pay-icon--purple">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z"/></svg>
+            </div>
+            <div class="igc-pay-info">
+              <div class="igc-pay-name">Kiphu</div>
+              <div class="igc-pay-desc">Financiamiento flexible · Cuotas Kiphu</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="igc-pay-security">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Pago 100% seguro · Conexión encriptada SSL/TLS
         </div>
 
         <div class="igc-step-footer">
           <button class="igc-btn-back" onclick="igcGoStep(2)">← Volver a Envío</button>
-          <button class="igc-btn-confirm" onclick="igcSubmitCheckout()">
+          <button class="igc-btn-confirm igc-confirm-mobile" onclick="igcSubmitCheckout()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             Confirmar pedido
           </button>
@@ -334,6 +372,10 @@
         <span>Total</span>
         <span id="igcCksTotal">$0</span>
       </div>
+      <button class="igc-cks-confirm-btn" id="igcCksConfirmBtn" onclick="igcSubmitCheckout()" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Confirmar pedido
+      </button>
     </div>
 
   </div><!-- /igc-co-body -->

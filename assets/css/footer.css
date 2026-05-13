@@ -424,3 +424,16 @@
   .ig-footer-root .bottom-divider { display: none; }
   .ig-footer-root .social-link { font-size: 10.5px; padding: 4px 6px; }
 }
+
+@media (max-width: 360px) {
+  .ig-footer-root .footer-main {
+    grid-template-columns: 1fr;
+    padding: 20px 12px 8px;
+  }
+  .ig-footer-root .footer-col:last-child {
+    grid-column: auto;
+  }
+  .ig-footer-root .footer-cta-strip { padding: 18px 12px; }
+  .ig-footer-root .cta-strip-title  { font-size: 14px; }
+  .ig-footer-root .footer-bottom    { padding: 10px 12px; }
+}

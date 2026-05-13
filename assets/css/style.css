@@ -2820,9 +2820,9 @@ footer {
     align-items: center;
     flex-direction: column;
     justify-content: flex-end;
-    padding-bottom: 110px;
+    padding-bottom: 72px;
   }
-  .carousel-controls { left: 24px; right: 24px; bottom: 72px; }
+  .carousel-controls { display: none; }
   .slide-title { font-size: 26px; letter-spacing: -0.5px; }
   .slide-inner { width: 100%; }
   .slide-cta {
@@ -2873,11 +2873,15 @@ footer {
 
 @media (max-width: 480px) {
   .hero-carousel { min-height: 340px; }
-  .hero-slide { padding-bottom: 100px; }
+  .hero-slide { padding-bottom: 72px; }
   .slide-title { font-size: 22px; line-height: 1.2; }
   .slide-tag { font-size: 10px; letter-spacing: 1.5px; margin-bottom: 10px; }
-  .carousel-controls { bottom: 66px; }
   .hero-brands-strip { height: 52px; }
+  .slide-2 {
+    background:
+      linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
+      url('/img/herotienda.jpeg') center/cover no-repeat;
+  }
 }
 /* ── SLIDE CHECKLIST (hero carrusel) ── */
 .slide-checklist { display: none; }

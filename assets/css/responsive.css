@@ -302,7 +302,7 @@
 ══════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Hero carousel: reducir padding inferior */
+  /* Hero carousel */
   .hero-slide { padding: 0 20px 80px !important; }
   .slide-title { font-size: clamp(22px, 7vw, 30px) !important; line-height: 1.1; }
   .slide-cta { font-size: 14px; padding: 12px 24px; }
@@ -349,7 +349,7 @@
 @media (max-width: 480px) {
 
   /* Hero carousel */
-  .hero-slide { padding: 0 16px 56px !important; }
+  .hero-slide { padding: 0 16px 72px !important; }
   .slide-title { font-size: clamp(20px, 8vw, 26px) !important; }
   .slide-cta  { width: 100%; justify-content: center; }
 
@@ -366,6 +366,51 @@
   .financing-stat-num  { font-size: clamp(24px, 6vw, 32px); }
   .cats-banner-title   { font-size: 18px; }
   .cats-banner-content { padding: 36px 20px; }
+}
+
+/* ══════════════════════════════════════════════
+   TELÉFONOS MUY PEQUEÑOS — max-width: 360px
+══════════════════════════════════════════════ */
+@media (max-width: 360px) {
+
+  /* Global */
+  section { padding: 36px 12px; }
+  .divider-line { margin: 0 12px; }
+
+  /* Hero */
+  .hero { padding: 72px 12px 130px; }
+  .hero-title { font-size: clamp(22px, 9vw, 30px); }
+
+  /* Hero carousel */
+  .hero-slide { padding: 0 12px 64px !important; }
+  .slide-title { font-size: clamp(18px, 8vw, 22px) !important; }
+
+  /* Botones globales */
+  .btn-primary,
+  .btn-outline { padding: 12px 18px; font-size: 13px; }
+
+  /* Tienda */
+  .tienda-header-content { padding: 20px 12px; }
+  .tienda-layout { padding: 10px 12px 36px; }
+  .productos-grid { grid-template-columns: 1fr; gap: 10px; }
+
+  /* Tienda preview */
+  .tienda-preview-grid { grid-template-columns: 1fr; }
+
+  /* Footer */
+  footer { padding: 20px 12px; }
+  .footer-bottom { padding: 12px; }
+
+  /* Configurador */
+  .configurador-header { padding: 88px 12px 24px; }
+  .config-layout { padding: 12px 10px 56px; }
+  .config-header { padding: 20px 12px 16px; }
+
+  /* Planes index */
+  .plan-card { padding: 24px 14px; }
+
+  /* Checkout */
+  .igc-page { padding: 0 10px; }
 }
 
 /* ══════════════════════════════════════════════
