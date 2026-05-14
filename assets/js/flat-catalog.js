@@ -74,7 +74,7 @@ const BRAND_LOGOS = {
 
 /* ─── estado: filas del pedido ──────────────────────────────── */
 // Expuesto en window._flatRows para que configurador.js calcule sidebar y descuentos
-let _flatRows   = [];   // [{ id, productName|null, qty, serviceValue|null }]
+let _flatRows   = [];   // [{ id, productName|null, qty }]
 let _rowCounter = 0;
 window._flatRows = _flatRows;   // referencia viva — siempre actualizada
 
@@ -133,7 +133,7 @@ window.buildCatalogTable = function buildCatalogTable() {
 ═══════════════════════════════════════════════════════════════ */
 window.flatAddRow = function flatAddRow(animate = true) {
   const id = newRowId();
-  _flatRows.push({ id, productName: null, qty: 0, serviceValue: null });
+  _flatRows.push({ id, productName: null, qty: 0 });
   window._flatRows = _flatRows; // mantener referencia actualizada
 
   const body = document.getElementById('flatRowsBody');
@@ -161,11 +161,6 @@ function _buildRowEl(id, animate) {
         <select class="flat-product-select" onchange="flatRowSelectProduct(${id}, this)">
           <option value="">— seleccionar producto —</option>
           ${_buildSelectOptions()}
-        </select>
-      </div>
-      <div class="flat-svc-wrap" id="svcwrap-${id}" style="display:none">
-        <select class="flat-svc-select" id="svcsel-${id}" onchange="flatRowSelectService(${id}, this)">
-          <option value="">— sin servicio adicional —</option>
         </select>
       </div>
     </div>
@@ -283,14 +278,11 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
   const val = selectEl.value;
   if (!val) {
     row.productName  = null;
-    row.serviceValue = null;
     row.qty = 0;
     const inp = document.getElementById(`qval-${id}`);
     if (inp) { inp.value = '0'; inp.min = '0'; }
     const qtyWrap = document.getElementById(`prqty-${id}`);
     if (qtyWrap) qtyWrap.classList.add('pr-qty--disabled');
-    const svcWrapClear = document.getElementById(`svcwrap-${id}`);
-    if (svcWrapClear) svcWrapClear.style.display = 'none';
     _clearRowDisplay(id);
     flatRefreshPrices();
     _syncAllToOriginal();
@@ -301,7 +293,6 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
 
   const productName  = decodeURIComponent(val);
   row.productName    = productName;
-  row.serviceValue   = null;
   selectEl.title     = productName;
 
   const producto = (window.CATALOGO || []).find(p => p.name === productName);
@@ -348,22 +339,6 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     if (inp) { inp.value = '1'; inp.min = '1'; }
   }
 
-  /* Servicio asociado — mostrar selector si el producto tiene servicios */
-  const svcWrap = document.getElementById(`svcwrap-${id}`);
-  const svcSel  = document.getElementById(`svcsel-${id}`);
-  if (svcWrap && svcSel) {
-    row.serviceValue = null;
-    const svcs = producto.servicios || [];
-    if (svcs.length > 0) {
-      svcSel.innerHTML = '<option value="">— sin servicio adicional —</option>' +
-        svcs.map(s => '<option value="' + s.value + '" data-price="' + s.price + '" data-frecuencia="' + (s.frecuencia || '/mes') + '">' + s.label + ' — $' + s.price.toLocaleString('es-CL') + (s.unidad || '') + '</option>').join('');
-      svcSel.value = '';
-      svcWrap.style.display = '';
-    } else {
-      svcWrap.style.display = 'none';
-    }
-  }
-
   flatRefreshPrices();
   _syncAllToOriginal();
   if (typeof window.updateSidebar        === 'function') window.updateSidebar();
@@ -375,7 +350,6 @@ function _clearRowProduct(id) {
   const row = _flatRows.find(r => r.id === id);
   if (!row) return;
   row.productName  = null;
-  row.serviceValue = null;
   row.qty = 0;
   const inp = document.getElementById(`qval-${id}`);
   if (inp) { inp.value = '0'; inp.min = '0'; }
@@ -383,8 +357,6 @@ function _clearRowProduct(id) {
   if (qtyWrap) qtyWrap.classList.add('pr-qty--disabled');
   const sel = document.querySelector(`#orow-${id} .flat-product-select`);
   if (sel) sel.value = '';
-  const svcWrapClr = document.getElementById(`svcwrap-${id}`);
-  if (svcWrapClr) svcWrapClr.style.display = 'none';
   _clearRowDisplay(id);
   flatRefreshPrices();
   _syncAllToOriginal();
@@ -823,10 +795,6 @@ function _syncAllToOriginal() {
       origQty.textContent = current + r.qty;
     }
 
-    if (r.serviceValue) {
-      const origSel = origItem.querySelector('select');
-      if (origSel) origSel.value = r.serviceValue;
-    }
   });
 }
 
@@ -860,7 +828,7 @@ function _overrideCollectEquipos() {
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
       const price = Math.round(basePrice * (1 - pct / 100));
-      const key   = r.productName + (r.serviceValue ? ` (+svc:${r.serviceValue})` : '');
+      const key   = r.productName;
 
       if (window.state.equipos[key]) {
         window.state.equipos[key].qty += r.qty;
