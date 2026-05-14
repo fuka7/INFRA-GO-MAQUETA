@@ -587,7 +587,7 @@ function updateSidebar() {
   /* Widget sidebar región */
   const despRegValEl  = document.getElementById('despachoRegionVal');
   const despRegInfoEl = document.getElementById('despachoRegionInfo');
-  if (despRegValEl)  { despRegValEl.textContent = despValText; despRegValEl.className = 'cls-despacho-val' + (esGratis ? ' cls-despacho-val--gratis' : ''); }
+  if (despRegValEl)  { despRegValEl.textContent = despValText; despRegValEl.className = 'despacho-inline-val' + (esGratis ? ' despacho-inline-val--gratis' : ''); }
   if (despRegInfoEl)  despRegInfoEl.textContent = totalConIVA > 0 ? (esGratis ? 'Despacho sin costo' : 'estimado · c/IVA') : 'sin productos';
 
   // Lista de productos en sidebar

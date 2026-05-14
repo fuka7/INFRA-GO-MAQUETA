@@ -347,42 +347,91 @@ body {
   padding-top: 7px; margin-top: 2px;
 }
 
-/* Widget Región de despacho */
-.cls-widget--despacho {
-  border-color: rgba(255,122,0,.25);
+/* Widget despacho inline (entre tabla y barra de totales) */
+.despacho-inline-wrap {
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 18px 20px 20px;
 }
-.cls-despacho-select {
-  width: 100%;
+.despacho-inline-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #0d1e36;
+  margin-bottom: 14px;
+}
+.despacho-inline-title svg { color: var(--orange); flex-shrink: 0; }
+.despacho-inline-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.despacho-inline-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--orange);
+  flex-shrink: 0;
+}
+.despacho-inline-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--c-text);
+  white-space: nowrap;
+}
+.despacho-inline-select {
+  flex: 1;
+  min-width: 200px;
   background: var(--c-surface-2);
   border: 1px solid rgba(255,122,0,.35);
   border-radius: 7px;
-  padding: 7px 10px;
+  padding: 8px 12px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--c-text);
   outline: none;
   cursor: pointer;
-  margin-bottom: 10px;
   transition: border-color .18s;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
 }
-.cls-despacho-select:focus { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-dim); }
-.cls-despacho-result {
+.despacho-inline-select:focus { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-dim); }
+.despacho-inline-select:disabled { opacity: .45; cursor: not-allowed; }
+.despacho-inline-result {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
-.cls-despacho-val {
+.despacho-inline-val {
+  font-family: 'Montserrat', sans-serif;
   font-size: 20px;
   font-weight: 800;
   color: var(--c-text);
   line-height: 1;
 }
-.cls-despacho-val--gratis { color: #16a34a; }
-.cls-despacho-info {
+.despacho-inline-val--gratis { color: #16a34a; }
+.despacho-inline-info {
+  font-family: 'Montserrat', sans-serif;
   font-size: 10px;
   color: var(--c-text-4);
   font-weight: 600;
+}
+@media (max-width: 600px) {
+  .despacho-inline-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+  .despacho-inline-select { min-width: unset; }
+  .despacho-inline-result { justify-content: flex-end; }
 }
 
 /* Descuentos */

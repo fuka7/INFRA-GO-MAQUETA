@@ -146,37 +146,6 @@ window.clsSetCat = function(tipo, btn) {
       <p class="cls-dolar-tagline">Modifica tu tipo de cambio y proyecta tu inversión</p>
     </div>
 
-    <!-- Widget Región de despacho -->
-    <div class="cls-widget cls-widget--despacho">
-      <div class="cls-widget-header">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--orange);flex-shrink:0"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        <span class="cls-widget-title">Región de despacho</span>
-      </div>
-      <select class="cls-despacho-select" id="despachoRegion" onchange="actualizarDespachoRegion(this.value)">
-        <option value="" selected disabled>Selecciona una región</option>
-        <option value="Región Metropolitana">Región Metropolitana</option>
-        <option value="Región de Valparaíso">Región de Valparaíso</option>
-        <option value="Región de O'Higgins">Región de O'Higgins</option>
-        <option value="Región del Maule">Región del Maule</option>
-        <option value="Región de Ñuble">Región de Ñuble</option>
-        <option value="Región del Biobío">Región del Biobío</option>
-        <option value="Región de La Araucanía">Región de La Araucanía</option>
-        <option value="Región de Los Ríos">Región de Los Ríos</option>
-        <option value="Región de Los Lagos">Región de Los Lagos</option>
-        <option value="Región de Coquimbo">Región de Coquimbo</option>
-        <option value="Región de Atacama">Región de Atacama</option>
-        <option value="Región de Antofagasta">Región de Antofagasta</option>
-        <option value="Región de Tarapacá">Región de Tarapacá</option>
-        <option value="Región de Arica y Parinacota">Región de Arica y Parinacota</option>
-        <option value="Región de Aysén">Región de Aysén</option>
-        <option value="Región de Magallanes">Región de Magallanes</option>
-      </select>
-      <div class="cls-despacho-result">
-        <span class="cls-despacho-val" id="despachoRegionVal">—</span>
-        <span class="cls-despacho-info" id="despachoRegionInfo">sin productos</span>
-      </div>
-    </div>
-
     <!-- Widget Descuentos por volumen -->
     <div class="cls-widget">
       <div class="cls-widget-title cls-widget-title--plain">Descuentos por volumen</div>
@@ -266,6 +235,42 @@ window.clsSetCat = function(tipo, btn) {
 
       <!-- Catálogo (buildCatalogTable lo inyecta aquí) -->
       <div id="catalogoProductos"></div>
+
+      <!-- ── Widget despacho inline ── -->
+      <div class="despacho-inline-wrap" id="despachoInlineWrap">
+        <div class="despacho-inline-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Estimar Envío
+        </div>
+      <div class="despacho-inline-bar">
+        <select class="despacho-inline-select" id="despachoRegion" onchange="despachoOnRegionChange(this.value)">
+          <option value="" selected disabled>Selecciona una región</option>
+          <option value="Región Metropolitana">Región Metropolitana</option>
+          <option value="Región de Valparaíso">Región de Valparaíso</option>
+          <option value="Región de O'Higgins">Región de O'Higgins</option>
+          <option value="Región del Maule">Región del Maule</option>
+          <option value="Región de Ñuble">Región de Ñuble</option>
+          <option value="Región del Biobío">Región del Biobío</option>
+          <option value="Región de La Araucanía">Región de La Araucanía</option>
+          <option value="Región de Los Ríos">Región de Los Ríos</option>
+          <option value="Región de Los Lagos">Región de Los Lagos</option>
+          <option value="Región de Coquimbo">Región de Coquimbo</option>
+          <option value="Región de Atacama">Región de Atacama</option>
+          <option value="Región de Antofagasta">Región de Antofagasta</option>
+          <option value="Región de Tarapacá">Región de Tarapacá</option>
+          <option value="Región de Arica y Parinacota">Región de Arica y Parinacota</option>
+          <option value="Región de Aysén">Región de Aysén</option>
+          <option value="Región de Magallanes">Región de Magallanes</option>
+        </select>
+        <select class="despacho-inline-select despacho-inline-select--comuna" id="despachoComuna" disabled onchange="actualizarDespachoRegion(document.getElementById('despachoRegion').value)">
+          <option value="" selected disabled>Selecciona una región primero</option>
+        </select>
+        <div class="despacho-inline-result">
+          <span class="despacho-inline-val" id="despachoRegionVal">—</span>
+          <span class="despacho-inline-info" id="despachoRegionInfo">sin productos</span>
+        </div>
+      </div>
+      </div>
 
       <!-- ── SIDEBAR DERECHO — RESUMEN (Movido al paso 1) ── -->
       <aside class="right-sidebar" id="bottomBar">
@@ -831,6 +836,23 @@ document.addEventListener('keydown',function(e){
 function trustScroll(btn, dir) {
   const track = btn.closest('.trust-card-nav').querySelector('.trust-logos-track');
   track.scrollBy({ left: dir * 160, behavior: 'smooth' });
+}
+
+function despachoOnRegionChange(region) {
+  var comunaSel = document.getElementById('despachoComuna');
+  if (!comunaSel) return;
+  comunaSel.innerHTML = '<option value="" selected disabled>Selecciona una comuna</option>';
+  if (region && window.COMUNAS_CHILE && window.COMUNAS_CHILE[region]) {
+    window.COMUNAS_CHILE[region].forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c; opt.textContent = c;
+      comunaSel.appendChild(opt);
+    });
+    comunaSel.disabled = false;
+  } else {
+    comunaSel.disabled = true;
+  }
+  actualizarDespachoRegion(region);
 }
 </script>
 <script src="/assets/js/rut-prefill.js" defer></script>

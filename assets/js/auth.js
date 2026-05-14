@@ -24,6 +24,7 @@
       rut:          d.rut                  || m.rut       || '',
       phone:        d.phone                || m.phone     || '',
       razon_social: d.razon_social         || '',
+      giro:         m.giro                 || d.giro      || '',
       contacto:     d.contacto             || '',
       cargo:        d.cargo                || '',
       direccion:    d.direccion            || '',
@@ -158,7 +159,10 @@
         <div class="auth-sub">Regístrate para cotizar y hacer seguimiento de tus pedidos</div>\
         <div class="auth-success" id="registerSuccess">\
           <div class="auth-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>\
-          <h3>¡Cuenta creada!</h3><p>Revisa tu correo para confirmar tu cuenta.</p>\
+          <h3>¡Cuenta creada!</h3>\
+          <p>Revisa tu correo para confirmar tu cuenta.</p>\
+          <p style="margin-top:10px;font-size:12px;color:#4a72b8;background:rgba(74,114,184,0.08);border:1px solid rgba(74,114,184,0.2);border-radius:8px;padding:10px 14px;line-height:1.5;">Una vez confirmada la cuenta, ingresa a <strong>Mi Perfil → Datos de facturación</strong> para guardar tu Razón Social, Giro y dirección. Se auto-rellenarán en todas tus cotizaciones.</p>\
+          <button type="button" id="registerSuccessClose" style="margin-top:18px;width:100%;height:44px;background:linear-gradient(135deg,#CC6200,#FF7A00);color:#fff;border:none;border-radius:10px;font-family:Montserrat,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Entendido</button>\
         </div>\
         <form class="auth-form" id="formRegister" novalidate>\
           <div class="auth-row">\
@@ -544,12 +548,15 @@
         document.getElementById('formRegister').style.display = 'none';
         document.getElementById('registerSuccess').classList.add('show');
         var pending = window._authRedirect;
-        setTimeout(function() {
-          switchTab('login');
-          window._authRedirect = pending;
-          document.getElementById('registerSuccess').classList.remove('show');
-          document.getElementById('formRegister').style.display = '';
-        }, 3000);
+        var closeBtn = document.getElementById('registerSuccessClose');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+            closeAuth();
+            document.getElementById('registerSuccess').classList.remove('show');
+            document.getElementById('formRegister').style.display = '';
+            window._authRedirect = pending;
+          }, { once: true });
+        }
       }).catch(function() {
         setLoading(btn, false);
         setError(email, 'Error de conexión. Intenta de nuevo.');
@@ -701,12 +708,23 @@
                 '<div class="igp-field"><label class="igp-label">Teléfono</label><input class="igp-input" type="tel" id="igpPhone" placeholder="+56 9 1234 5678" autocomplete="tel"></div>' +
               '</div>' +
               '<div class="igp-field"><label class="igp-label">Correo electrónico</label><input class="igp-input" type="email" id="igpEmail" disabled></div>' +
-              '<div class="igp-field"><label class="igp-label">Razón Social / Empresa</label><input class="igp-input" type="text" id="igpEmpresa" placeholder="Mi Empresa SpA" autocomplete="organization"></div>' +
+              '<div class="igp-field"><label class="igp-label">Cargo</label><input class="igp-input" type="text" id="igpCargo" placeholder="Gerente TI"></div>' +
+              '<div class="igp-billing-section">' +
+                '<div class="igp-billing-title">' +
+                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="13" height="13"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+                  'Datos de facturación' +
+                '</div>' +
+                '<span class="igp-billing-hint">Se auto-rellenan en tus cotizaciones</span>' +
+              '</div>' +
               '<div class="igp-row">' +
-                '<div class="igp-field"><label class="igp-label">Cargo</label><input class="igp-input" type="text" id="igpCargo" placeholder="Gerente TI"></div>' +
-                '<div class="igp-field"><label class="igp-label">Ciudad</label><input class="igp-input" type="text" id="igpCiudad" placeholder="Santiago" autocomplete="address-level2"></div>' +
+                '<div class="igp-field"><label class="igp-label">Razón Social / Empresa</label><input class="igp-input" type="text" id="igpEmpresa" placeholder="Mi Empresa SpA" autocomplete="organization"></div>' +
+                '<div class="igp-field"><label class="igp-label">Giro</label><input class="igp-input" type="text" id="igpGiro" placeholder="Venta de equipos"></div>' +
               '</div>' +
               '<div class="igp-field"><label class="igp-label">Dirección</label><input class="igp-input" type="text" id="igpDireccion" placeholder="Av. Ejemplo 123" autocomplete="street-address"></div>' +
+              '<div class="igp-row">' +
+                '<div class="igp-field"><label class="igp-label">Región</label><select class="igp-input igp-select" id="igpRegion"><option value="">— seleccionar —</option><option value="Región Metropolitana">Región Metropolitana</option><option value="Región de Valparaíso">Región de Valparaíso</option><option value="Región de O\'Higgins">Región de O\'Higgins</option><option value="Región del Maule">Región del Maule</option><option value="Región de Ñuble">Región de Ñuble</option><option value="Región del Biobío">Región del Biobío</option><option value="Región de La Araucanía">Región de La Araucanía</option><option value="Región de Los Ríos">Región de Los Ríos</option><option value="Región de Los Lagos">Región de Los Lagos</option><option value="Región de Coquimbo">Región de Coquimbo</option><option value="Región de Atacama">Región de Atacama</option><option value="Región de Antofagasta">Región de Antofagasta</option><option value="Región de Tarapacá">Región de Tarapacá</option><option value="Región de Arica y Parinacota">Región de Arica y Parinacota</option><option value="Región de Aysén">Región de Aysén</option><option value="Región de Magallanes">Región de Magallanes</option></select></div>' +
+                '<div class="igp-field"><label class="igp-label">Ciudad / Comuna</label><input class="igp-input" type="text" id="igpCiudad" placeholder="Las Condes" autocomplete="address-level2"></div>' +
+              '</div>' +
               '<button type="submit" class="igp-save-btn" id="igpSaveBtn">' +
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>' +
                 'Guardar cambios' +
@@ -761,7 +779,7 @@
       if (nmEl) nmEl.textContent = displayName;
       if (emEl) emEl.textContent = currentUser.email;
 
-      var map = { igpNombre: 'nombre', igpApellido: 'apellido', igpRut: 'rut', igpPhone: 'phone', igpEmail: 'email', igpEmpresa: 'razon_social', igpCargo: 'cargo', igpCiudad: 'ciudad', igpDireccion: 'direccion' };
+      var map = { igpNombre: 'nombre', igpApellido: 'apellido', igpRut: 'rut', igpPhone: 'phone', igpEmail: 'email', igpCargo: 'cargo', igpEmpresa: 'razon_social', igpGiro: 'giro', igpDireccion: 'direccion', igpRegion: 'region', igpCiudad: 'ciudad' };
       Object.keys(map).forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.value = currentUser[map[id]] || '';
@@ -832,10 +850,12 @@
       apellido:     (document.getElementById('igpApellido')  || {}).value || '',
       rut:          (document.getElementById('igpRut')       || {}).value || '',
       phone:        (document.getElementById('igpPhone')     || {}).value || '',
-      razon_social: (document.getElementById('igpEmpresa')   || {}).value || '',
       cargo:        (document.getElementById('igpCargo')     || {}).value || '',
-      ciudad:       (document.getElementById('igpCiudad')    || {}).value || '',
-      direccion:    (document.getElementById('igpDireccion') || {}).value || ''
+      razon_social: (document.getElementById('igpEmpresa')   || {}).value || '',
+      giro:         (document.getElementById('igpGiro')      || {}).value || '',
+      direccion:    (document.getElementById('igpDireccion') || {}).value || '',
+      region:       (document.getElementById('igpRegion')    || {}).value || '',
+      ciudad:       (document.getElementById('igpCiudad')    || {}).value || ''
     };
 
     if (currentUser) {
@@ -858,11 +878,11 @@
       var session = res.data && res.data.session;
       if (!session) { _done(false, 'No hay sesión activa.'); return; }
 
-      var profileUpdate = { rut: fields.rut, phone: fields.phone, razon_social: fields.razon_social, cargo: fields.cargo, ciudad: fields.ciudad, direccion: fields.direccion };
+      var profileUpdate = { rut: fields.rut, phone: fields.phone, razon_social: fields.razon_social, cargo: fields.cargo, direccion: fields.direccion, region: fields.region, ciudad: fields.ciudad };
 
       Promise.all([
         window.supabase.from('profiles').update(profileUpdate).eq('id', session.user.id),
-        window.supabase.auth.updateUser({ data: { nombre: fields.nombre, apellido: fields.apellido } })
+        window.supabase.auth.updateUser({ data: { nombre: fields.nombre, apellido: fields.apellido, giro: fields.giro } })
       ]).then(function(results) {
         var err = (results[0] && results[0].error) || (results[1] && results[1].error);
         err ? _done(false, 'Error al guardar. Intenta de nuevo.') : _done(true, 'Cambios guardados correctamente.');

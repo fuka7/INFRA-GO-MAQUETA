@@ -141,6 +141,7 @@
 
       /* SimpleAPI devuelve: { razonSocial, actividad, direccion, comuna, region } */
       var razonSocial = data.razonSocial || data.nombre || data.name || '';
+      var giroSII     = data.actividad   || data.giro   || '';
       var direccionSII = data.direccion  || '';
       var ciudadSII   = data.comuna      || '';
       var regionSII   = data.region      || '';
@@ -186,9 +187,15 @@
           sii_fetched:  true
         });
 
+        /* Guardar giro en user_metadata si vino del SII */
+        if (giroSII && window.supabase) {
+          window.supabase.auth.updateUser({ data: { giro: giroSII } });
+        }
+
         /* Actualizar caché localStorage */
         var updatedProfile = Object.assign({}, profile, {
           razon_social: razonSocial,
+          giro:         giroSII || profile.giro,
           sii_fetched:  true
         });
         try { localStorage.setItem('ig_profile', JSON.stringify(updatedProfile)); } catch(e) {}

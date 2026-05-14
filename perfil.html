@@ -74,8 +74,9 @@
 
   <!-- ── PESTAÑA: MIS DATOS ── -->
   <section class="prf-section active" id="tabDatos">
-    <div class="prf-section-title">Información personal</div>
     <form class="prf-form" id="prfFormDatos" novalidate>
+
+      <div class="prf-section-title">Información personal</div>
 
       <div class="prf-row">
         <div class="prf-field">
@@ -99,30 +100,69 @@
         </div>
       </div>
 
-      <div class="prf-field">
-        <label class="prf-label" for="prfEmail">Correo electrónico</label>
-        <input class="prf-input" type="email" id="prfEmail2" disabled>
-      </div>
-
-      <div class="prf-field">
-        <label class="prf-label" for="prfEmpresa">Razón Social / Empresa</label>
-        <input class="prf-input" type="text" id="prfEmpresa" placeholder="Mi Empresa SpA" autocomplete="organization">
-      </div>
-
       <div class="prf-row">
+        <div class="prf-field">
+          <label class="prf-label" for="prfEmail2">Correo electrónico</label>
+          <input class="prf-input" type="email" id="prfEmail2" disabled>
+        </div>
         <div class="prf-field">
           <label class="prf-label" for="prfCargo">Cargo</label>
           <input class="prf-input" type="text" id="prfCargo" placeholder="Gerente TI">
         </div>
+      </div>
+
+      <!-- ── Sección: Datos de Facturación ── -->
+      <div class="prf-billing-section">
+        <div class="prf-billing-section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="15" height="15"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          Datos de facturación
+        </div>
+        <span class="prf-billing-section-hint">Se auto-rellenan en tus cotizaciones y pedidos</span>
+      </div>
+
+      <div class="prf-row">
         <div class="prf-field">
-          <label class="prf-label" for="prfCiudad">Ciudad</label>
-          <input class="prf-input" type="text" id="prfCiudad" placeholder="Santiago" autocomplete="address-level2">
+          <label class="prf-label" for="prfEmpresa">Razón Social / Empresa</label>
+          <input class="prf-input" type="text" id="prfEmpresa" placeholder="Mi Empresa SpA" autocomplete="organization">
+        </div>
+        <div class="prf-field">
+          <label class="prf-label" for="prfGiro">Giro</label>
+          <input class="prf-input" type="text" id="prfGiro" placeholder="Venta de equipos computacionales">
         </div>
       </div>
 
       <div class="prf-field">
         <label class="prf-label" for="prfDireccion">Dirección</label>
         <input class="prf-input" type="text" id="prfDireccion" placeholder="Av. Ejemplo 1234" autocomplete="street-address">
+      </div>
+
+      <div class="prf-row">
+        <div class="prf-field">
+          <label class="prf-label" for="prfRegion">Región</label>
+          <select class="prf-input prf-select" id="prfRegion">
+            <option value="">— seleccionar —</option>
+            <option value="Región Metropolitana">Región Metropolitana</option>
+            <option value="Región de Valparaíso">Región de Valparaíso</option>
+            <option value="Región de O'Higgins">Región de O'Higgins</option>
+            <option value="Región del Maule">Región del Maule</option>
+            <option value="Región de Ñuble">Región de Ñuble</option>
+            <option value="Región del Biobío">Región del Biobío</option>
+            <option value="Región de La Araucanía">Región de La Araucanía</option>
+            <option value="Región de Los Ríos">Región de Los Ríos</option>
+            <option value="Región de Los Lagos">Región de Los Lagos</option>
+            <option value="Región de Coquimbo">Región de Coquimbo</option>
+            <option value="Región de Atacama">Región de Atacama</option>
+            <option value="Región de Antofagasta">Región de Antofagasta</option>
+            <option value="Región de Tarapacá">Región de Tarapacá</option>
+            <option value="Región de Arica y Parinacota">Región de Arica y Parinacota</option>
+            <option value="Región de Aysén">Región de Aysén</option>
+            <option value="Región de Magallanes">Región de Magallanes</option>
+          </select>
+        </div>
+        <div class="prf-field">
+          <label class="prf-label" for="prfCiudad">Ciudad / Comuna</label>
+          <input class="prf-input" type="text" id="prfCiudad" placeholder="Las Condes" autocomplete="address-level2">
+        </div>
       </div>
 
       <div class="prf-form-actions">

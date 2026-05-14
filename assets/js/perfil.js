@@ -76,10 +76,12 @@
       prfRut:       'rut',
       prfPhone:     'phone',
       prfEmail2:    'email',
-      prfEmpresa:   'razon_social',
       prfCargo:     'cargo',
-      prfCiudad:    'ciudad',
-      prfDireccion: 'direccion'
+      prfEmpresa:   'razon_social',
+      prfGiro:      'giro',
+      prfDireccion: 'direccion',
+      prfRegion:    'region',
+      prfCiudad:    'ciudad'
     };
     Object.keys(map).forEach(function (id) {
       var el = document.getElementById(id);
@@ -133,10 +135,12 @@
       apellido:     val('prfApellido'),
       rut:          val('prfRut'),
       phone:        val('prfPhone'),
-      razon_social: val('prfEmpresa'),
       cargo:        val('prfCargo'),
-      ciudad:       val('prfCiudad'),
-      direccion:    val('prfDireccion')
+      razon_social: val('prfEmpresa'),
+      giro:         val('prfGiro'),
+      direccion:    val('prfDireccion'),
+      region:       val('prfRegion'),
+      ciudad:       val('prfCiudad')
     };
 
     // Actualizar caché local inmediatamente
@@ -161,10 +165,11 @@
           phone:        fields.phone,
           razon_social: fields.razon_social,
           cargo:        fields.cargo,
-          ciudad:       fields.ciudad,
-          direccion:    fields.direccion
+          direccion:    fields.direccion,
+          region:       fields.region,
+          ciudad:       fields.ciudad
         }).eq('id', session.user.id),
-        window.supabase.auth.updateUser({ data: { nombre: fields.nombre, apellido: fields.apellido } })
+        window.supabase.auth.updateUser({ data: { nombre: fields.nombre, apellido: fields.apellido, giro: fields.giro } })
       ]).then(function (results) {
         var err = (results[0] && results[0].error) || (results[1] && results[1].error);
         done(!err, err ? 'Error al guardar. Intenta de nuevo.' : 'Cambios guardados correctamente.');

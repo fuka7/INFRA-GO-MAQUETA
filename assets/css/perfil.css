@@ -153,6 +153,43 @@
 .prf-save-msg.ok  { display: inline-block; color: #16a34a; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
 .prf-save-msg.err { display: inline-block; color: #dc2626; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15); }
 
+/* ── SELECT ── */
+.prf-select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* ── BILLING SECTION DIVIDER ── */
+.prf-billing-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #eef4ff 100%);
+  border: 1px solid #c4d7ff;
+  border-radius: 10px;
+}
+.prf-billing-section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 800;
+  color: #1a4fa0;
+}
+.prf-billing-section-hint {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; color: #4a72b8;
+  font-weight: 500;
+}
+
 /* ── COTIZACIONES ── */
 .prf-quot-grid {
   display: grid;
