@@ -786,6 +786,30 @@
     _load();
     if (!_items.length) return;
 
+    /* Guard: require region selection */
+    var regionSel = document.getElementById('igs-region-igcCartShippingWidget');
+    var errEl     = document.getElementById('igcRegionError');
+    if (regionSel && !regionSel.value) {
+      if (errEl) { errEl.style.display = ''; setTimeout(function() { errEl.style.display = 'none'; }, 3500); }
+      regionSel.classList.add('igc-field-error');
+      setTimeout(function() { regionSel.classList.remove('igc-field-error'); }, 3500);
+      var shipWrap = document.getElementById('igcCartShipWrap');
+      if (shipWrap) shipWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (errEl) errEl.style.display = 'none';
+
+    /* Guard: require login to proceed to checkout */
+    var loggedIn = (window.igbAuth && typeof window.igbAuth.current === 'function' && window.igbAuth.current())
+                || (window.igbAuth && typeof window.igbAuth.getProfileCache === 'function' && window.igbAuth.getProfileCache());
+    if (!loggedIn) {
+      sessionStorage.setItem('ig_checkout_pending', '1');
+      if (window.igbAuth && typeof window.igbAuth.open === 'function') {
+        window.igbAuth.open('login');
+      }
+      return;
+    }
+
     /* Pre-rellenar si está logueado */
     if (window.igbAuth && typeof window.igbAuth.current === 'function') {
       var u = window.igbAuth.current();

@@ -498,6 +498,11 @@
             setTimeout(function() {
               closeAuth(false);
               window._authRedirect = null;
+              if (sessionStorage.getItem('ig_checkout_pending') && window.location.pathname.includes('carrito')) {
+                sessionStorage.removeItem('ig_checkout_pending');
+                if (typeof window.igcOpenCheckout === 'function') window.igcOpenCheckout();
+                return;
+              }
               if (redirectTarget) window.location.href = redirectTarget;
             }, 1500);
           });
