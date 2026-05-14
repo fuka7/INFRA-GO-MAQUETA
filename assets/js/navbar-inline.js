@@ -25,7 +25,7 @@
       : cachedProfile.email.split('@')[0];
     accountHTML = '<span style="width:32px;height:32px;background:#FF7A00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
       '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
-    accountHTMLMobile = '<div class="igb-mobile-account"><div class="igb-mobile-account-row"><div class="igb-mobile-account-avatar">' + initials + '</div><div class="igb-mobile-account-info"><div class="igb-mobile-account-name">' + displayName + '</div><div class="igb-mobile-account-sub">Sesión activa</div></div></div><button onclick="igbLogout()" class="igb-mobile-logout">Cerrar sesión</button></div>';
+    accountHTMLMobile = '<div class="igb-mobile-account"><div class="igb-mobile-account-row"><div class="igb-mobile-account-avatar">' + initials + '</div><div class="igb-mobile-account-info"><div class="igb-mobile-account-name">' + displayName + '</div><div class="igb-mobile-account-sub">Sesión activa</div></div></div><div class="igb-mobile-account-actions"><button onclick="igbOpenProfile()" class="igb-mobile-profile-btn">Mi perfil</button><button onclick="igbLogout()" class="igb-mobile-logout">Cerrar sesión</button></div></div>';
   } else {
     accountHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
       '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>' +
@@ -320,25 +320,25 @@ function igbCotizar(e){
 }
 function igbHandleAccount(e){
   e.preventDefault();
+  e.stopPropagation();
   var btn = e.target.closest('.igb-account');
   if(!btn) return false;
-  
-  // Esperar a que igbAuth esté listo (máximo 100ms)
+
+  var state = btn.dataset.igbState;
   var attempts = 0;
-  var tryOpen = function() {
+  var tryAct = function() {
     if(window.igbAuth && window.igbAuth.open) {
-      var state = btn.dataset.igbState;
       if(state === 'logged') {
-        window.igbAuth.logout();
+        window.igbAuth.toggleAcctDropdown(btn);
       } else {
         window.igbAuth.open('login');
       }
     } else if(attempts < 50) {
       attempts++;
-      setTimeout(tryOpen, 2);
+      setTimeout(tryAct, 2);
     }
   };
-  tryOpen();
+  tryAct();
   return false;
 }
 function igbLogout(){
@@ -365,6 +365,10 @@ function igbMobileLogin(){
     }
   };
   tryOpen();
+}
+function igbOpenProfile(){
+  igbCloseMenu();
+  window.location.href = '/perfil.html';
 }
 // Cerrar menú mobile al redimensionar a pantalla grande
 window.addEventListener('resize', function(){

@@ -285,7 +285,7 @@
       var apellido = (user.apellido || '').trim();
       var initials = nombre && apellido ? (nombre[0] + apellido[0]).toUpperCase() : nombre ? nombre.slice(0,2).toUpperCase() : user.email.slice(0,2).toUpperCase();
       var displayName = nombre ? (nombre + (apellido ? ' ' + apellido : '')) : user.email.split('@')[0];
-      return '<div class="igb-mobile-account"><div class="igb-mobile-account-row"><div class="igb-mobile-account-avatar">' + initials + '</div><div class="igb-mobile-account-info"><div class="igb-mobile-account-name">' + displayName + '</div><div class="igb-mobile-account-sub">Sesión activa</div></div></div><button onclick="igbLogout()" class="igb-mobile-logout">Cerrar sesión</button></div>';
+      return '<div class="igb-mobile-account"><div class="igb-mobile-account-row"><div class="igb-mobile-account-avatar">' + initials + '</div><div class="igb-mobile-account-info"><div class="igb-mobile-account-name">' + displayName + '</div><div class="igb-mobile-account-sub">Sesión activa</div></div></div><div class="igb-mobile-account-actions"><button onclick="igbOpenProfile()" class="igb-mobile-profile-btn">Mi perfil</button><button onclick="igbLogout()" class="igb-mobile-logout">Cerrar sesión</button></div></div>';
     } else {
       return '<div style="margin-top:8px;"><button onclick="igbMobileLogin()" class="igb-mobile-login-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Iniciar Sesión</button></div>';
     }
@@ -381,7 +381,7 @@
 
     closeBtn.addEventListener('click', function() { closeAuth(); });
     overlay.addEventListener('click', function(e) { if (e.target === overlay) closeAuth(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAuth(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeAuth(); closeAcctDropdown(); } });
 
     // Tabs
     document.querySelectorAll('.auth-tab').forEach(function(tab) {
@@ -594,12 +594,341 @@
   }
 
   /* ════════════════════════════════════════════
+     DROPDOWN DE CUENTA (navbar desktop)
+  ════════════════════════════════════════════ */
+  var _ddOpen = false;
+
+  function buildAcctDropdown() {
+    if (document.getElementById('igbAcctDd')) return;
+    var el = document.createElement('div');
+    el.id = 'igbAcctDd';
+    el.className = 'igb-acct-dd';
+    el.innerHTML =
+      '<button class="igb-acct-dd-item" id="igbDdPerfil">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+        'Mi perfil' +
+      '</button>' +
+      '<hr class="igb-acct-dd-sep">' +
+      '<button class="igb-acct-dd-item danger" id="igbDdLogout">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>' +
+        'Cerrar sesión' +
+      '</button>';
+    document.body.appendChild(el);
+
+    document.getElementById('igbDdPerfil').addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeAcctDropdown();
+      window.location.href = '/perfil.html';
+    });
+    document.getElementById('igbDdLogout').addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeAcctDropdown();
+      logout();
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!_ddOpen) return;
+      var dd   = document.getElementById('igbAcctDd');
+      var acct = document.querySelector('.igb-account');
+      if (dd && dd.contains(e.target)) return;
+      if (acct && acct.contains(e.target)) return;
+      closeAcctDropdown();
+    });
+  }
+
+  function openAcctDropdown(anchor) {
+    buildAcctDropdown();
+    var dd = document.getElementById('igbAcctDd');
+    if (!dd) return;
+    var rect = anchor.getBoundingClientRect();
+    dd.style.top   = (rect.bottom + 8) + 'px';
+    dd.style.right = (window.innerWidth - rect.right) + 'px';
+    dd.style.left  = 'auto';
+    dd.classList.add('open');
+    _ddOpen = true;
+  }
+
+  function closeAcctDropdown() {
+    var dd = document.getElementById('igbAcctDd');
+    if (dd) dd.classList.remove('open');
+    _ddOpen = false;
+  }
+
+  function toggleAcctDropdown(anchor) {
+    _ddOpen ? closeAcctDropdown() : openAcctDropdown(anchor);
+  }
+
+  /* ════════════════════════════════════════════
+     PANEL DE PERFIL
+  ════════════════════════════════════════════ */
+  var _profileEventsAttached = false;
+  var _quotLoaded = false;
+
+  function buildProfilePanel() {
+    if (document.getElementById('igpPanel')) return;
+    var wrapper = document.createElement('div');
+    wrapper.innerHTML =
+      '<div class="igp-overlay" id="igpOverlay"></div>' +
+      '<div class="igp-panel" id="igpPanel" role="dialog" aria-modal="true" aria-label="Mi perfil">' +
+        '<div class="igp-header">' +
+          '<div class="igp-header-top">' +
+            '<div class="igp-user-row">' +
+              '<div class="igp-avatar" id="igpAvatar"></div>' +
+              '<div class="igp-user-info">' +
+                '<div class="igp-user-name" id="igpUserName"></div>' +
+                '<div class="igp-user-email" id="igpUserEmail"></div>' +
+              '</div>' +
+            '</div>' +
+            '<button class="igp-close" id="igpClose" aria-label="Cerrar perfil">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+            '</button>' +
+          '</div>' +
+          '<div class="igp-tabs">' +
+            '<button class="igp-tab active" data-pane="datos">Mis Datos</button>' +
+            '<button class="igp-tab" data-pane="tarjetas">Tarjetas</button>' +
+            '<button class="igp-tab" data-pane="cotizaciones">Cotizaciones</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="igp-body">' +
+          '<div class="igp-pane active" id="igpPaneDatos">' +
+            '<form class="igp-form" id="igpFormDatos" novalidate>' +
+              '<div class="igp-row">' +
+                '<div class="igp-field"><label class="igp-label">Nombre</label><input class="igp-input" type="text" id="igpNombre" placeholder="Juan" autocomplete="given-name"></div>' +
+                '<div class="igp-field"><label class="igp-label">Apellido</label><input class="igp-input" type="text" id="igpApellido" placeholder="González" autocomplete="family-name"></div>' +
+              '</div>' +
+              '<div class="igp-row">' +
+                '<div class="igp-field"><label class="igp-label">RUT</label><input class="igp-input" type="text" id="igpRut" placeholder="12.345.678-9" maxlength="12"></div>' +
+                '<div class="igp-field"><label class="igp-label">Teléfono</label><input class="igp-input" type="tel" id="igpPhone" placeholder="+56 9 1234 5678" autocomplete="tel"></div>' +
+              '</div>' +
+              '<div class="igp-field"><label class="igp-label">Correo electrónico</label><input class="igp-input" type="email" id="igpEmail" disabled></div>' +
+              '<div class="igp-field"><label class="igp-label">Razón Social / Empresa</label><input class="igp-input" type="text" id="igpEmpresa" placeholder="Mi Empresa SpA" autocomplete="organization"></div>' +
+              '<div class="igp-row">' +
+                '<div class="igp-field"><label class="igp-label">Cargo</label><input class="igp-input" type="text" id="igpCargo" placeholder="Gerente TI"></div>' +
+                '<div class="igp-field"><label class="igp-label">Ciudad</label><input class="igp-input" type="text" id="igpCiudad" placeholder="Santiago" autocomplete="address-level2"></div>' +
+              '</div>' +
+              '<div class="igp-field"><label class="igp-label">Dirección</label><input class="igp-input" type="text" id="igpDireccion" placeholder="Av. Ejemplo 123" autocomplete="street-address"></div>' +
+              '<button type="submit" class="igp-save-btn" id="igpSaveBtn">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>' +
+                'Guardar cambios' +
+              '</button>' +
+              '<div class="igp-save-msg" id="igpSaveMsg"></div>' +
+            '</form>' +
+          '</div>' +
+          '<div class="igp-pane" id="igpPaneTarjetas">' +
+            '<div class="igp-cards-empty">' +
+              '<div class="igp-coming-badge">Próximamente</div>' +
+              '<div class="igp-cards-icon">💳</div>' +
+              '<div class="igp-cards-text">Gestión de métodos de pago</div>' +
+              '<div class="igp-cards-sub">Podrás guardar tus tarjetas y medios de pago para agilizar tus compras.</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="igp-pane" id="igpPaneCotizaciones">' +
+            '<div class="igp-loading" id="igpQuotLoading">Cargando cotizaciones...</div>' +
+            '<div class="igp-quot-list" id="igpQuotList" style="display:none;"></div>' +
+            '<div class="igp-empty" id="igpQuotEmpty" style="display:none;">' +
+              '<div class="igp-empty-icon">📋</div>' +
+              '<div class="igp-empty-text">Sin cotizaciones aún</div>' +
+              '<div class="igp-empty-sub">Tus cotizaciones enviadas aparecerán aquí.</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="igp-footer">' +
+          '<button class="igp-logout-btn" id="igpLogoutBtn">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>' +
+            'Cerrar sesión' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    while (wrapper.firstChild) document.body.appendChild(wrapper.firstChild);
+  }
+
+  function openProfile() {
+    buildProfilePanel();
+    _quotLoaded = false;
+
+    if (currentUser) {
+      var nombre   = (currentUser.nombre   || '').trim();
+      var apellido = (currentUser.apellido || '').trim();
+      var initials = nombre && apellido ? (nombre[0] + apellido[0]).toUpperCase()
+                   : nombre ? nombre.slice(0, 2).toUpperCase()
+                   : currentUser.email.slice(0, 2).toUpperCase();
+      var displayName = nombre ? (nombre + (apellido ? ' ' + apellido : '')) : currentUser.email.split('@')[0];
+
+      var avEl   = document.getElementById('igpAvatar');
+      var nmEl   = document.getElementById('igpUserName');
+      var emEl   = document.getElementById('igpUserEmail');
+      if (avEl) avEl.textContent = initials;
+      if (nmEl) nmEl.textContent = displayName;
+      if (emEl) emEl.textContent = currentUser.email;
+
+      var map = { igpNombre: 'nombre', igpApellido: 'apellido', igpRut: 'rut', igpPhone: 'phone', igpEmail: 'email', igpEmpresa: 'razon_social', igpCargo: 'cargo', igpCiudad: 'ciudad', igpDireccion: 'direccion' };
+      Object.keys(map).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.value = currentUser[map[id]] || '';
+      });
+    }
+
+    document.getElementById('igpOverlay').classList.add('open');
+    document.getElementById('igpPanel').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    switchProfileTab('datos');
+    _attachProfileEvents();
+  }
+
+  function closeProfile() {
+    var overlay = document.getElementById('igpOverlay');
+    var panel   = document.getElementById('igpPanel');
+    if (!overlay || !panel) return;
+    overlay.classList.remove('open');
+    panel.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function switchProfileTab(pane) {
+    document.querySelectorAll('.igp-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.pane === pane);
+    });
+    var capPane = pane.charAt(0).toUpperCase() + pane.slice(1);
+    document.querySelectorAll('.igp-pane').forEach(function(p) {
+      p.classList.toggle('active', p.id === 'igpPane' + capPane);
+    });
+    if (pane === 'cotizaciones') loadCotizaciones();
+  }
+
+  function _attachProfileEvents() {
+    if (_profileEventsAttached) return;
+    _profileEventsAttached = true;
+
+    document.getElementById('igpClose').addEventListener('click', closeProfile);
+    document.getElementById('igpOverlay').addEventListener('click', closeProfile);
+
+    document.querySelectorAll('.igp-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() { switchProfileTab(tab.dataset.pane); });
+    });
+
+    document.getElementById('igpLogoutBtn').addEventListener('click', function() {
+      closeProfile();
+      logout();
+    });
+
+    var rutInput = document.getElementById('igpRut');
+    if (rutInput) rutInput.addEventListener('input', function() { rutInput.value = formatRut(rutInput.value); });
+
+    document.getElementById('igpFormDatos').addEventListener('submit', function(e) {
+      e.preventDefault();
+      saveProfileData();
+    });
+  }
+
+  function saveProfileData() {
+    var btn     = document.getElementById('igpSaveBtn');
+    var saveMsg = document.getElementById('igpSaveMsg');
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    saveMsg.className = 'igp-save-msg';
+
+    var fields = {
+      nombre:       (document.getElementById('igpNombre')    || {}).value || '',
+      apellido:     (document.getElementById('igpApellido')  || {}).value || '',
+      rut:          (document.getElementById('igpRut')       || {}).value || '',
+      phone:        (document.getElementById('igpPhone')     || {}).value || '',
+      razon_social: (document.getElementById('igpEmpresa')   || {}).value || '',
+      cargo:        (document.getElementById('igpCargo')     || {}).value || '',
+      ciudad:       (document.getElementById('igpCiudad')    || {}).value || '',
+      direccion:    (document.getElementById('igpDireccion') || {}).value || ''
+    };
+
+    if (currentUser) {
+      Object.assign(currentUser, fields);
+      igSaveProfileCache(currentUser);
+      updateNavbar();
+    }
+
+    function _done(ok, msg) {
+      btn.disabled = false;
+      btn.style.opacity = '';
+      saveMsg.textContent = msg;
+      saveMsg.className = 'igp-save-msg ' + (ok ? 'ok' : 'err');
+      setTimeout(function() { saveMsg.className = 'igp-save-msg'; }, 3500);
+    }
+
+    if (!window.supabase) { _done(true, 'Cambios guardados localmente.'); return; }
+
+    window.supabase.auth.getSession().then(function(res) {
+      var session = res.data && res.data.session;
+      if (!session) { _done(false, 'No hay sesión activa.'); return; }
+
+      var profileUpdate = { rut: fields.rut, phone: fields.phone, razon_social: fields.razon_social, cargo: fields.cargo, ciudad: fields.ciudad, direccion: fields.direccion };
+
+      Promise.all([
+        window.supabase.from('profiles').update(profileUpdate).eq('id', session.user.id),
+        window.supabase.auth.updateUser({ data: { nombre: fields.nombre, apellido: fields.apellido } })
+      ]).then(function(results) {
+        var err = (results[0] && results[0].error) || (results[1] && results[1].error);
+        err ? _done(false, 'Error al guardar. Intenta de nuevo.') : _done(true, 'Cambios guardados correctamente.');
+      }).catch(function() { _done(false, 'Error de conexión.'); });
+    });
+  }
+
+  function loadCotizaciones() {
+    if (_quotLoaded) return;
+
+    var loading = document.getElementById('igpQuotLoading');
+    var list    = document.getElementById('igpQuotList');
+    var empty   = document.getElementById('igpQuotEmpty');
+    if (!loading || !list || !empty) return;
+
+    if (!window.supabase || !currentUser) {
+      loading.style.display = 'none';
+      empty.style.display = '';
+      return;
+    }
+
+    window.supabase.from('cotizaciones')
+      .select('id, empresa, total_general, total_productos, total_servicios, created_at')
+      .eq('email', currentUser.email)
+      .order('created_at', { ascending: false })
+      .limit(30)
+      .then(function(res) {
+        loading.style.display = 'none';
+        if (res.error || !res.data || res.data.length === 0) {
+          empty.style.display = '';
+          return;
+        }
+        _quotLoaded = true;
+        list.style.display = '';
+        list.innerHTML = res.data.map(function(q) {
+          var fecha   = q.created_at ? new Date(q.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+          var total   = q.total_general != null ? '$ ' + Number(q.total_general).toLocaleString('es-CL') : '—';
+          var empresa = q.empresa || '—';
+          var detalle = [];
+          if (q.total_productos) detalle.push('Productos: $ ' + Number(q.total_productos).toLocaleString('es-CL'));
+          if (q.total_servicios) detalle.push('Servicios: $ ' + Number(q.total_servicios).toLocaleString('es-CL'));
+          return '<div class="igp-quot-card">' +
+            '<div class="igp-quot-top">' +
+              '<div class="igp-quot-empresa">' + empresa + '</div>' +
+              '<div class="igp-quot-total">' + total + '</div>' +
+            '</div>' +
+            '<div class="igp-quot-meta">' + fecha + '</div>' +
+            (detalle.length ? '<div class="igp-quot-products">' + detalle.join(' · ') + '</div>' : '') +
+          '</div>';
+        }).join('');
+      }).catch(function() {
+        loading.style.display = 'none';
+        empty.style.display = '';
+      });
+  }
+
+  /* ════════════════════════════════════════════
      API GLOBAL — expuesta inmediatamente
   ════════════════════════════════════════════ */
   window.igbAuth = {
-    open:    openAuth,
-    close:   closeAuth,
-    logout:  logout,
+    open:               openAuth,
+    close:              closeAuth,
+    logout:             logout,
+    openProfile:        openProfile,
+    closeProfile:       closeProfile,
+    toggleAcctDropdown: toggleAcctDropdown,
     current: function() { return currentUser; },
     getProfileCache: function() {
       try { return JSON.parse(localStorage.getItem('ig_profile') || 'null'); } catch(e) { return null; }
@@ -617,13 +946,13 @@
     return false;
   };
 
-  /* Click global en .igb-account — funciona en todas las páginas */
+  /* Click global en .igb-account — fallback sin inline onclick */
   document.addEventListener('click', function(e) {
     var btn = e.target.closest('.igb-account');
     if (!btn) return;
     e.preventDefault();
     if (btn.dataset.igbState === 'logged') {
-      logout();
+      toggleAcctDropdown(btn);
     } else {
       openAuth('login');
     }

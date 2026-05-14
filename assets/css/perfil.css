@@ -1,0 +1,302 @@
+/* ═══════════════════════════════════════════════
+   perfil.css — InfraGo
+   Página de perfil del usuario
+   © 2026 InfraGo SpA / TIC Managers
+═══════════════════════════════════════════════ */
+
+/* ── HERO ── */
+.prf-hero {
+  background: linear-gradient(135deg, #0A1426 0%, #0d1f3a 100%);
+  padding: 48px 48px 44px;
+}
+.prf-hero-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.prf-avatar {
+  width: 80px; height: 80px;
+  background: #FF7A00;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800; font-size: 28px; color: #fff;
+  flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 24px rgba(255,122,0,0.3);
+}
+.prf-hero-info { display: flex; flex-direction: column; gap: 4px; }
+.prf-hero-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800; font-size: 26px; color: #fff; line-height: 1.2;
+}
+.prf-hero-email {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; color: rgba(255,255,255,0.45);
+}
+.prf-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,122,0,0.15);
+  border: 1px solid rgba(255,122,0,0.3);
+  color: #FF9933;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700;
+  padding: 4px 12px; border-radius: 20px;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+/* ── TABS BAR ── */
+.prf-tabs-bar {
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  position: sticky;
+  top: 96px;
+  z-index: 100;
+}
+.prf-tabs-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+}
+.prf-tab {
+  padding: 16px 22px;
+  border: none; background: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: rgba(17,17,17,0.4);
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -1px;
+  display: flex; align-items: center; gap: 7px;
+  white-space: nowrap;
+}
+.prf-tab:hover { color: #FF7A00; }
+.prf-tab.active { color: #FF7A00; border-bottom-color: #FF7A00; }
+.prf-tab svg { width: 14px; height: 14px; }
+
+/* ── MAIN CONTENT ── */
+.prf-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 48px 80px;
+  min-height: 50vh;
+}
+.prf-section { display: none; }
+.prf-section.active { display: block; }
+.prf-section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 17px; font-weight: 800; color: #0f172a;
+  margin-bottom: 26px;
+}
+
+/* ── FORM: MIS DATOS ── */
+.prf-form {
+  max-width: 640px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.prf-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.prf-field { display: flex; flex-direction: column; gap: 6px; }
+.prf-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700;
+  color: rgba(17,17,17,0.5);
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.prf-input {
+  height: 46px;
+  border: 1.5px solid rgba(17,17,17,0.13);
+  border-radius: 10px;
+  padding: 0 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; color: #111;
+  background: #f8f9fb;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  width: 100%; box-sizing: border-box;
+}
+.prf-input:focus {
+  border-color: #FF7A00;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255,122,0,0.1);
+}
+.prf-input:disabled {
+  color: rgba(17,17,17,0.35);
+  background: #f1f3f6;
+  cursor: not-allowed;
+}
+.prf-form-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+.prf-save-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 48px; padding: 0 28px;
+  background: linear-gradient(135deg, #CC6200, #FF7A00);
+  color: #fff; border: none; border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,122,0,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.prf-save-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,122,0,0.35); }
+.prf-save-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.prf-save-btn svg { width: 16px; height: 16px; }
+.prf-save-msg {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 600;
+  padding: 10px 16px; border-radius: 8px; display: none;
+}
+.prf-save-msg.ok  { display: inline-block; color: #16a34a; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
+.prf-save-msg.err { display: inline-block; color: #dc2626; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15); }
+
+/* ── COTIZACIONES ── */
+.prf-quot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 16px;
+}
+.prf-quot-card {
+  border: 1px solid rgba(17,17,17,0.1);
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.18s;
+}
+.prf-quot-card:hover {
+  border-color: #FF7A00;
+  box-shadow: 0 4px 20px rgba(255,122,0,0.12);
+  transform: translateY(-2px);
+}
+.prf-quot-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 8px;
+  margin-bottom: 12px;
+}
+.prf-quot-empresa {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; font-size: 14px; color: #0f172a;
+  line-height: 1.3;
+}
+.prf-quot-date {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; color: rgba(17,17,17,0.38);
+  white-space: nowrap; flex-shrink: 0;
+}
+.prf-quot-breakdown {
+  display: flex; flex-direction: column; gap: 5px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.prf-quot-row {
+  display: flex; justify-content: space-between;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; color: rgba(17,17,17,0.5);
+}
+.prf-quot-total {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800; font-size: 17px; color: #FF7A00;
+}
+
+/* ── EMPTY / LOADING ── */
+.prf-empty {
+  text-align: center; padding: 72px 24px;
+}
+.prf-empty-icon  { font-size: 52px; margin-bottom: 16px; }
+.prf-empty-title { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; color: rgba(17,17,17,0.45); margin-bottom: 6px; }
+.prf-empty-sub   { font-family: 'Montserrat', sans-serif; font-size: 13px; color: rgba(17,17,17,0.3); }
+
+.prf-loading { text-align: center; padding: 72px 24px; }
+.prf-loading-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(255,122,0,0.15);
+  border-top-color: #FF7A00;
+  border-radius: 50%;
+  animation: prfSpin 0.75s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes prfSpin { to { transform: rotate(360deg); } }
+.prf-loading-text { font-family: 'Montserrat', sans-serif; font-size: 13px; color: rgba(17,17,17,0.38); }
+
+/* ── COMING SOON (Tarjetas) ── */
+.prf-coming { max-width: 480px; margin: 72px auto; text-align: center; }
+.prf-coming-badge {
+  display: inline-block;
+  background: rgba(255,122,0,0.1); color: #FF7A00;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 800;
+  padding: 5px 14px; border-radius: 20px;
+  letter-spacing: 0.6px; text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.prf-coming-icon  { font-size: 56px; margin-bottom: 18px; }
+.prf-coming-title { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
+.prf-coming-text  { font-family: 'Montserrat', sans-serif; font-size: 14px; color: rgba(17,17,17,0.45); line-height: 1.65; }
+
+/* ── COMPRAS: lista de ítems dentro de la card ── */
+.prf-compra-items {
+  display: flex; flex-direction: column; gap: 4px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.prf-compra-item {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; color: rgba(17,17,17,0.65);
+  display: flex; align-items: baseline; gap: 6px;
+  line-height: 1.4;
+}
+.prf-compra-item::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #FF7A00;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.prf-compra-more {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; color: rgba(17,17,17,0.38);
+  font-style: italic;
+}
+.prf-compra-meta {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; color: rgba(17,17,17,0.45);
+  margin-bottom: 10px;
+}
+.prf-compra-meta span { display: flex; align-items: center; gap: 4px; }
+.prf-estado-badge {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 800;
+  padding: 3px 8px; border-radius: 12px;
+  letter-spacing: 0.4px; text-transform: uppercase;
+}
+.prf-estado-pendiente { background: rgba(234,179,8,0.12); color: #b45309; }
+.prf-estado-completado { background: rgba(34,197,94,0.1); color: #16a34a; }
+.prf-estado-cancelado  { background: rgba(239,68,68,0.1); color: #dc2626; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .prf-hero         { padding: 32px 20px 28px; }
+  .prf-tabs-bar     { top: 88px; }
+  .prf-tabs-inner   { padding: 0 12px; }
+  .prf-tab          { padding: 14px 14px; font-size: 12px; }
+  .prf-main         { padding: 28px 20px 60px; }
+  .prf-row          { grid-template-columns: 1fr; gap: 12px; }
+  .prf-quot-grid    { grid-template-columns: 1fr; }
+  .prf-section-title{ font-size: 15px; margin-bottom: 18px; }
+}
+@media (max-width: 480px) {
+  .prf-hero-inner   { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .prf-avatar       { width: 64px; height: 64px; font-size: 22px; }
+  .prf-hero-name    { font-size: 20px; }
+  .prf-save-btn     { width: 100%; justify-content: center; }
+  .prf-form-actions { flex-direction: column; align-items: stretch; }
+  .prf-save-msg     { text-align: center; }
+}

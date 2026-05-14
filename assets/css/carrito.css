@@ -153,8 +153,8 @@
 
 .igc-mini-dropdown {
   position: fixed;
-  top: 110px;
-  right: 20px;
+  top: 110px;   /* fallback; JS sobreescribe */
+  right: 20px;  /* fallback; JS sobreescribe */
   width: 440px;
   background: #fff;
   border-radius: 14px;
@@ -176,7 +176,7 @@
 .igc-mini-dropdown::before {
   content: '';
   position: absolute;
-  top: -7px; right: 24px;
+  top: -7px; right: var(--mini-arrow-right, 24px);
   width: 13px; height: 13px;
   background: #fff;
   border-left: 1px solid #e4e8f0;

@@ -238,6 +238,22 @@
     var el = document.getElementById('igcMiniDropdown');
     if (!el) return;
     clearTimeout(_miniTimeout);
+
+    var cartBtn = document.querySelector('.igb-cart');
+    if (cartBtn) {
+      var rect   = cartBtn.getBoundingClientRect();
+      var dropW  = 440;
+      var right  = Math.max(8, window.innerWidth - rect.right);
+      // Si se saldría por la izquierda, recortar
+      if (window.innerWidth - right - dropW < 8) right = window.innerWidth - dropW - 8;
+      el.style.right = right + 'px';
+      el.style.left  = 'auto';
+      el.style.top   = (rect.bottom + 8) + 'px';
+      // Flecha centrada sobre el botón del carro
+      var arrowRight = Math.round(rect.width / 2 - 6);
+      el.style.setProperty('--mini-arrow-right', Math.max(8, arrowRight) + 'px');
+    }
+
     el.classList.add('open');
     _miniOpen = true;
   }
@@ -852,6 +868,39 @@
     var msg2 = document.getElementById('igcSuccessMsg');
     if (msg2) msg2.innerHTML = msg;
     if (ss)   ss.style.display = 'flex';
+
+    /* Guardar pedido en Supabase antes de limpiar el carrito */
+    (function() {
+      var sub       = _subtotalConDescuento();
+      var subSvc    = _subtotalSvc();
+      var base      = sub + subSvc;
+      var totalFinal = (_metodo === 'tarjeta' ? Math.round(base * 1.03) : base) + _cartShipCost;
+      var gv = function(id) { return ((document.getElementById(id) || {}).value || '').trim(); };
+      var orderData = {
+        email:       gv('igcCoEmail'),
+        nombre:      gv('igcCoNombre'),
+        apellido:    gv('igcCoApellido'),
+        telefono:    gv('igcCoTel'),
+        items:       JSON.stringify(_items.map(function(i){ return { id:i.id, nombre:i.nombre, precio:i.precio, qty:i.qty }; })),
+        subtotal:    sub,
+        total_svc:   subSvc,
+        envio:       _cartShipCost,
+        total:       totalFinal,
+        metodo_pago: _metodo,
+        tipo_doc:    _docTipo,
+        direccion:   gv('igcCoDireccion'),
+        region:      gv('igcCoRegion'),
+        comuna:      gv('igcCoComuna'),
+        empresa:     gv('igcCoEmpresa'),
+        rut_empresa: gv('igcCoRutEmpresa'),
+        estado:      'pendiente'
+      };
+      if (window.supabase && orderData.email) {
+        window.supabase.from('pedidos').insert([orderData]).then(function(res) {
+          if (res.error) console.warn('Pedido no guardado en BD:', res.error);
+        }).catch(function() {});
+      }
+    })();
 
     _items = []; _save(); _selectedSvc = {}; _updateNavbarBadge();
     window.scrollTo(0, 0);

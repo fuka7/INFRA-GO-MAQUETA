@@ -163,6 +163,11 @@ function _buildRowEl(id, animate) {
           ${_buildSelectOptions()}
         </select>
       </div>
+      <div class="flat-svc-wrap" id="svcwrap-${id}" style="display:none">
+        <select class="flat-svc-select" id="svcsel-${id}" onchange="flatRowSelectService(${id}, this)">
+          <option value="">— sin servicio adicional —</option>
+        </select>
+      </div>
     </div>
 
     <div class="pr-cat"><span class="pr-cat-badge" id="catbadge-${id}"></span></div>
@@ -284,6 +289,8 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     if (inp) { inp.value = '0'; inp.min = '0'; }
     const qtyWrap = document.getElementById(`prqty-${id}`);
     if (qtyWrap) qtyWrap.classList.add('pr-qty--disabled');
+    const svcWrapClear = document.getElementById(`svcwrap-${id}`);
+    if (svcWrapClear) svcWrapClear.style.display = 'none';
     _clearRowDisplay(id);
     flatRefreshPrices();
     _syncAllToOriginal();
@@ -341,6 +348,22 @@ window.flatRowSelectProduct = function flatRowSelectProduct(id, selectEl) {
     if (inp) { inp.value = '1'; inp.min = '1'; }
   }
 
+  /* Servicio asociado — mostrar selector si el producto tiene servicios */
+  const svcWrap = document.getElementById(`svcwrap-${id}`);
+  const svcSel  = document.getElementById(`svcsel-${id}`);
+  if (svcWrap && svcSel) {
+    row.serviceValue = null;
+    const svcs = producto.servicios || [];
+    if (svcs.length > 0) {
+      svcSel.innerHTML = '<option value="">— sin servicio adicional —</option>' +
+        svcs.map(s => '<option value="' + s.value + '" data-price="' + s.price + '" data-frecuencia="' + (s.frecuencia || '/mes') + '">' + s.label + ' — $' + s.price.toLocaleString('es-CL') + (s.unidad || '') + '</option>').join('');
+      svcSel.value = '';
+      svcWrap.style.display = '';
+    } else {
+      svcWrap.style.display = 'none';
+    }
+  }
+
   flatRefreshPrices();
   _syncAllToOriginal();
   if (typeof window.updateSidebar        === 'function') window.updateSidebar();
@@ -360,6 +383,8 @@ function _clearRowProduct(id) {
   if (qtyWrap) qtyWrap.classList.add('pr-qty--disabled');
   const sel = document.querySelector(`#orow-${id} .flat-product-select`);
   if (sel) sel.value = '';
+  const svcWrapClr = document.getElementById(`svcwrap-${id}`);
+  if (svcWrapClr) svcWrapClr.style.display = 'none';
   _clearRowDisplay(id);
   flatRefreshPrices();
   _syncAllToOriginal();
