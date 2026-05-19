@@ -103,9 +103,9 @@ window.buildCatalogTable = function buildCatalogTable() {
       <span class="flat-col-label">Producto del catálogo</span>
       <span class="flat-col-label center">Cat.</span>
       <span class="flat-col-label center">N° Parte</span>
-      <span class="flat-col-label right">P. Lista c/IVA</span>
+      <span class="flat-col-label right">P. unitaria c/IVA</span>
       <span class="flat-col-label center">Cant.</span>
-      <span class="flat-col-label right">P. dto. c/IVA</span>
+      <span class="flat-col-label right">Total c/IVA</span>
     </div>
     <div id="flatRowsBody"></div>
     <div class="flat-add-row">
@@ -484,12 +484,12 @@ function _clearRowDisplay(id) {
 window.flatRefreshPrices = function flatRefreshPrices() {
   const tc = window.tipoCambio || 900;
 
-  /* 1. Total unidades SOLO hardware para calcular % descuento (excluye servicio-tic y accesorios) */
+  /* 1. Total unidades SOLO hardware físico para calcular % descuento (excluye servicios, accesorios y licencias) */
   let totalQty = 0;
   _flatRows.forEach(r => {
     if (!r.productName) return;
     const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-    if (prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios') totalQty += r.qty;
+    if (prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios' && prod.cat !== 'licencias') totalQty += r.qty;
   });
   const pct = flatObtenerPct(totalQty);
 
@@ -505,8 +505,8 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const producto = (window.CATALOGO || []).find(p => p.name === productName);
     if (!producto) return;
 
-    // Servicios TIC y accesorios: sin descuento por volumen
-    const esSvc        = producto.tipo === 'servicio-tic' || producto.tipo === 'accesorios';
+    // Servicios TIC, accesorios y licencias: sin descuento por volumen
+    const esSvc        = producto.tipo === 'servicio-tic' || producto.tipo === 'accesorios' || producto.cat === 'licencias';
     const pctEfectivo  = esSvc ? 0 : pct;
 
     // Precio CLP dinámico: si el producto tiene priceUSD → priceUSD × tipoCambio
@@ -529,7 +529,7 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const subtotalDisp     = qty * precioConDtoDisp;
     const ahorroDisp       = Math.round(ahorro * 1.19);
 
-    /* Precio lista (tachado si hay dto y qty > 0) */
+    /* Precio unitario — siempre muestra el precio de 1 unidad */
     const elBase = document.getElementById(`plista-${id}`);
     if (elBase) {
       elBase.textContent = `$${flatFmt(priceDisp)}`;
@@ -540,11 +540,11 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     const elUsd = document.getElementById(`pusd-${id}`);
     if (elUsd) elUsd.textContent = '';
 
-    /* Precio con dto */
+    /* Precio con dto — muestra subtotal (qty × precio dto) */
     const elDto   = document.getElementById(`pdto-${id}`);
     const elBadge = document.getElementById(`dtobadge-${id}`);
     if (elDto) {
-      elDto.textContent = qty > 0 ? `$${flatFmt(precioConDtoDisp)}` : '—';
+      elDto.textContent = qty > 0 ? `$${flatFmt(subtotalDisp)}` : '—';
       if (pctEfectivo > 0 && qty > 0) {
         elDto.classList.remove('sin-dto');
         if (elBadge) { elBadge.textContent = `-${pctEfectivo}%`; elBadge.classList.remove('oculto'); }
@@ -810,10 +810,10 @@ function _overrideCollectEquipos() {
     if (!window.state) { _orig(); return; }
     window.state.equipos = {};
 
-    // Descuento solo sobre hardware (excluye servicio-tic)
+    // Descuento solo sobre hardware físico (excluye servicio-tic y licencias)
     const totalQtyHw = _flatRows.filter(x => x.productName && x.qty > 0).reduce((s, x) => {
       const prod = (window.CATALOGO || []).find(p => p.name === x.productName);
-      return prod && prod.tipo !== 'servicio-tic' ? s + x.qty : s;
+      return prod && prod.tipo !== 'servicio-tic' && prod.cat !== 'licencias' ? s + x.qty : s;
     }, 0);
     const pct = flatObtenerPct(totalQtyHw);
 
@@ -827,7 +827,10 @@ function _overrideCollectEquipos() {
       const basePrice = (producto.priceUSD && producto.priceUSD > 0)
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
-      const price = Math.round(basePrice * (1 - pct / 100));
+      // Licencias sin descuento por volumen
+      const price = (producto.cat === 'licencias')
+        ? basePrice
+        : Math.round(basePrice * (1 - pct / 100));
       const key   = r.productName;
 
       if (window.state.equipos[key]) {

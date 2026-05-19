@@ -22,33 +22,32 @@ async function initSupabase() {
 // ═════════════════════════════════════════
 // TARIFAS DE DESPACHO POR REGIÓN
 // ═════════════════════════════════════════
+// Precios por caja, de norte a sur. gratis75k: solo RM con comunas InfraGo y compra > $75.000
 const TARIFAS_REGIONES = {
-  'Región Metropolitana':         { precio: 3490,  gratis75k: true  },
-  'Región de Valparaíso':         { precio: 4990,  gratis75k: false },
-  "Región de O'Higgins":          { precio: 4990,  gratis75k: false },
-  'Región del Maule':             { precio: 5490,  gratis75k: false },
-  'Región de Ñuble':              { precio: 5490,  gratis75k: false },
-  'Región del Biobío':            { precio: 5490,  gratis75k: false },
-  'Región de La Araucanía':       { precio: 5990,  gratis75k: false },
-  'Región de Los Ríos':           { precio: 6490,  gratis75k: false },
-  'Región de Los Lagos':          { precio: 6490,  gratis75k: false },
-  'Región de Coquimbo':           { precio: 5490,  gratis75k: false },
-  'Región de Atacama':            { precio: 5990,  gratis75k: false },
-  'Región de Antofagasta':        { precio: 6490,  gratis75k: false },
-  'Región de Tarapacá':           { precio: 6990,  gratis75k: false },
-  'Región de Arica y Parinacota': { precio: 7490,  gratis75k: false },
-  'Región de Aysén':              { precio: 8990,  gratis75k: false },
-  'Región de Magallanes':         { precio: 9990,  gratis75k: false },
+  'Región de Arica y Parinacota': { precio: 23900, gratis75k: false },
+  'Región de Tarapacá':           { precio: 21900, gratis75k: false },
+  'Región de Antofagasta':        { precio: 19900, gratis75k: false },
+  'Región de Atacama':            { precio: 15900, gratis75k: false },
+  'Región de Coquimbo':           { precio:  9900, gratis75k: false },
+  'Región de Valparaíso':         { precio:  5900, gratis75k: false },
+  'Región Metropolitana':         { precio:  3900, gratis75k: true  },
+  "Región de O'Higgins":          { precio:  4900, gratis75k: false },
+  'Región del Maule':             { precio:  7900, gratis75k: false },
+  'Región de Ñuble':              { precio:  8900, gratis75k: false },
+  'Región del Biobío':            { precio:  9900, gratis75k: false },
+  'Región de La Araucanía':       { precio: 12900, gratis75k: false },
+  'Región de Los Ríos':           { precio: 15900, gratis75k: false },
+  'Región de Los Lagos':          { precio: 17900, gratis75k: false },
+  'Región de Aysén':              { precio: 24900, gratis75k: false },
+  'Región de Magallanes':         { precio: 25900, gratis75k: false },
 };
 
-window._despachoRegion = '';
+window._despachoDestinos     = [];  // [{ rowId, productName, qty, region, comuna }]
+window._despachoCajasFisicas = 0;   // actualizado por updateSidebar()
+window._summaryTotalConIVA   = 0;   // actualizado por updateSidebar()
+window._despachoMode         = 'single'; // 'single' | 'multi'
+window._despachoSingle       = { region: '', comuna: '' }; // estado para modo un destino
 window.TARIFAS_REGIONES = TARIFAS_REGIONES;
-
-window.actualizarDespachoRegion = function(region) {
-  window._despachoRegion = region || '';
-  if (!window._despachoRegion) window._igDespachoResult = null;
-  updateSidebar();
-};
 
 // ═════════════════════════════════════════
 // TIPO DE CAMBIO (DÓLAR TIC)
@@ -114,13 +113,13 @@ function obtenerPctDescuento(totalQty) {
 }
 
 function actualizarDescuento() {
-  // Contar SOLO hardware (no servicio-tic ni accesorios) para el descuento por volumen
+  // Contar SOLO hardware físico (excluye servicios, accesorios y licencias)
   let totalQty = 0;
   if (typeof window._flatRows !== 'undefined') {
     window._flatRows.forEach(r => {
       if (!r.productName) return;
       const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-      if (prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios') totalQty += r.qty;
+      if (prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios' && prod.cat !== 'licencias') totalQty += r.qty;
     });
   } else {
     // Fallback: accordion oculto
@@ -241,6 +240,7 @@ function updateStepDisplay() {
       const comunaVal = (document.getElementById('ciudad') || {}).value;
       if (comunaVal) cotizarDespachoForm();
     }
+    renderDireccionesMulti();
   }
   if (currentStep === 4) generateFinalSummary();
 }
@@ -375,12 +375,12 @@ function collectEquipos() {
     // Fuente de verdad: flat-catalog rows
     state.equipos = {};
 
-    // Calcular total hardware para descuento por volumen (excluye servicio-tic y accesorios)
+    // Calcular total hardware físico para descuento (excluye servicios, accesorios y licencias)
     const totalQtyHw = window._flatRows
       .filter(r => r.productName && r.qty > 0)
       .reduce((s, r) => {
         const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-        return prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios' ? s + r.qty : s;
+        return prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios' && prod.cat !== 'licencias' ? s + r.qty : s;
       }, 0);
     const pct = obtenerPctDescuento(totalQtyHw);
 
@@ -392,8 +392,8 @@ function collectEquipos() {
       const basePrice = (producto.priceUSD && producto.priceUSD > 0)
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
-      // Aplicar descuento por volumen solo a hardware (servicio-tic y accesorios no descuentan)
-      const price = (producto.tipo !== 'servicio-tic' && producto.tipo !== 'accesorios')
+      // Solo hardware físico recibe descuento por volumen
+      const price = (producto.tipo !== 'servicio-tic' && producto.tipo !== 'accesorios' && producto.cat !== 'licencias')
         ? Math.round(basePrice * (1 - pct / 100))
         : basePrice;
       state.equipos[r.productName] = { qty: r.qty, price };
@@ -455,20 +455,21 @@ function collectServicios() {
 // SIDEBAR / STICKY RESUMEN
 // ═════════════════════════════════════════
 function updateSidebar() {
-  let totalEqBase   = 0;  // hardware precio lista (sin descuento)
-  let totalEqCLP    = 0;  // hardware precio con descuento (lo que paga el cliente)
-  let totalQtyEq    = 0;  // unidades de hardware
-  let totalQtySvc   = 0;  // unidades de servicios
+  let totalEqBase       = 0;  // hardware precio lista (sin descuento)
+  let totalEqCLP        = 0;  // hardware precio con descuento (lo que paga el cliente)
+  let totalQtyEq        = 0;  // unidades de hardware
+  let totalQtySvc       = 0;  // unidades de servicios
+  let totalCajasFisicas = 0;  // unidades físicas (excluye licencias digitales)
   const selectedProducts = [];
 
   // Leer desde _flatRows si está disponible (fuente de verdad)
   if (typeof window._flatRows !== 'undefined') {
-    // Paso 1: contar SOLO hardware para el descuento por volumen
+    // Paso 1: contar SOLO hardware físico para el descuento por volumen (excluye servicios y licencias)
     const qtyHardware = window._flatRows
       .filter(r => r.productName && r.qty > 0)
       .reduce((s, r) => {
         const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-        return prod && prod.tipo !== 'servicio-tic' ? s + r.qty : s;
+        return prod && prod.tipo !== 'servicio-tic' && prod.cat !== 'licencias' ? s + r.qty : s;
       }, 0);
 
     const pct = obtenerPctDescuento(qtyHardware);
@@ -480,14 +481,21 @@ function updateSidebar() {
 
       if (producto.tipo === 'servicio-tic') return; // los servicios TIC van aparte
 
-      // Hardware: precio dinámico (USD × tipo de cambio si aplica) con descuento por volumen
+      // Contar cajas físicas: excluir licencias digitales (no tienen despacho)
+      if (producto.cat !== 'licencias') totalCajasFisicas += r.qty;
+
       const tc = window.tipoCambio || 900;
       const precioBase = (producto.priceUSD && producto.priceUSD > 0)
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
-      const precio = Math.round(precioBase * (1 - pct / 100));
+
+      // Licencias y servicios sin descuento por volumen; solo hardware físico lo recibe
+      const precio = (producto.cat === 'licencias')
+        ? precioBase
+        : Math.round(precioBase * (1 - pct / 100));
+
       totalEqBase += r.qty * precioBase;  // acumula precio lista
-      totalEqCLP  += r.qty * precio;      // acumula precio con descuento
+      totalEqCLP  += r.qty * precio;      // acumula precio con/sin descuento según tipo
       totalQtyEq  += r.qty;
       selectedProducts.push({ name: r.productName, qty: r.qty });
     });
@@ -543,24 +551,56 @@ function updateSidebar() {
     if (el) el.textContent = val;
   };
 
-  /* ── Despacho: calcular ANTES del total para sumarlo ── */
-  const region      = window._despachoRegion || '';
-  const tarifa      = region ? (TARIFAS_REGIONES[region] || { precio: 5990, gratis75k: false }) : null;
-  const esGratis    = tarifa ? (tarifa.gratis75k && totalConIVA >= 75000) : false;
-  const despPrecio  = (totalConIVA > 0 && tarifa && !esGratis) ? tarifa.precio : 0;
-  const regionCorta = region.replace(/^Región (de(l?|) )?/i, '');
-  const totalFinal  = totalConIVA + despPrecio;
+  /* ── Despacho: suma de múltiples destinos ── */
+  window._despachoCajasFisicas = totalCajasFisicas;
+  window._summaryTotalConIVA   = totalConIVA;
+
+  _syncDespachoDestinos();
+  const destinos = window._despachoDestinos || [];
+  let despPrecio = 0;
+  let hayValidos = false;
+  let todosGratis = true;
+
+  destinos.forEach(d => {
+    if (!d.region || !(d.qty > 0)) return;
+    hayValidos = true;
+    const t = TARIFAS_REGIONES[d.region] || { precio: 9900, gratis75k: false };
+    const esCG = typeof window.igShipping?.esComunaGratis === 'function'
+      ? window.igShipping.esComunaGratis(d.comuna || '') : false;
+    const esDG = t.gratis75k && totalConIVA >= 75000 && esCG;
+    if (!esDG) { despPrecio += t.precio * d.qty; todosGratis = false; }
+  });
+  if (!hayValidos) todosGratis = false;
+
+  /* Guardar resultado de despacho para pasos siguientes */
+  window._despachoPrecioTotal  = despPrecio;
+  window._despachoGratis       = todosGratis;
+  window._despachoHayValidos   = hayValidos;
+  state.despacho = {
+    mode:          window._despachoMode || 'single',
+    singleDestino: Object.assign({}, window._despachoSingle || {}),
+    destinos:      (window._despachoDestinos || []).map(d => Object.assign({}, d)),
+    precioTotal:   despPrecio,
+    gratis:        todosGratis,
+    hayValidos:    hayValidos
+  };
+
+  const totalFinal = totalConIVA + (totalConIVA > 0 ? despPrecio : 0);
 
   let despValText, despSubText;
   if (totalConIVA === 0) {
-    despValText = '—';      despSubText = 'estimado · c/IVA';
-  } else if (!region) {
-    despValText = '—';      despSubText = 'elige región';
-  } else if (esGratis) {
-    despValText = 'Gratis'; despSubText = regionCorta + ' · InfraGo';
+    despValText = '—'; despSubText = 'estimado · c/IVA';
+  } else if (totalCajasFisicas === 0) {
+    despValText = '—'; despSubText = 'solo productos digitales';
+  } else if (!hayValidos) {
+    despValText = '—'; despSubText = 'elige destino';
+  } else if (todosGratis) {
+    despValText = 'Gratis'; despSubText = 'despacho sin costo';
   } else {
-    despValText = '~$' + tarifa.precio.toLocaleString('es-CL');
-    despSubText = 'estimado · ' + regionCorta;
+    const nDest = destinos.filter(d => d.region && d.qty > 0).length;
+    despValText = '~$' + despPrecio.toLocaleString('es-CL');
+    despSubText = nDest > 1 ? nDest + ' destinos'
+      : (destinos[0]?.comuna || (destinos[0]?.region || '').replace(/^Región (de(l?|) )?/i, '') || '—');
   }
 
   setTxt('countEquipos',   totalQty);
@@ -578,17 +618,20 @@ function updateSidebar() {
   const totalLabelEl = document.querySelector('.bb-col--total .bb-label');
   if (totalLabelEl) totalLabelEl.textContent = (despPrecio > 0) ? 'Total c/IVA + despacho' : 'Total c/IVA';
 
-  /* Columna despacho en la barra */
-  const despEl    = document.getElementById('despachoEstimado');
-  const despSubEl = document.getElementById('despachoEstimadoSub');
-  if (despEl)    { despEl.textContent = despValText; despEl.className = esGratis ? 'bb-value bb-value--green' : 'bb-value'; }
+  /* Columna despacho en la barra inferior */
+  const despEl      = document.getElementById('despachoEstimado');
+  const despSubEl   = document.getElementById('despachoEstimadoSub');
+  const despLabelEl = document.getElementById('despachoBarLabel');
+  if (despEl)    { despEl.textContent = despValText; despEl.className = todosGratis ? 'bb-value bb-value--green' : 'bb-value'; }
   if (despSubEl)  despSubEl.textContent = despSubText;
+  if (despLabelEl) {
+    const nDest = destinos.filter(d => d.region && d.qty > 0).length;
+    const svgDespacho = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
+    despLabelEl.innerHTML = svgDespacho + ' Despacho' + (nDest > 1 ? ' (' + nDest + ' destinos)' : '');
+  }
 
-  /* Widget sidebar región */
-  const despRegValEl  = document.getElementById('despachoRegionVal');
-  const despRegInfoEl = document.getElementById('despachoRegionInfo');
-  if (despRegValEl)  { despRegValEl.textContent = despValText; despRegValEl.className = 'despacho-inline-val' + (esGratis ? ' despacho-inline-val--gratis' : ''); }
-  if (despRegInfoEl)  despRegInfoEl.textContent = totalConIVA > 0 ? (esGratis ? 'Despacho sin costo' : 'estimado · c/IVA') : 'sin productos';
+  /* Re-render widget multi-destino */
+  if (typeof window.despachoRenderWidget === 'function') window.despachoRenderWidget();
 
   // Lista de productos en sidebar
   const list = document.getElementById('productsListSidebar');
@@ -684,6 +727,99 @@ function generateFinalSummary() {
   setTxt('summarySubtotalEq',  fmt(eqIVA));
   setTxt('summarySubtotalSvc', fmt(svcIVA));
 
+  // Acordeón productos: expandir si tiene items, colapsar si no
+  const productosCard = document.getElementById('productosCard');
+  if (productosCard) {
+    productosCard.classList.toggle('resumen-card--collapsed', eqEntries.length === 0);
+  }
+
+  // Acordeón servicios: colapsar si vacío, expandir si tiene items
+  const serviciosCard = document.getElementById('serviciosCard');
+  if (serviciosCard) {
+    serviciosCard.classList.toggle('resumen-card--collapsed', svcEntries.length === 0);
+  }
+
+  // ── Despacho estimado (acordeón) ─────────────────────────
+  const despachoSlot = document.getElementById('resumen-despacho-slot');
+  if (despachoSlot) {
+    const desp         = state.despacho || {};
+    const despMode     = desp.mode || 'single';
+    const totalConIVAD = window._summaryTotalConIVA || 0;
+    const svgTruck     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
+    const svgChevron   = '<svg class="resumen-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>';
+
+    let body = '', footer = '', hasData = false;
+
+    if (despMode === 'single') {
+      const sd = desp.singleDestino || {};
+      if (sd.region) {
+        hasData = true;
+        const totalCajas = (desp.destinos || []).reduce((s, d) => s + d.qty, 0);
+        const t      = (window.TARIFAS_REGIONES || {})[sd.region] || { precio: 9900, gratis75k: false };
+        const eCG    = typeof window.igShipping?.esComunaGratis === 'function'
+                       ? window.igShipping.esComunaGratis(sd.comuna || '') : false;
+        const gratis = t.gratis75k && totalConIVAD >= 75000 && eCG;
+        const costo  = gratis ? 0 : t.precio * totalCajas;
+        const lugar  = [sd.comuna, (sd.region || '').replace(/^Región (de(l?|) )?/i, '')].filter(Boolean).join(', ');
+        body = `<div class="resumen-line-item">
+          <div class="resumen-line-info">
+            <span class="resumen-line-name">Todos los productos</span>
+            <span class="resumen-line-qty">${totalCajas} caja${totalCajas !== 1 ? 's' : ''} → ${lugar}</span>
+          </div>
+          <span class="resumen-line-price${gratis ? ' resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '~$' + fmt(costo)}</span>
+        </div>`;
+        footer = `<div class="resumen-card-footer">
+          <span>Total despacho</span>
+          <strong class="${gratis ? 'resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '~$' + fmt(costo)}</strong>
+        </div>`;
+      }
+    } else {
+      const destArr = Array.isArray(desp.destinos) ? desp.destinos.filter(d => d.region && d.qty > 0) : [];
+      if (destArr.length > 0) {
+        hasData = true;
+        body = destArr.map(d => {
+          const t      = (window.TARIFAS_REGIONES || {})[d.region] || { precio: 9900, gratis75k: false };
+          const eCG    = typeof window.igShipping?.esComunaGratis === 'function'
+                         ? window.igShipping.esComunaGratis(d.comuna || '') : false;
+          const gratis = t.gratis75k && totalConIVAD >= 75000 && eCG;
+          const costo  = gratis ? 0 : t.precio * d.qty;
+          const lugar  = [d.comuna, (d.region || '').replace(/^Región (de(l?|) )?/i, '')].filter(Boolean).join(', ');
+          const svgPin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+          const dirEntrega = d.direccion
+            ? `<span class="resumen-line-dir">${svgPin}${d.direccion}</span>`
+            : '';
+          return `<div class="resumen-line-item${d.direccion ? ' resumen-line-item--with-dir' : ''}">
+            <div class="resumen-line-info">
+              <span class="resumen-line-name">${d.productName}</span>
+              <span class="resumen-line-qty">${d.qty} caja${d.qty !== 1 ? 's' : ''} → ${lugar}</span>
+            </div>
+            <span class="resumen-line-price${gratis ? ' resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '~$' + fmt(costo)}</span>
+            ${dirEntrega}
+          </div>`;
+        }).join('');
+        footer = `<div class="resumen-card-footer">
+          <span>Total despacho</span>
+          <strong class="${desp.gratis ? 'resumen-line-gratis' : ''}">${desp.gratis ? 'Gratis' : '~$' + fmt(desp.precioTotal || 0)}</strong>
+        </div>`;
+      }
+    }
+
+    if (!hasData) {
+      body = '<p class="resumen-empty" style="padding:12px 20px;">Sin destinos configurados. Estima el despacho en el paso 1.</p>';
+    }
+
+    despachoSlot.innerHTML = `
+      <div class="resumen-card resumen-card--collapsible${hasData ? '' : ' resumen-card--collapsed'}" id="resumen-despacho-card">
+        <div class="resumen-card-header" onclick="document.getElementById('resumen-despacho-card').classList.toggle('resumen-card--collapsed')">
+          ${svgTruck}
+          <h3>Despacho estimado</h3>
+          ${svgChevron}
+        </div>
+        <div class="resumen-card-body">${body}</div>
+        ${footer}
+      </div>`;
+  }
+
   // Guardar neto para que refreshResumenTotales lo use
   window._summaryNetoEq  = totalEq;
   window._summaryNetoSvc = totalSvc;
@@ -705,9 +841,7 @@ function generateFinalSummary() {
             ${f.contacto  ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Contacto</span><span class="resumen-contact-value">${f.contacto}</span></div>` : ''}
             ${f.email     ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Email</span><span class="resumen-contact-value">${f.email}</span></div>` : ''}
             ${f.telefono  ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Teléfono</span><span class="resumen-contact-value">${f.telefono}</span></div>` : ''}
-            ${f.region    ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Región</span><span class="resumen-contact-value">${f.region}</span></div>` : ''}
-            ${f.ciudad    ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Ciudad</span><span class="resumen-contact-value">${f.ciudad}</span></div>` : ''}
-            ${f.direccion ? `<div class="resumen-contact-field resumen-contact-full"><span class="resumen-contact-label">Dirección</span><span class="resumen-contact-value">${f.direccion}</span></div>` : ''}
+            ${(state.despacho?.mode !== 'multi' && f.direccion) ? `<div class="resumen-contact-field resumen-contact-full"><span class="resumen-contact-label">Dirección de entrega</span><span class="resumen-contact-value">${f.direccion}</span></div>` : ''}
             ${f.notas     ? `<div class="resumen-contact-field resumen-contact-full"><span class="resumen-contact-label">Notas adicionales</span><span class="resumen-contact-value">${f.notas}</span></div>` : ''}
           </div>
         </div>
@@ -1491,7 +1625,6 @@ document.addEventListener('click', function(e) {
   }
 });
 window.solicitarCotizacion  = solicitarCotizacion;
-window.enviarCotizacion     = enviarCotizacion;
 window.updateSidebar        = updateSidebar;
 window.cerrarModal          = cerrarModal;
 window.aplicarFiltros       = aplicarFiltros;   // flat-catalog.js la reemplaza en su DOMContentLoaded
@@ -1510,6 +1643,293 @@ window.cotizarDespachoForm   = cotizarDespachoForm;
 window.refreshResumenTotales = refreshResumenTotales;
 
 // ═════════════════════════════════════════
+// WIDGET DESPACHO MULTI-DESTINO
+// ═════════════════════════════════════════
+
+function _buildRegionOptions(selectedRegion) {
+  return Object.keys(TARIFAS_REGIONES).map(r =>
+    `<option value="${r}"${r === selectedRegion ? ' selected' : ''}>${r.replace(/^Región (de(l?|) )?/i, '')}</option>`
+  ).join('');
+}
+
+/* Sincroniza _despachoDestinos con los productos físicos actuales de _flatRows.
+   Usa rowId (id de fila) como clave para que dos filas del mismo producto
+   sean destinos independientes y preserven su región/comuna por separado. */
+function _syncDespachoDestinos() {
+  var prods = [];
+  if (Array.isArray(window._flatRows)) {
+    window._flatRows.forEach(function(r) {
+      if (!r.productName || r.qty <= 0) return;
+      var prod = (window.CATALOGO || []).find(function(p) { return p.name === r.productName; });
+      if (!prod || prod.tipo === 'servicio-tic' || prod.cat === 'licencias') return;
+      prods.push({ rowId: r.id, productName: r.productName, qty: r.qty });
+    });
+  }
+  var existing = Array.isArray(window._despachoDestinos) ? window._despachoDestinos : [];
+  var mode     = window._despachoMode || 'single';
+  var single   = window._despachoSingle || { region: '', comuna: '' };
+
+  window._despachoDestinos = prods.map(function(p) {
+    if (mode === 'single') {
+      return { rowId: p.rowId, productName: p.productName, qty: p.qty,
+               region: single.region, comuna: single.comuna };
+    }
+    var found = existing.find(function(d) { return d.rowId === p.rowId; });
+    return {
+      rowId:       p.rowId,
+      productName: p.productName,
+      qty:         p.qty,
+      region:      found ? (found.region    || '') : '',
+      comuna:      found ? (found.comuna    || '') : '',
+      direccion:   found ? (found.direccion || '') : ''
+    };
+  });
+}
+
+/* Construye opciones de select de región */
+function _despachoRegionOpts(selected) {
+  var opts = '<option value="" disabled' + (!selected ? ' selected' : '') + '>Región</option>';
+  Object.keys(window.TARIFAS_REGIONES).forEach(function(r) {
+    opts += '<option value="' + r.replace(/"/g, '&quot;') + '"' + (r === selected ? ' selected' : '') + '>'
+      + r.replace(/^Región (de(l?|) )?/i, '') + '</option>';
+  });
+  return opts;
+}
+
+/* Construye opciones de select de comuna */
+function _despachoComunaOpts(region, selected) {
+  var opts = '<option value="" disabled' + (!selected ? ' selected' : '') + '>Comuna</option>';
+  if (region && window.COMUNAS_CHILE && window.COMUNAS_CHILE[region]) {
+    window.COMUNAS_CHILE[region].forEach(function(c) {
+      opts += '<option value="' + c + '"' + (c === selected ? ' selected' : '') + '>' + c + '</option>';
+    });
+  }
+  return opts;
+}
+
+/* Calcula val/info de una fila dada región, qty y totalConIVA */
+function _despachoRowCost(region, comuna, qty, totalConIVA) {
+  if (!region || qty <= 0) return { val: '&mdash;', info: 'elige destino', gratis: false };
+  var t   = window.TARIFAS_REGIONES[region] || { precio: 9900, gratis75k: false };
+  var eCG = typeof window.igShipping !== 'undefined' && typeof window.igShipping.esComunaGratis === 'function'
+            ? window.igShipping.esComunaGratis(comuna || '') : false;
+  var eDG = t.gratis75k && totalConIVA >= 75000 && eCG;
+  if (eDG) return { val: 'Gratis', info: qty + ' caja' + (qty !== 1 ? 's' : '') + ' &middot; InfraGo', gratis: true };
+  return { val: '~$' + (t.precio * qty).toLocaleString('es-CL'),
+           info: qty + ' &times; $' + t.precio.toLocaleString('es-CL'), gratis: false };
+}
+
+function despachoRenderWidget() {
+  var container = document.getElementById('despachoDestinosContainer');
+  var badge     = document.getElementById('despachoCajasBadge');
+  var summaryEl = document.getElementById('despachoProdsSummary');
+  if (!container) return;
+
+  _syncDespachoDestinos();
+
+  var mode        = window._despachoMode || 'single';
+  var single      = window._despachoSingle || { region: '', comuna: '' };
+  var destinos    = window._despachoDestinos;
+  var totalConIVA = window._summaryTotalConIVA || 0;
+  var totalCajas  = destinos.reduce(function(s, d) { return s + d.qty; }, 0);
+  var asigCajas   = destinos.filter(function(d) { return d.region; })
+                            .reduce(function(s, d) { return s + d.qty; }, 0);
+
+  /* Badge */
+  if (badge) {
+    if (totalCajas === 0) {
+      badge.textContent = '';
+      badge.className   = 'despacho-cajas-badge';
+    } else {
+      badge.textContent = asigCajas + ' / ' + totalCajas + ' caja' + (totalCajas !== 1 ? 's' : '');
+      badge.className   = 'despacho-cajas-badge' + (asigCajas === totalCajas ? ' despacho-cajas-badge--ok' : '');
+    }
+  }
+  if (summaryEl) summaryEl.textContent = '';
+
+  /* Toggle de modo */
+  var toggleHtml =
+    '<div class="despacho-mode-toggle">' +
+      '<button class="despacho-mode-btn' + (mode === 'single' ? ' despacho-mode-btn--active' : '') + '" onclick="window.despachoSetMode(\'single\')">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+        ' Un destino' +
+      '</button>' +
+      '<button class="despacho-mode-btn' + (mode === 'multi' ? ' despacho-mode-btn--active' : '') + '" onclick="window.despachoSetMode(\'multi\')">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>' +
+        ' Múltiples destinos' +
+      '</button>' +
+    '</div>';
+
+  if (destinos.length === 0) {
+    container.innerHTML = toggleHtml + '<p class="despacho-empty-hint">Agrega productos físicos al pedido para estimar el despacho.</p>';
+    return;
+  }
+
+  var rowsHtml = '';
+
+  if (mode === 'single') {
+    /* ── Modo un destino: una sola fila con el total de cajas ── */
+    var cost = _despachoRowCost(single.region, single.comuna, totalCajas, totalConIVA);
+    var prodsList = destinos.map(function(d) { return d.productName; })
+                            .filter(function(v, i, a) { return a.indexOf(v) === i; })
+                            .join(', ');
+    rowsHtml =
+      '<div class="despacho-destino-row despacho-destino-row--single">' +
+        '<div class="despacho-destino-product">' +
+          '<span class="despacho-destino-prodname">Todos los productos</span>' +
+          '<span class="despacho-destino-prodqty">' + totalCajas + ' caja' + (totalCajas !== 1 ? 's' : '') + '</span>' +
+        '</div>' +
+        '<div class="despacho-destino-selects">' +
+          '<select class="despacho-inline-select" onchange="window.despachoSetRegion(-1,this.value)">' + _despachoRegionOpts(single.region) + '</select>' +
+          '<select class="despacho-inline-select despacho-inline-select--comuna"' + (!single.region ? ' disabled' : '') + ' onchange="window.despachoSetComuna(-1,this.value)">' + _despachoComunaOpts(single.region, single.comuna) + '</select>' +
+        '</div>' +
+        '<div class="despacho-inline-result">' +
+          '<span class="despacho-inline-val' + (cost.gratis ? ' despacho-inline-val--gratis' : '') + '">' + cost.val + '</span>' +
+          '<span class="despacho-inline-info">' + cost.info + '</span>' +
+        '</div>' +
+      '</div>';
+  } else {
+    /* ── Modo múltiples destinos: una fila por producto ── */
+    var nameCounts = {};
+    destinos.forEach(function(d) { nameCounts[d.productName] = (nameCounts[d.productName] || 0) + 1; });
+    var nameIndexes = {};
+
+    destinos.forEach(function(d, idx) {
+      var displayName = d.productName;
+      if (nameCounts[d.productName] > 1) {
+        nameIndexes[d.productName] = (nameIndexes[d.productName] || 0) + 1;
+        displayName = d.productName + ' (' + nameIndexes[d.productName] + ')';
+      }
+      var cost = _despachoRowCost(d.region, d.comuna, d.qty, totalConIVA);
+      rowsHtml +=
+        '<div class="despacho-destino-row">' +
+          '<div class="despacho-destino-product">' +
+            '<span class="despacho-destino-prodname">' + displayName + '</span>' +
+            '<span class="despacho-destino-prodqty">&times;' + d.qty + '</span>' +
+          '</div>' +
+          '<div class="despacho-destino-selects">' +
+            '<select class="despacho-inline-select" onchange="window.despachoSetRegion(' + idx + ',this.value)">' + _despachoRegionOpts(d.region) + '</select>' +
+            '<select class="despacho-inline-select despacho-inline-select--comuna"' + (!d.region ? ' disabled' : '') + ' onchange="window.despachoSetComuna(' + idx + ',this.value)">' + _despachoComunaOpts(d.region, d.comuna) + '</select>' +
+          '</div>' +
+          '<div class="despacho-inline-result">' +
+            '<span class="despacho-inline-val' + (cost.gratis ? ' despacho-inline-val--gratis' : '') + '">' + cost.val + '</span>' +
+            '<span class="despacho-inline-info">' + cost.info + '</span>' +
+          '</div>' +
+        '</div>';
+    });
+  }
+
+  container.innerHTML = toggleHtml + rowsHtml;
+}
+
+window.despachoRenderWidget = despachoRenderWidget;
+
+window.despachoSetRegion = function(idx, region) {
+  if (idx === -1 || window._despachoMode === 'single') {
+    window._despachoSingle.region = region;
+    window._despachoSingle.comuna = '';
+  } else {
+    var d = window._despachoDestinos[idx];
+    if (!d) return;
+    d.region = region;
+    d.comuna = '';
+  }
+  (typeof window.updateSidebar === 'function' ? window.updateSidebar : updateSidebar)();
+};
+
+window.despachoSetComuna = function(idx, comuna) {
+  if (idx === -1 || window._despachoMode === 'single') {
+    window._despachoSingle.comuna = comuna;
+  } else {
+    var d = window._despachoDestinos[idx];
+    if (!d) return;
+    d.comuna = comuna;
+  }
+  (typeof window.updateSidebar === 'function' ? window.updateSidebar : updateSidebar)();
+};
+
+window.despachoSetMode = function(mode) {
+  if (mode === window._despachoMode) return;
+  window._despachoMode = mode;
+  // Limpiar estado del modo anterior para que el nuevo empiece en blanco
+  if (mode === 'multi') {
+    window._despachoDestinos = [];   // fuerza que _syncDespachoDestinos no herede región/comuna del modo single
+  } else {
+    window._despachoSingle = { region: '', comuna: '' };  // limpia el selector único al volver a single
+  }
+  (typeof window.updateSidebar === 'function' ? window.updateSidebar : updateSidebar)();
+};
+
+/* Guarda la dirección de entrega de un destino específico (modo multi) */
+window.despachoSetDireccion = function(rowId, value) {
+  var d = (window._despachoDestinos || []).find(function(x) { return String(x.rowId) === String(rowId); });
+  if (d) d.direccion = value;
+  // Sincronizar en state.despacho para pasos siguientes
+  if (state.despacho && Array.isArray(state.despacho.destinos)) {
+    var sd = state.despacho.destinos.find(function(x) { return String(x.rowId) === String(rowId); });
+    if (sd) sd.direccion = value;
+  }
+};
+
+/* Renderiza las direcciones de entrega en paso 3 según el modo de despacho */
+function renderDireccionesMulti() {
+  var singleField = document.getElementById('singleDirField');
+  var multiSection = document.getElementById('multiDirSection');
+  var container    = document.getElementById('multiDirContainer');
+  if (!singleField && !multiSection) return;
+
+  var mode     = (state.despacho || {}).mode || 'single';
+  var destinos = Array.isArray((state.despacho || {}).destinos)
+    ? state.despacho.destinos.filter(function(d) { return d.region && d.qty > 0; })
+    : [];
+
+  if (mode === 'single') {
+    // Un destino: mostrar campo único, ocultar sección múltiple
+    if (singleField)  singleField.style.display  = '';
+    if (multiSection) multiSection.style.display = 'none';
+    return;
+  }
+
+  // Múltiples destinos: ocultar campo único, mostrar sección múltiple
+  if (singleField)  singleField.style.display  = 'none';
+  if (multiSection) multiSection.style.display = destinos.length > 0 ? '' : 'none';
+  if (!container || destinos.length === 0) return;
+
+  // Desambiguar nombres duplicados
+  var nameCounts  = {};
+  destinos.forEach(function(d) { nameCounts[d.productName] = (nameCounts[d.productName] || 0) + 1; });
+  var nameIndexes = {};
+
+  container.innerHTML = destinos.map(function(d) {
+    var displayName = d.productName;
+    if (nameCounts[d.productName] > 1) {
+      nameIndexes[d.productName] = (nameIndexes[d.productName] || 0) + 1;
+      displayName = d.productName + ' (' + nameIndexes[d.productName] + ')';
+    }
+    var lugar = [d.comuna, (d.region || '').replace(/^Región (de(l?|) )?/i, '')].filter(Boolean).join(', ');
+    var val   = (d.direccion || '').replace(/"/g, '&quot;');
+    return '<div class="config-field config-field--full multi-dir-row">' +
+      '<label class="config-label">' +
+        '<span class="multi-dir-badge">' + displayName + ' &times;' + d.qty + '</span>' +
+        '<span class="multi-dir-lugar">&rarr; ' + lugar + '</span>' +
+      '</label>' +
+      '<input type="text" class="config-input" placeholder="Calle, número, oficina"' +
+        ' value="' + val + '"' +
+        ' oninput="window.despachoSetDireccion(\'' + d.rowId + '\', this.value)">' +
+    '</div>';
+  }).join('');
+}
+window.renderDireccionesMulti = renderDireccionesMulti;
+
+// Render inicial del widget una vez que todo está cargado
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    if (typeof window.updateSidebar === 'function') window.updateSidebar();
+    else despachoRenderWidget();
+  }, 120); // después del timeout de flat-catalog.js (80ms)
+});
+
+// ═════════════════════════════════════════
 // TOTALES RESUMEN (con despacho)
 // ═════════════════════════════════════════
 function refreshResumenTotales() {
@@ -1523,10 +1943,10 @@ function refreshResumenTotales() {
   const neto     = totalEq + totalSvc;
   const iva      = Math.round(neto * 0.19);
 
-  // Despacho
-  const despacho      = window._igDespachoResult || null;
-  const shippingCost  = despacho && despacho.tipo !== 'gratis' ? (despacho.precio || 0) : 0;
-  const shippingGratis = despacho && despacho.tipo === 'gratis';
+  // Despacho — usa los globals que updateSidebar actualiza en tiempo real
+  const shippingCost   = window._despachoPrecioTotal  || 0;
+  const shippingGratis = window._despachoGratis       || false;
+  const hayValidos     = window._despachoHayValidos   || false;
 
   const total = neto + iva + shippingCost;
 
@@ -1534,15 +1954,19 @@ function refreshResumenTotales() {
   setTxt('summaryIVA',   fmt(iva));
   setTxt('summaryTotal', fmt(total));
 
-  // Fila de despacho
+  // Fila de despacho en totales
   const row   = document.getElementById('summaryDespachoRow');
   const label = document.getElementById('summaryDespachoLabel');
-  if (row && label && despacho) {
-    row.style.display = '';
-    label.textContent = shippingGratis ? 'Gratis' : '$' + fmt(shippingCost);
-    label.style.color = shippingGratis ? '#22c55e' : '';
-  } else if (row) {
-    row.style.display = 'none';
+  if (row) {
+    if (hayValidos) {
+      row.style.display = '';
+      if (label) {
+        label.textContent = shippingGratis ? 'Gratis' : '$' + fmt(shippingCost);
+        label.style.color = shippingGratis ? '#22c55e' : '';
+      }
+    } else {
+      row.style.display = 'none';
+    }
   }
 
   // Financiamiento (sobre equipos + servicios, sin despacho — se paga aparte)

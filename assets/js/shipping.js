@@ -22,15 +22,25 @@
   ─────────────────────────────────────────────────────────── */
   var SHIPIT_TOKEN = 'TU_TOKEN_SHIPIT_AQUI';
 
-  /* ── Comunas con despacho gratuito (InfraGo, compra > $75.000) ── */
+  /* ── Comunas RM con despacho gratuito InfraGo (compra > $75.000) ──
+     Cubre el Gran Santiago urbano. Comunas rurales/periféricas (Alhué,
+     Buin, Melipilla, etc.) van a tarifa normal de $3.900/caja.
+  ─────────────────────────────────────────────────────────────────── */
   var COMUNAS_GRATIS = [
-    'cerrillos','cerro navia','estacion central','huechuraba','independencia',
-    'la florida','la reina','las condes','lo barnechea','lo prado','macul',
-    'maipu','nunoa','pedro aguirre cerda','penalolen','providencia',
-    'puente alto','pudahuel','quilicura','quinta normal','recoleta',
-    'renca','san bernardo','san joaquin','san miguel','santiago','vitacura',
-    // variantes sin tilde
-    'maipú','ñuñoa','peñalolén','estación central'
+    // Centro y comunas urbanas consolidadas
+    'santiago','providencia','vitacura','las condes','lo barnechea',
+    'nunoa','la reina','macul','peñalolen','penalolen',
+    // Poniente
+    'cerrillos','cerro navia','estacion central','estación central',
+    'huechuraba','independencia','lo prado','maipu','maipú',
+    'padre aguirre cerda','pudahuel','quinta normal','renca',
+    'san joaquin','san joaquín','san miguel',
+    // Sur y suroriente
+    'el bosque','la cisterna','la florida','la granja','la pintana',
+    'lo espejo','pedro aguirre cerda','puente alto','san bernardo',
+    'san ramon','san ramón','conchalí','conchali',
+    // Norte
+    'recoleta','quilicura',
   ];
 
   /* ── Origen de despacho InfraGo ── */
@@ -44,22 +54,22 @@
      Fuente: tarifas referenciales couriers Chile 2025
   ─────────────────────────────────────────────────────────── */
   var TARIFAS_RESPALDO = {
-    'Región de Arica y Parinacota': { precio: 7490, dias: '4-6' },
-    'Región de Tarapacá':        { precio: 6990,  dias: '4-6' },
-    'Región de Antofagasta':     { precio: 6490,  dias: '3-5' },
-    'Región de Atacama':         { precio: 5990,  dias: '3-5' },
-    'Región de Coquimbo':        { precio: 5490,  dias: '2-4' },
-    'Región de Valparaíso':      { precio: 4990,  dias: '2-3' },
-    'Región Metropolitana':      { precio: 3490,  dias: '1-2' },
-    "Región de O'Higgins":       { precio: 4990,  dias: '2-3' },
-    'Región del Maule':          { precio: 5490,  dias: '2-4' },
-    'Región de Ñuble':           { precio: 5490,  dias: '2-4' },
-    'Región del Biobío':         { precio: 5490,  dias: '2-4' },
-    'Región de La Araucanía':    { precio: 5990,  dias: '3-5' },
-    'Región de Los Ríos':        { precio: 6490,  dias: '3-5' },
-    'Región de Los Lagos':       { precio: 6490,  dias: '3-5' },
-    'Región de Aysén':           { precio: 8990,  dias: '5-7' },
-    'Región de Magallanes':      { precio: 9990,  dias: '5-8' },
+    'Región de Arica y Parinacota': { precio: 23900, dias: '4-6' },
+    'Región de Tarapacá':        { precio: 21900, dias: '4-6' },
+    'Región de Antofagasta':     { precio: 19900, dias: '3-5' },
+    'Región de Atacama':         { precio: 15900, dias: '3-5' },
+    'Región de Coquimbo':        { precio:  9900, dias: '2-4' },
+    'Región de Valparaíso':      { precio:  5900, dias: '2-3' },
+    'Región Metropolitana':      { precio:  3900, dias: '1-2' },
+    "Región de O'Higgins":       { precio:  4900, dias: '2-3' },
+    'Región del Maule':          { precio:  7900, dias: '2-4' },
+    'Región de Ñuble':           { precio:  8900, dias: '2-4' },
+    'Región del Biobío':         { precio:  9900, dias: '2-4' },
+    'Región de La Araucanía':    { precio: 12900, dias: '3-5' },
+    'Región de Los Ríos':        { precio: 15900, dias: '3-5' },
+    'Región de Los Lagos':       { precio: 17900, dias: '3-5' },
+    'Región de Aysén':           { precio: 24900, dias: '5-7' },
+    'Región de Magallanes':      { precio: 25900, dias: '5-8' },
   };
 
   /* ── Normalizar texto para comparación ── */

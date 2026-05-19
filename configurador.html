@@ -149,6 +149,7 @@ window.clsSetCat = function(tipo, btn) {
     <!-- Widget Descuentos por volumen -->
     <div class="cls-widget">
       <div class="cls-widget-title cls-widget-title--plain">Descuentos por volumen</div>
+      <p class="cls-dcto-nota">Solo hardware físico (PCs, notebooks, impresoras, etc.). Licencias y servicios no cuentan.</p>
       <div class="cls-dcto-list">
         <div class="cls-dcto-row dcto-row" data-min="10" data-max="19">
           <span>10 – 19 uds</span><span class="cls-dcto-pct dcto-pct">1% dto.</span>
@@ -236,40 +237,14 @@ window.clsSetCat = function(tipo, btn) {
       <!-- Catálogo (buildCatalogTable lo inyecta aquí) -->
       <div id="catalogoProductos"></div>
 
-      <!-- ── Widget despacho inline ── -->
+      <!-- ── Widget despacho inline multi-destino ── -->
       <div class="despacho-inline-wrap" id="despachoInlineWrap">
         <div class="despacho-inline-title">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           Estimar Envío
+          <span class="despacho-cajas-badge" id="despachoCajasBadge"></span>
         </div>
-      <div class="despacho-inline-bar">
-        <select class="despacho-inline-select" id="despachoRegion" onchange="despachoOnRegionChange(this.value)">
-          <option value="" selected disabled>Selecciona una región</option>
-          <option value="Región Metropolitana">Región Metropolitana</option>
-          <option value="Región de Valparaíso">Región de Valparaíso</option>
-          <option value="Región de O'Higgins">Región de O'Higgins</option>
-          <option value="Región del Maule">Región del Maule</option>
-          <option value="Región de Ñuble">Región de Ñuble</option>
-          <option value="Región del Biobío">Región del Biobío</option>
-          <option value="Región de La Araucanía">Región de La Araucanía</option>
-          <option value="Región de Los Ríos">Región de Los Ríos</option>
-          <option value="Región de Los Lagos">Región de Los Lagos</option>
-          <option value="Región de Coquimbo">Región de Coquimbo</option>
-          <option value="Región de Atacama">Región de Atacama</option>
-          <option value="Región de Antofagasta">Región de Antofagasta</option>
-          <option value="Región de Tarapacá">Región de Tarapacá</option>
-          <option value="Región de Arica y Parinacota">Región de Arica y Parinacota</option>
-          <option value="Región de Aysén">Región de Aysén</option>
-          <option value="Región de Magallanes">Región de Magallanes</option>
-        </select>
-        <select class="despacho-inline-select despacho-inline-select--comuna" id="despachoComuna" disabled onchange="actualizarDespachoRegion(document.getElementById('despachoRegion').value)">
-          <option value="" selected disabled>Selecciona una región primero</option>
-        </select>
-        <div class="despacho-inline-result">
-          <span class="despacho-inline-val" id="despachoRegionVal">—</span>
-          <span class="despacho-inline-info" id="despachoRegionInfo">sin productos</span>
-        </div>
-      </div>
+        <div id="despachoDestinosContainer"></div>
       </div>
 
       <!-- ── SIDEBAR DERECHO — RESUMEN (Movido al paso 1) ── -->
@@ -308,9 +283,9 @@ window.clsSetCat = function(tipo, btn) {
         <div class="bb-divider"></div>
 
         <div class="bb-col bb-col--despacho">
-          <div class="bb-label">
+          <div class="bb-label" id="despachoBarLabel">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            Despacho RM
+            Despacho
           </div>
           <div class="bb-value" id="despachoEstimado">—</div>
           <div class="bb-sub" id="despachoEstimadoSub">estimado · c/IVA</div>
@@ -458,8 +433,8 @@ window.clsSetCat = function(tipo, btn) {
           <input type="text" id="empresa" class="config-input" placeholder="Razón social de tu empresa" autocomplete="organization">
         </div>
 
-<div class="config-field config-field--full">
-          <label class="config-label">Dirección</label>
+<div class="config-field config-field--full" id="singleDirField">
+          <label class="config-label">Dirección de entrega</label>
           <input type="text" id="direccion" class="config-input" placeholder="Calle, número, oficina">
         </div>
         <div class="config-field">
@@ -483,6 +458,15 @@ window.clsSetCat = function(tipo, btn) {
           <label class="config-label">Notas adicionales</label>
           <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
         </div>
+      </div>
+
+      <!-- Direcciones de entrega por destino (solo en modo multi-destino) -->
+      <div id="multiDirSection" style="display:none">
+        <div class="multi-dir-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span>Direcciones de entrega</span>
+        </div>
+        <div class="config-form-grid" id="multiDirContainer"></div>
       </div>
 
       <!-- Carrusel confianza -->
@@ -517,10 +501,11 @@ window.clsSetCat = function(tipo, btn) {
         <p>Revisa equipos, servicios y datos antes de continuar.</p>
       </div>
 
-      <div class="resumen-card">
-        <div class="resumen-card-header">
+      <div class="resumen-card resumen-card--collapsible" id="productosCard">
+        <div class="resumen-card-header" onclick="document.getElementById('productosCard').classList.toggle('resumen-card--collapsed')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           <h3>Productos seleccionados</h3>
+          <svg class="resumen-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="resumen-card-body" id="summaryEquipos">
           <p class="resumen-empty">Sin productos seleccionados</p>
@@ -531,21 +516,22 @@ window.clsSetCat = function(tipo, btn) {
         </div>
       </div>
 
-      <div class="resumen-card">
-        <div class="resumen-card-header">
+      <div class="resumen-card resumen-card--collapsible resumen-card--collapsed" id="serviciosCard">
+        <div class="resumen-card-header" onclick="document.getElementById('serviciosCard').classList.toggle('resumen-card--collapsed')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <h3>Servicios seleccionados</h3>
+          <svg class="resumen-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="resumen-card-body" id="summaryServicios">
           <p class="resumen-empty">Sin servicios seleccionados</p>
         </div>
-        <div class="resumen-card-footer">
+        <div class="resumen-card-footer" id="serviciosCardFooter">
           <span>Subtotal servicios/mes</span>
           <strong>$<span id="summarySubtotalSvc">0</span>/mes</strong>
         </div>
       </div>
 
-      <!-- Tarjeta de despacho inyectada por shipping.js -->
+      <!-- Tarjeta de despacho inyectada por generateFinalSummary() -->
       <div id="resumen-despacho-slot"></div>
 
       <div class="resumen-total-box">
