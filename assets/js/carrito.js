@@ -864,6 +864,156 @@
     if (form) form.scrollTop = 0;
   };
 
+  /* ─── Boleta / localStorage ────────────────────────────── */
+  function _fmtBol(n) { return '$ ' + (n || 0).toLocaleString('es-CL'); }
+
+  function _generarBoletaHTML(snapshot) {
+    var tipoDoc     = snapshot.tipo_doc === 'factura' ? 'Factura' : 'Boleta de Venta';
+    var fecha       = new Date(snapshot.fecha).toLocaleDateString('es-CL', { day:'2-digit', month:'long', year:'numeric' });
+    var folio       = String(snapshot.id).replace('ped_', '').slice(-10);
+    var pct         = snapshot.dcto_pct || 0;
+    var METODOS     = { transferencia:'Transferencia bancaria', tarjeta:'Tarjeta de crédito/débito',
+                        bchileMC:'Banco de Chile MasterCard', santanderVisa:'Santander Visa',
+                        klap:'Klap', mercadopago:'MercadoPago', kiphu:'Kiphu' };
+    var metodoLabel = METODOS[snapshot.metodo_pago] || snapshot.metodo_pago || '—';
+
+    var itemRows = (snapshot.items_arr || []).map(function(it) {
+      var unitPrice = it.es_svc ? it.precio : Math.round(it.precio * (1 - pct / 100));
+      var subtotal  = unitPrice * it.qty;
+      return '<tr><td>' + _esc(it.nombre) + '</td>' +
+             '<td style="text-align:center">' + it.qty + '</td>' +
+             '<td style="text-align:right">' + _fmtBol(unitPrice) + '</td>' +
+             '<td style="text-align:right">' + _fmtBol(subtotal) + '</td></tr>';
+    }).join('');
+
+    var svcRows = (snapshot.services_arr || []).map(function(s) {
+      return '<tr class="svc-row"><td>' + _esc(s.label) + ' <span class="svc-freq">/mes</span></td>' +
+             '<td style="text-align:center">1</td>' +
+             '<td style="text-align:right">' + _fmtBol(s.price) + '</td>' +
+             '<td style="text-align:right">' + _fmtBol(s.price) + '</td></tr>';
+    }).join('');
+
+    var fullName    = [snapshot.nombre, snapshot.apellido].filter(Boolean).join(' ');
+    var clientRows  = '';
+    if (fullName)              clientRows += '<tr><td>Nombre</td><td>' + _esc(fullName) + '</td></tr>';
+    if (snapshot.email)        clientRows += '<tr><td>Email</td><td>' + _esc(snapshot.email) + '</td></tr>';
+    if (snapshot.telefono)     clientRows += '<tr><td>Teléfono</td><td>' + _esc(snapshot.telefono) + '</td></tr>';
+    if (snapshot.tipo_doc === 'factura') {
+      if (snapshot.empresa)     clientRows += '<tr><td>Empresa</td><td>' + _esc(snapshot.empresa) + '</td></tr>';
+      if (snapshot.rut_empresa) clientRows += '<tr><td>RUT Empresa</td><td>' + _esc(snapshot.rut_empresa) + '</td></tr>';
+    }
+    var dir = [snapshot.direccion, snapshot.comuna, snapshot.region].filter(Boolean).join(', ');
+    if (dir) clientRows += '<tr><td>Dirección despacho</td><td>' + _esc(dir) + '</td></tr>';
+
+    var sub     = snapshot.subtotal  || 0;
+    var subSvc  = snapshot.total_svc || 0;
+    var ahorro  = snapshot.ahorro    || 0;
+    var envio   = snapshot.envio     || 0;
+    var total   = snapshot.total     || 0;
+    var base    = sub + subSvc;
+    var recargo = snapshot.metodo_pago === 'tarjeta' ? (total - envio - base) : 0;
+
+    var totalsRows = '';
+    totalsRows += '<div class="totals-row sub"><span>Subtotal productos</span><span>' + _fmtBol(sub) + '</span></div>';
+    if (ahorro > 0) {
+      totalsRows += '<div class="totals-row sub" style="color:#16a34a"><span>Descuento ' + pct + '% aplicado · Ahorro</span><span>−' + _fmtBol(ahorro) + '</span></div>';
+    }
+    if (subSvc > 0) {
+      totalsRows += '<div class="totals-row sub"><span>Servicios TIC</span><span>' + _fmtBol(subSvc) + '</span></div>';
+    }
+    totalsRows += '<div class="totals-row sub"><span>Despacho</span><span>' + (envio > 0 ? _fmtBol(envio) : '<span style="color:#16a34a">Gratis</span>') + '</span></div>';
+    if (recargo > 0) {
+      totalsRows += '<div class="totals-row sub"><span>Recargo tarjeta (3%)</span><span>' + _fmtBol(recargo) + '</span></div>';
+    }
+    totalsRows += '<div class="totals-row main"><span>TOTAL</span><span>' + _fmtBol(total) + '</span></div>';
+
+    return '<!DOCTYPE html>\n<html lang="es">\n<head>\n  <meta charset="UTF-8">\n' +
+      '  <title>' + tipoDoc + ' — InfraGo</title>\n  <style>\n' +
+      '    * { margin:0; padding:0; box-sizing:border-box; }\n' +
+      '    body { font-family:Arial,sans-serif; font-size:12px; color:#0a1628; background:#fff; line-height:1.5; }\n' +
+      '    .no-print { display:flex; align-items:center; gap:12px; background:#f0f4ff; border-bottom:2px solid #0a1628; padding:10px 24px; font-size:12px; color:#0a1628; }\n' +
+      '    .no-print button { background:#0a1628; color:#fff; border:none; border-radius:6px; padding:7px 18px; font-size:12px; font-weight:700; cursor:pointer; }\n' +
+      '    @media print { .no-print { display:none; } }\n' +
+      '    .header-banner { background:linear-gradient(135deg,#0a1628 0%,#1e3a5f 100%); color:#fff; padding:40px; margin-bottom:32px; display:flex; justify-content:space-between; align-items:flex-start; }\n' +
+      '    .hdr-logo { font-size:32px; font-weight:900; }\n' +
+      '    .hdr-logo span { color:#ff7a00; }\n' +
+      '    .hdr-meta { text-align:right; font-size:11px; line-height:2; }\n' +
+      '    .hdr-meta strong { font-size:17px; display:block; color:#ff7a00; margin-bottom:4px; }\n' +
+      '    .main-content { padding:0 40px 40px; }\n' +
+      '    .section { margin-bottom:28px; }\n' +
+      '    .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:#ff7a00; margin-bottom:12px; border-bottom:2px solid #ff7a00; padding-bottom:6px; }\n' +
+      '    .info-table { border-collapse:collapse; font-size:12px; }\n' +
+      '    .info-table td:first-child { font-weight:700; color:#666; text-transform:uppercase; font-size:10px; padding:4px 20px 4px 0; white-space:nowrap; vertical-align:top; }\n' +
+      '    .info-table td:last-child { font-size:13px; font-weight:600; color:#0a1628; padding:4px 0; }\n' +
+      '    table.items-table { width:100%; border-collapse:collapse; }\n' +
+      '    table.items-table thead { background:#0a1628; color:#fff; }\n' +
+      '    table.items-table thead th { padding:10px 8px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }\n' +
+      '    table.items-table tbody td { padding:9px 8px; border-bottom:1px solid #e0e0e0; font-size:11px; }\n' +
+      '    .svc-row td { color:#444; font-style:italic; }\n' +
+      '    .svc-freq { font-size:10px; opacity:0.6; }\n' +
+      '    .totals-breakdown { background:#f0f2f5; border-radius:4px; padding:16px; margin:16px 0; max-width:380px; margin-left:auto; }\n' +
+      '    .totals-row { display:flex; justify-content:space-between; padding:6px 0; font-size:12px; gap:24px; }\n' +
+      '    .totals-row.sub { color:#444; font-size:11px; }\n' +
+      '    .totals-row.main { font-size:16px; font-weight:800; color:#ff7a00; border-top:2px solid #0a1628; padding-top:12px; margin-top:8px; }\n' +
+      '    .metodo-pago { font-size:11px; color:#666; margin-top:8px; text-align:right; }\n' +
+      '    .metodo-pago strong { color:#0a1628; }\n' +
+      '    .footer { text-align:center; font-size:10px; color:#999; border-top:1px solid #e0e0e0; padding:16px 40px; margin-top:16px; }\n' +
+      '  </style>\n</head>\n<body>\n' +
+      '<div class="no-print">\n' +
+      '  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>\n' +
+      '  <span>Para guardar como PDF usa <strong>Ctrl+P → Guardar como PDF</strong></span>\n' +
+      '  <button onclick="window.print()">Imprimir / Guardar PDF</button>\n</div>\n' +
+      '<div class="header-banner">\n' +
+      '  <div class="hdr-logo">INFRA<span>GO</span></div>\n' +
+      '  <div class="hdr-meta"><strong>' + tipoDoc.toUpperCase() + '</strong>Folio N° ' + folio + '<br>Fecha: ' + fecha + '</div>\n' +
+      '</div>\n<div class="main-content">\n' +
+      (clientRows ? '<div class="section"><div class="section-title">Datos del cliente</div>' +
+        '<table class="info-table"><tbody>' + clientRows + '</tbody></table></div>' : '') +
+      '<div class="section"><div class="section-title">Detalle del pedido</div>' +
+      '<table class="items-table"><thead><tr>' +
+      '<th>Producto / Servicio</th><th style="text-align:center">Cant.</th>' +
+      '<th style="text-align:right">P. Unit.</th><th style="text-align:right">Subtotal</th>' +
+      '</tr></thead><tbody>' + itemRows + svcRows + '</tbody></table></div>' +
+      '<div class="section"><div class="section-title">Resumen de pago</div>' +
+      '<div class="totals-breakdown">' + totalsRows + '</div>' +
+      '<div class="metodo-pago">Método de pago: <strong>' + _esc(metodoLabel) + '</strong></div>' +
+      '</div></div>\n' +
+      '<div class="footer">InfraGo SpA · www.infrago.cl · Este documento es informativo y no tiene validez tributaria oficial.</div>\n' +
+      '</body>\n</html>';
+  }
+
+  function _guardarPedidoLocal(snapshot) {
+    try {
+      var record = {
+        id:          snapshot.id,
+        fecha:       snapshot.fecha,
+        nombre:      snapshot.nombre,
+        apellido:    snapshot.apellido,
+        email:       snapshot.email,
+        empresa:     snapshot.empresa,
+        tipo_doc:    snapshot.tipo_doc,
+        metodo_pago: snapshot.metodo_pago,
+        subtotal:    snapshot.subtotal,
+        total_svc:   snapshot.total_svc,
+        envio:       snapshot.envio,
+        total:       snapshot.total,
+        dcto_pct:    snapshot.dcto_pct,
+        ahorro:      snapshot.ahorro,
+        region:      snapshot.region,
+        comuna:      snapshot.comuna,
+        n_items:     (snapshot.items_arr || []).reduce(function(s, i) { return s + i.qty; }, 0),
+        items:       (snapshot.items_arr || []).slice(0, 8).map(function(i) { return { nombre: i.nombre, qty: i.qty }; })
+      };
+      var pedidos = [];
+      try { pedidos = JSON.parse(localStorage.getItem('ig_pedidos') || '[]'); } catch(e2) {}
+      pedidos.unshift(record);
+      if (pedidos.length > 50) pedidos = pedidos.slice(0, 50);
+      localStorage.setItem('ig_pedidos', JSON.stringify(pedidos));
+      var htmlBoleta = _generarBoletaHTML(snapshot);
+      if (htmlBoleta) localStorage.setItem('ig_pedido_boleta_' + snapshot.id, htmlBoleta);
+    } catch (e) { console.warn('Error al guardar pedido local:', e); }
+  }
+
   window.igcSubmitCheckout = function() {
     if (!_validateStep(3)) return;
 
@@ -893,37 +1043,55 @@
     if (msg2) msg2.innerHTML = msg;
     if (ss)   ss.style.display = 'flex';
 
-    /* Guardar pedido en Supabase antes de limpiar el carrito */
+    /* Guardar pedido (Supabase + localStorage) antes de limpiar el carrito */
     (function() {
+      var rawSub    = _subtotal();
       var sub       = _subtotalConDescuento();
       var subSvc    = _subtotalSvc();
       var base      = sub + subSvc;
+      var pct       = _descuentoPct();
       var totalFinal = (_metodo === 'tarjeta' ? Math.round(base * 1.03) : base) + _cartShipCost;
-      var gv = function(id) { return ((document.getElementById(id) || {}).value || '').trim(); };
+      var gv = function(elId) { return ((document.getElementById(elId) || {}).value || '').trim(); };
+      var snapshot = {
+        id:           'ped_' + Date.now(),
+        fecha:        new Date().toISOString(),
+        nombre:       gv('igcCoNombre'),
+        apellido:     gv('igcCoApellido'),
+        email:        gv('igcCoEmail'),
+        telefono:     gv('igcCoTel'),
+        tipo_doc:     _docTipo,
+        empresa:      gv('igcCoEmpresa'),
+        rut_empresa:  gv('igcCoRutEmpresa'),
+        direccion:    gv('igcCoDireccion'),
+        region:       gv('igcCoRegion'),
+        comuna:       gv('igcCoComuna'),
+        metodo_pago:  _metodo,
+        subtotal:     sub,
+        total_svc:    subSvc,
+        envio:        _cartShipCost,
+        total:        totalFinal,
+        dcto_pct:     pct,
+        ahorro:       pct > 0 ? (rawSub - sub) : 0,
+        items_arr:    _items.map(function(i) { return { id:i.id, nombre:i.nombre, precio:i.precio, qty:i.qty, es_svc:_isService(i) }; }),
+        services_arr: SERVICIOS_TIENDA.filter(function(s){ return !!_selectedSvc[s.id]; }).map(function(s){ return { id:s.id, label:s.label, price:s.price }; })
+      };
       var orderData = {
-        email:       gv('igcCoEmail'),
-        nombre:      gv('igcCoNombre'),
-        apellido:    gv('igcCoApellido'),
-        telefono:    gv('igcCoTel'),
-        items:       JSON.stringify(_items.map(function(i){ return { id:i.id, nombre:i.nombre, precio:i.precio, qty:i.qty }; })),
-        subtotal:    sub,
-        total_svc:   subSvc,
-        envio:       _cartShipCost,
-        total:       totalFinal,
-        metodo_pago: _metodo,
-        tipo_doc:    _docTipo,
-        direccion:   gv('igcCoDireccion'),
-        region:      gv('igcCoRegion'),
-        comuna:      gv('igcCoComuna'),
-        empresa:     gv('igcCoEmpresa'),
-        rut_empresa: gv('igcCoRutEmpresa'),
-        estado:      'pendiente'
+        email:       snapshot.email,       nombre:      snapshot.nombre,
+        apellido:    snapshot.apellido,    telefono:    snapshot.telefono,
+        items:       JSON.stringify(snapshot.items_arr.map(function(i){ return { id:i.id, nombre:i.nombre, precio:i.precio, qty:i.qty }; })),
+        subtotal:    snapshot.subtotal,    total_svc:   snapshot.total_svc,
+        envio:       snapshot.envio,       total:       snapshot.total,
+        metodo_pago: snapshot.metodo_pago, tipo_doc:    snapshot.tipo_doc,
+        direccion:   snapshot.direccion,   region:      snapshot.region,
+        comuna:      snapshot.comuna,      empresa:     snapshot.empresa,
+        rut_empresa: snapshot.rut_empresa, estado:      'pendiente'
       };
       if (window.supabase && orderData.email) {
         window.supabase.from('pedidos').insert([orderData]).then(function(res) {
           if (res.error) console.warn('Pedido no guardado en BD:', res.error);
         }).catch(function() {});
       }
+      _guardarPedidoLocal(snapshot);
     })();
 
     _items = []; _save(); _selectedSvc = {}; _updateNavbarBadge();

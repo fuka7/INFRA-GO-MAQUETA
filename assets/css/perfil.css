@@ -234,9 +234,41 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 12px; color: rgba(17,17,17,0.5);
 }
+.prf-quot-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
 .prf-quot-total {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800; font-size: 17px; color: #FF7A00;
+}
+.prf-quot-row--fin {
+  color: #FF7A00 !important;
+  font-weight: 600;
+}
+.prf-quot-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1.5px solid #FF7A00;
+  color: #FF7A00;
+  border-radius: 7px;
+  padding: 5px 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.18s, color 0.18s;
+}
+.prf-quot-pdf-btn:hover {
+  background: #FF7A00;
+  color: #fff;
 }
 
 /* ── EMPTY / LOADING ── */

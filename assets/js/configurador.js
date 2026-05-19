@@ -1023,7 +1023,9 @@ function solicitarCotizacion() {
   collectServicios();
 
   const totalEquipos   = Object.values(state.equipos).reduce((sum, e) => sum + e.qty * e.price, 0);
-  const totalServicios = Object.values(state.servicios).reduce((sum, s) => sum + s, 0);
+  const totalServicios = Object.values(state.servicios).reduce((sum, s) => sum + (typeof s === 'object' ? s.price : s), 0);
+  const totalNeto      = totalEquipos + totalServicios;
+  const totalConIVA    = totalNeto + Math.round(totalNeto * 0.19);
 
   const data = {
     ...state.formulario,
@@ -1031,7 +1033,7 @@ function solicitarCotizacion() {
     servicios:        state.servicios,
     total_productos:  totalEquipos,
     total_servicios:  totalServicios,
-    total_general:    totalEquipos + totalServicios,
+    total_general:    totalConIVA,
     plazo_meses:      simPlazo,
     tasa_anual:       simTasa,
     url:              window.location.href
@@ -1039,6 +1041,7 @@ function solicitarCotizacion() {
 
   guardarCotizacionSupabase(data)
     .then(() => {
+      _guardarCotizacionLocal();
       const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
       setTxt('modalEmpresa', state.formulario.empresa || '—');
       setTxt('modalEmail',   state.formulario.email   || '—');
@@ -1049,6 +1052,7 @@ function solicitarCotizacion() {
       abrirModal();
     })
     .catch(() => {
+      _guardarCotizacionLocal();
       const suc = document.getElementById('modalSuccess');
       const err = document.getElementById('modalError');
       if (suc) suc.style.display = 'none';
@@ -1061,7 +1065,7 @@ function solicitarCotizacion() {
 // ═════════════════════════════════════════
 // DESCARGA PDF
 // ═════════════════════════════════════════
-function descargarCotizacionPDF() {
+function descargarCotizacionPDF(returnHtml) {
   const f   = state.formulario || {};
   const fmt = n => (n || 0).toLocaleString('es-CL');
   const tc  = window.tipoCambio || 900;
@@ -1580,6 +1584,8 @@ function descargarCotizacionPDF() {
 </body>
 </html>`;
 
+  if (returnHtml) return htmlPDF;
+
   const win = window.open('', '_blank');
   if (!win) { alert('Permite las ventanas emergentes para descargar el PDF.'); return; }
   win.document.write(htmlPDF);
@@ -1588,6 +1594,76 @@ function descargarCotizacionPDF() {
 }
 
 window.descargarCotizacionPDF = descargarCotizacionPDF;
+
+// ═════════════════════════════════════════
+// GUARDAR COTIZACIÓN EN LOCALSTORAGE
+// ═════════════════════════════════════════
+function _guardarCotizacionLocal() {
+  try {
+    const f = state.formulario || {};
+
+    const eqEntries  = Object.entries(state.equipos).filter(([name]) => {
+      const p = (window.CATALOGO || []).find(x => x.name === name);
+      return !p || p.tipo !== 'servicio-tic';
+    });
+    const svcEntries = Object.entries(state.servicios);
+
+    const totalEqNeto  = eqEntries.reduce((s, [, v]) => s + v.qty * v.price, 0);
+    const totalSvcNeto = svcEntries.reduce((s, [, v]) => s + (typeof v === 'object' ? v.price : v), 0);
+    const totalGenNeto = totalEqNeto + totalSvcNeto;
+    const ivaTotal     = Math.round(totalGenNeto * 0.19);
+    const totalGenIVA  = totalGenNeto + ivaTotal;
+
+    const desp       = state.despacho || {};
+    const despPrecio = (desp.hayValidos && !desp.gratis) ? (desp.precioTotal || 0) : 0;
+    const totalFinal = totalGenIVA + despPrecio;
+
+    const principal     = Math.round(totalEqNeto * 1.19);
+    const svcMensualIVA = Math.round(totalSvcNeto * 1.19);
+    const tm = simTasa / 100 / 12;
+    let cuotaEq = tm === 0 ? principal / simPlazo
+      : principal * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
+    const cuota    = Math.round(cuotaEq + svcMensualIVA);
+    const totalQty = eqEntries.reduce((s, [, v]) => s + v.qty, 0);
+    const items    = eqEntries.slice(0, 8).map(([name, v]) => ({ name, qty: v.qty }));
+
+    const id = 'cot_' + Date.now();
+    const record = {
+      id,
+      fecha:           new Date().toISOString(),
+      empresa:         f.empresa || '—',
+      email:           f.email   || '',
+      total_general:   totalFinal,
+      total_neto:      totalGenNeto,
+      total_iva:       ivaTotal,
+      total_despacho:  despPrecio,
+      total_productos: totalEqNeto,
+      total_servicios: totalSvcNeto,
+      plazo:           simPlazo,
+      tasa:            simTasa,
+      cuota,
+      n_items:         totalQty,
+      items
+    };
+
+    // Guardar índice (máx. 50 registros)
+    let cotizaciones = [];
+    try { cotizaciones = JSON.parse(localStorage.getItem('ig_cotizaciones') || '[]'); } catch (e) {}
+    cotizaciones.unshift(record);
+    if (cotizaciones.length > 50) cotizaciones = cotizaciones.slice(0, 50);
+    localStorage.setItem('ig_cotizaciones', JSON.stringify(cotizaciones));
+
+    // Guardar HTML del PDF en clave separada
+    const htmlPDF = descargarCotizacionPDF(true);
+    if (htmlPDF) {
+      try { localStorage.setItem('ig_cot_pdf_' + id, htmlPDF); } catch (e) {
+        console.warn('No se pudo guardar el PDF (localStorage lleno?):', e);
+      }
+    }
+  } catch (e) {
+    console.warn('Error al guardar cotización local:', e);
+  }
+}
 
 
 

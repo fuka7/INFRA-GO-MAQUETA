@@ -1535,7 +1535,7 @@ footer {
 .slide-2 {
   background:
     linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-    url('/img/herotienda.jpeg') center 35%/110% auto no-repeat;
+    url('/img/slide%202.jpeg') center/cover no-repeat;
 }
 .slide-3 {
   background:
@@ -2880,7 +2880,7 @@ footer {
   .slide-2 {
     background:
       linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-      url('/img/herotienda.jpeg') center/cover no-repeat;
+      url('/img/slide%202.jpeg') center/cover no-repeat;
   }
 }
 /* ── SLIDE CHECKLIST (hero carrusel) ── */
