@@ -447,7 +447,7 @@ function collectServicios() {
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto || producto.tipo !== 'servicio-tic') return;
       // servicio-tic siempre es mensual
-      state.servicios[r.productName] = { price: (producto.price || 0) * r.qty, frecuencia: '/mes' };
+      state.servicios[r.productName] = { price: (producto.price || 0) * r.qty, frecuencia: '/mes', qty: r.qty };
     });
   }
 }
@@ -458,22 +458,23 @@ function collectServicios() {
 function updateSidebar() {
   let totalEqBase       = 0;  // hardware precio lista (sin descuento)
   let totalEqCLP        = 0;  // hardware precio con descuento (lo que paga el cliente)
-  let totalQtyEq        = 0;  // unidades de hardware
+  let totalQtyEq        = 0;  // unidades totales (hardware + accesorios + licencias)
   let totalQtySvc       = 0;  // unidades de servicios
   let totalCajasFisicas = 0;  // unidades físicas (excluye licencias digitales)
+  let qtyHwDiscount     = 0;  // solo hardware puro — determina el tramo de descuento
   const selectedProducts = [];
 
   // Leer desde _flatRows si está disponible (fuente de verdad)
   if (typeof window._flatRows !== 'undefined') {
-    // Paso 1: contar SOLO hardware físico para el descuento por volumen (excluye servicios, accesorios y licencias)
-    const qtyHardware = window._flatRows
+    // Contar SOLO hardware físico para el tramo de descuento por volumen
+    qtyHwDiscount = window._flatRows
       .filter(r => r.productName && r.qty > 0)
       .reduce((s, r) => {
         const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
         return prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios' && prod.cat !== 'licencias' ? s + r.qty : s;
       }, 0);
 
-    const pct = obtenerPctDescuento(qtyHardware);
+    const pct = obtenerPctDescuento(qtyHwDiscount);
 
     window._flatRows.forEach(r => {
       if (!r.productName || r.qty <= 0) return;
@@ -501,7 +502,7 @@ function updateSidebar() {
       selectedProducts.push({ name: r.productName, qty: r.qty });
     });
   } else {
-    // Fallback: accordion
+    // Fallback: accordion — en el accordion todos los productos son hardware
     document.querySelectorAll('.product-item').forEach(item => {
       const qty      = parseInt(item.querySelector('.qty-value').textContent) || 0;
       const priceCLP = parseInt(item.dataset.price) || 0;
@@ -512,6 +513,7 @@ function updateSidebar() {
         selectedProducts.push({ name, qty });
       }
     });
+    qtyHwDiscount = totalQtyEq; // en accordion todos son hardware
   }
 
   // Servicios: asociados a productos (service-check) + servicio-tic de flat rows
@@ -540,7 +542,7 @@ function updateSidebar() {
   }
 
   // Cálculos correctos — totalEqCLP ya tiene el descuento aplicado desde el loop
-  const pctDcto     = obtenerPctDescuento(totalQtyEq);
+  const pctDcto     = obtenerPctDescuento(qtyHwDiscount); // tramo correcto: solo hardware
   const descuento   = Math.round(totalEqBase - totalEqCLP); // ahorro real: lista − con descuento
   const totalNeto   = totalEqCLP + totalSvc;                // neto: hw descontado + servicios
   const iva         = Math.round(totalNeto * 0.19);
@@ -1135,10 +1137,11 @@ function descargarCotizacionPDF() {
     const dcto     = (p && p.cat !== 'licencias' && p.tipo !== 'accesorios') ? pctDescuento : 0;
     const subtotal = v.qty * unitIVA;
     const saving   = Math.max(0, v.qty * (baseIVA - unitIVA));
+    const catLabel = p ? (p.cat === 'licencias' ? 'LIC' : p.tipo === 'accesorios' ? 'ACC' : 'HW') : 'HW';
     return `<tr>
       <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
       <td ${TD()}><strong>${name}</strong></td>
-      <td ${TD('text-align:center;color:#666;')}>HW</td>
+      <td ${TD('text-align:center;color:#666;')}>${catLabel}</td>
       <td ${TD('text-align:center;')}>${v.qty}</td>
       <td ${TD('text-align:right;color:#666;')}>$${fmt(baseIVA)}</td>
       <td ${TD('text-align:right;')}>${dcto > 0 ? dcto + '%' : '—'}</td>
@@ -1151,17 +1154,20 @@ function descargarCotizacionPDF() {
   const svcRows = svcEntries.map(([name, svc]) => {
     const price    = typeof svc === 'object' ? svc.price : svc;
     const freq     = typeof svc === 'object' ? (svc.frecuencia || '/mes') : '/mes';
+    const qty      = (typeof svc === 'object' && svc.qty) ? svc.qty : 1;
     const freqLbl  = freq === 'al inicio' ? 'pago único' : freq === '/año' ? 'anual' : 'mensual';
-    const priceIVA = price + Math.round(price * 0.19);
+    const unitNeto  = Math.round(price / qty);
+    const unitIVA   = unitNeto + Math.round(unitNeto * 0.19);
+    const totalIVA  = price + Math.round(price * 0.19);
     return `<tr>
       <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
       <td ${TD()}><strong>${name}</strong> <span style="font-size:10px;color:#888;background:#f0f0f0;padding:1px 5px;border-radius:3px;">${freqLbl}</span></td>
       <td ${TD('text-align:center;color:#666;')}>SVC</td>
-      <td ${TD('text-align:center;')}>1</td>
-      <td ${TD('text-align:right;color:#666;')}>$${fmt(priceIVA)}</td>
+      <td ${TD('text-align:center;')}>${qty}</td>
+      <td ${TD('text-align:right;color:#666;')}>$${fmt(unitIVA)}</td>
       <td ${TD('text-align:right;')}>—</td>
-      <td ${TD('text-align:right;font-weight:600;')}>$${fmt(priceIVA)}</td>
-      <td ${TD('text-align:right;font-weight:700;')}>$${fmt(priceIVA)}</td>
+      <td ${TD('text-align:right;font-weight:600;')}>$${fmt(unitIVA)}</td>
+      <td ${TD('text-align:right;font-weight:700;')}>$${fmt(totalIVA)}</td>
       <td ${TD('text-align:right;color:#888;')}>—</td>
     </tr>`;
   }).join('');
@@ -1441,24 +1447,24 @@ function descargarCotizacionPDF() {
     <div class="section">
       <div class="section-title">ESCALA DE DESCUENTOS POR VOLUMEN</div>
       <div class="discount-table">
-        <div class="discount-table-row ${totalQty >= 10 && totalQty < 20 ? 'active' : ''}">
+        <div class="discount-table-row ${qtyHw >= 10 && qtyHw < 20 ? 'active' : ''}">
           <span>10 – 19 unidades</span><span>1%</span>
         </div>
-        <div class="discount-table-row ${totalQty >= 20 && totalQty < 30 ? 'active' : ''}">
+        <div class="discount-table-row ${qtyHw >= 20 && qtyHw < 30 ? 'active' : ''}">
           <span>20 – 29 unidades</span><span>2%</span>
         </div>
-        <div class="discount-table-row ${totalQty >= 30 && totalQty < 40 ? 'active' : ''}">
+        <div class="discount-table-row ${qtyHw >= 30 && qtyHw < 40 ? 'active' : ''}">
           <span>30 – 39 unidades</span><span>3%</span>
         </div>
-        <div class="discount-table-row ${totalQty >= 40 && totalQty < 50 ? 'active' : ''}">
+        <div class="discount-table-row ${qtyHw >= 40 && qtyHw < 50 ? 'active' : ''}">
           <span>40 – 49 unidades</span><span>4%</span>
         </div>
-        <div class="discount-table-row ${totalQty >= 50 ? 'active' : ''}">
+        <div class="discount-table-row ${qtyHw >= 50 ? 'active' : ''}">
           <span>50 unidades +</span><span>5%</span>
         </div>
       </div>
       <div style="background:#fff3e0;padding:12px;border-radius:4px;margin-top:12px;font-size:11px;">
-        <strong>Total pedido: ${totalQty} unidades → ${pctDescuento}% sobre todos los ítems</strong>
+        <strong>Hardware: ${qtyHw} unidades → descuento ${pctDescuento}%${totalQty > qtyHw ? ' (pedido total: ' + totalQty + ' ítems)' : ''}</strong>
       </div>
     </div>
 
