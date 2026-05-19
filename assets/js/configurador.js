@@ -388,14 +388,15 @@ function collectEquipos() {
       if (!r.productName || r.qty <= 0) return;
       const producto = (window.CATALOGO || []).find(p => p.name === r.productName);
       if (!producto) return;
+      if (producto.tipo === 'servicio-tic') return; // van a state.servicios, no a state.equipos
       const tc = window.tipoCambio || 900;
       const basePrice = (producto.priceUSD && producto.priceUSD > 0)
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
-      // Solo hardware físico recibe descuento por volumen
-      const price = (producto.tipo !== 'servicio-tic' && producto.tipo !== 'accesorios' && producto.cat !== 'licencias')
-        ? Math.round(basePrice * (1 - pct / 100))
-        : basePrice;
+      // Solo hardware físico recibe descuento por volumen (no accesorios ni licencias)
+      const price = (producto.cat === 'licencias' || producto.tipo === 'accesorios')
+        ? basePrice
+        : Math.round(basePrice * (1 - pct / 100));
       state.equipos[r.productName] = { qty: r.qty, price };
     });
   } else {
@@ -464,12 +465,12 @@ function updateSidebar() {
 
   // Leer desde _flatRows si está disponible (fuente de verdad)
   if (typeof window._flatRows !== 'undefined') {
-    // Paso 1: contar SOLO hardware físico para el descuento por volumen (excluye servicios y licencias)
+    // Paso 1: contar SOLO hardware físico para el descuento por volumen (excluye servicios, accesorios y licencias)
     const qtyHardware = window._flatRows
       .filter(r => r.productName && r.qty > 0)
       .reduce((s, r) => {
         const prod = (window.CATALOGO || []).find(p => p.name === r.productName);
-        return prod && prod.tipo !== 'servicio-tic' && prod.cat !== 'licencias' ? s + r.qty : s;
+        return prod && prod.tipo !== 'servicio-tic' && prod.tipo !== 'accesorios' && prod.cat !== 'licencias' ? s + r.qty : s;
       }, 0);
 
     const pct = obtenerPctDescuento(qtyHardware);
@@ -489,8 +490,8 @@ function updateSidebar() {
         ? Math.round(producto.priceUSD * tc)
         : (producto.price || 0);
 
-      // Licencias y servicios sin descuento por volumen; solo hardware físico lo recibe
-      const precio = (producto.cat === 'licencias')
+      // Solo hardware físico recibe descuento por volumen (no accesorios ni licencias)
+      const precio = (producto.cat === 'licencias' || producto.tipo === 'accesorios')
         ? precioBase
         : Math.round(precioBase * (1 - pct / 100));
 
@@ -721,9 +722,9 @@ function generateFinalSummary() {
     }
   }
 
-  // Subtotales con IVA en los footers de cada card
-  const eqIVA  = Math.round(totalEq * 1.19);
-  const svcIVA = Math.round(totalSvc * 1.19);
+  // Subtotales con IVA en los footers de cada card (mismo método de redondeo que el cuadro total)
+  const eqIVA  = totalEq  + Math.round(totalEq  * 0.19);
+  const svcIVA = totalSvc + Math.round(totalSvc * 0.19);
   setTxt('summarySubtotalEq',  fmt(eqIVA));
   setTxt('summarySubtotalSvc', fmt(svcIVA));
 
@@ -760,13 +761,19 @@ function generateFinalSummary() {
                        ? window.igShipping.esComunaGratis(sd.comuna || '') : false;
         const gratis = t.gratis75k && totalConIVAD >= 75000 && eCG;
         const costo  = gratis ? 0 : t.precio * totalCajas;
-        const lugar  = [sd.comuna, (sd.region || '').replace(/^Región (de(l?|) )?/i, '')].filter(Boolean).join(', ');
-        body = `<div class="resumen-line-item">
+        const lugar      = [sd.comuna, (sd.region || '').replace(/^Región (de(l?|) )?/i, '')].filter(Boolean).join(', ');
+        const svgPin     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+        const dirSingle  = (state.formulario || {}).direccion || '';
+        const dirLine    = dirSingle
+          ? `<span class="resumen-line-dir">${svgPin}${dirSingle}</span>`
+          : '';
+        body = `<div class="resumen-line-item${dirSingle ? ' resumen-line-item--with-dir' : ''}">
           <div class="resumen-line-info">
             <span class="resumen-line-name">Todos los productos</span>
             <span class="resumen-line-qty">${totalCajas} caja${totalCajas !== 1 ? 's' : ''} → ${lugar}</span>
           </div>
           <span class="resumen-line-price${gratis ? ' resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '~$' + fmt(costo)}</span>
+          ${dirLine}
         </div>`;
         footer = `<div class="resumen-card-footer">
           <span>Total despacho</span>
@@ -841,7 +848,6 @@ function generateFinalSummary() {
             ${f.contacto  ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Contacto</span><span class="resumen-contact-value">${f.contacto}</span></div>` : ''}
             ${f.email     ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Email</span><span class="resumen-contact-value">${f.email}</span></div>` : ''}
             ${f.telefono  ? `<div class="resumen-contact-field"><span class="resumen-contact-label">Teléfono</span><span class="resumen-contact-value">${f.telefono}</span></div>` : ''}
-            ${(state.despacho?.mode !== 'multi' && f.direccion) ? `<div class="resumen-contact-field resumen-contact-full"><span class="resumen-contact-label">Dirección de entrega</span><span class="resumen-contact-value">${f.direccion}</span></div>` : ''}
             ${f.notas     ? `<div class="resumen-contact-field resumen-contact-full"><span class="resumen-contact-label">Notas adicionales</span><span class="resumen-contact-value">${f.notas}</span></div>` : ''}
           </div>
         </div>
@@ -953,14 +959,23 @@ function updateTasa(val) {
   if (currentStep === 4) generateFinalSummary();
 }
 
-function toggleTablaAmort() {
-  const wrap = document.getElementById('tablaAmortWrap');
-  const btn  = document.getElementById('btnToggleTabla');
-  if (!wrap) return;
-  const visible = wrap.style.display !== 'none';
-  wrap.style.display = visible ? 'none' : 'block';
-  if (btn) btn.textContent = visible ? '▼ Ver tabla de amortización' : '▲ Ocultar tabla';
+function abrirModalAmort() {
+  const overlay = document.getElementById('modalAmortOverlay');
+  if (!overlay) return;
+  const meta = document.getElementById('modalAmortMeta');
+  if (meta) meta.textContent = simPlazo + ' meses · ' + simTasa + '% anual';
+  overlay.classList.add('modal-visible');
+  document.body.style.overflow = 'hidden';
 }
+
+function cerrarModalAmort(e) {
+  if (e && e.target !== document.getElementById('modalAmortOverlay')) return;
+  const overlay = document.getElementById('modalAmortOverlay');
+  if (overlay) overlay.classList.remove('modal-visible');
+  document.body.style.overflow = '';
+}
+
+function toggleTablaAmort() { abrirModalAmort(); }
 
 function calcularCuotaSimple() {
   const totalEq     = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
@@ -1045,69 +1060,154 @@ function solicitarCotizacion() {
 // DESCARGA PDF
 // ═════════════════════════════════════════
 function descargarCotizacionPDF() {
-  const f = state.formulario;
+  const f   = state.formulario || {};
   const fmt = n => (n || 0).toLocaleString('es-CL');
+  const tc  = window.tipoCambio || 900;
 
-  // Calcular totales
-  const eqEntries = Object.entries(state.equipos)
-    .filter(([name]) => {
-      const prod = (window.CATALOGO || []).find(p => p.name === name);
-      return !prod || prod.tipo !== 'servicio-tic';
-    });
-
+  // ── Entradas de equipos y servicios ──────────────────────────────────────
+  const eqEntries = Object.entries(state.equipos).filter(([name]) => {
+    const p = (window.CATALOGO || []).find(x => x.name === name);
+    return !p || p.tipo !== 'servicio-tic';
+  });
   const svcEntries = Object.entries(state.servicios);
 
-  const totalQty = eqEntries.reduce((sum, [, v]) => sum + v.qty, 0);
-  const totalEqNeto = eqEntries.reduce((s, [, v]) => s + v.qty * v.price, 0);
-  const totalSvcNeto = svcEntries.reduce((s, [, v]) => s + (typeof v === 'object' ? v.price : v), 0);
-  const pctDescuento = obtenerPctDescuento(totalQty);
-  const totalEqNetoConDescto = Math.round(totalEqNeto * (1 - pctDescuento / 100));
-  const ahorroEq = totalEqNeto - totalEqNetoConDescto;
-  const totalEqIVA = Math.round(totalEqNetoConDescto * 1.19);
-  const totalSvcIVA = Math.round(totalSvcNeto * 1.19);
-  const totalGenNeto = totalEqNetoConDescto + totalSvcNeto;
-  const totalGenIVA = totalEqIVA + totalSvcIVA;
-  const cuotaMensual = Math.round(totalGenIVA / simPlazo);
-  const ahorro = ahorroEq;
+  // Contar solo hardware real para tramo de descuento
+  const qtyHw = eqEntries.reduce((s, [name, v]) => {
+    const p = (window.CATALOGO || []).find(x => x.name === name);
+    return (p && p.tipo !== 'accesorios' && p.cat !== 'licencias') ? s + v.qty : s;
+  }, 0);
+  const pctDescuento = obtenerPctDescuento(qtyHw);
+  const totalQty = eqEntries.reduce((s, [, v]) => s + v.qty, 0);
 
-  // Generar filas de productos
+  // Precios correctos: v.price ya tiene descuento aplicado por collectEquipos
+  let totalListaNeto = 0, totalEqNeto = 0, ahorroNeto = 0;
+  eqEntries.forEach(([name, v]) => {
+    const p = (window.CATALOGO || []).find(x => x.name === name);
+    const base = p ? ((p.priceUSD > 0) ? Math.round(p.priceUSD * tc) : (p.price || 0)) : v.price;
+    totalListaNeto += v.qty * base;
+    totalEqNeto    += v.qty * v.price;
+    ahorroNeto     += v.qty * Math.max(0, base - v.price);
+  });
+  const totalSvcNeto = svcEntries.reduce((s, [, v]) => s + (typeof v === 'object' ? v.price : v), 0);
+  const totalGenNeto = totalEqNeto + totalSvcNeto;
+  const ivaTotal     = Math.round(totalGenNeto * 0.19);
+  const totalGenIVA  = totalGenNeto + ivaTotal;
+  const ahorroIVA    = ahorroNeto + Math.round(ahorroNeto * 0.19);
+
+  // ── Despacho ──────────────────────────────────────────────────────────────
+  const desp       = state.despacho || {};
+  const despMode   = desp.mode || 'single';
+  const despPrecio = desp.precioTotal  || 0;
+  const despGratis = desp.gratis       || false;
+  const despHay    = desp.hayValidos   || false;
+  const totalFinal = totalGenIVA + (despHay ? despPrecio : 0);
+
+  // ── Financiamiento con simPlazo / simTasa reales ──────────────────────────
+  const principal     = Math.round(totalEqNeto * 1.19);
+  const svcMensualIVA = Math.round(totalSvcNeto * 1.19);
+  const tm = simTasa / 100 / 12;
+  let cuotaEq = tm === 0 ? principal / simPlazo
+    : principal * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
+  const cuotaMensual  = Math.round(cuotaEq + svcMensualIVA);
+  const totalPagarFin = Math.round(cuotaEq * simPlazo + svcMensualIVA * simPlazo + (despHay ? despPrecio : 0));
+  const intereses     = Math.max(0, Math.round(cuotaEq * simPlazo - principal));
+  const ahorro        = ahorroNeto;
+
+  const computeCuota = (plazo) => {
+    const tm2 = simTasa / 100 / 12;
+    const cEq = tm2 === 0 ? principal / plazo
+      : principal * (tm2 * Math.pow(1 + tm2, plazo)) / (Math.pow(1 + tm2, plazo) - 1);
+    return Math.round(cEq + svcMensualIVA);
+  };
+  const cuota12 = computeCuota(12);
+  const cuota24 = computeCuota(24);
+  const cuota36 = computeCuota(36);
+
+  // ── Filas de productos ────────────────────────────────────────────────────
   let numItem = 1;
+  const TD = (extra='') => `style="padding:9px 8px;border-bottom:1px solid #e8e8e8;font-size:11px;${extra}"`;
+
   const eqRows = eqEntries.map(([name, v]) => {
-    const priceUnit = v.price;
-    const priceUnitIVA = Math.round(priceUnit * 1.19);
-    const subtotal = v.qty * priceUnitIVA;
-    const ahorroItem = Math.round(v.qty * priceUnit * (pctDescuento / 100) * 1.19);
-    return `
-    <tr>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;font-weight:600;">${numItem++}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;"><strong>${name}</strong></td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">HW</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">${v.qty}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">$${fmt(priceUnitIVA)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">${pctDescuento}%</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">$${fmt(Math.round(priceUnit * 0.81 * 1.19))}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;font-weight:600;">$${fmt(subtotal)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">$${fmt(ahorroItem)}</td>
+    const p        = (window.CATALOGO || []).find(x => x.name === name);
+    const base     = p ? ((p.priceUSD > 0) ? Math.round(p.priceUSD * tc) : (p.price || 0)) : v.price;
+    const baseIVA  = base + Math.round(base * 0.19);
+    const unitIVA  = v.price + Math.round(v.price * 0.19);
+    const dcto     = (p && p.cat !== 'licencias' && p.tipo !== 'accesorios') ? pctDescuento : 0;
+    const subtotal = v.qty * unitIVA;
+    const saving   = Math.max(0, v.qty * (baseIVA - unitIVA));
+    return `<tr>
+      <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
+      <td ${TD()}><strong>${name}</strong></td>
+      <td ${TD('text-align:center;color:#666;')}>HW</td>
+      <td ${TD('text-align:center;')}>${v.qty}</td>
+      <td ${TD('text-align:right;color:#666;')}>$${fmt(baseIVA)}</td>
+      <td ${TD('text-align:right;')}>${dcto > 0 ? dcto + '%' : '—'}</td>
+      <td ${TD('text-align:right;color:#e6a817;font-weight:600;')}>$${fmt(unitIVA)}</td>
+      <td ${TD('text-align:right;font-weight:700;')}>$${fmt(subtotal)}</td>
+      <td ${TD('text-align:right;color:#28a745;')}>$${fmt(saving)}</td>
     </tr>`;
   }).join('');
 
   const svcRows = svcEntries.map(([name, svc]) => {
-    const price = typeof svc === 'object' ? svc.price : svc;
-    const freq  = typeof svc === 'object' ? svc.frecuencia : '/mes';
-    const priceIVA = Math.round(price * 1.19);
-    return `
-    <tr>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;font-weight:600;">${numItem++}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;"><strong>${name}</strong></td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">SVC</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:center;">1</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">$${fmt(priceIVA)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;">—</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">$${fmt(priceIVA)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;font-weight:600;">$${fmt(priceIVA)}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #e0e0e0;text-align:right;color:#e6a817;">—</td>
+    const price    = typeof svc === 'object' ? svc.price : svc;
+    const freq     = typeof svc === 'object' ? (svc.frecuencia || '/mes') : '/mes';
+    const freqLbl  = freq === 'al inicio' ? 'pago único' : freq === '/año' ? 'anual' : 'mensual';
+    const priceIVA = price + Math.round(price * 0.19);
+    return `<tr>
+      <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
+      <td ${TD()}><strong>${name}</strong> <span style="font-size:10px;color:#888;background:#f0f0f0;padding:1px 5px;border-radius:3px;">${freqLbl}</span></td>
+      <td ${TD('text-align:center;color:#666;')}>SVC</td>
+      <td ${TD('text-align:center;')}>1</td>
+      <td ${TD('text-align:right;color:#666;')}>$${fmt(priceIVA)}</td>
+      <td ${TD('text-align:right;')}>—</td>
+      <td ${TD('text-align:right;font-weight:600;')}>$${fmt(priceIVA)}</td>
+      <td ${TD('text-align:right;font-weight:700;')}>$${fmt(priceIVA)}</td>
+      <td ${TD('text-align:right;color:#888;')}>—</td>
     </tr>`;
   }).join('');
+
+  // ── Fila(s) de despacho ───────────────────────────────────────────────────
+  let despRows = '';
+  if (despHay) {
+    if (despMode === 'single') {
+      const sd         = desp.singleDestino || {};
+      const t          = (window.TARIFAS_REGIONES || {})[sd.region] || { precio: 9900 };
+      const cajas      = (desp.destinos || []).reduce((s, d) => s + d.qty, 0);
+      const costo      = despGratis ? 0 : t.precio * cajas;
+      const regionShrt = (sd.region || '').replace(/^Región (de(l?|) )?/i, '');
+      const lugar      = [sd.comuna, regionShrt].filter(Boolean).join(', ');
+      const dir        = f.direccion || '';
+      despRows = `<tr style="background:#f8fdf8;">
+        <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
+        <td ${TD()}><strong>Despacho — ${lugar || 'Sin destino'}</strong>${dir ? `<br><small style="color:#666;">${dir}</small>` : ''}</td>
+        <td ${TD('text-align:center;color:#28a745;')}>DSP</td>
+        <td ${TD('text-align:center;')}>${cajas} caja${cajas !== 1 ? 's' : ''}</td>
+        <td ${TD('text-align:right;color:#666;')}>$${fmt(t.precio)}/caja</td>
+        <td ${TD('text-align:right;')}>—</td>
+        <td ${TD('text-align:right;color:#28a745;font-weight:600;')}>${despGratis ? 'Gratis' : '$' + fmt(costo)}</td>
+        <td ${TD('text-align:right;font-weight:700;color:#28a745;')}>${despGratis ? 'Gratis' : '$' + fmt(costo)}</td>
+        <td ${TD('text-align:right;')}>—</td>
+      </tr>`;
+    } else {
+      despRows = (desp.destinos || []).filter(d => d.region && d.qty > 0).map(d => {
+        const t          = (window.TARIFAS_REGIONES || {})[d.region] || { precio: 9900 };
+        const regionShrt = (d.region || '').replace(/^Región (de(l?|) )?/i, '');
+        const lugar      = [d.comuna, regionShrt].filter(Boolean).join(', ');
+        const costo      = despGratis ? 0 : t.precio * d.qty;
+        return `<tr style="background:#f8fdf8;">
+          <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
+          <td ${TD()}><strong>Despacho — ${d.productName}</strong><br><small style="color:#666;">${lugar}${d.direccion ? ' · ' + d.direccion : ''}</small></td>
+          <td ${TD('text-align:center;color:#28a745;')}>DSP</td>
+          <td ${TD('text-align:center;')}>${d.qty} caja${d.qty !== 1 ? 's' : ''}</td>
+          <td ${TD('text-align:right;color:#666;')}>$${fmt(t.precio)}/caja</td>
+          <td ${TD('text-align:right;')}>—</td>
+          <td ${TD('text-align:right;color:#28a745;font-weight:600;')}>${despGratis ? 'Gratis' : '$' + fmt(costo)}</td>
+          <td ${TD('text-align:right;font-weight:700;color:#28a745;')}>${despGratis ? 'Gratis' : '$' + fmt(costo)}</td>
+          <td ${TD('text-align:right;')}>—</td>
+        </tr>`;
+      }).join('');
+    }
+  }
 
   const fecha = new Date();
   const fechaEmision = fecha.toLocaleDateString('es-CL', { year:'numeric', month:'long', day:'numeric' });
@@ -1121,6 +1221,9 @@ function descargarCotizacionPDF() {
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Arial', sans-serif; font-size:12px; color:#0a1628; background:#fff; line-height:1.5; }
+    .no-print { display:flex; align-items:center; gap:12px; background:#f0f4ff; border-bottom:2px solid #0a1628; padding:10px 24px; font-size:12px; color:#0a1628; }
+    .no-print button { background:#0a1628; color:#fff; border:none; border-radius:6px; padding:7px 18px; font-size:12px; font-weight:700; cursor:pointer; }
+    @media print { .no-print { display:none; } }
     .page { page-break-after:always; }
     .header-banner { background:linear-gradient(135deg,#0a1628 0%,#1e3a5f 100%); color:#fff; padding:48px 40px; margin-bottom:40px; }
     .header-banner-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:32px; }
@@ -1182,6 +1285,12 @@ function descargarCotizacionPDF() {
 </head>
 <body>
 
+<div class="no-print">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  <span>Cotización lista. Para guardar como PDF usa <strong>Ctrl+P → Guardar como PDF</strong></span>
+  <button onclick="window.print()">Imprimir / Guardar PDF</button>
+</div>
+
 <!-- PÁGINA 1 -->
 <div class="page">
 
@@ -1207,7 +1316,7 @@ function descargarCotizacionPDF() {
       </div>
       <div class="header-banner-detail-item">
         <strong>TOTAL COTIZADO</strong>
-        $${fmt(totalGenIVA)}
+        $${fmt(totalFinal)}
       </div>
     </div>
   </div>
@@ -1275,18 +1384,18 @@ function descargarCotizacionPDF() {
       <div class="summary-box">
         <div class="summary-card blue">
           <div class="summary-card-label">Total a Pagar</div>
-          <div class="summary-card-value">$${fmt(totalGenIVA)}</div>
-          <small style="display:block;margin-top:4px;font-size:10px;">CLP con IVA · ${totalQty} unidades</small>
+          <div class="summary-card-value">$${fmt(totalFinal)}</div>
+          <small style="display:block;margin-top:4px;font-size:10px;">CLP c/IVA${despHay ? ' + despacho' : ''} · ${totalQty} unidades</small>
         </div>
         <div class="summary-card orange">
           <div class="summary-card-label">Ahorro Obtenido</div>
-          <div class="summary-card-value">$${fmt(ahorro)}</div>
+          <div class="summary-card-value">$${fmt(ahorroIVA)}</div>
           <small style="display:block;margin-top:4px;font-size:10px;">vs. precio lista · dto. ${pctDescuento}%</small>
         </div>
         <div class="summary-card green">
-          <div class="summary-card-label">Financiamiento 24M</div>
+          <div class="summary-card-label">Cuota mensual ${simPlazo}M</div>
           <div class="summary-card-value">$${fmt(cuotaMensual)}</div>
-          <small style="display:block;margin-top:4px;font-size:10px;">Cuota mensual · CAE 8.13%</small>
+          <small style="display:block;margin-top:4px;font-size:10px;">Tasa ${simTasa}% anual · ${simPlazo} meses</small>
         </div>
         <div class="summary-card">
           <div class="summary-card-label">Tipo de Cambio</div>
@@ -1316,7 +1425,15 @@ function descargarCotizacionPDF() {
         <tbody>
           ${eqRows}
           ${svcRows}
+          ${despRows}
         </tbody>
+        <tfoot>
+          <tr style="background:#f0f4f8;">
+            <td colspan="7" style="padding:10px 8px;font-weight:700;font-size:12px;">Total general (c/IVA${despHay ? ' + despacho' : ''})</td>
+            <td style="padding:10px 8px;font-weight:800;font-size:14px;text-align:right;color:#0a1628;">$${fmt(totalFinal)}</td>
+            <td style="padding:10px 8px;text-align:right;color:#28a745;font-weight:700;">$${fmt(ahorroIVA)}</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
 
@@ -1349,53 +1466,69 @@ function descargarCotizacionPDF() {
     <div class="section">
       <div class="section-title">DESGLOSE DE PRECIOS</div>
       <div class="totals-breakdown">
-        <div class="totals-row">
-          <span>Precio lista total (sin dto.)</span>
-          <span>$${fmt(totalEqNeto + totalSvcNeto)}</span>
+        <div class="totals-row sub">
+          <span>Equipos precio lista (neto s/IVA)</span>
+          <span>$${fmt(totalListaNeto)}</span>
         </div>
-        <div class="totals-row highlight">
+        <div class="totals-row sub">
+          <span>Servicios (neto s/IVA)</span>
+          <span>$${fmt(totalSvcNeto)}</span>
+        </div>
+        ${ahorroNeto > 0 ? `<div class="totals-row highlight">
           <span>Descuento por volumen (${pctDescuento}%)</span>
-          <span style="color:#e74c3c;">– $${fmt(ahorro)}</span>
-        </div>
+          <span style="color:#e74c3c;">– $${fmt(ahorroNeto)}</span>
+        </div>` : ''}
         <div class="totals-row">
           <span>Neto antes de IVA</span>
           <span>$${fmt(totalGenNeto)}</span>
         </div>
         <div class="totals-row">
           <span>IVA (19%)</span>
-          <span>$${fmt(totalGenIVA - totalGenNeto)}</span>
+          <span>$${fmt(Math.round(totalGenNeto * 0.19))}</span>
         </div>
-        <div class="totals-row main">
-          <span>Total a pagar (CLP)</span>
+        <div class="totals-row">
+          <span>Subtotal c/IVA</span>
           <span>$${fmt(totalGenIVA)}</span>
         </div>
-        <div class="totals-row sub" style="margin-top:8px;">
-          <span style="color:#28a745;">✓ Usted ahorra en este pedido</span>
-          <span style="color:#28a745;font-weight:600;">$${fmt(ahorro)} CLP</span>
+        ${despHay ? `<div class="totals-row">
+          <span>Despacho</span>
+          <span>${despGratis ? 'Gratis' : '$' + fmt(despPrecio)}</span>
+        </div>` : ''}
+        <div class="totals-row main">
+          <span>Total a pagar (CLP)</span>
+          <span>$${fmt(totalFinal)}</span>
         </div>
+        ${ahorroIVA > 0 ? `<div class="totals-row sub" style="margin-top:8px;">
+          <span style="color:#28a745;">✓ Usted ahorra en este pedido</span>
+          <span style="color:#28a745;font-weight:600;">$${fmt(ahorroIVA)} CLP</span>
+        </div>` : ''}
       </div>
     </div>
 
     <!-- OPCIONES DE FINANCIAMIENTO -->
     <div class="section">
       <div class="section-title">OPCIONES DE FINANCIAMIENTO</div>
+      <p style="font-size:11px;color:#666;margin-bottom:12px;">Simulación a tasa ${simTasa}% anual. La opción seleccionada en el configurador se destaca.</p>
       <div class="financing-options">
-        <div class="financing-option">
-          <strong>12 CUOTAS</strong>
-          <div style="font-size:16px;font-weight:800;color:#0a1628;margin:8px 0;">$${fmt(Math.round(totalGenIVA / 12))}</div>
-          <small>CAE 5.41% anual</small>
+        <div class="financing-option ${simPlazo === 12 ? 'active' : ''}">
+          <strong>12 CUOTAS${simPlazo === 12 ? ' — SELECCIONADO' : ''}</strong>
+          <div style="font-size:16px;font-weight:800;${simPlazo !== 12 ? 'color:#0a1628;' : ''}margin:8px 0;">$${fmt(cuota12)}</div>
+          <small>Tasa ${simTasa}% anual · 12 meses</small>
         </div>
-        <div class="financing-option active">
-          <strong>24 CUOTAS — RECOMENDADO</strong>
-          <div style="font-size:16px;font-weight:800;margin:8px 0;">$${fmt(cuotaMensual)}</div>
-          <small>CAE 8.13% anual</small>
+        <div class="financing-option ${simPlazo === 24 ? 'active' : ''}">
+          <strong>24 CUOTAS${simPlazo === 24 ? ' — SELECCIONADO' : ''}</strong>
+          <div style="font-size:16px;font-weight:800;${simPlazo !== 24 ? 'color:#0a1628;' : ''}margin:8px 0;">$${fmt(cuota24)}</div>
+          <small>Tasa ${simTasa}% anual · 24 meses</small>
         </div>
-        <div class="financing-option">
-          <strong>36 CUOTAS</strong>
-          <div style="font-size:16px;font-weight:800;color:#0a1628;margin:8px 0;">$${fmt(Math.round(totalGenIVA / 36))}</div>
-          <small>CAE 9.74% anual</small>
+        <div class="financing-option ${simPlazo === 36 ? 'active' : ''}">
+          <strong>36 CUOTAS${simPlazo === 36 ? ' — SELECCIONADO' : ''}</strong>
+          <div style="font-size:16px;font-weight:800;${simPlazo !== 36 ? 'color:#0a1628;' : ''}margin:8px 0;">$${fmt(cuota36)}</div>
+          <small>Tasa ${simTasa}% anual · 36 meses</small>
         </div>
       </div>
+      ${simPlazo !== 12 && simPlazo !== 24 && simPlazo !== 36 ? `<div style="background:#fff3e0;padding:12px;border-radius:4px;margin-top:12px;font-size:11px;">
+        <strong>Plazo seleccionado: ${simPlazo} meses → Cuota mensual $${fmt(cuotaMensual)} (tasa ${simTasa}% anual)</strong>
+      </div>` : ''}
     </div>
 
     <!-- CONDICIONES COMERCIALES -->
@@ -1446,7 +1579,6 @@ function descargarCotizacionPDF() {
   win.document.write(htmlPDF);
   win.document.close();
   win.focus();
-  setTimeout(() => { win.print(); }, 500);
 }
 
 window.descargarCotizacionPDF = descargarCotizacionPDF;
@@ -1632,6 +1764,8 @@ window.toggleCategory       = toggleCategory;
 window.setPlazo             = setPlazo;
 window.updateTasa           = updateTasa;
 window.toggleTablaAmort     = toggleTablaAmort;
+window.abrirModalAmort      = abrirModalAmort;
+window.cerrarModalAmort     = cerrarModalAmort;
 window.actualizarTipoCambio = actualizarTipoCambio;
 window.cambiarDolar         = cambiarDolar;
 window.actualizarDescuento  = actualizarDescuento;
@@ -1873,20 +2007,38 @@ window.despachoSetDireccion = function(rowId, value) {
 
 /* Renderiza las direcciones de entrega en paso 3 según el modo de despacho */
 function renderDireccionesMulti() {
-  var singleField = document.getElementById('singleDirField');
-  var multiSection = document.getElementById('multiDirSection');
-  var container    = document.getElementById('multiDirContainer');
+  var singleField    = document.getElementById('singleDirField');
+  var singleLocation = document.getElementById('singleDirLocation');
+  var multiSection   = document.getElementById('multiDirSection');
+  var container      = document.getElementById('multiDirContainer');
   if (!singleField && !multiSection) return;
 
   var mode     = (state.despacho || {}).mode || 'single';
+  var single   = window._despachoSingle || {};
   var destinos = Array.isArray((state.despacho || {}).destinos)
     ? state.despacho.destinos.filter(function(d) { return d.region && d.qty > 0; })
     : [];
 
   if (mode === 'single') {
-    // Un destino: mostrar campo único, ocultar sección múltiple
+    // Mostrar campo único, ocultar sección múltiple
     if (singleField)  singleField.style.display  = '';
     if (multiSection) multiSection.style.display = 'none';
+
+    // Badge de región/comuna seleccionada en paso 1
+    if (singleLocation) {
+      if (single.region) {
+        var regionCorta = (single.region || '').replace(/^Región (de(l?|) )?/i, '');
+        var comunaText  = single.comuna ? ' &middot; ' + single.comuna : '';
+        singleLocation.innerHTML =
+          '<div class="paso3-location-badge">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+            '<span>' + regionCorta + comunaText + '</span>' +
+          '</div>';
+      } else {
+        singleLocation.innerHTML =
+          '<p class="paso3-location-hint">Sin destino configurado — vuelve al paso 1 para seleccionar región y comuna.</p>';
+      }
+    }
     return;
   }
 
@@ -1906,13 +2058,15 @@ function renderDireccionesMulti() {
       nameIndexes[d.productName] = (nameIndexes[d.productName] || 0) + 1;
       displayName = d.productName + ' (' + nameIndexes[d.productName] + ')';
     }
-    var lugar = [d.comuna, (d.region || '').replace(/^Región (de(l?|) )?/i, '')].filter(Boolean).join(', ');
-    var val   = (d.direccion || '').replace(/"/g, '&quot;');
+    var regionCorta = (d.region || '').replace(/^Región (de(l?|) )?/i, '');
+    var lugar       = [d.comuna, regionCorta].filter(Boolean).join(', ');
+    var val         = (d.direccion || '').replace(/"/g, '&quot;');
     return '<div class="config-field config-field--full multi-dir-row">' +
-      '<label class="config-label">' +
-        '<span class="multi-dir-badge">' + displayName + ' &times;' + d.qty + '</span>' +
-        '<span class="multi-dir-lugar">&rarr; ' + lugar + '</span>' +
-      '</label>' +
+      '<div class="multi-dir-location-badge">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+        '<span>' + lugar + '</span>' +
+        '<span class="multi-dir-prod">' + displayName + ' &times;' + d.qty + '</span>' +
+      '</div>' +
       '<input type="text" class="config-input" placeholder="Calle, número, oficina"' +
         ' value="' + val + '"' +
         ' oninput="window.despachoSetDireccion(\'' + d.rowId + '\', this.value)">' +
@@ -1927,6 +2081,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof window.updateSidebar === 'function') window.updateSidebar();
     else despachoRenderWidget();
   }, 120); // después del timeout de flat-catalog.js (80ms)
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const amort = document.getElementById('modalAmortOverlay');
+      if (amort && amort.classList.contains('modal-visible')) {
+        amort.classList.remove('modal-visible');
+        document.body.style.overflow = '';
+      }
+    }
+  });
 });
 
 // ═════════════════════════════════════════

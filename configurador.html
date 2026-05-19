@@ -372,24 +372,10 @@ window.clsSetCat = function(tipo, btn) {
             </div>
           </div>
 
-          <button class="sim-toggle-tabla" id="btnToggleTabla" onclick="toggleTablaAmort()">▼ Ver tabla de amortización</button>
-          <div id="tablaAmortWrap" style="display:none">
-            <div class="sim-tabla-scroll">
-              <table class="sim-tabla">
-                <thead><tr><th>Mes</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead>
-                <tbody id="tablaAmortBody"></tbody>
-                <tfoot>
-                  <tr>
-                    <td><strong>Total</strong></td>
-                    <td><strong id="tfoot-cuota">—</strong></td>
-                    <td><strong id="tfoot-capital">—</strong></td>
-                    <td><strong id="tfoot-interes">—</strong></td>
-                    <td>—</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
+          <button class="sim-toggle-tabla" onclick="abrirModalAmort()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="margin-right:6px;vertical-align:-1px"><path d="M9 17H5a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v0a2 2 0 0 0-2-2h-4"/><rect x="9" y="3" width="6" height="14" rx="1"/></svg>
+            Ver tabla de amortización
+          </button>
 
         </div>
 
@@ -427,15 +413,15 @@ window.clsSetCat = function(tipo, btn) {
         <p>Completa la información de contacto para generar tu cotización formal.</p>
       </div>
 
+      <!-- ── Sección 1: Datos de empresa ── -->
+      <div class="paso3-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Datos de empresa
+      </div>
       <div class="config-form-grid">
         <div class="config-field config-field--full">
           <label class="config-label">Razón Social <span class="req">*</span></label>
           <input type="text" id="empresa" class="config-input" placeholder="Razón social de tu empresa" autocomplete="organization">
-        </div>
-
-<div class="config-field config-field--full" id="singleDirField">
-          <label class="config-label">Dirección de entrega</label>
-          <input type="text" id="direccion" class="config-input" placeholder="Calle, número, oficina">
         </div>
         <div class="config-field">
           <label class="config-label">Nombre de contacto <span class="req">*</span></label>
@@ -453,19 +439,31 @@ window.clsSetCat = function(tipo, btn) {
           <label class="config-label">Email <span class="req">*</span></label>
           <input type="email" id="email" class="config-input" placeholder="correo@empresa.cl" autocomplete="email">
         </div>
-
         <div class="config-field config-field--full">
           <label class="config-label">Notas adicionales</label>
           <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
         </div>
       </div>
 
-      <!-- Direcciones de entrega por destino (solo en modo multi-destino) -->
-      <div id="multiDirSection" style="display:none">
-        <div class="multi-dir-header">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          <span>Direcciones de entrega</span>
+      <!-- ── Sección 2: Dirección de entrega (dinámica según modo paso 1) ── -->
+      <div class="paso3-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Dirección de entrega
+      </div>
+
+      <!-- Modo un destino -->
+      <div id="singleDirField">
+        <div id="singleDirLocation" class="paso3-location-badge-wrap"></div>
+        <div class="config-form-grid">
+          <div class="config-field config-field--full">
+            <label class="config-label">Calle, número, oficina</label>
+            <input type="text" id="direccion" class="config-input" placeholder="Ej: Av. Providencia 1234, Oficina 501">
+          </div>
         </div>
+      </div>
+
+      <!-- Modo múltiples destinos -->
+      <div id="multiDirSection" style="display:none">
         <div class="config-form-grid" id="multiDirContainer"></div>
       </div>
 
@@ -511,7 +509,7 @@ window.clsSetCat = function(tipo, btn) {
           <p class="resumen-empty">Sin productos seleccionados</p>
         </div>
         <div class="resumen-card-footer">
-          <span>Subtotal productos</span>
+          <span>Subtotal productos <small style="opacity:0.6;font-weight:400;">(c/IVA)</small></span>
           <strong>$<span id="summarySubtotalEq">0</span></strong>
         </div>
       </div>
@@ -526,7 +524,7 @@ window.clsSetCat = function(tipo, btn) {
           <p class="resumen-empty">Sin servicios seleccionados</p>
         </div>
         <div class="resumen-card-footer" id="serviciosCardFooter">
-          <span>Subtotal servicios/mes</span>
+          <span>Subtotal servicios/mes <small style="opacity:0.6;font-weight:400;">(c/IVA)</small></span>
           <strong>$<span id="summarySubtotalSvc">0</span>/mes</strong>
         </div>
       </div>
@@ -628,6 +626,39 @@ window.clsSetCat = function(tipo, btn) {
       <button class="modal-btn" onclick="cerrarModal()">Intentar de nuevo</button>
     </div>
 
+  </div>
+</div>
+
+<!-- Modal tabla de amortización -->
+<div class="modal-overlay" id="modalAmortOverlay" onclick="cerrarModalAmort(event)">
+  <div class="modal-amort-box">
+    <div class="modal-amort-header">
+      <div class="modal-amort-title-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 17H5a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v0a2 2 0 0 0-2-2h-4"/><rect x="9" y="3" width="6" height="14" rx="1"/></svg>
+        <h3>Tabla de amortización</h3>
+      </div>
+      <span class="modal-amort-meta" id="modalAmortMeta"></span>
+      <button class="modal-amort-close" onclick="cerrarModalAmort()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-amort-body">
+      <div class="sim-tabla-scroll">
+        <table class="sim-tabla">
+          <thead><tr><th>Mes</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead>
+          <tbody id="tablaAmortBody"></tbody>
+          <tfoot>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong id="tfoot-cuota">—</strong></td>
+              <td><strong id="tfoot-capital">—</strong></td>
+              <td><strong id="tfoot-interes">—</strong></td>
+              <td>—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
