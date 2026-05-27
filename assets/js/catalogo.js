@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   catalogo.js — Inventario único · InfraGo
+﻿/* ═══════════════════════════════════════════════════════════════
+   catalogo.js — Inventario único · ElevalCorp
    ───────────────────────────────────────────────────────────────
    FUENTE ÚNICA DE VERDAD para tienda y configurador.
    · Configurador usa: name, marca, tipo, partNumber, priceUSD/price, servicios

@@ -1,5 +1,5 @@
 ﻿/* ═══════════════════════════════════════════════════════════════
-   carrito.js — InfraGo
+   carrito.js — ElevalCorp
    ───────────────────────────────────────────────────────────────
    · Mini-dropdown en navbar al agregar producto (tienda + producto)
    · Página completa en carrito.html
@@ -441,7 +441,7 @@
         '<div class="igc-page-item">',
         '  <div class="igc-page-img">' + _itemImg(item) + '</div>',
         '  <div class="igc-page-info">',
-        '    <div class="igc-page-marca">InfraGo</div>',
+        '    <div class="igc-page-marca">ElevalCorp</div>',
         '    <div class="igc-page-nombre">' + _esc(item.nombre) + '</div>',
         '    <div class="igc-page-precio">',
         (_pct > 0 && !esSvc) ? '      <span class="igc-page-precio-original">' + _fmt(item.precio) + '</span>' : '',
@@ -928,7 +928,7 @@
     totalsRows += '<div class="totals-row main"><span>TOTAL</span><span>' + _fmtBol(total) + '</span></div>';
 
     return '<!DOCTYPE html>\n<html lang="es">\n<head>\n  <meta charset="UTF-8">\n' +
-      '  <title>' + tipoDoc + ' — InfraGo</title>\n  <style>\n' +
+      '  <title>' + tipoDoc + ' — ElevalCorp</title>\n  <style>\n' +
       '    * { margin:0; padding:0; box-sizing:border-box; }\n' +
       '    body { font-family:Arial,sans-serif; font-size:12px; color:#0a1628; background:#fff; line-height:1.5; }\n' +
       '    .no-print { display:flex; align-items:center; gap:12px; background:#f0f4ff; border-bottom:2px solid #0a1628; padding:10px 24px; font-size:12px; color:#0a1628; }\n' +
@@ -978,7 +978,7 @@
       '<div class="totals-breakdown">' + totalsRows + '</div>' +
       '<div class="metodo-pago">Método de pago: <strong>' + _esc(metodoLabel) + '</strong></div>' +
       '</div></div>\n' +
-      '<div class="footer">InfraGo SpA · www.infrago.cl · Este documento es informativo y no tiene validez tributaria oficial.</div>\n' +
+      '<div class="footer">ElevalCorp SpA · www.infrago.cl · Este documento es informativo y no tiene validez tributaria oficial.</div>\n' +
       '</body>\n</html>';
   }
 

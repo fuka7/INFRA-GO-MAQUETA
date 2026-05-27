@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   configurador.js — InfraGo
+﻿/* ═══════════════════════════════════════════════════════════════
+   configurador.js — ElevalCorp
    ───────────────────────────────────────────────────────────────
    Contiene: navegación wizard, validaciones, descuentos,
    tipo de cambio, sidebar, resumen, simulador, cotización.
@@ -22,7 +22,7 @@ async function initSupabase() {
 // ═════════════════════════════════════════
 // TARIFAS DE DESPACHO POR REGIÓN
 // ═════════════════════════════════════════
-// Precios por caja, de norte a sur. gratis75k: solo RM con comunas InfraGo y compra > $75.000
+// Precios por caja, de norte a sur. gratis75k: solo RM con comunas ElevalCorp y compra > $75.000
 const TARIFAS_REGIONES = {
   'Región de Arica y Parinacota': { precio: 23900, gratis75k: false },
   'Región de Tarapacá':           { precio: 21900, gratis75k: false },
@@ -1310,7 +1310,7 @@ function descargarCotizacionPDF(returnHtml) {
       <div class="header-banner-logo">Infra<span>Go</span></div>
       <div class="header-banner-meta">
         <strong>COTIZACIÓN FORMAL</strong>
-        InfraGo — TIC Manager's
+        ElevalCorp — TIC Manager's
       </div>
     </div>
     <div class="header-banner-title">Propuesta comercial</div>
@@ -1340,7 +1340,7 @@ function descargarCotizacionPDF(returnHtml) {
         <div class="info-box" style="background:transparent;padding:0;">
           <div class="info-field">
             <div class="info-field-label">Nombre</div>
-            <div class="info-field-value" style="font-size:16px;">TIC Manager's — InfraGo</div>
+            <div class="info-field-value" style="font-size:16px;">TIC Manager's — ElevalCorp</div>
           </div>
           <div class="info-field" style="margin-top:12px;">
             <div class="info-field-label">RUT</div>
@@ -1575,7 +1575,7 @@ function descargarCotizacionPDF(returnHtml) {
   </div>
 
   <div class="footer">
-    TIC Manager's — InfraGo · contacto@ticmanagers.cl · +56 9 6572 0213 · Providencia 1208, Of. 307, Santiago, Chile
+    TIC Manager's — ElevalCorp · contacto@ticmanagers.cl · +56 9 6572 0213 · Providencia 1208, Of. 307, Santiago, Chile
     <br>COTIZACIÓN VÁLIDA HASTA ${fechaVencimiento}
   </div>
 
@@ -1930,7 +1930,7 @@ function _despachoRowCost(region, comuna, qty, totalConIVA) {
   var eCG = typeof window.igShipping !== 'undefined' && typeof window.igShipping.esComunaGratis === 'function'
             ? window.igShipping.esComunaGratis(comuna || '') : false;
   var eDG = t.gratis75k && totalConIVA >= 75000 && eCG;
-  if (eDG) return { val: 'Gratis', info: qty + ' caja' + (qty !== 1 ? 's' : '') + ' &middot; InfraGo', gratis: true };
+  if (eDG) return { val: 'Gratis', info: qty + ' caja' + (qty !== 1 ? 's' : '') + ' &middot; ElevalCorp', gratis: true };
   return { val: '~$' + (t.precio * qty).toLocaleString('es-CL'),
            info: qty + ' &times; $' + t.precio.toLocaleString('es-CL'), gratis: false };
 }

@@ -1,7 +1,7 @@
-/* ═══════════════════════════════════════════════
-   perfil.js — InfraGo
+﻿/* ═══════════════════════════════════════════════
+   perfil.js — ElevalCorp
    Lógica de la página de perfil de usuario
-   © 2026 InfraGo SpA / TIC Managers
+   © 2026 ElevalCorp SpA / TIC Managers
 ═══════════════════════════════════════════════ */
 
 (function () {
@@ -65,7 +65,7 @@
       bdgEl.style.display = '';
     }
 
-    document.title = 'Mi perfil — ' + displayName + ' · InfraGo';
+    document.title = 'Mi perfil — ' + displayName + ' · ElevalCorp';
   }
 
   /* ── Formulario ── */

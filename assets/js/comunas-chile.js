@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   comunas-chile.js — InfraGo
+﻿/* ═══════════════════════════════════════════════════════════════
+   comunas-chile.js — ElevalCorp
    Todas las comunas de Chile organizadas por región (346 comunas).
    Fuente: División Político Administrativa oficial de Chile.
 ═══════════════════════════════════════════════════════════════ */

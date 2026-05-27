@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   flat-catalog.js — InfraGo
+﻿/* ═══════════════════════════════════════════════════════════════
+   flat-catalog.js — ElevalCorp
    ───────────────────────────────────────────────────────────────
    Tabla dinámica de pedido con selector de productos del catálogo.
    · Cada fila tiene un <select> para elegir producto del catálogo

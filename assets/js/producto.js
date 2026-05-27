@@ -1,8 +1,8 @@
-/* ═══════════════════════════════════════════════
-   producto.js — InfraGo
+﻿/* ═══════════════════════════════════════════════
+   producto.js — ElevalCorp
    Página de detalle de producto.
    Requiere: productos.js cargado antes que este archivo.
-   © 2026 InfraGo SpA / TIC Managers
+   © 2026 ElevalCorp SpA / TIC Managers
 ═══════════════════════════════════════════════ */
 
 /* ── Helpers ── */
@@ -181,7 +181,7 @@ function renderProducto(p) {
   }
 
   // Título de la página
-  document.title = `${p.nombre} — InfraGo`;
+  document.title = `${p.nombre} — ElevalCorp`;
 }
 
 /* ── Agregar al carro ── */
@@ -312,11 +312,11 @@ function renderRecommended(p) {
 const REV_SEED = {
   notebooks: [
     { nombre: 'Carlos M.',    empresa: 'Constructora Andina', rating: 5, comentario: 'Excelente rendimiento para trabajo en terreno. Batería aguanta todo el día sin problemas.', fecha: '2025-11-14' },
-    { nombre: 'Valentina R.', empresa: 'Clínica RedSalud',    rating: 4, comentario: 'Muy buena relación precio-calidad. El soporte de InfraGo respondió rápido cuando tuve una duda.', fecha: '2025-12-02' },
+    { nombre: 'Valentina R.', empresa: 'Clínica RedSalud',    rating: 4, comentario: 'Muy buena relación precio-calidad. El soporte de ElevalCorp respondió rápido cuando tuve una duda.', fecha: '2025-12-02' },
     { nombre: 'Diego F.',     empresa: '',                    rating: 5, comentario: 'Lo recomiendo 100%. Llegó configurado y listo para usar, lo conecté y funcionó de inmediato.', fecha: '2026-01-20' },
   ],
   servidores: [
-    { nombre: 'Rodrigo A.',   empresa: 'Minera Collahuasi',   rating: 5, comentario: 'Instalación impecable. El equipo de InfraGo coordinó todo sin interrumpir nuestra operación.', fecha: '2025-10-08' },
+    { nombre: 'Rodrigo A.',   empresa: 'Minera Collahuasi',   rating: 5, comentario: 'Instalación impecable. El equipo de ElevalCorp coordinó todo sin interrumpir nuestra operación.', fecha: '2025-10-08' },
     { nombre: 'Isabel C.',    empresa: 'ACME SpA',            rating: 4, comentario: 'Buen servidor para nuestra carga de trabajo. Estable desde el primer día.', fecha: '2026-02-11' },
   ],
   impresoras: [

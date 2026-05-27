@@ -1,9 +1,9 @@
-/* ═══════════════════════════════════════════════
-   producto-detalle.js — InfraGo
+﻿/* ═══════════════════════════════════════════════
+   producto-detalle.js — ElevalCorp
    Descripción, specs técnicos e imágenes para
    la página de detalle de cada producto.
    Keyed por el mismo id que usa catalogo.js.
-   © 2026 InfraGo SpA / TIC Managers
+   © 2026 ElevalCorp SpA / TIC Managers
 ═══════════════════════════════════════════════ */
 
 const PRODUCTO_DETALLE = {

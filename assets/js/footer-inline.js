@@ -1,5 +1,5 @@
-/**
- * footer-inline.js — InfraGo
+﻿/**
+ * footer-inline.js — ElevalCorp
  * Inyecta el footer en todas las páginas via #footer-placeholder
  */
 (function () {
@@ -12,7 +12,7 @@
     <!-- Marca -->
     <div class="footer-brand">
       <div class="brand-logo">
-        <img src="/img/logo infrago.png" alt="InfraGo" class="footer-logo-img">
+        <img src="/img/logo en blanco.png" alt="ElevalCorp" class="footer-logo-img">
       </div>
       <p class="brand-tagline">Operación TI inteligente. Sin fricción.<br>Una empresa de TIC Manager's.</p>
       <div class="brand-badges">
@@ -38,7 +38,7 @@
     <div class="footer-col">
       <div class="col-label">Empresa</div>
       <ul class="col-links">
-        <li><a href="/index.html#por-que">Por qué InfraGo</a></li>
+        <li><a href="/index.html#por-que">Por qué ElevalCorp</a></li>
         <li><a href="/index.html#como-funciona">Cómo funciona</a></li>
         <li><a href="/index.html#catalogo">Catálogo</a></li>
         <li><a href="/index.html#financiamiento">Financiamiento</a></li>
@@ -51,9 +51,9 @@
       <div class="col-label">Contacto</div>
       <ul class="col-links">
         <li>
-          <a href="mailto:contacto@infrago.cl" class="contact-item">
+          <a href="mailto:contacto@elevalcorp.cl" class="contact-item">
             <span class="contact-label">Email</span>
-            <span class="contact-val">contacto@infrago.cl</span>
+            <span class="contact-val">contacto@elevalcorp.cl</span>
           </a>
         </li>
         <li>
@@ -76,7 +76,7 @@
   <!-- ── BOTTOM ── -->
   <div class="footer-bottom">
     <div class="bottom-left">
-      <span class="copyright">© 2026 InfraGo SpA. Todos los derechos reservados.</span>
+      <span class="copyright">© 2026 ElevalCorp SpA. Todos los derechos reservados.</span>
       <span class="bottom-divider"></span>
       <span class="made-by">Una empresa de <span>TIC Manager's</span></span>
     </div>

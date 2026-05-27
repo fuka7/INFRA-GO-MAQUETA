@@ -1,8 +1,8 @@
-/* ═══════════════════════════════════════════════
-   tienda.js — InfraGo
+﻿/* ═══════════════════════════════════════════════
+   tienda.js — ElevalCorp
    Lógica de la página de tienda.
    Requiere: productos.js cargado antes que este archivo.
-   © 2026 InfraGo SpA / TIC Managers
+   © 2026 ElevalCorp SpA / TIC Managers
 ═══════════════════════════════════════════════ */
 
 /* ── Estado de filtros ── */

@@ -1,6 +1,6 @@
-/**
+﻿/**
  * ════════════════════════════════════════════════════════════
- * NAVBAR — InfraGo (inline, sin fetch, sin parpadeo)
+ * NAVBAR — ElevalCorp (inline, sin fetch, sin parpadeo)
  * ════════════════════════════════════════════════════════════
  */
 (function () {
@@ -36,7 +36,7 @@
   }
 
   var NAVBAR_HTML = `<!-- ╔══════════════════════════════════════════════════╗
-     NAVBAR — InfraGo
+     NAVBAR — ElevalCorp
      Inyectado por /assets/js/navbar-inline.js en todas las páginas
      ╚══════════════════════════════════════════════╝ -->
 
@@ -94,7 +94,7 @@
 <header class="igb-main">
 
   <a class="igb-logo" href="/index.html">
-    <img src="/img/logo infrago.png" alt="InfraGo" class="igb-logo-img">
+    <img src="/img/logo en blanco.png" alt="ElevalCorp" class="igb-logo-img">
   </a>
 
   <!-- Dropdown categorías -->

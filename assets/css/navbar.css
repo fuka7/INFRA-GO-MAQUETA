@@ -1,7 +1,7 @@
-/* ═══════════════════════════════════════════════
-   navbar.css — InfraGo
-   Prefijo igb- (InfraGo Barra) — sin conflictos
-   © 2026 InfraGo SpA / TIC Managers
+﻿/* ═══════════════════════════════════════════════
+   navbar.css — ElevalCorp
+   Prefijo igb- (ElevalCorp Barra) — sin conflictos
+   © 2026 ElevalCorp SpA / TIC Managers
 ═══════════════════════════════════════════════ */
 
 /* ── NAVBAR INLINE — prefijo igb- ── */
@@ -14,7 +14,7 @@
 .igb-main{position:fixed;top:36px;left:0;right:0;z-index:1001;height:60px;background:#0a1628;display:flex;align-items:center;gap:20px;padding:0 48px;border-bottom:1px solid rgba(255,255,255,0.06);}
 .igb-logo{font-family:'Montserrat',sans-serif;font-weight:800;font-size:28px;color:#fff;text-decoration:none;flex-shrink:0;line-height:1;margin-right:8px;}
 .igb-logo span{color:#FF7A00;}
-.igb-logo-img{height:90px;width:auto;display:block;}
+.igb-logo-img{height:66px;width:auto;display:block;object-fit:contain;}
 .igb-actions{display:flex;align-items:center;gap:20px;flex-shrink:0;margin-left:auto;}
 .igb-account{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;transition:opacity .2s;}
 .igb-account:hover{opacity:.75;}

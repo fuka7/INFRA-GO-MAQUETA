@@ -1,7 +1,7 @@
-/* ═══════════════════════════════════════════════
-   config.js — InfraGo
+﻿/* ═══════════════════════════════════════════════
+   config.js — ElevalCorp
    Configuración global: Supabase client
-   © 2026 InfraGo SpA / TIC Managers
+   © 2026 ElevalCorp SpA / TIC Managers
 ═══════════════════════════════════════════════ */
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';

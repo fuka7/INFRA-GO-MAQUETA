@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   rut-prefill.js — InfraGo
+﻿/* ═══════════════════════════════════════════════════════════════
+   rut-prefill.js — ElevalCorp
    ───────────────────────────────────────────────────────────────
    Pre-rellena el paso 3 del configurador con los datos guardados
    en Supabase (profiles). Si razon_social está vacía, consulta
@@ -201,7 +201,7 @@
         try { localStorage.setItem('ig_profile', JSON.stringify(updatedProfile)); } catch(e) {}
       }
     } catch (err) {
-      console.warn('[InfraGo] SimpleAPI error:', err.message);
+      console.warn('[ElevalCorp] SimpleAPI error:', err.message);
       /* Falló la API — no bloquear al usuario, simplemente dejar el campo vacío */
     } finally {
       if (empresaEl) {
@@ -220,7 +220,7 @@
       if (!userId) return;
       await window.supabase.from('profiles').update(fields).eq('id', userId);
     } catch (e) {
-      console.warn('[InfraGo] No se pudo guardar en Supabase:', e.message);
+      console.warn('[ElevalCorp] No se pudo guardar en Supabase:', e.message);
     }
   }
 

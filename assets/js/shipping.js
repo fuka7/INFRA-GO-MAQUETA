@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   shipping.js — InfraGo
+﻿/* ═══════════════════════════════════════════════════════════════
+   shipping.js — ElevalCorp
    ───────────────────────────────────────────────────────────────
    Módulo de cotización de despacho.
    Usado en: configurador.html (paso 4) y tienda.html (carrito)
@@ -22,7 +22,7 @@
   ─────────────────────────────────────────────────────────── */
   var SHIPIT_TOKEN = 'TU_TOKEN_SHIPIT_AQUI';
 
-  /* ── Comunas RM con despacho gratuito InfraGo (compra > $75.000) ──
+  /* ── Comunas RM con despacho gratuito ElevalCorp (compra > $75.000) ──
      Cubre el Gran Santiago urbano. Comunas rurales/periféricas (Alhué,
      Buin, Melipilla, etc.) van a tarifa normal de $3.900/caja.
   ─────────────────────────────────────────────────────────────────── */
@@ -43,7 +43,7 @@
     'recoleta','quilicura',
   ];
 
-  /* ── Origen de despacho InfraGo ── */
+  /* ── Origen de despacho ElevalCorp ── */
   var ORIGEN = {
     region:  'Región Metropolitana',
     comuna:  'Providencia',
@@ -97,7 +97,7 @@
 
     /* 1. ¿Despacho gratis? */
     if (esComunaGratis(comuna) && totalCompra >= 75000) {
-      return { tipo: 'gratis', precio: 0, dias: '2-4', courier: 'InfraGo', label: 'Gratis' };
+      return { tipo: 'gratis', precio: 0, dias: '2-4', courier: 'ElevalCorp', label: 'Gratis' };
     }
 
     /* 2. Intentar Shipit API */
@@ -106,7 +106,7 @@
         var shipitResult = await _cotizarShipit(comuna, region);
         if (shipitResult) return shipitResult;
       } catch(e) {
-        console.warn('[InfraGo Shipping] Shipit no disponible, usando tarifa referencial:', e.message);
+        console.warn('[ElevalCorp Shipping] Shipit no disponible, usando tarifa referencial:', e.message);
       }
     }
 
@@ -221,7 +221,7 @@
     if (esComunaGratis(comuna) && totalCompra >= 75000) {
       return [{
         tipo: 'gratis', precio: 0, dias: '2-4',
-        courier: 'InfraGo Express', label: 'Gratis',
+        courier: 'ElevalCorp Express', label: 'Gratis',
         estimado: _estimarFecha(3)
       }];
     }
@@ -246,7 +246,7 @@
           }).sort(function(a, b) { return a.precio - b.precio; });
         }
       } catch(e) {
-        console.warn('[InfraGo Shipping] Shipit no disponible:', e.message);
+        console.warn('[ElevalCorp Shipping] Shipit no disponible:', e.message);
       }
     }
 
@@ -418,7 +418,7 @@
     if (!result) return;
     if (esComunaGratis(comuna)) {
       result.style.display = 'block';
-      result.innerHTML = _buildResultHtml({ tipo:'gratis', precio:0, dias:'2-4', courier:'InfraGo', label:'Gratis' });
+      result.innerHTML = _buildResultHtml({ tipo:'gratis', precio:0, dias:'2-4', courier:'ElevalCorp', label:'Gratis' });
     }
   }
 
