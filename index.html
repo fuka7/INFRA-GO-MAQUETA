@@ -757,109 +757,105 @@
       </a>
     </div>
 
-    <!-- Grid 3 columnas -->
-    <div class="faq-grid">
+    <!-- Layout dos columnas: categorías + preguntas -->
+    <div class="faq-layout">
 
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">01</span>
-          <span class="faq-q">¿Puedo renovar solo una parte de mi parque tecnológico?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>Sí. ElevalCorp permite renovar por etapas: puede incorporar nuevos equipos como servicio y mantener parte de su parque actual cuando técnica y operativamente convenga. El objetivo es optimizar inversión, continuidad operativa y sustentabilidad, no cambiar por cambiar.</p>
-        </div>
+      <!-- Categorías -->
+      <div class="faq-cats">
+        <button class="faq-cat active" data-cat="general">General</button>
+        <button class="faq-cat" data-cat="cotizacion">Cotización</button>
+        <button class="faq-cat" data-cat="soporte">Soporte & Servicio</button>
       </div>
 
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">02</span>
-          <span class="faq-q">¿En qué consiste el Assessment ElevalCorp?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>Es una evaluación inicial de su parque tecnológico, usuarios, consumo energético, criticidad operativa y cobertura geográfica. Con esa información diseñamos una recomendación técnica y financiera más eficiente, segura y sustentable para cada sede o unidad.</p>
-        </div>
-      </div>
+      <!-- Paneles de preguntas -->
+      <div class="faq-panels">
 
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">03</span>
-          <span class="faq-q">¿Necesito crear una cuenta para cotizar?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>Sí. Para acceder al configurador, guardar escenarios y ver condiciones comerciales debe crear una cuenta gratuita. El registro permite ordenar sus cotizaciones, comparar alternativas y retomar el proceso sin perder información.</p>
+        <!-- General -->
+        <div class="faq-panel active" data-cat="general">
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿Puedo renovar solo una parte de mi parque tecnológico?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>Sí. ElevalCorp permite renovar por etapas: puede incorporar nuevos equipos como servicio y mantener parte de su parque actual cuando técnica y operativamente convenga. El objetivo es optimizar inversión, continuidad operativa y sustentabilidad, no cambiar por cambiar.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿Cuentan con especialistas certificados?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>Sí. TIC Managers e ElevalCorp operan con equipo propio y una red de partners técnicos especializados en todo Chile para instalación, soporte, continuidad operativa, seguridad y proyectos de infraestructura. Esto permite combinar escala nacional con control de servicio.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿ElevalCorp sirve para compras públicas o solo para empresas privadas?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>Sirve para ambos mundos. En empresas privadas puede apoyar la cotización y contratación directa; en el sector público ayuda a estructurar información técnica, financiera y operativa para planificación, RFI, estudios de mercado o bases de compra.</p></div>
+          </div>
         </div>
-      </div>
 
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">04</span>
-          <span class="faq-q">¿Puedo proyectar el costo de inversión?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>En el configurador puedes modificar el tipo de cambio proyectado. Por ejemplo, si la compra se estima para octubre y Finanzas proyecta un dólar a $955, los costos actuales se recalculan automáticamente con ese valor. Esto permite anticipar hoy el costo futuro de un proyecto o plan de inversión.</p>
+        <!-- Cotización -->
+        <div class="faq-panel" data-cat="cotizacion">
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿Necesito crear una cuenta para cotizar?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>Sí. Para acceder al configurador, guardar escenarios y ver condiciones comerciales debe crear una cuenta gratuita. El registro permite ordenar sus cotizaciones, comparar alternativas y retomar el proceso sin perder información.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿Puedo proyectar el costo de inversión?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>En el configurador puedes modificar el tipo de cambio proyectado. Por ejemplo, si la compra se estima para octubre y Finanzas proyecta un dólar a $955, los costos actuales se recalculan automáticamente con ese valor. Esto permite anticipar hoy el costo futuro de un proyecto o plan de inversión.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿Puedo cotizar para varias empresas, sedes o sucursales?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>Sí. El configurador permite estructurar cotizaciones por razón social, unidad, sede o proyecto. Los descuentos por volumen se aplican de forma automática cuando corresponda, facilitando una visión consolidada del costo total.</p></div>
+          </div>
         </div>
-      </div>
 
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">05</span>
-          <span class="faq-q">¿Qué incluye el soporte postventa?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>Incluye soporte remoto, coordinación de atención en terreno, gestión de garantías, servicios por evento y opciones de especialistas residentes para proyectos que lo requieran. La cobertura y los SLA se definen según la configuración contratada.</p>
+        <!-- Soporte & Servicio -->
+        <div class="faq-panel" data-cat="soporte">
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿En qué consiste el Assessment ElevalCorp?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>Es una evaluación inicial de su parque tecnológico, usuarios, consumo energético, criticidad operativa y cobertura geográfica. Con esa información diseñamos una recomendación técnica y financiera más eficiente, segura y sustentable para cada sede o unidad.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿Qué incluye el soporte postventa?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>Incluye soporte remoto, coordinación de atención en terreno, gestión de garantías, servicios por evento y opciones de especialistas residentes para proyectos que lo requieran. La cobertura y los SLA se definen según la configuración contratada.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-trigger" aria-expanded="false">
+              <span class="faq-q">¿Cómo funciona el financiamiento?</span>
+              <svg class="faq-icon faq-icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon faq-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="faq-body"><p>ElevalCorp permite simular compra, arriendo, leasing operativo o financiero, comparando cuota, plazo, servicios y costo total. Una vez definida la opción, coordinamos con partners financieros las acciones contractuales correspondientes.</p></div>
+          </div>
         </div>
-      </div>
 
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">06</span>
-          <span class="faq-q">¿Cómo funciona el financiamiento?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>ElevalCorp permite simular compra, arriendo, leasing operativo o financiero, comparando cuota, plazo, servicios y costo total. Una vez definida la opción, coordinamos con partners financieros las acciones contractuales correspondientes.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">07</span>
-          <span class="faq-q">¿Puedo cotizar para varias empresas, sedes o sucursales?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>Sí. El configurador permite estructurar cotizaciones por razón social, unidad, sede o proyecto. Los descuentos por volumen se aplican de forma automática cuando corresponda, facilitando una visión consolidada del costo total.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">08</span>
-          <span class="faq-q">¿Cuentan con especialistas certificados?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>Sí. TIC Managers e ElevalCorp operan con equipo propio y una red de partners técnicos especializados en todo Chile para instalación, soporte, continuidad operativa, seguridad y proyectos de infraestructura. Esto permite combinar escala nacional con control de servicio.</p>
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-num">09</span>
-          <span class="faq-q">¿ElevalCorp sirve para compras públicas o solo para empresas privadas?</span>
-          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-body">
-          <p>Sirve para ambos mundos. En empresas privadas puede apoyar la cotización y contratación directa; en el sector público ayuda a estructurar información técnica, financiera y operativa para planificación, RFI, estudios de mercado o bases de compra.</p>
-        </div>
-      </div>
-
-    </div>
+      </div><!-- /faq-panels -->
+    </div><!-- /faq-layout -->
   </div>
 </section>
 
@@ -1067,7 +1063,21 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="/assets/js/footer-inline.js"></script>
 
 <script>
-/* FAQ — toggle independiente por tarjeta */
+/* FAQ — cambio de categoría */
+document.querySelectorAll('.faq-cat').forEach(function(cat) {
+  cat.addEventListener('click', function() {
+    document.querySelectorAll('.faq-cat').forEach(function(c) { c.classList.remove('active'); });
+    document.querySelectorAll('.faq-panel').forEach(function(p) { p.classList.remove('active'); });
+    this.classList.add('active');
+    document.querySelector('.faq-panel[data-cat="' + this.dataset.cat + '"]').classList.add('active');
+    document.querySelectorAll('.faq-trigger').forEach(function(t) {
+      t.setAttribute('aria-expanded', 'false');
+      t.nextElementSibling.classList.remove('open');
+    });
+  });
+});
+
+/* FAQ — accordion */
 document.querySelectorAll('.faq-trigger').forEach(function(btn) {
   btn.addEventListener('click', function() {
     var expanded = this.getAttribute('aria-expanded') === 'true';
