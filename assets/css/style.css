@@ -1821,108 +1821,86 @@ footer {
 
 .why-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  max-width: 1100px;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1080px;
   margin: 0 auto;
-  border: 1px solid rgba(17,17,17,0.08);
-  border-radius: 20px;
-  overflow: hidden;
+  gap: 20px;
 }
 
 .why-card-new {
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 28px 32px 28px 32px;
-  padding-bottom: 80px;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(17,17,17,0.07);
-  border-right: none;
-  transition: background 0.2s;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  padding: 36px 28px 32px;
+  background: #f8f9fb;
+  border: 1px solid rgba(17,17,17,0.07);
+  border-radius: 16px;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
   position: relative;
-  min-height: 120px;
+  overflow: hidden;
 }
 
-/* Separador vertical entre las dos columnas */
-.why-card-new:nth-child(odd) {
-  border-right: 1px solid rgba(17,17,17,0.07);
-}
-
-/* Sin borde inferior en la última fila */
-.why-card-new:nth-last-child(-n+2) {
-  border-bottom: none;
-}
-
-.why-card-new:hover {
-  background: #fdf8f0;
-}
-
-/* Línea dorada izquierda al hover */
 .why-card-new::before {
   content: '';
   position: absolute;
-  left: 0; top: 20%; bottom: 20%;
-  width: 3px;
+  top: 0; left: 0; right: 0;
+  height: 3px;
   background: var(--gold);
-  border-radius: 0 2px 2px 0;
-  transform: scaleY(0);
-  transition: transform 0.25s;
+  opacity: 0;
+  transition: opacity 0.25s;
 }
 
-.why-card-new:hover::before { transform: scaleY(1); }
+.why-card-new:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.09);
+  background: #ffffff;
+}
+
+.why-card-new:hover::before { opacity: 1; }
 
 .why-icon-new {
-  width: 48px; height: 48px;
-  border-radius: 12px;
+  width: 64px; height: 64px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 0;
+  margin-bottom: 20px;
 }
 
-.why-icon-new svg { width: 22px; height: 22px; }
+.why-icon-new svg { width: 28px; height: 28px; }
 
 .why-icon--blue   { background: rgba(37,99,196,0.1);   color: #2563c4; }
 .why-icon--green  { background: rgba(22,163,74,0.1);   color: #16a34a; }
-.why-icon--gold   { background: rgba(255,122,0,0.1);  color: var(--gold); }
+.why-icon--gold   { background: rgba(255,122,0,0.1);   color: var(--gold); }
 .why-icon--cyan   { background: rgba(8,145,178,0.1);   color: #0891b2; }
 .why-icon--purple { background: rgba(147,51,234,0.1);  color: #9333ea; }
 .why-icon--teal   { background: rgba(13,148,136,0.1);  color: #0d9488; }
 
 .why-body {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 .why-title-new {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
   color: #111;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   line-height: 1.4;
-  min-height: 24px;
-}
-
-.why-desc-new {
-  font-size: 16px;
-  color: rgba(17,17,17,0.55);
-  line-height: 1.5;
-  margin-bottom: 0;
 }
 
 .why-stat-new {
-  position: absolute;
-  bottom: 28px;
-  right: 32px;
-  font-size: 14px;
+  display: inline-block;
+  font-size: 12px;
   font-weight: 700;
   color: var(--gold);
   background: rgba(255,122,0,0.08);
   border: 1px solid rgba(255,122,0,0.2);
   border-radius: 20px;
-  padding: 6px 14px;
+  padding: 5px 14px;
   white-space: nowrap;
 }
 
@@ -1951,7 +1929,74 @@ footer {
 .how-section .section-heading { color: #ffffff; }
 .how-section .section-sub     { color: rgba(255,255,255,0.55); }
 
-/* ── Acordeón ── */
+/* ── Pasos horizontales ── */
+.how-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 960px;
+  margin: 60px auto 0;
+  padding: 0 20px;
+}
+
+.how-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.how-step-num-circle {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(255,122,0,0.12);
+  border: 2px solid rgba(255,122,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 17px; font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.how-step-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+  color: rgba(255,255,255,0.75);
+}
+
+.how-step-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.how-step-badge {
+  display: inline-block;
+  font-size: 11px; font-weight: 600;
+  color: var(--gold);
+  background: rgba(255,122,0,0.1);
+  border: 1px solid rgba(255,122,0,0.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+.how-step-connector {
+  flex: 0 0 40px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,122,0,0.55), rgba(255,122,0,0.15));
+  border-radius: 1px;
+  margin-top: 27px; /* alinea con el centro del círculo (56px / 2) */
+}
+
+/* ── Acordeón (legacy — no usado) ── */
 .how-accordion {
   max-width: 780px;
   margin: 0 auto;
@@ -2778,10 +2823,10 @@ footer {
   .hero-slide { padding: 0 48px 120px; }
   .carousel-controls  { left: 48px; right: 48px; bottom: 76px; }
   .why-section-new    { padding: 80px 48px; }
-  .why-grid           { grid-template-columns: repeat(2, 1fr); }
-  .why-stat-new       { display: none; }
+  .why-grid           { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .why-stat-new       { font-size: 11px; }
   .how-section        { padding: 80px 48px; }
-  .how-accordion      { max-width: 100%; }
+  .how-steps          { gap: 0; }
   .cats-section       { padding: 48px 32px; }
   .cats-banner        { min-height: 500px; }
   .cats-banner-title  { font-size: 24px; }
@@ -2828,16 +2873,13 @@ footer {
     margin-top: 16px;
   }
   .why-section-new    { padding: 64px 24px; }
-  .why-grid           { grid-template-columns: 1fr; border-radius: 14px; }
-  .why-card-new       { padding: 20px 20px; gap: 14px; }
-  .why-card-new:nth-child(odd) { border-right: none; }
-  .why-card-new:nth-last-child(-n+2) { border-bottom: 1px solid rgba(17,17,17,0.07); }
-  .why-card-new:last-child    { border-bottom: none; }
+  .why-grid           { grid-template-columns: 1fr; gap: 12px; }
+  .why-card-new       { padding: 28px 24px 24px; }
   .how-section        { padding: 64px 24px; }
-  .how-acc-header     { padding: 18px 20px; }
-  .how-acc-content    { padding: 0 20px; }
-  .how-acc-open .how-acc-content { padding-bottom: 20px; }
-  .how-acc-title      { font-size: 15px; }
+  .how-steps          { flex-direction: column; align-items: center; gap: 0; }
+  .how-step           { max-width: 280px; }
+  .how-step-connector { width: 2px; height: 28px; flex: 0 0 28px; margin-top: 0; margin-left: 0;
+                        background: linear-gradient(180deg, rgba(255,122,0,0.55), rgba(255,122,0,0.15)); }
   .cats-section       { padding: 32px 16px; }
   .cats-banner        { min-height: 420px; background-position: 65% center; }
   .cats-banner-content { padding: 48px 36px; max-width: 100%; }

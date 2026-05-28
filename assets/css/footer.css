@@ -7,8 +7,8 @@
 /* ── VARIABLES ── */
 :root {
   --gold: #FF7A00;
-  --footer-dark: #0d0d0d;
-  --footer-bottom-bg: #0a0a0a;
+  --footer-dark: #0a1628;
+  --footer-bottom-bg: #0a1628;
   --footer-border: rgba(255, 255, 255, 0.06);
   --footer-border2: rgba(255, 255, 255, 0.10);
   --text-dim: rgba(255, 255, 255, 0.35);
@@ -25,7 +25,7 @@
 
 /* ── STRIP CTA ── */
 .ig-footer-root .footer-cta-strip {
-  background: linear-gradient(135deg, #0f1f45 0%, #0a0a0a 60%);
+  background: linear-gradient(135deg, #0d2247 0%, #0a1628 60%);
   border-top: 1px solid var(--footer-border2);
   border-bottom: 1px solid var(--footer-border);
   padding: 28px 48px;

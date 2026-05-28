@@ -95,7 +95,7 @@ window.clsSetCat = function(tipo, btn) {
           <div class="progress-step-dot">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           </div>
-          <span class="progress-step-label">Simulador</span>
+          <span class="progress-step-label">Financiamiento</span>
         </div>
         <div class="progress-step" data-step="3">
           <div class="progress-step-dot">
@@ -123,66 +123,68 @@ window.clsSetCat = function(tipo, btn) {
        SIDEBAR IZQUIERDO (solo paso 1)
   ══════════════════════════════════ -->
   <aside class="config-left-sidebar" id="configLeftSidebar">
+  <div class="cw-sticky-wrap">
 
     <!-- Widget Dólar TIC -->
-    <div class="cls-widget cls-widget--dolar">
-      <div class="cls-widget-header">
-        <span class="cls-dolar-dot"></span>
-        <span class="cls-widget-title">Dólar TIC <span class="cls-dolar-hoy">hoy</span></span>
+    <div class="cw-widget cw-dolar">
+      <div class="cw-dolar__header">
+        <span class="cw-dolar__dot"></span>
+        <span class="cw-dolar__title">Dólar TIC <span class="cw-dolar__badge-hoy">hoy</span></span>
       </div>
-      <div class="cls-dolar-row">
-        <div class="cls-dolar-input-wrap">
+      <div class="cw-dolar__row">
+        <div class="cw-dolar__input-wrap">
           <input type="number" id="tipoCambio" value="900" min="1"
                  onchange="actualizarTipoCambio(this.value)"
                  onblur="actualizarTipoCambio(this.value)">
-          <div class="cls-dolar-spinners">
+          <div class="cw-dolar__spinners">
             <button type="button" onclick="cambiarDolar(+10)">▲</button>
             <button type="button" onclick="cambiarDolar(-10)">▼</button>
           </div>
         </div>
-        <span class="cls-dolar-unit">CLP/USD</span>
+        <span class="cw-dolar__unit">CLP/USD</span>
       </div>
-      <p class="cls-dolar-note" id="dolarNote">Obteniendo tipo de cambio…</p>
-      <p class="cls-dolar-tagline">Modifica tu tipo de cambio y proyecta tu inversión</p>
+      <p class="cw-dolar__note" id="dolarNote">Obteniendo tipo de cambio…</p>
+      <p class="cw-dolar__tagline">Modifica tu tipo de cambio y proyecta tu inversión</p>
     </div>
 
     <!-- Widget Descuentos por volumen -->
-    <div class="cls-widget">
-      <div class="cls-widget-title cls-widget-title--plain">Descuentos por volumen</div>
-      <p class="cls-dcto-nota">Solo hardware físico (PCs, notebooks, impresoras, etc.). Licencias y servicios no cuentan.</p>
-      <div class="cls-dcto-list">
-        <div class="cls-dcto-row dcto-row" data-min="10" data-max="19">
-          <span>10 – 19 uds</span><span class="cls-dcto-pct dcto-pct">1% dto.</span>
+    <div class="cw-widget">
+      <div class="cw-dcto__title">Descuentos por volumen</div>
+      <p class="cw-dcto__nota">Solo hardware físico (PCs, notebooks, impresoras, etc.). Licencias y servicios no cuentan.</p>
+      <div class="cw-dcto__list">
+        <div class="cw-dcto__row dcto-row" data-min="10" data-max="19">
+          <span>10 – 19 uds</span><span class="cw-dcto__pct">1% dto.</span>
         </div>
-        <div class="cls-dcto-row dcto-row" data-min="20" data-max="29">
-          <span>20 – 29 uds</span><span class="cls-dcto-pct dcto-pct">2% dto.</span>
+        <div class="cw-dcto__row dcto-row" data-min="20" data-max="29">
+          <span>20 – 29 uds</span><span class="cw-dcto__pct">2% dto.</span>
         </div>
-        <div class="cls-dcto-row dcto-row" data-min="30" data-max="39">
-          <span>30 – 39 uds</span><span class="cls-dcto-pct dcto-pct">3% dto.</span>
+        <div class="cw-dcto__row dcto-row" data-min="30" data-max="39">
+          <span>30 – 39 uds</span><span class="cw-dcto__pct">3% dto.</span>
         </div>
-        <div class="cls-dcto-row dcto-row" data-min="40" data-max="49">
-          <span>40 – 49 uds</span><span class="cls-dcto-pct dcto-pct">4% dto.</span>
+        <div class="cw-dcto__row dcto-row" data-min="40" data-max="49">
+          <span>40 – 49 uds</span><span class="cw-dcto__pct">4% dto.</span>
         </div>
-        <div class="cls-dcto-row dcto-row" data-min="50" data-max="9999">
-          <span>50 uds +</span><span class="cls-dcto-pct dcto-pct">5% dto.</span>
+        <div class="cw-dcto__row dcto-row" data-min="50" data-max="9999">
+          <span>50 uds +</span><span class="cw-dcto__pct">5% dto.</span>
         </div>
       </div>
-      <div class="cls-dcto-aplicado" id="dctoAplicado" style="display:none">
+      <div class="cw-dcto__applied" id="dctoAplicado" style="display:none">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Descuento activo: <strong id="dctoAplicadoVal"></strong>
       </div>
     </div>
 
-<!-- Widget +50 unidades -->
-    <div class="cls-widget cls-widget--dark">
-      <div class="cls-dark-title">+50 unidades</div>
-      <p class="cls-dark-text">Propuesta personalizada, mejores condiciones y financiamiento a medida.</p>
-      <a class="cls-dark-btn" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
+    <!-- Widget +50 unidades -->
+    <div class="cw-widget cw-cta">
+      <div class="cw-cta__title">+50 unidades</div>
+      <p class="cw-cta__text">Propuesta personalizada, mejores condiciones y financiamiento a medida.</p>
+      <a class="cw-cta__btn" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Hablar con ejecutivo
       </a>
     </div>
 
+  </div><!-- /cw-sticky-wrap -->
   </aside><!-- /config-left-sidebar -->
 
   <!-- ── WIZARD ── -->
@@ -192,6 +194,63 @@ window.clsSetCat = function(tipo, btn) {
          PASO 1 — EQUIPOS
          ╚══════════════════════════════╝ -->
     <div class="wizard-step active" data-step="1">
+
+      <!-- ── CARDS DE RESUMEN RÁPIDO (parte superior) ── -->
+      <aside class="right-sidebar" id="bottomBar">
+        <div class="bb-col bb-col--equipos">
+          <div class="bb-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Productos
+          </div>
+          <div class="bb-card-row">
+            <div class="bb-value">$<span id="totalEquipos">0</span></div>
+            <div class="bb-icon bb-icon--blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+          </div>
+          <div class="bb-sub"><span id="countEquipos">0</span> unid. · c/IVA</div>
+        </div>
+
+        <div class="bb-col bb-col--servicios">
+          <div class="bb-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Servicios
+          </div>
+          <div class="bb-card-row">
+            <div class="bb-value">$<span id="totalServicios">0</span><span class="bb-period">/mes</span></div>
+            <div class="bb-icon bb-icon--blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="bb-sub"><span id="countServicios">0</span> activos · c/IVA</div>
+        </div>
+
+        <div class="bb-col bb-col--dcto">
+          <div class="bb-label bb-label--green">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            Descuento
+          </div>
+          <div class="bb-card-row">
+            <div class="bb-value bb-value--green">−$<span id="ahorroTotal">0</span></div>
+            <div class="bb-icon bb-icon--green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </div>
+          </div>
+          <div class="bb-sub"><span id="descuentoPct">—</span> vol. · c/IVA</div>
+        </div>
+
+        <div class="bb-col bb-col--total">
+          <div class="bb-label">Total c/IVA</div>
+          <div class="bb-card-row">
+            <div class="bb-value bb-value--orange">$<span id="totalGeneral">0</span></div>
+            <div class="bb-icon bb-icon--orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+          </div>
+          <div class="bb-sub bb-sub--iva">Neto $<span id="totalNeto">0</span> · IVA $<span id="totalIVA">0</span></div>
+        </div>
+
+      </aside>
 
       <!-- Chips de categoría encima de la tabla -->
       <div class="flat-cat-chips-bar">
@@ -247,73 +306,12 @@ window.clsSetCat = function(tipo, btn) {
         <div id="despachoDestinosContainer"></div>
       </div>
 
-      <!-- ── SIDEBAR DERECHO — RESUMEN (Movido al paso 1) ── -->
-      <aside class="right-sidebar" id="bottomBar">
-        <div class="bb-col bb-col--equipos">
-          <div class="bb-label">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            PRODUCTOS
-          </div>
-          <div class="bb-value">$<span id="totalEquipos">0</span></div>
-          <div class="bb-sub"><span id="countEquipos">0</span> unid. · c/IVA</div>
-        </div>
-
-        <div class="bb-divider"></div>
-
-        <div class="bb-col bb-col--servicios">
-          <div class="bb-label">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Servicios
-          </div>
-          <div class="bb-value">$<span id="totalServicios">0</span><span class="bb-period">/mes</span></div>
-          <div class="bb-sub"><span id="countServicios">0</span> activos · c/IVA</div>
-        </div>
-
-        <div class="bb-divider"></div>
-
-        <div class="bb-col bb-col--dcto">
-          <div class="bb-label bb-label--green">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-            Descuento
-          </div>
-          <div class="bb-value bb-value--green">−$<span id="ahorroTotal">0</span></div>
-          <div class="bb-sub"><span id="descuentoPct">—</span> vol. · c/IVA</div>
-        </div>
-
-        <div class="bb-divider"></div>
-
-        <div class="bb-col bb-col--despacho">
-          <div class="bb-label" id="despachoBarLabel">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            Despacho
-          </div>
-          <div class="bb-value" id="despachoEstimado">—</div>
-          <div class="bb-sub" id="despachoEstimadoSub">estimado · c/IVA</div>
-        </div>
-
-        <div class="bb-divider"></div>
-
-        <div class="bb-col bb-col--total">
-          <div class="bb-label">Total c/IVA</div>
-          <div class="bb-value bb-value--orange">$<span id="totalGeneral">0</span></div>
-          <div class="bb-sub bb-sub--iva">
-            Neto $<span id="totalNeto">0</span> + IVA $<span id="totalIVA">0</span>
-          </div>
-        </div>
-
-        <div class="bb-divider"></div>
-
-        <div class="bb-col bb-actions">
-          <div class="bb-cuotas-hint">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            ¿Cómo quieres pagar en cuotas?
-          </div>
-          <button class="bb-btn-next" id="btnNext" onclick="nextStep()">
-            Simular financiamiento
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-      </aside>
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button class="bb-btn-next" onclick="nextStep()">
+          Simular financiamiento
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
 
     </div><!-- /paso 1 -->
 
@@ -445,26 +443,28 @@ window.clsSetCat = function(tipo, btn) {
         </div>
       </div>
 
-      <!-- ── Sección 2: Dirección de entrega (dinámica según modo paso 1) ── -->
-      <div class="paso3-section-header">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Dirección de entrega
-      </div>
+      <!-- ── Sección 2: Dirección de entrega (oculta si no hay despacho seleccionado) ── -->
+      <div id="entregaSection" style="display:none">
+        <div class="paso3-section-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Dirección de entrega
+        </div>
 
-      <!-- Modo un destino -->
-      <div id="singleDirField">
-        <div id="singleDirLocation" class="paso3-location-badge-wrap"></div>
-        <div class="config-form-grid">
-          <div class="config-field config-field--full">
-            <label class="config-label">Calle, número, oficina</label>
-            <input type="text" id="direccion" class="config-input" placeholder="Ej: Av. Providencia 1234, Oficina 501">
+        <!-- Modo un destino -->
+        <div id="singleDirField">
+          <div id="singleDirLocation" class="paso3-location-badge-wrap"></div>
+          <div class="config-form-grid">
+            <div class="config-field config-field--full">
+              <label class="config-label">Calle, número, oficina</label>
+              <input type="text" id="direccion" class="config-input" placeholder="Ej: Av. Providencia 1234, Oficina 501">
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Modo múltiples destinos -->
-      <div id="multiDirSection" style="display:none">
-        <div class="config-form-grid" id="multiDirContainer"></div>
+        <!-- Modo múltiples destinos -->
+        <div id="multiDirSection" style="display:none">
+          <div class="config-form-grid" id="multiDirContainer"></div>
+        </div>
       </div>
 
       <!-- Carrusel confianza -->
@@ -508,10 +508,6 @@ window.clsSetCat = function(tipo, btn) {
         <div class="resumen-card-body" id="summaryEquipos">
           <p class="resumen-empty">Sin productos seleccionados</p>
         </div>
-        <div class="resumen-card-footer">
-          <span>Subtotal productos <small style="opacity:0.6;font-weight:400;">(c/IVA)</small></span>
-          <strong>$<span id="summarySubtotalEq">0</span></strong>
-        </div>
       </div>
 
       <div class="resumen-card resumen-card--collapsible resumen-card--collapsed" id="serviciosCard">
@@ -523,10 +519,6 @@ window.clsSetCat = function(tipo, btn) {
         <div class="resumen-card-body" id="summaryServicios">
           <p class="resumen-empty">Sin servicios seleccionados</p>
         </div>
-        <div class="resumen-card-footer" id="serviciosCardFooter">
-          <span>Subtotal servicios/mes <small style="opacity:0.6;font-weight:400;">(c/IVA)</small></span>
-          <strong>$<span id="summarySubtotalSvc">0</span>/mes</strong>
-        </div>
       </div>
 
       <!-- Tarjeta de despacho inyectada por generateFinalSummary() -->
@@ -534,41 +526,29 @@ window.clsSetCat = function(tipo, btn) {
 
       <div class="resumen-total-box">
 
-        <!-- Desglose de precio -->
         <div class="resumen-total-row resumen-total-desglose">
           <span>Subtotal neto</span>
           <span>$<span id="summaryNeto">0</span></span>
         </div>
         <div class="resumen-total-row resumen-total-desglose">
-          <span>+ IVA (19%)</span>
+          <span>IVA (19%)</span>
           <span>$<span id="summaryIVA">0</span></span>
         </div>
         <div class="resumen-total-row resumen-total-desglose" id="summaryDespachoRow" style="display:none">
-          <span>+ Despacho</span>
+          <span>Despacho</span>
           <span id="summaryDespachoLabel">—</span>
         </div>
-        <div class="resumen-total-row resumen-total-main">
+
+        <div class="resumen-total-main">
           <span>Total</span>
           <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
         </div>
 
         <div class="resumen-total-divider"></div>
 
-        <!-- Financiamiento -->
-        <div class="resumen-total-row resumen-total-fin-header">
-          <span>Financiamiento — <span id="plazoLabelSummary">24</span> meses al <span id="tasaLabelSummary">12</span>% anual</span>
-        </div>
-        <div class="resumen-total-row">
-          <span>Cuota mensual estimada</span>
-          <span class="resumen-total-cuota">≈ $<span id="summaryCuota">0</span>/mes</span>
-        </div>
-        <div class="resumen-total-row resumen-total-sub">
-          <span>Total a pagar</span>
-          <span>$<span id="summaryTotalPagar">0</span></span>
-        </div>
-        <div class="resumen-total-row resumen-total-sub">
-          <span>Intereses estimados</span>
-          <span>$<span id="summaryIntereses">0</span></span>
+        <div class="resumen-total-fin">
+          <span>Financiamiento <span id="plazoLabelSummary">24</span> meses · <span id="tasaLabelSummary">12</span>% anual</span>
+          <span class="resumen-total-cuota">$<span id="summaryCuota">0</span>/mes</span>
         </div>
 
       </div>

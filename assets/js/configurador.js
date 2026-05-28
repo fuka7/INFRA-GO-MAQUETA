@@ -220,7 +220,7 @@ function updateStepDisplay() {
   // Botón Anterior y Next inline
   const btnPrev    = document.getElementById('btnPrev');
   const inlineNext = document.getElementById('btnNextInline');
-  if (btnPrev)     btnPrev.style.display    = isStep1 ? 'none' : '';
+  if (btnPrev) btnPrev.style.display = isStep1 ? 'none' : '';
   if (inlineNext) {
     inlineNext.style.display = isStep1 ? 'none' : '';
     if (currentStep === totalSteps) {
@@ -255,22 +255,7 @@ function updateProgressBar() {
 }
 
 function updateButtons() {
-  const btnPrev = document.getElementById('btnPrev');
-  const btnNext = document.getElementById('btnNext');
-
-  if (currentStep === 1) {
-    btnPrev.style.display = 'none';
-    btnNext.textContent = 'Siguiente →';
-    btnNext.onclick = nextStep;
-  } else if (currentStep === totalSteps) {
-    btnPrev.style.display = 'inline-flex';
-    btnNext.textContent = 'Enviar Cotización';
-    btnNext.onclick = solicitarCotizacion;
-  } else {
-    btnPrev.style.display = 'inline-flex';
-    btnNext.textContent = 'Siguiente →';
-    btnNext.onclick = nextStep;
-  }
+  // navegación manejada por updateNavButtons / btnNextInline
 }
 
 // ═════════════════════════════════════════
@@ -724,11 +709,6 @@ function generateFinalSummary() {
     }
   }
 
-  // Subtotales con IVA en los footers de cada card (mismo método de redondeo que el cuadro total)
-  const eqIVA  = totalEq  + Math.round(totalEq  * 0.19);
-  const svcIVA = totalSvc + Math.round(totalSvc * 0.19);
-  setTxt('summarySubtotalEq',  fmt(eqIVA));
-  setTxt('summarySubtotalSvc', fmt(svcIVA));
 
   // Acordeón productos: expandir si tiene items, colapsar si no
   const productosCard = document.getElementById('productosCard');
@@ -736,10 +716,11 @@ function generateFinalSummary() {
     productosCard.classList.toggle('resumen-card--collapsed', eqEntries.length === 0);
   }
 
-  // Acordeón servicios: colapsar si vacío, expandir si tiene items
+  // Servicios: ocultar tarjeta completa si no hay servicios
   const serviciosCard = document.getElementById('serviciosCard');
   if (serviciosCard) {
-    serviciosCard.classList.toggle('resumen-card--collapsed', svcEntries.length === 0);
+    serviciosCard.style.display = svcEntries.length === 0 ? 'none' : '';
+    if (svcEntries.length > 0) serviciosCard.classList.remove('resumen-card--collapsed');
   }
 
   // ── Despacho estimado (acordeón) ─────────────────────────
@@ -751,11 +732,11 @@ function generateFinalSummary() {
     const svgTruck     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
     const svgChevron   = '<svg class="resumen-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>';
 
-    let body = '', footer = '', hasData = false;
+    let body = '', hasData = false;
 
     if (despMode === 'single') {
       const sd = desp.singleDestino || {};
-      if (sd.region) {
+      if (sd.region && desp.hayValidos) {
         hasData = true;
         const totalCajas = (desp.destinos || []).reduce((s, d) => s + d.qty, 0);
         const t      = (window.TARIFAS_REGIONES || {})[sd.region] || { precio: 9900, gratis75k: false };
@@ -774,12 +755,8 @@ function generateFinalSummary() {
             <span class="resumen-line-name">Todos los productos</span>
             <span class="resumen-line-qty">${totalCajas} caja${totalCajas !== 1 ? 's' : ''} → ${lugar}</span>
           </div>
-          <span class="resumen-line-price${gratis ? ' resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '~$' + fmt(costo)}</span>
+          <span class="resumen-line-price${gratis ? ' resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '$' + fmt(costo)}</span>
           ${dirLine}
-        </div>`;
-        footer = `<div class="resumen-card-footer">
-          <span>Total despacho</span>
-          <strong class="${gratis ? 'resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '~$' + fmt(costo)}</strong>
         </div>`;
       }
     } else {
@@ -802,31 +779,26 @@ function generateFinalSummary() {
               <span class="resumen-line-name">${d.productName}</span>
               <span class="resumen-line-qty">${d.qty} caja${d.qty !== 1 ? 's' : ''} → ${lugar}</span>
             </div>
-            <span class="resumen-line-price${gratis ? ' resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '~$' + fmt(costo)}</span>
+            <span class="resumen-line-price${gratis ? ' resumen-line-gratis' : ''}">${gratis ? 'Gratis' : '$' + fmt(costo)}</span>
             ${dirEntrega}
           </div>`;
         }).join('');
-        footer = `<div class="resumen-card-footer">
-          <span>Total despacho</span>
-          <strong class="${desp.gratis ? 'resumen-line-gratis' : ''}">${desp.gratis ? 'Gratis' : '~$' + fmt(desp.precioTotal || 0)}</strong>
-        </div>`;
       }
     }
 
     if (!hasData) {
-      body = '<p class="resumen-empty" style="padding:12px 20px;">Sin destinos configurados. Estima el despacho en el paso 1.</p>';
+      despachoSlot.innerHTML = '';
+    } else {
+      despachoSlot.innerHTML = `
+        <div class="resumen-card resumen-card--collapsible" id="resumen-despacho-card">
+          <div class="resumen-card-header" onclick="document.getElementById('resumen-despacho-card').classList.toggle('resumen-card--collapsed')">
+            ${svgTruck}
+            <h3>Despacho estimado</h3>
+            ${svgChevron}
+          </div>
+          <div class="resumen-card-body">${body}</div>
+        </div>`;
     }
-
-    despachoSlot.innerHTML = `
-      <div class="resumen-card resumen-card--collapsible${hasData ? '' : ' resumen-card--collapsed'}" id="resumen-despacho-card">
-        <div class="resumen-card-header" onclick="document.getElementById('resumen-despacho-card').classList.toggle('resumen-card--collapsed')">
-          ${svgTruck}
-          <h3>Despacho estimado</h3>
-          ${svgChevron}
-        </div>
-        <div class="resumen-card-body">${body}</div>
-        ${footer}
-      </div>`;
   }
 
   // Guardar neto para que refreshResumenTotales lo use
@@ -1447,29 +1419,17 @@ function descargarCotizacionPDF(returnHtml) {
       </table>
     </div>
 
-    <!-- ESCALA DE DESCUENTOS -->
+    <!-- DESCUENTO APLICADO -->
     <div class="section">
-      <div class="section-title">ESCALA DE DESCUENTOS POR VOLUMEN</div>
-      <div class="discount-table">
-        <div class="discount-table-row ${qtyHw >= 10 && qtyHw < 20 ? 'active' : ''}">
-          <span>10 – 19 unidades</span><span>1%</span>
-        </div>
-        <div class="discount-table-row ${qtyHw >= 20 && qtyHw < 30 ? 'active' : ''}">
-          <span>20 – 29 unidades</span><span>2%</span>
-        </div>
-        <div class="discount-table-row ${qtyHw >= 30 && qtyHw < 40 ? 'active' : ''}">
-          <span>30 – 39 unidades</span><span>3%</span>
-        </div>
-        <div class="discount-table-row ${qtyHw >= 40 && qtyHw < 50 ? 'active' : ''}">
-          <span>40 – 49 unidades</span><span>4%</span>
-        </div>
-        <div class="discount-table-row ${qtyHw >= 50 ? 'active' : ''}">
-          <span>50 unidades +</span><span>5%</span>
-        </div>
-      </div>
-      <div style="background:#fff3e0;padding:12px;border-radius:4px;margin-top:12px;font-size:11px;">
-        <strong>Hardware: ${qtyHw} unidades → descuento ${pctDescuento}%${totalQty > qtyHw ? ' (pedido total: ' + totalQty + ' ítems)' : ''}</strong>
-      </div>
+      <div class="section-title">DESCUENTO POR VOLUMEN APLICADO</div>
+      ${pctDescuento > 0 ? `
+      <div style="background:#fff3e0;padding:12px 16px;border-radius:4px;border-left:4px solid #f39c12;font-size:11px;display:flex;justify-content:space-between;align-items:center;">
+        <span><strong>${qtyHw} unidades de hardware${totalQty > qtyHw ? ' (' + totalQty + ' ítems en total)' : ''}</strong></span>
+        <span style="font-size:14px;font-weight:700;color:#e67e22;">${pctDescuento}% de descuento</span>
+      </div>` : `
+      <div style="background:#f5f5f5;padding:12px 16px;border-radius:4px;font-size:11px;color:#666;">
+        Sin descuento por volumen — se requieren 10 o más unidades de hardware.
+      </div>`}
     </div>
 
     <!-- DESGLOSE DE PRECIOS -->
@@ -2089,11 +2049,16 @@ window.despachoSetDireccion = function(rowId, value) {
 
 /* Renderiza las direcciones de entrega en paso 3 según el modo de despacho */
 function renderDireccionesMulti() {
+  var entregaSection = document.getElementById('entregaSection');
   var singleField    = document.getElementById('singleDirField');
   var singleLocation = document.getElementById('singleDirLocation');
   var multiSection   = document.getElementById('multiDirSection');
   var container      = document.getElementById('multiDirContainer');
   if (!singleField && !multiSection) return;
+
+  var hayValidos = (state.despacho || {}).hayValidos || false;
+  if (entregaSection) entregaSection.style.display = hayValidos ? '' : 'none';
+  if (!hayValidos) return;
 
   var mode     = (state.despacho || {}).mode || 'single';
   var single   = window._despachoSingle || {};
@@ -2224,12 +2189,8 @@ function refreshResumenTotales() {
     cuotaEq = eqIVA * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
   }
   const cuotaTotal = Math.round(cuotaEq + svcIVA);
-  const totalPagar = Math.round(cuotaEq * simPlazo + svcIVA * simPlazo + shippingCost);
-  const intereses  = Math.max(0, Math.round(cuotaEq * simPlazo - eqIVA));
 
   setTxt('summaryCuota',      fmt(cuotaTotal));
-  setTxt('summaryTotalPagar', fmt(totalPagar));
-  setTxt('summaryIntereses',  fmt(intereses));
   setTxt('plazoLabelSummary', simPlazo + '');
   setTxt('tasaLabelSummary',  simTasa + '');
 }
@@ -2305,6 +2266,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateProgressBar();
   updateButtons();
+  updateNavButtons();
   updateSidebar();
   actualizarDescuento();
   fetchDolarTIC();
