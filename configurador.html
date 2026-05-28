@@ -252,8 +252,22 @@ window.clsSetCat = function(tipo, btn) {
 
       </aside>
 
-      <!-- Chips de categoría encima de la tabla -->
-      <div class="flat-cat-chips-bar">
+      <!-- Cabecera de la tabla de pedido -->
+      <div class="flat-table-header">
+        <div class="flat-table-header-left">
+          <div class="flat-table-title">Configurador de precios por volumen</div>
+          <div class="flat-table-sub">Ítems ilimitados — descuento sobre total consolidado del pedido</div>
+        </div>
+        <button type="button" id="btnAddFlatRow" onclick="flatAddRow()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar producto
+        </button>
+      </div>
+
+      <!-- Barra de filtros de categoría -->
+      <div class="flat-filter-bar">
         <button class="flat-cat-chip active" data-tipo="todos" onclick="clsSetCat('todos',this)">
           Todos <span id="cnt-todos">—</span>
         </button>
@@ -281,16 +295,6 @@ window.clsSetCat = function(tipo, btn) {
         <button class="flat-cat-chip" data-tipo="accesorios" onclick="clsSetCat('accesorios',this)">
           Accesorios <span id="cnt-accesorios">—</span>
         </button>
-      </div>
-
-      <!-- Cabecera de la tabla de pedido -->
-      <div class="flat-table-header">
-        <div class="flat-table-header-left">
-          <div class="flat-table-title">
-            Configurador de precios por volumen
-          </div>
-          <div class="flat-table-sub">Ítems ilimitados — descuento sobre total consolidado del pedido</div>
-        </div>
       </div>
 
       <!-- Catálogo (buildCatalogTable lo inyecta aquí) -->

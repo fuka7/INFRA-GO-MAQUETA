@@ -646,48 +646,123 @@ body {
 
 
 /* ════════════════════════════════════════════
-   CHIPS DE CATEGORÍA (encima de la tabla)
-════════════════════════════════════════════ */
-.flat-cat-chips-bar {
-  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
-}
-.flat-cat-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: var(--c-surface); border: 1px solid var(--c-border);
-  border-radius: 20px; padding: 7px 15px;
-  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
-  color: var(--c-text-2); cursor: pointer; transition: all .18s; white-space: nowrap;
-}
-.flat-cat-chip span {
-  font-size: 10px; background: var(--c-surface-2); color: var(--c-text-4);
-  padding: 1px 6px; border-radius: 8px; font-weight: 700;
-}
-.flat-cat-chip:hover { border-color: rgba(255,122,0,.4); background: var(--orange-dim); color: var(--c-text); }
-.flat-cat-chip.active { background: var(--orange-dim); border-color: var(--orange); color: var(--orange); font-weight: 700; }
-.flat-cat-chip.active span { background: rgba(255,122,0,.2); color: var(--orange); }
-
-
-/* ════════════════════════════════════════════
-   TABLA PRINCIPAL — cabecera y buscador
+   TABLA PRINCIPAL — cabecera y chips integrados
 ════════════════════════════════════════════ */
 .flat-table-header {
-  background: linear-gradient(90deg, #0d2247, #0a1628);
+  background: linear-gradient(135deg, #0d2247 0%, #0a1628 100%);
   border-radius: var(--radius) var(--radius) 0 0;
   padding: 16px 20px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
   gap: 16px;
 }
+.flat-table-header-left { flex: 1; }
 .flat-table-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px; font-weight: 700;
   color: #fff; margin-bottom: 4px;
 }
-.flat-table-title span { color: rgba(255,255,255,.65); font-weight: 400; }
-.flat-table-sub {
-  font-size: 11px; color: rgba(255,255,255,.45);
+.flat-table-title span { color: rgba(255,255,255,.55); font-weight: 400; }
+.flat-table-sub { font-size: 11px; color: rgba(255,255,255,.4); }
+
+/* ── Botón agregar dentro del header ── */
+#btnAddFlatRow {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--orange);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background .18s, box-shadow .18s;
+  box-shadow: 0 4px 14px rgba(255,122,0,.35);
 }
+#btnAddFlatRow:hover {
+  background: #e06d00;
+  box-shadow: 0 6px 20px rgba(255,122,0,.45);
+}
+
+/* ── Barra de filtros de categoría ── */
+.flat-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  background: #f8f9fb;
+  border: 1px solid var(--c-border);
+  border-top: none;
+  border-bottom: none;
+}
+
+/* ── Chips de categoría con color propio ── */
+.flat-cat-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 20px; padding: 5px 12px;
+  font-family: 'Montserrat', sans-serif; font-size: 11.5px; font-weight: 600;
+  cursor: pointer; transition: all .18s; white-space: nowrap;
+  border: 1.5px solid transparent;
+}
+.flat-cat-chip span {
+  font-size: 10px; font-weight: 700;
+  padding: 0px 5px; border-radius: 8px;
+}
+
+/* Todos */
+.flat-cat-chip[data-tipo="todos"]         { background: rgba(10,22,40,.07);  color: #0a1628; border-color: rgba(10,22,40,.18); }
+.flat-cat-chip[data-tipo="todos"] span    { background: rgba(10,22,40,.08);  color: #0a1628; }
+/* PC */
+.flat-cat-chip[data-tipo="pc"]            { background: rgba(71,85,105,.08); color: #475569; border-color: rgba(71,85,105,.25); }
+.flat-cat-chip[data-tipo="pc"] span       { background: rgba(71,85,105,.1);  color: #475569; }
+/* Notebook */
+.flat-cat-chip[data-tipo="notebook"]      { background: rgba(37,99,235,.08); color: #2563eb; border-color: rgba(37,99,235,.25); }
+.flat-cat-chip[data-tipo="notebook"] span { background: rgba(37,99,235,.1);  color: #2563eb; }
+/* Servidor */
+.flat-cat-chip[data-tipo="servidor"]      { background: rgba(124,58,237,.08); color: #7c3aed; border-color: rgba(124,58,237,.25); }
+.flat-cat-chip[data-tipo="servidor"] span { background: rgba(124,58,237,.1);  color: #7c3aed; }
+/* Impresora */
+.flat-cat-chip[data-tipo="impresora"]      { background: rgba(5,150,105,.08); color: #059669; border-color: rgba(5,150,105,.25); }
+.flat-cat-chip[data-tipo="impresora"] span { background: rgba(5,150,105,.1);  color: #059669; }
+/* Networking */
+.flat-cat-chip[data-tipo="networking"]      { background: rgba(217,119,6,.08); color: #d97706; border-color: rgba(217,119,6,.25); }
+.flat-cat-chip[data-tipo="networking"] span { background: rgba(217,119,6,.1);  color: #d97706; }
+/* Storage / Licencias */
+.flat-cat-chip[data-tipo="storage"]      { background: rgba(219,39,119,.08); color: #db2777; border-color: rgba(219,39,119,.25); }
+.flat-cat-chip[data-tipo="storage"] span { background: rgba(219,39,119,.1);  color: #db2777; }
+/* Servicios TIC */
+.flat-cat-chip[data-tipo="servicio-tic"]      { background: rgba(255,122,0,.08); color: #c25d00; border-color: rgba(255,122,0,.3); }
+.flat-cat-chip[data-tipo="servicio-tic"] span { background: rgba(255,122,0,.1);  color: #c25d00; }
+/* Accesorios */
+.flat-cat-chip[data-tipo="accesorios"]      { background: rgba(13,148,136,.08); color: #0d9488; border-color: rgba(13,148,136,.25); }
+.flat-cat-chip[data-tipo="accesorios"] span { background: rgba(13,148,136,.1);  color: #0d9488; }
+
+/* ── Hover: satura un poco más ── */
+.flat-cat-chip:hover { filter: brightness(.94); }
+
+/* ── Active: fondo sólido con color de categoría ── */
+.flat-cat-chip.active[data-tipo="todos"]        { background: #0a1628; border-color: #0a1628; color: #fff; }
+.flat-cat-chip.active[data-tipo="todos"] span   { background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="pc"]           { background: #475569; border-color: #475569; color: #fff; }
+.flat-cat-chip.active[data-tipo="pc"] span      { background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="notebook"]     { background: #2563eb; border-color: #2563eb; color: #fff; }
+.flat-cat-chip.active[data-tipo="notebook"] span{ background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="servidor"]     { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+.flat-cat-chip.active[data-tipo="servidor"] span{ background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="impresora"]     { background: #059669; border-color: #059669; color: #fff; }
+.flat-cat-chip.active[data-tipo="impresora"] span{ background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="networking"]     { background: #d97706; border-color: #d97706; color: #fff; }
+.flat-cat-chip.active[data-tipo="networking"] span{ background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="storage"]     { background: #db2777; border-color: #db2777; color: #fff; }
+.flat-cat-chip.active[data-tipo="storage"] span{ background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="servicio-tic"]     { background: #FF7A00; border-color: #FF7A00; color: #fff; }
+.flat-cat-chip.active[data-tipo="servicio-tic"] span{ background: rgba(255,255,255,.15); color: #fff; }
+.flat-cat-chip.active[data-tipo="accesorios"]     { background: #0d9488; border-color: #0d9488; color: #fff; }
+.flat-cat-chip.active[data-tipo="accesorios"] span{ background: rgba(255,255,255,.15); color: #fff; }
 .flat-table-year {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.12);
@@ -2179,18 +2254,11 @@ body {
 
   .config-layout { grid-template-columns: 1fr; padding: 14px 12px 40px; gap: 14px; }
 
-  /* ── Chips de categoría: scroll horizontal sin salto de línea ── */
-  .flat-cat-chips-bar {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
-    margin-bottom: 14px;
-    gap: 6px;
-  }
-  .flat-cat-chips-bar::-webkit-scrollbar { display: none; }
-  .flat-cat-chip { font-size: 12px; padding: 6px 12px; white-space: nowrap; flex-shrink: 0; }
+  /* ── Filtros de categoría en mobile ── */
+  .flat-filter-bar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 10px 14px; }
+  .flat-filter-bar::-webkit-scrollbar { display: none; }
+  .flat-cat-chip { font-size: 11px; padding: 4px 10px; flex-shrink: 0; }
+  #btnAddFlatRow { padding: 8px 14px; font-size: 11px; }
 
   /* ── Cards resumen: 2 columnas en mobile ── */
   .right-sidebar { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
@@ -2298,7 +2366,7 @@ body {
 @media (max-width: 380px) {
   .progress-step-label { display: none; }
   .config-layout { padding: 12px 10px 120px; }
-  .flat-cat-chip { font-size: 11px; padding: 5px 10px; }
+  .flat-cat-chip { font-size: 10px; padding: 3px 8px; }
   .product-item { padding: 12px 12px; }
   .bb-value { font-size: 14px; }
   .bb-cuotas-hint { display: none; }

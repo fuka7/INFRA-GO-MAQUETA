@@ -106,16 +106,10 @@ window.buildCatalogTable = function buildCatalogTable() {
       <span class="flat-col-label right">P. unitaria c/IVA</span>
       <span class="flat-col-label center">Cant.</span>
       <span class="flat-col-label right">Total c/IVA</span>
+      <span class="flat-col-label center">Dto.</span>
+      <span class="flat-col-label"></span>
     </div>
     <div id="flatRowsBody"></div>
-    <div class="flat-add-row">
-      <button type="button" id="btnAddFlatRow" onclick="flatAddRow()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
-        Agregar producto al pedido
-      </button>
-    </div>
   `;
 
   catalogoDiv.parentNode.insertBefore(wrap, catalogoDiv);
@@ -192,7 +186,18 @@ function _buildRowEl(id, animate) {
 
     <div class="pr-precio-dto">
       <span class="precio-dto-val sin-dto" id="pdto-${id}">—</span>
-      <span class="dto-badge oculto"       id="dtobadge-${id}"></span>
+    </div>
+
+    <div class="pr-dto">
+      <span class="dto-badge oculto" id="dtobadge-${id}"></span>
+    </div>
+
+    <div class="pr-actions">
+      <button type="button" class="pr-action-btn" onclick="flatRemoveRow(${id})" title="Eliminar fila">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
   `;
@@ -943,9 +948,8 @@ function _injectStyles() {
     /* ── Cabecera de columnas ── */
     .flat-col-headers {
       display: grid;
-      grid-template-columns: 40px 72px minmax(180px,240px) 60px 110px 100px 90px 100px;
+      grid-template-columns: 40px 72px 1fr 60px 110px 100px 90px 100px 52px 36px;
       align-items: center;
-      justify-content: space-between;
       padding: 10px 20px;
       background: #f8f9fb;
       border-bottom: 2px solid #dde1e8;
@@ -961,12 +965,10 @@ function _injectStyles() {
 
     /* ── Fila del pedido ── */
     .flat-order-row {
-      position: relative;
       display: grid;
-      grid-template-columns: 40px 72px minmax(180px,240px) 60px 110px 100px 90px 100px;
+      grid-template-columns: 40px 72px 1fr 60px 110px 100px 90px 100px 52px 36px;
       align-items: center;
-      justify-content: space-between;
-      padding: 14px 44px 14px 20px;
+      padding: 14px 20px;
       border-bottom: 1px solid #eaecf0;
       transition: background 0.15s, opacity 0.2s, transform 0.2s;
       gap: 8px;
@@ -1145,57 +1147,38 @@ function _injectStyles() {
     }
     .qty-arrows button:hover { color: #FF7A00; }
 
-    /* Precio con descuento */
-    .pr-precio-dto { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+    /* Precio con descuento (total) */
+    .pr-precio-dto { display: flex; align-items: center; justify-content: flex-end; }
     .precio-dto-val {
       font-size: 13px; font-weight: 800;
-      color: #FF7A00;
+      color: #0d1e36;
     }
     .precio-dto-val.sin-dto { color: #0d1e36; font-weight: 700; }
+
+    /* Columna DTO badge */
+    .pr-dto { display: flex; align-items: center; justify-content: center; }
     .dto-badge {
       font-size: 9px; font-weight: 800;
       background: rgba(34,197,94,.12);
       color: #16a34a;
       border: 1px solid rgba(34,197,94,.3);
       border-radius: 10px;
-      padding: 1px 6px;
+      padding: 2px 7px;
+      white-space: nowrap;
     }
     .dto-badge.oculto { display: none; }
 
-    /* Botón eliminar — columna propia */
-    .pr-del {
-      position: absolute;
-      right: 6px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
+    /* Columna acciones */
+    .pr-actions { display: flex; align-items: center; justify-content: center; }
+    .pr-action-btn {
+      background: none; border: none;
+      border-radius: 6px; padding: 5px 6px;
+      color: #b0bcc9; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, color .15s;
     }
-
-
-
-    /* Botón agregar + zona eliminar */
-    .flat-add-row {
-      padding: 10px 16px;
-      border-top: 1px dashed #dde1e8;
-      background: #f8f9fb;
-      border-radius: 0 0 12px 12px;
-      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    }
-    #btnAddFlatRow {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(255,122,0,.10);
-      border: 1px solid rgba(255,122,0,.3);
-      border-radius: 7px;
-      padding: 7px 16px;
-      color: #FF7A00;
-      font-size: 12px; font-weight: 700;
-      cursor: pointer; transition: all .18s;
-    }
-    #btnAddFlatRow:hover { background: rgba(255,122,0,.18); border-color: #FF7A00; }
-    #btnAddFlatRow svg { width: 13px; height: 13px; }
+    .pr-action-btn:hover { background: rgba(239,68,68,.08); color: #ef4444; }
+    .pr-action-btn svg { width: 14px; height: 14px; }
 
     /* Buscador */
     .filtros-bar--simple { display: flex; align-items: center; padding: 10px 0 20px; gap: 10px; }
@@ -1223,27 +1206,27 @@ function _injectStyles() {
     /* Responsive */
     @media (max-width: 1400px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 36px 68px minmax(160px,240px) 56px 120px 100px 90px 84px; gap: 12px; }
+      .flat-order-row { grid-template-columns: 36px 68px 1fr 56px 120px 100px 90px 84px 48px 32px; gap: 12px; }
     }
     @media (max-width: 1100px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 32px 60px minmax(140px,200px) 52px 82px 78px 82px 80px; gap: 4px; }
+      .flat-order-row { grid-template-columns: 32px 60px 1fr 52px 82px 78px 82px 80px 44px 30px; gap: 4px; }
       .pr-prov-logo { width: 56px; height: 26px; }
     }
 
-    /* ── Tablet / mobile: ocultar Marca, Cat, N°Parte y P.Dto ── */
+    /* ── Tablet / mobile: ocultar Marca, Cat, N°Parte y DTO ── */
     @media (max-width: 760px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 22px 1fr 84px 62px; gap: 4px; }
+      .flat-order-row { grid-template-columns: 22px 1fr 84px 62px 30px; gap: 4px; }
 
       /* Ocultar celdas de fila */
-      .pr-prov, .pr-cat, .pr-partnum, .pr-precio-dto { display: none; }
+      .pr-prov, .pr-cat, .pr-partnum, .pr-dto { display: none; }
 
-      /* Ocultar cabeceras correspondientes: Marca(2) Cat(4) N°Parte(5) P.Dto(8) */
+      /* Ocultar cabeceras: Marca(2) Cat(4) N°Parte(5) Total(8) Dto(9) */
       .flat-col-headers span:nth-child(2),
       .flat-col-headers span:nth-child(4),
       .flat-col-headers span:nth-child(5),
-      .flat-col-headers span:nth-child(8) { display: none; }
+      .flat-col-headers span:nth-child(9) { display: none; }
 
       .flat-col-headers { padding: 10px 12px; }
       .flat-order-row { padding: 10px 12px; }
@@ -1254,10 +1237,11 @@ function _injectStyles() {
     /* ── Móvil pequeño ── */
     @media (max-width: 520px) {
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 18px 1fr 78px 56px; gap: 3px; }
+      .flat-order-row { grid-template-columns: 18px 1fr 78px 56px 28px; gap: 3px; }
 
       .flat-col-headers { padding: 8px 10px; }
       .flat-order-row { padding: 8px 10px; }
+      .flat-table-toolbar { padding: 10px 12px; }
       .flat-product-select { font-size: 11px; padding: 4px 22px 4px 7px; }
       .precio-base { font-size: 12px; }
       .qty-value { font-size: 13px; width: 28px; }
