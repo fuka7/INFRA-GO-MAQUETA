@@ -100,7 +100,7 @@ window.buildCatalogTable = function buildCatalogTable() {
     <div class="flat-col-headers">
       <span class="flat-col-label center">#</span>
       <span class="flat-col-label center">Marca</span>
-      <span class="flat-col-label">Producto del catálogo</span>
+      <span class="flat-col-label center">Producto del catálogo</span>
       <span class="flat-col-label center">Cat.</span>
       <span class="flat-col-label center">N° Parte</span>
       <span class="flat-col-label right">P. unitaria c/IVA</span>
@@ -110,6 +110,14 @@ window.buildCatalogTable = function buildCatalogTable() {
       <span class="flat-col-label"></span>
     </div>
     <div id="flatRowsBody"></div>
+    <div class="flat-add-row-wrap">
+      <button type="button" id="btnAddFlatRow" onclick="flatAddRow()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Agregar producto
+      </button>
+    </div>
   `;
 
   catalogoDiv.parentNode.insertBefore(wrap, catalogoDiv);
@@ -659,32 +667,34 @@ window.igaOpenVolumeModal = function igaOpenVolumeModal(forceBrand) {
   /* Sin cierre al hacer click fuera — el cliente debe elegir una opción */
 
   if (showBrandVariant) {
+    const bSlug    = flatSlugify(stats.topBrand);
+    const bLogoSrc = BRAND_LOGOS[bSlug];
+    let bIconHTML;
+    if (bLogoSrc && bLogoSrc.startsWith('<svg')) {
+      bIconHTML = `<div class="iga-opp-icon iga-opp-icon--svg">${bLogoSrc}</div>`;
+    } else if (bLogoSrc) {
+      bIconHTML = `<div class="iga-opp-icon iga-opp-icon--img"><img src="${bLogoSrc}" alt="${stats.topBrand}"></div>`;
+    } else {
+      bIconHTML = `<div class="iga-opp-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>`;
+    }
     overlay.innerHTML = `
       <div class="iga-modal iga-modal--brand" role="dialog" aria-modal="true">
-        <div class="iga-modal-header iga-modal-header--brand">
-          <div class="iga-modal-header-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-            </svg>
+        <div class="iga-opp-wrap">
+          <p class="iga-opp-title">Oportunidad detectada</p>
+          <div class="iga-opp-main">
+            ${bIconHTML}
+            <div class="iga-opp-details">
+              <p class="iga-opp-headline"><strong>${stats.topPct}%</strong> del pedido es <strong class="iga-opp-brandname">${stats.topBrand}</strong></p>
+              <p class="iga-opp-desc">Podemos gestionar descuentos de canal y condiciones especiales directamente con <strong>${stats.topBrand}</strong> para su proyecto.</p>
+            </div>
           </div>
-          <div class="iga-modal-header-text">
-            <strong>El ${stats.topPct}% de su pedido es ${stats.topBrand}</strong>
-            <span>Podemos gestionar mejores condiciones directamente con la marca</span>
-          </div>
-        </div>
-        <div class="iga-brand-body">
-          <div class="iga-brand-highlight">
-            <div class="iga-brand-pill">${stats.topBrand}</div>
-            <div class="iga-brand-pct">${stats.topPct}<span>%</span></div>
-            <div class="iga-brand-pct-label">del pedido — ${stats.topQty} unidades</div>
-          </div>
-          <p class="iga-brand-desc">Nuestro equipo puede gestionar <strong>descuentos de canal y condiciones especiales</strong> directamente con ${stats.topBrand} para su proyecto.</p>
           <div class="iga-vol-actions">
-            <a class="iga-modal-primary" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" onclick="igaCloseVolumeModal()" style="text-decoration:none;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15">
-                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              Contactar ejecutivo
+            <a class="iga-opp-cta" href="https://outlook.office.com/book/InfraGo@ticmanagers.cl/" target="_blank" onclick="igaCloseVolumeModal()" style="text-decoration:none;">
+              Solicitar mejores condiciones →
             </a>
             <button class="iga-modal-secondary" onclick="igaCloseVolumeModal(); igaResumeQuote()">
               Continuar sin asistencia
@@ -948,7 +958,7 @@ function _injectStyles() {
     /* ── Cabecera de columnas ── */
     .flat-col-headers {
       display: grid;
-      grid-template-columns: 40px 72px 1fr 60px 110px 100px 90px 100px 52px 36px;
+      grid-template-columns: 40px 72px minmax(180px, 1fr) 48px 110px 130px 90px 130px 56px 36px;
       align-items: center;
       padding: 10px 20px;
       background: #f8f9fb;
@@ -966,9 +976,9 @@ function _injectStyles() {
     /* ── Fila del pedido ── */
     .flat-order-row {
       display: grid;
-      grid-template-columns: 40px 72px 1fr 60px 110px 100px 90px 100px 52px 36px;
+      grid-template-columns: 40px 72px minmax(180px, 1fr) 48px 110px 130px 90px 130px 56px 36px;
       align-items: center;
-      padding: 14px 20px;
+      padding: 20px 20px;
       border-bottom: 1px solid #eaecf0;
       transition: background 0.15s, opacity 0.2s, transform 0.2s;
       gap: 8px;
@@ -985,16 +995,16 @@ function _injectStyles() {
     }
 
     /* Select producto */
-    .pr-info--select { display: flex; flex-direction: column; gap: 4px; justify-content: center; padding-right: 8px; }
+    .pr-info--select { display: flex; flex-direction: column; gap: 4px; justify-content: center; padding-left: 14px; padding-right: 4px; }
     .flat-select-wrap { position: relative; }
     .flat-product-select {
       width: 100%;
       background: #f4f5f7;
       border: 1px solid #dde1e8;
       border-radius: 6px;
-      padding: 5px 26px 5px 9px;
+      padding: 6px 26px 6px 9px;
       color: #0d1e36;
-      font-size: 12px; font-weight: 500;
+      font-size: 13px; font-weight: 500;
       font-family: inherit;
       cursor: pointer;
       appearance: none; -webkit-appearance: none;
@@ -1073,7 +1083,7 @@ function _injectStyles() {
     /* Part Number */
     .pr-partnum { display: flex; align-items: center; justify-content: center; }
     .pr-partnum-val {
-      font-size: 10px; font-weight: 600;
+      font-size: 12px; font-weight: 600;
       color: #b0bcc9;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       max-width: 115px;
@@ -1089,7 +1099,7 @@ function _injectStyles() {
     /* Precio lista */
     .pr-precio-lista { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
     .precio-base {
-      font-size: 12px; font-weight: 700;
+      font-size: 14px; font-weight: 700;
       color: #0d1e36;
     }
     .precio-base.tachado {
@@ -1098,11 +1108,11 @@ function _injectStyles() {
       font-weight: 400;
     }
     .precio-usd {
-      font-size: 10px; color: #7a8fa6;
+      font-size: 11px; color: #7a8fa6;
     }
 
     /* Cantidad — spinner vertical */
-    .pr-qty { display: flex; align-items: center; justify-content: center; }
+    .pr-qty { display: flex; align-items: center; justify-content: center; padding-left: 14px; }
     .pr-qty--disabled { opacity: .3; pointer-events: none; user-select: none; }
     .qty-spinner-wrap {
       display: flex;
@@ -1150,7 +1160,7 @@ function _injectStyles() {
     /* Precio con descuento (total) */
     .pr-precio-dto { display: flex; align-items: center; justify-content: flex-end; }
     .precio-dto-val {
-      font-size: 13px; font-weight: 800;
+      font-size: 15px; font-weight: 800;
       color: #0d1e36;
     }
     .precio-dto-val.sin-dto { color: #0d1e36; font-weight: 700; }
@@ -1399,27 +1409,47 @@ function _injectStyles() {
       font-size: 11px; color: #aab8cc; text-align: center; margin: 0;
     }
 
-    /* ── MODAL MARCA — layout propio ── */
-    .iga-modal--brand { max-width: 380px; }
-    .iga-brand-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
-    .iga-brand-highlight {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      background: linear-gradient(135deg, #0e5a8a 0%, #1b82c4 100%);
-      border-radius: 10px; padding: 16px 16px 14px;
+    /* ── MODAL MARCA — layout rediseñado ── */
+    .iga-modal--brand { max-width: 420px; }
+    .iga-opp-wrap { padding: 20px 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+    .iga-opp-title {
+      font-size: 12px; font-weight: 800; color: #1a2b4a;
+      text-transform: uppercase; letter-spacing: .06em; margin: 0;
     }
-    .iga-brand-pill {
-      background: rgba(255,255,255,.18); color: #fff;
-      font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800;
-      letter-spacing: .06em; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,.3);
+    .iga-opp-main { display: flex; align-items: flex-start; gap: 14px; }
+    .iga-opp-icon {
+      width: 50px; height: 50px; flex-shrink: 0;
+      border-radius: 50%;
+      background: #1a4fa0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
     }
-    .iga-brand-pct {
-      font-family: 'Montserrat', sans-serif; font-size: 38px; font-weight: 900;
-      color: #fff; line-height: 1; margin-top: 4px;
+    .iga-opp-icon svg { width: 22px; height: 22px; }
+    .iga-opp-icon--img,
+    .iga-opp-icon--svg {
+      background: #fff;
+      border: 1.5px solid #dde6f5;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
     }
-    .iga-brand-pct span { font-size: 22px; vertical-align: super; }
-    .iga-brand-pct-label { font-size: 11px; color: rgba(255,255,255,.75); font-weight: 600; }
-    .iga-brand-desc { font-size: 12px; color: #4a6080; line-height: 1.55; margin: 0; text-align: center; }
+    .iga-opp-icon--img img { width: 34px; height: 34px; object-fit: contain; }
+    .iga-opp-icon--svg svg { width: 34px; height: auto; }
+    .iga-opp-details { flex: 1; }
+    .iga-opp-headline {
+      font-size: 16px; font-weight: 700; color: #0d1e36;
+      margin: 0 0 7px; line-height: 1.3;
+    }
+    .iga-opp-headline strong { font-weight: 900; }
+    .iga-opp-brandname { color: #1a4fa0; }
+    .iga-opp-desc { font-size: 12px; color: #5a7294; line-height: 1.55; margin: 0; }
+    .iga-opp-cta {
+      display: flex; align-items: center; justify-content: center;
+      background: #1a4fa0; border: none; border-radius: 8px;
+      padding: 12px 20px; color: #fff;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      transition: background .18s; width: 100%;
+      letter-spacing: .01em;
+    }
+    .iga-opp-cta:hover { background: #0d3578; color: #fff; }
 
     /* ── MODAL VOLUMEN — layout propio ── */
     .iga-modal--vol { max-width: 380px; }
@@ -1475,10 +1505,8 @@ function _injectStyles() {
       .iga-vol-stat-val { font-size: 15px; }
       /* Modal marca */
       .iga-modal--brand { max-width: 100%; }
-      .iga-brand-body { padding: 20px 16px 28px; gap: 16px; }
-      .iga-brand-highlight { padding: 18px 12px 14px; }
-      .iga-brand-pct { font-size: 40px; }
-      .iga-brand-pct span { font-size: 24px; }
+      .iga-opp-wrap { padding: 20px 16px 28px; gap: 16px; }
+      .iga-opp-headline { font-size: 15px; }
     }
   `;
   document.head.appendChild(style);

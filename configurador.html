@@ -258,12 +258,6 @@ window.clsSetCat = function(tipo, btn) {
           <div class="flat-table-title">Configurador de precios por volumen</div>
           <div class="flat-table-sub">Ítems ilimitados — descuento sobre total consolidado del pedido</div>
         </div>
-        <button type="button" id="btnAddFlatRow" onclick="flatAddRow()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Agregar producto
-        </button>
       </div>
 
       <!-- Barra de filtros de categoría -->
@@ -326,6 +320,18 @@ window.clsSetCat = function(tipo, btn) {
       <div class="step-intro">
         <h2>Simulador de financiamiento</h2>
         <p>Ajusta el plazo y la tasa para ver tu cuota mensual estimada.</p>
+      </div>
+
+      <div class="sim-info-banner" id="simSeguroBanner">
+        <svg class="sim-info-banner__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <path d="M12 2l7 4v5c0 4.97-3.5 9.27-7 10.93C8.5 20.27 5 15.97 5 11V6l7-4z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+        <div class="sim-info-banner__text">
+          <strong>Todos los proyectos financiados incluyen seguro</strong>
+          <span>Tu inversión protegida ante imprevistos, respaldada por las mejores aseguradoras del mercado.</span>
+        </div>
+        <button class="sim-info-banner__close" onclick="document.getElementById('simSeguroBanner').style.display='none'" aria-label="Cerrar">×</button>
       </div>
 
       <div class="sim-layout">

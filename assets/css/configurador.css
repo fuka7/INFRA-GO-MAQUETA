@@ -654,7 +654,6 @@ body {
   padding: 16px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
 }
 .flat-table-header-left { flex: 1; }
@@ -666,7 +665,11 @@ body {
 .flat-table-title span { color: rgba(255,255,255,.55); font-weight: 400; }
 .flat-table-sub { font-size: 11px; color: rgba(255,255,255,.4); }
 
-/* ── Botón agregar dentro del header ── */
+/* ── Botón agregar — debajo de la tabla ── */
+.flat-add-row-wrap {
+  padding: 14px 20px;
+  border-top: 1px solid #eaecf0;
+}
 #btnAddFlatRow {
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--orange);
@@ -1539,6 +1542,52 @@ body {
 }
 .resumen-contact-value { font-size: 13px; font-weight: 600; color: var(--c-text); }
 
+
+/* ── Banner informativo paso 2 ── */
+.sim-info-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f0faf4;
+  border: 1px solid #b6e5c8;
+  border-radius: 10px;
+  padding: 11px 14px 11px 16px;
+  margin-bottom: 20px;
+}
+.sim-info-banner__icon {
+  flex-shrink: 0;
+  color: #1e8a4a;
+}
+.sim-info-banner__text {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sim-info-banner__text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f4a27;
+  white-space: nowrap;
+}
+.sim-info-banner__text span {
+  font-size: 12px;
+  color: #3a7a55;
+  line-height: 1.4;
+}
+.sim-info-banner__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  color: #5a9a72;
+  cursor: pointer;
+  padding: 0 2px;
+  transition: color .15s;
+}
+.sim-info-banner__close:hover { color: #0f4a27; }
 
 /* ════════════════════════════════════════════
    PASO 4 — SIMULADOR
