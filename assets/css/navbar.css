@@ -16,8 +16,11 @@
 .igb-logo span{color:#FF7A00;}
 .igb-logo-img{height:66px;width:auto;display:block;object-fit:contain;}
 .igb-actions{display:flex;align-items:center;gap:20px;flex-shrink:0;margin-left:auto;}
-.igb-account{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;transition:opacity .2s;}
+.igb-account{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;transition:opacity .2s;border-radius:8px;padding:4px 8px 4px 4px;}
 .igb-account:hover{opacity:.75;}
+.igb-acct-chevron{flex-shrink:0;color:rgba(255,255,255,0.55);transition:transform .22s ease,color .2s;}
+.igb-account:hover .igb-acct-chevron{color:rgba(255,255,255,0.85);}
+.igb-account.open .igb-acct-chevron{transform:rotate(180deg);color:#fff;}
 .igb-account-text{display:flex;flex-direction:column;line-height:1.25;}
 .igb-account-text small{font-size:10px;color:rgba(255,255,255,0.5);}
 .igb-account-text strong{font-size:14px;font-weight:700;}
@@ -72,14 +75,14 @@
 @media(max-width:480px){.igb-comunas-list{grid-template-columns:repeat(2,1fr);}}
 .igb-overlay{display:none;position:fixed;inset:0;top:96px;background:rgba(0,0,0,0.4);z-index:2147483645;}
 .igb-overlay.open{display:block;}
-.igb-mobile{position:fixed;top:96px;left:0;right:0;z-index:2147483646;background:#fff;display:flex;flex-direction:column;padding:10px 14px 20px;gap:1px;box-shadow:0 12px 32px rgba(0,0,0,0.14);transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform .3s,opacity .25s;max-height:calc(100dvh - 96px);overflow-y:auto;overscroll-behavior:contain;}
+.igb-mobile{position:fixed;top:96px;left:0;right:0;z-index:2147483646;background:#0a1628;display:flex;flex-direction:column;padding:10px 14px 20px;gap:1px;box-shadow:0 12px 40px rgba(0,0,0,0.4);transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform .3s,opacity .25s;max-height:calc(100dvh - 96px);overflow-y:auto;overscroll-behavior:contain;border-top:1px solid rgba(255,255,255,0.07);}
 .igb-mobile.open{transform:translateY(0);opacity:1;visibility:visible;}
-.igb-mobile a{display:block;padding:10px 14px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:#334155;text-decoration:none;border-radius:8px;transition:background .15s,color .15s;}
-.igb-mobile a:hover{background:#f1f5f9;color:#0d1e36;}
+.igb-mobile a{display:block;padding:10px 14px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,0.75);text-decoration:none;border-radius:8px;transition:background .15s,color .15s;}
+.igb-mobile a:hover{background:rgba(255,255,255,0.07);color:#fff;}
 .igb-mobile .igb-cta{margin-top:6px;text-align:center;border-radius:8px;padding:11px 20px;font-size:14px;}
-.igb-mobile-sep{border:none;border-top:1px solid #f1f5f9;margin:6px 0;}
+.igb-mobile-sep{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:6px 0;}
 /* Etiqueta de sección */
-.igb-mobile-section-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:#94a3b8;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px 4px;}
+.igb-mobile-section-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:rgba(255,255,255,0.3);letter-spacing:.08em;text-transform:uppercase;padding:10px 14px 4px;}
 /* Evita parpadeo: ocupa el espacio de la navbar con el fondo oscuro antes de que el JS inyecte el contenido */
 #navbar-placeholder{position:fixed;top:0;left:0;right:0;height:96px;background:#0a1628;z-index:999;}
 /* Reservar espacio */
@@ -89,19 +92,22 @@ body{padding-top:96px;}
 @media(max-width:1024px){.igb-actions{display:none;}.igb-links{display:none;}.igb-categories{display:none;}.igb-burger{display:flex;}.igb-main{padding:0 24px;}body{padding-top:96px;}.hero-carousel{height:calc(100vh - 96px);}}
 @media(max-width:768px){#navbar-placeholder{height:88px;}.igb-top{height:32px;}.igb-main{top:32px;height:56px;padding:0 20px;}.igb-overlay{top:88px;}.igb-mobile{top:88px;max-height:calc(100dvh - 88px);}body{padding-top:88px;}.hero-carousel{height:calc(100vh - 88px);}}
 /* Carrito en menú mobile — fila completa destacada */
-.igb-mobile-cart{display:flex !important;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:linear-gradient(135deg,rgba(26,79,160,0.07),rgba(26,79,160,0.04));border:1.5px solid rgba(26,79,160,0.18);color:#1a4fa0 !important;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;text-decoration:none;transition:background .15s,border-color .15s;margin:4px 0;position:relative;}
-.igb-mobile-cart:hover{background:linear-gradient(135deg,rgba(26,79,160,0.13),rgba(26,79,160,0.08)) !important;border-color:rgba(26,79,160,0.35);}
+.igb-mobile-cart{display:flex !important;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:rgba(26,79,160,0.15);border:1.5px solid rgba(99,141,255,0.3);color:#7da8ff !important;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;text-decoration:none;transition:background .15s,border-color .15s;margin:4px 0;position:relative;}
+.igb-mobile-cart:hover{background:rgba(26,79,160,0.25) !important;border-color:rgba(99,141,255,0.5);}
 .igb-mobile-cart-icon{position:relative;display:flex;align-items:center;flex-shrink:0;}
 .igb-mobile-cart-label{flex:1;}
 .igb-mobile-cart .igb-cart-count{position:absolute;top:-7px;right:-8px;min-width:18px;height:18px;padding:0 4px;background:#FF7A00;color:#fff;font-size:10px;font-weight:800;border-radius:9px;display:flex;align-items:center;justify-content:center;pointer-events:none;box-shadow:0 2px 6px rgba(255,122,0,.4);}
 /* Sección de cuenta mobile */
-.igb-mobile-account{margin-top:8px;padding:12px 14px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;}
+.igb-mobile-account{margin-top:8px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);}
 .igb-mobile-account-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .igb-mobile-account-avatar{width:36px;height:36px;border-radius:50%;background:#FF7A00;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;color:#fff;flex-shrink:0;}
-.igb-mobile-account-info{flex:1;min-width:0;}.igb-mobile-account-name{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#0d1e36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.igb-mobile-account-sub{font-family:'Montserrat',sans-serif;font-size:11px;color:#64748b;}
-.igb-mobile-logout{width:100%;padding:8px;background:#fff;border:1.5px solid #fca5a5;border-radius:7px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#dc2626;cursor:pointer;transition:background .15s;}
-.igb-mobile-logout:hover{background:#fef2f2;}
+.igb-mobile-account-info{flex:1;min-width:0;}.igb-mobile-account-name{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.igb-mobile-account-sub{font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,0.4);}
+.igb-mobile-account-actions{display:flex;gap:8px;}
+.igb-mobile-profile-btn{flex:1;padding:8px;background:transparent;border:1.5px solid rgba(255,122,0,0.5);border-radius:7px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#FF9933;cursor:pointer;transition:background .15s,border-color .15s;}
+.igb-mobile-profile-btn:hover{background:rgba(255,122,0,0.12);border-color:#FF7A00;}
+.igb-mobile-logout{flex:1;padding:8px;background:transparent;border:1.5px solid rgba(239,68,68,0.35);border-radius:7px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#f87171;cursor:pointer;transition:background .15s,border-color .15s;}
+.igb-mobile-logout:hover{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.6);}
 .igb-mobile-login-btn{width:100%;padding:10px;background:linear-gradient(135deg,#FF7A00,#FF9933);color:#fff;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .igb-mobile-action-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;background:linear-gradient(135deg,#FF7A00,#FF9933);color:#fff !important;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;text-decoration:none;text-align:center;box-sizing:border-box;transition:opacity .2s;margin-top:6px;}
 .igb-mobile-action-btn:hover{opacity:.88;color:#fff !important;}

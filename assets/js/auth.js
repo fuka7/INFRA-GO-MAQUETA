@@ -310,7 +310,8 @@
           : currentUser.email.split('@')[0];
         link.innerHTML =
           '<span style="width:32px;height:32px;background:#FF7A00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
-          '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
+          '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>' +
+          '<svg class="igb-acct-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="6 9 12 15 18 9"/></svg>';
         link.dataset.igbState = 'logged';
       } else {
         link.dataset.igbState = 'guest';
@@ -657,12 +658,15 @@
     dd.style.right = (window.innerWidth - rect.right) + 'px';
     dd.style.left  = 'auto';
     dd.classList.add('open');
+    anchor.classList.add('open');
     _ddOpen = true;
   }
 
   function closeAcctDropdown() {
-    var dd = document.getElementById('igbAcctDd');
-    if (dd) dd.classList.remove('open');
+    var dd   = document.getElementById('igbAcctDd');
+    var acct = document.querySelector('.igb-account');
+    if (dd)   dd.classList.remove('open');
+    if (acct) acct.classList.remove('open');
     _ddOpen = false;
   }
 

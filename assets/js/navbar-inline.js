@@ -24,7 +24,8 @@
       ? (nombre + (apellido ? ' ' + apellido : ''))
       : cachedProfile.email.split('@')[0];
     accountHTML = '<span style="width:32px;height:32px;background:#FF7A00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">' + initials + '</span>' +
-      '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>';
+      '<span class="igb-account-text"><small>Sesión activa</small><strong>' + displayName + '</strong></span>' +
+      '<svg class="igb-acct-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="6 9 12 15 18 9"/></svg>';
     accountHTMLMobile = '<div class="igb-mobile-account"><div class="igb-mobile-account-row"><div class="igb-mobile-account-avatar">' + initials + '</div><div class="igb-mobile-account-info"><div class="igb-mobile-account-name">' + displayName + '</div><div class="igb-mobile-account-sub">Sesión activa</div></div></div><div class="igb-mobile-account-actions"><button onclick="igbOpenProfile()" class="igb-mobile-profile-btn">Mi perfil</button><button onclick="igbLogout()" class="igb-mobile-logout">Cerrar sesión</button></div></div>';
   } else {
     accountHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +

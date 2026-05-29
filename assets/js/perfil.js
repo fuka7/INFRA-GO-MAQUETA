@@ -32,10 +32,11 @@
     renderHero();
     fillForm();
     attachEvents();
+    initHamburger();
 
     // Activar la pestaña indicada en el hash URL
     var hash = (window.location.hash || '').replace('#', '');
-    if (hash && document.querySelector('.prf-tab[data-tab="' + hash + '"]')) {
+    if (hash && document.querySelector('.prf-nav-item[data-tab="' + hash + '"]')) {
       switchTab(hash);
     }
   }
@@ -91,8 +92,8 @@
 
   /* ── Eventos ── */
   function attachEvents() {
-    // Pestañas
-    document.querySelectorAll('.prf-tab').forEach(function (tab) {
+    // Navegación sidebar
+    document.querySelectorAll('.prf-nav-item').forEach(function (tab) {
       tab.addEventListener('click', function () {
         switchTab(tab.dataset.tab);
         history.replaceState(null, '', '#' + tab.dataset.tab);
@@ -108,9 +109,42 @@
     if (form) form.addEventListener('submit', function (e) { e.preventDefault(); saveData(); });
   }
 
+  /* ── Hamburger móvil ── */
+  function initHamburger() {
+    var btn     = document.getElementById('prfHamburger');
+    var overlay = document.getElementById('prfMobOverlay');
+    var sidebar = document.querySelector('.prf-sidebar');
+    if (!btn || !overlay || !sidebar) return;
+
+    function openMenu() {
+      btn.classList.add('prf-is-open');
+      overlay.classList.add('prf-is-open');
+      sidebar.classList.add('prf-is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      btn.classList.remove('prf-is-open');
+      overlay.classList.remove('prf-is-open');
+      sidebar.classList.remove('prf-is-open');
+      document.body.style.overflow = '';
+    }
+
+    btn.addEventListener('click', function () {
+      sidebar.classList.contains('prf-is-open') ? closeMenu() : openMenu();
+    });
+    overlay.addEventListener('click', closeMenu);
+
+    // Cerrar al navegar en móvil
+    document.querySelectorAll('.prf-nav-item, .prf-sidebar-back, .prf-sidebar-logout').forEach(function (el) {
+      el.addEventListener('click', function () {
+        if (window.innerWidth <= 768) closeMenu();
+      });
+    });
+  }
+
   /* ── Pestañas ── */
   function switchTab(tab) {
-    document.querySelectorAll('.prf-tab').forEach(function (t) {
+    document.querySelectorAll('.prf-nav-item').forEach(function (t) {
       t.classList.toggle('active', t.dataset.tab === tab);
     });
     var capTab = tab.charAt(0).toUpperCase() + tab.slice(1);

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -9,10 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/navbar.css">
-<link rel="stylesheet" href="/assets/css/footer.css">
 <link rel="stylesheet" href="/assets/css/auth.css">
-<link rel="stylesheet" href="/assets/css/responsive.css">
 <link rel="stylesheet" href="/assets/css/perfil.css">
 <!-- Guardia de autenticación: redirige a inicio si no hay sesión -->
 <script>
@@ -22,55 +19,85 @@
 })();
 </script>
 </head>
-<body>
-
-<div id="navbar-placeholder"></div>
+<body class="prf-body">
 
 <!-- ══════════════════════════════════════
-     HERO DE PERFIL
+     BARRA SUPERIOR MÓVIL
 ══════════════════════════════════════ -->
-<section class="prf-hero">
-  <div class="prf-hero-inner">
-    <div class="prf-avatar" id="prfAvatar"></div>
-    <div class="prf-hero-info">
-      <div class="prf-hero-name" id="prfName">Cargando...</div>
-      <div class="prf-hero-email" id="prfEmail"></div>
+<div class="prf-mob-header">
+  <button class="prf-hamburger" id="prfHamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="/index.html" class="prf-mob-logo-link">
+    <img src="/img/logo en blanco.png" alt="ElevalCorp" class="prf-mob-logo">
+  </a>
+</div>
+<div class="prf-mob-overlay" id="prfMobOverlay"></div>
+
+<!-- ══════════════════════════════════════
+     DASHBOARD: SIDEBAR + CONTENIDO
+══════════════════════════════════════ -->
+<div class="prf-dashboard">
+
+  <!-- SIDEBAR IZQUIERDO -->
+  <aside class="prf-sidebar">
+
+    <!-- Marca -->
+    <a href="/index.html" class="prf-sidebar-brand">
+      <img src="/img/logo en blanco.png" alt="ElevalCorp" class="prf-sidebar-logo">
+    </a>
+
+    <div class="prf-sidebar-divider"></div>
+
+    <!-- Perfil del usuario -->
+    <div class="prf-sidebar-profile">
+      <div class="prf-avatar" id="prfAvatar"></div>
+      <div class="prf-sidebar-name" id="prfName">Cargando...</div>
+      <div class="prf-sidebar-email" id="prfEmail"></div>
       <span class="prf-hero-badge" id="prfBadge" style="display:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span id="prfBadgeText"></span>
       </span>
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════════
-     BARRA DE PESTAÑAS
-══════════════════════════════════════ -->
-<div class="prf-tabs-bar">
-  <div class="prf-tabs-inner">
-    <button class="prf-tab active" data-tab="datos">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Mis Datos
-    </button>
-    <button class="prf-tab" data-tab="tarjetas">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-      Tarjetas
-    </button>
-    <button class="prf-tab" data-tab="compras">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      Mis Compras
-    </button>
-    <button class="prf-tab" data-tab="cotizaciones">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
-      Cotizaciones
-    </button>
-  </div>
-</div>
+    <div class="prf-sidebar-divider"></div>
 
-<!-- ══════════════════════════════════════
-     CONTENIDO PRINCIPAL
-══════════════════════════════════════ -->
-<main class="prf-main">
+    <!-- Navegación -->
+    <nav class="prf-sidebar-nav">
+      <button class="prf-nav-item active" data-tab="datos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="17" height="17"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Mis Datos
+      </button>
+      <button class="prf-nav-item" data-tab="tarjetas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="17" height="17"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Tarjetas
+      </button>
+      <button class="prf-nav-item" data-tab="cotizaciones">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="17" height="17"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        Mis Cotizaciones
+      </button>
+      <button class="prf-nav-item" data-tab="compras">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="17" height="17"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Mis Compras
+      </button>
+    </nav>
+
+    <!-- Acciones inferiores -->
+    <div class="prf-sidebar-bottom">
+      <a href="/index.html" class="prf-sidebar-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="16" height="16"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Volver al Inicio
+      </a>
+      <button class="prf-sidebar-logout" onclick="igbLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Cerrar sesión
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="prf-content">
 
   <!-- ── PESTAÑA: MIS DATOS ── -->
   <section class="prf-section active" id="tabDatos">
@@ -224,15 +251,13 @@
     </div>
   </section>
 
-</main>
+  </main><!-- .prf-content -->
 
-<!-- Placeholder para footer -->
-<div id="footer-placeholder"></div>
+</div><!-- .prf-dashboard -->
 
 <script type="module" src="/assets/js/config.js"></script>
 <script src="/assets/js/auth.js" defer></script>
 <script src="/assets/js/navbar-inline.js"></script>
-<script src="/assets/js/footer-inline.js"></script>
 <script src="/assets/js/perfil.js" defer></script>
 
 </body>
