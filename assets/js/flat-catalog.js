@@ -882,11 +882,29 @@ function _overrideValidateStep() {
     if (step === 1) {
       const totalQty = _flatRows.filter(r => r.productName).reduce((s, r) => s + r.qty, 0);
       if (totalQty === 0) {
-        alert('⚠️ Debes seleccionar al menos un producto');
+        (window.igAlert || alert)('Debes seleccionar al menos un producto');
         return false;
       }
       _syncAllToOriginal();
       if (typeof window.collectEquipos === 'function') window.collectEquipos();
+
+      /* Validación de despacho: región seleccionada exige comuna */
+      if (window._despachoHabilitado) {
+        const mode = window._despachoMode || 'single';
+        if (mode === 'single') {
+          const s = window._despachoSingle || {};
+          if (s.region && !s.comuna) {
+            (window.igAlert || alert)('Selecciona una comuna para el destino de envío');
+            return false;
+          }
+        } else {
+          const incompleto = (window._despachoDestinos || []).some(function(d) { return d.region && !d.comuna; });
+          if (incompleto) {
+            (window.igAlert || alert)('Todos los destinos con región seleccionada deben tener una comuna');
+            return false;
+          }
+        }
+      }
 
       /* Alerta de marca dominante al presionar Siguiente (desde 10 uds, si no fue descartada) */
       if (!_igaAlertDismissed.brand) {

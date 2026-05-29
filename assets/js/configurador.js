@@ -47,7 +47,30 @@ window._despachoCajasFisicas = 0;   // actualizado por updateSidebar()
 window._summaryTotalConIVA   = 0;   // actualizado por updateSidebar()
 window._despachoMode         = 'single'; // 'single' | 'multi'
 window._despachoSingle       = { region: '', comuna: '' }; // estado para modo un destino
+window._despachoHabilitado   = false;    // toggle de despacho (paso 1)
 window.TARIFAS_REGIONES = TARIFAS_REGIONES;
+
+// ═════════════════════════════════════════
+// TOAST DE VALIDACIÓN
+// ═════════════════════════════════════════
+function igAlert(msg) {
+  var el = document.getElementById('ig-toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'ig-toast';
+    el.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15">' +
+        '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>' +
+        '<line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' +
+      '</svg><span></span>';
+    document.body.appendChild(el);
+  }
+  el.querySelector('span').textContent = msg.replace(/^⚠️\s*/, '');
+  clearTimeout(el._t);
+  el.classList.add('ig-toast--show');
+  el._t = setTimeout(function() { el.classList.remove('ig-toast--show'); }, 3500);
+}
+window.igAlert = igAlert;
 
 // ═════════════════════════════════════════
 // TIPO DE CAMBIO (DÓLAR TIC)
@@ -269,10 +292,28 @@ function validateStep(step) {
       totalQty += parseInt(el.textContent) || 0;
     });
     if (totalQty === 0) {
-      alert('⚠️ Debes seleccionar al menos un equipo');
+      igAlert('Debes seleccionar al menos un equipo');
       return false;
     }
     collectEquipos();
+
+    // Si despacho está habilitado, una región seleccionada exige una comuna
+    if (window._despachoHabilitado) {
+      const mode = window._despachoMode || 'single';
+      if (mode === 'single') {
+        const s = window._despachoSingle || {};
+        if (s.region && !s.comuna) {
+          igAlert('Selecciona una comuna para el destino de envío');
+          return false;
+        }
+      } else {
+        const incompleto = (window._despachoDestinos || []).some(d => d.region && !d.comuna);
+        if (incompleto) {
+          igAlert('Todos los destinos con región seleccionada deben tener una comuna');
+          return false;
+        }
+      }
+    }
   }
 
   if (step === 2) {
@@ -311,7 +352,7 @@ function validateForm() {
   const telefono = document.getElementById('telefono')?.value.trim();
 
   if (!empresa || !email || !contacto || !telefono) {
-    alert('⚠️ Completa los campos obligatorios (Empresa, Contacto, Teléfono y Email)');
+    igAlert('Completa los campos obligatorios: Empresa, Contacto, Teléfono y Email');
     return false;
   }
 
@@ -558,6 +599,13 @@ function updateSidebar() {
     if (!esDG) { despPrecio += t.precio * d.qty; todosGratis = false; }
   });
   if (!hayValidos) todosGratis = false;
+
+  /* Si el toggle de despacho está OFF, descartar todo */
+  if (!window._despachoHabilitado) {
+    hayValidos  = false;
+    todosGratis = false;
+    despPrecio  = 0;
+  }
 
   /* Guardar resultado de despacho para pasos siguientes */
   window._despachoPrecioTotal  = despPrecio;
@@ -1546,7 +1594,7 @@ function descargarCotizacionPDF(returnHtml) {
   if (returnHtml) return htmlPDF;
 
   const win = window.open('', '_blank');
-  if (!win) { alert('Permite las ventanas emergentes para descargar el PDF.'); return; }
+  if (!win) { igAlert('Permite las ventanas emergentes para descargar el PDF.'); return; }
   win.document.write(htmlPDF);
   win.document.close();
   win.focus();
@@ -1884,7 +1932,7 @@ function _despachoComunaOpts(region, selected) {
 
 /* Calcula val/info de una fila dada región, qty y totalConIVA */
 function _despachoRowCost(region, comuna, qty, totalConIVA) {
-  if (!region || qty <= 0) return { val: '&mdash;', info: 'elige destino', gratis: false };
+  if (!region || !comuna || qty <= 0) return { val: '&mdash;', info: 'elige destino', gratis: false };
   var t   = window.TARIFAS_REGIONES[region] || { precio: 9900, gratis75k: false };
   var eCG = typeof window.igShipping !== 'undefined' && typeof window.igShipping.esComunaGratis === 'function'
             ? window.igShipping.esComunaGratis(comuna || '') : false;
@@ -1912,7 +1960,7 @@ function despachoRenderWidget() {
 
   /* Badge */
   if (badge) {
-    if (totalCajas === 0) {
+    if (!window._despachoHabilitado || totalCajas === 0) {
       badge.textContent = '';
       badge.className   = 'despacho-cajas-badge';
     } else {
@@ -1998,6 +2046,29 @@ function despachoRenderWidget() {
 }
 
 window.despachoRenderWidget = despachoRenderWidget;
+
+/* Activa o desactiva el flujo de despacho completo */
+function toggleDespacho(enabled) {
+  window._despachoHabilitado = enabled;
+
+  // Al desactivar, limpiar todas las selecciones para no dejar estado sucio
+  if (!enabled) {
+    window._despachoSingle = { region: '', comuna: '' };
+    (window._despachoDestinos || []).forEach(function(d) {
+      d.region = '';
+      d.comuna = '';
+    });
+  }
+
+  var container = document.getElementById('despachoDestinosContainer');
+  var wrap      = document.getElementById('despachoInlineWrap');
+  if (container) container.style.display = enabled ? '' : 'none';
+  if (wrap) wrap.classList.toggle('despacho-inline-wrap--active', enabled);
+
+  if (typeof window.despachoRenderWidget === 'function') window.despachoRenderWidget();
+  updateSidebar();
+}
+window.toggleDespacho = toggleDespacho;
 
 window.despachoSetRegion = function(idx, region) {
   if (idx === -1 || window._despachoMode === 'single') {

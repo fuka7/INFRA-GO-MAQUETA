@@ -593,6 +593,11 @@
   };
 
   function _injectDespachoCardConfigurador() {
+    if (!window._despachoHabilitado) {
+      var slot0 = document.getElementById('resumen-despacho-slot');
+      if (slot0) slot0.innerHTML = '';
+      return;
+    }
     var slot = document.getElementById('resumen-despacho-slot');
     if (!slot) return;
 

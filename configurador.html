@@ -293,10 +293,14 @@ window.clsSetCat = function(tipo, btn) {
       <div class="despacho-inline-wrap" id="despachoInlineWrap">
         <div class="despacho-inline-title">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          Estimar Envío
+          Incluir despacho
           <span class="despacho-cajas-badge" id="despachoCajasBadge"></span>
+          <label class="despacho-switch" title="Activar envío a domicilio">
+            <input type="checkbox" id="despachoHabilitado" onchange="toggleDespacho(this.checked)">
+            <span class="despacho-switch-track"><span class="despacho-switch-thumb"></span></span>
+          </label>
         </div>
-        <div id="despachoDestinosContainer"></div>
+        <div id="despachoDestinosContainer" style="display:none"></div>
       </div>
 
       <div style="display:flex; justify-content:center; margin-top:20px;">
