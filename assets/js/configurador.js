@@ -246,11 +246,10 @@ function updateStepDisplay() {
 }
 
 function updateProgressBar() {
-  const progress = (currentStep / totalSteps) * 100;
-  document.getElementById('progressBar').style.width = progress + '%';
-  document.querySelectorAll('.progress-step').forEach(step => {
-    const n = parseInt(step.dataset.step);
-    step.classList.toggle('active', n <= currentStep);
+  document.querySelectorAll('.cfg-step-item').forEach(item => {
+    const n = parseInt(item.dataset.step);
+    item.classList.toggle('active',    n === currentStep);
+    item.classList.toggle('completed', n < currentStep);
   });
 }
 
@@ -1782,7 +1781,7 @@ window.updateStepDisplay    = updateStepDisplay;
 
 /* ── Navegación clickeando el progress bar ── */
 document.addEventListener('click', function(e) {
-  const stepDot = e.target.closest('.progress-step');
+  const stepDot = e.target.closest('.cfg-step-item');
   if (!stepDot) return;
   const targetStep = parseInt(stepDot.dataset.step);
   if (!targetStep || targetStep === currentStep) return;

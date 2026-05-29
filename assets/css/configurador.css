@@ -184,7 +184,12 @@ body {
 /* Pasos 2-4: sin sidebars, una sola columna centrada */
 .config-layout--single {
   grid-template-columns: 1fr;
+}
+/* Contenido de pasos 2-4: centrado y acotado igual que antes */
+.config-layout--single .wizard-step {
   max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -691,6 +696,34 @@ body {
 }
 
 /* ── Barra de filtros de categoría ── */
+/* Select de categoría: solo visible en mobile */
+.flat-filter-select-wrap {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: #f8f9fb;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-s);
+  padding: 0 14px;
+  margin-bottom: 10px;
+  height: 44px;
+}
+.flat-filter-select-wrap svg { stroke: var(--c-text-3); flex-shrink: 0; }
+.flat-filter-select-wrap select {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-text);
+  outline: none;
+  cursor: pointer;
+  height: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
 .flat-filter-bar {
   display: flex;
   flex-wrap: wrap;
@@ -2266,157 +2299,264 @@ body {
 /* ════════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════════ */
+
+/* ── TABLET GRANDE ── */
 @media (max-width: 1200px) {
   .config-layout { grid-template-columns: 195px 1fr; padding: 20px 20px 60px; gap: 16px; }
 }
+
+/* ── TABLET ── */
 @media (max-width: 1024px) {
   .config-layout { grid-template-columns: 1fr; }
-  .sim-layout { grid-template-columns: 1fr; }
+  .sim-layout    { grid-template-columns: 1fr; }
 
-  /* Sidebar izquierdo: pasa a barra horizontal encima de la tabla */
-  .config-left-sidebar {
-    grid-column: 1 / -1;   /* ocupa todo el ancho del grid */
-  }
+  /* Sidebar: barra horizontal de widgets encima del contenido */
+  .config-left-sidebar { grid-column: 1 / -1; }
   .cw-sticky-wrap {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    position: static;       /* desactiva sticky */
+    position: static;
     top: auto;
     gap: 10px;
   }
   .cw-widget { padding: 10px 12px; }
-  .cw-cta { padding: 10px 12px; }
+  .cw-cta    { padding: 10px 12px; }
   .cw-cta__title { font-size: 15px; }
   .cw-cta__text  { margin-bottom: 8px; }
-  /* El widget de dólar y el de descuento en fila 1; fin y +50 en fila 2 */
-  
-  /* Cards resumen: 2 columnas en tablet */
+
+  /* Cards resumen: 2 columnas */
   .right-sidebar { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── MÓVIL ── */
 @media (max-width: 768px) {
+  /* Cabecera */
   .config-header { padding: 20px 16px 18px; }
   .config-header-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
   .config-header-text h1 { font-size: 22px; }
-  .config-header-text p { font-size: 13px; }
-  .config-header-badges { flex-direction: row; flex-wrap: wrap; gap: 6px; }
-  .config-progress-inner { padding: 12px 16px; }
+  .config-header-text p  { font-size: 13px; }
+  .config-header-badges  { flex-direction: row; flex-wrap: wrap; gap: 6px; }
 
+  /* Layout */
   .config-layout { grid-template-columns: 1fr; padding: 14px 12px 40px; gap: 14px; }
+  .config-layout--single .wizard-step { max-width: 100%; }
 
-  /* ── Filtros de categoría en mobile ── */
+  /* Stepper */
+  .cfg-step-nav  { padding: 8px 12px; margin-bottom: 14px; }
+  .cfg-step-item { padding: 6px 8px; gap: 7px; }
+  .cfg-step-dot  { width: 26px; height: 26px; }
+  .cfg-step-dot svg { width: 11px; height: 11px; }
+  .cfg-step-name { font-size: 12px; }
+  .cfg-step-num  { font-size: 9px; }
+  .cfg-step-connector { width: 14px; }
+
+  /* Filtros de categoría */
   .flat-filter-bar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 10px 14px; }
   .flat-filter-bar::-webkit-scrollbar { display: none; }
-  .flat-cat-chip { font-size: 11px; padding: 4px 10px; flex-shrink: 0; }
+  .flat-cat-chip { font-size: 11px; padding: 8px 12px; flex-shrink: 0; min-height: 36px; }
   #btnAddFlatRow { padding: 8px 14px; font-size: 11px; }
+  /* Select mobile: ocultar chips, mostrar dropdown */
+  .flat-filter-select-wrap { display: flex; }
+  .flat-filter-bar { display: none; }
 
-  /* ── Cards resumen: 2 columnas en mobile ── */
-  .right-sidebar { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+  /* Cards resumen */
+  .right-sidebar { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; margin-top: 14px; }
   .right-sidebar .bb-col { padding: 12px 14px; }
+  .bb-sub { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* ── Productos — 2 filas: nombre arriba, precio + qty abajo ── */
-  .product-item { padding: 14px 14px; }
-  .product-main { gap: 6px 10px; }
+  /* Botón paso 1 */
+  .bb-btn-next { width: 100%; justify-content: center; }
+
+  /* Productos */
+  .product-item    { padding: 14px 14px; }
+  .product-main    { gap: 6px 10px; }
   .product-details { flex: 1 1 100%; min-width: 0; }
-  .product-name {
-    font-size: 14px;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    line-height: 1.3;
-  }
-  .product-specs { font-size: 11px; }
+  .product-name    { font-size: 14px; white-space: normal; overflow: visible; text-overflow: unset; line-height: 1.3; }
+  .product-specs   { font-size: 11px; }
   .product-price-tag { font-size: 18px; flex: 1; }
   .product-qty-control { flex-shrink: 0; }
   .product-service-row { gap: 8px; }
   .product-service-select { min-width: 0; font-size: 12px; }
 
-  /* ── Widgets izquierdos ── */
-  .cw-sticky-wrap {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  .cw-cta { display: none; } /* se oculta en mobile para reducir densidad */
+  /* Widgets */
+  .cw-sticky-wrap { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cw-cta { display: none; }
 
-  /* ── Formulario y simulador ── */
-  .config-form-grid { grid-template-columns: 1fr; padding: 16px 14px; gap: 12px; }
-  .sim-plazo-btns { grid-template-columns: repeat(2, 1fr); }
-  .sim-result-grid { grid-template-columns: 1fr; }
-  .sim-panel { padding: 22px 18px; gap: 22px; }
-  .sim-results { padding: 22px 18px; gap: 18px; }
+  /* Paso 2 — Simulador */
+  .config-form-grid  { grid-template-columns: 1fr; padding: 16px 14px; gap: 12px; }
+  .sim-plazo-btns    { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sim-plazo-btn     { padding: 10px 6px; font-size: 13px; }
+  .sim-result-grid   { grid-template-columns: 1fr; }
+  .sim-panel         { padding: 22px 18px; gap: 22px; }
+  .sim-results       { padding: 22px 18px; gap: 18px; }
+  .sim-result-val    { font-size: 50px; }
+  .sim-amount        { font-size: 28px; }
+  .sim-amount--svc   { font-size: 22px; }
 
-  /* ── Pasos intro ── */
-  .step-intro { margin-bottom: 20px; }
+  /* Paso 3 — Datos */
+  .step-intro    { margin-bottom: 20px; }
   .step-intro h2 { font-size: 22px; }
-  .step-intro p { font-size: 14px; }
+  .step-intro p  { font-size: 14px; }
 
-  /* ── Resumen ── */
+  /* Paso 4 — Resumen */
   .resumen-card-header { padding: 12px 16px; }
-  .resumen-line-item { padding: 10px 16px; gap: 12px; }
-  .resumen-total-box { padding: 18px 18px; }
+  .resumen-line-item   { padding: 10px 16px; gap: 12px; }
+  .resumen-total-box   { padding: 18px 18px; }
+  .resumen-contact-grid { grid-template-columns: 1fr; }
 
-  /* ── Progreso ── */
-  .progress-step-label { font-size: 9px; }
+  /* Navegación */
+  .wizard-nav { gap: 10px; }
+  .wizard-btn--prev { font-size: 13px; padding: 11px 16px; }
+  .wizard-btn--next { flex: 1; justify-content: center; font-size: 13px; padding: 11px 16px; }
 
-  /* ── Otros ── */
+  /* Varios */
   .modal-box { padding: 32px 20px 28px; }
   .flat-table-header { flex-direction: column; gap: 8px; }
-  .sim-result-val { font-size: 50px; }
-  .sim-amount { font-size: 28px; }
-  .sim-amount--svc { font-size: 22px; }
 }
 
+/* ── MÓVIL PEQUEÑO ── */
 @media (max-width: 480px) {
-  /* ── Cabecera: ocultar badges, liberar espacio ── */
+  /* Cabecera */
   .config-header-badges { display: none; }
-  .config-header { padding: 16px 14px; }
+  .config-header        { padding: 16px 14px; }
   .config-header-text h1 { font-size: 20px; }
 
-  /* ── Progreso ── */
-  .progress-step-dot { width: 28px; height: 28px; }
-  .progress-step-dot svg { width: 13px; height: 13px; }
+  /* Stepper: solo paso activo */
+  .cfg-step-connector         { display: none; }
+  .cfg-step-item:not(.active) { display: none; }
+  .cfg-step-item.active       { flex: unset; justify-content: flex-start; }
+  .cfg-step-name { font-size: 14px; }
+  .cfg-step-num  { font-size: 10px; }
 
-  .right-sidebar .bb-col { padding: 10px 12px; }
-  .bb-value { font-size: 16px; }
-  .bb-icon { width: 32px; height: 32px; }
+  /* Cards resumen: 1 columna */
+  .right-sidebar             { grid-template-columns: 1fr; gap: 8px; }
+  .right-sidebar .bb-col     { padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .bb-value   { font-size: 18px; }
+  .bb-sub     { font-size: 11px; white-space: normal; }
+  .bb-icon    { width: 32px; height: 32px; }
   .bb-icon svg { width: 15px; height: 15px; }
-  .bb-cuota-val { font-size: 20px; }
 
-  /* ── Widgets: columna única ── */
+  /* Widgets: columna única */
   .cw-sticky-wrap { grid-template-columns: 1fr; }
 
-  /* ── Touch targets para cantidad ── */
-  .product-qty-control button { width: 34px; height: 34px; font-size: 18px; }
+  /* Touch targets */
+  .product-qty-control button { width: 36px; height: 36px; font-size: 18px; }
   .qty-value { font-size: 20px; min-width: 24px; }
+  .flat-cat-chip { min-height: 40px; padding: 8px 10px; }
 
-  /* ── Botones de navegación ── */
-  .wizard-nav { gap: 10px; margin-top: 20px; padding-top: 18px; }
-  .wizard-btn { font-size: 13px; padding: 11px 16px; }
-  .wizard-btn--next { flex: 1; justify-content: center; }
+  /* Paso 1 */
+  .product-price-tag  { font-size: 17px; }
+  .product-service-select { min-width: 100px; }
+  .bb-btn-next { width: 100%; justify-content: center; padding: 14px 20px; font-size: 14px; }
 
-  /* ── Formulario ── */
-  .config-form-grid { padding: 12px 12px; gap: 10px; }
-  .config-input { font-size: 13px; padding: 9px 12px; }
-
-  /* ── Simulador ── */
-  .sim-result-val { font-size: 40px; letter-spacing: -1px; }
-  .sim-amount { font-size: 24px; }
+  /* Paso 2 — Simulador */
+  .sim-result-val  { font-size: 40px; letter-spacing: -1px; }
+  .sim-amount      { font-size: 24px; }
   .sim-amount--svc { font-size: 20px; }
-  .sim-total-val { font-size: 20px; }
-  .product-price-tag { font-size: 17px; }
+  .sim-total-val   { font-size: 20px; }
+  .sim-plazo-btns  { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .sim-plazo-btn   { padding: 10px 4px; font-size: 12px; }
 
-  /* ── Resumen totales ── */
-  .resumen-total-val { font-size: 24px; }
+  /* Paso 3 — Formulario */
+  .config-form-grid { padding: 12px 12px; gap: 10px; }
+  .config-input     { font-size: 13px; padding: 9px 12px; }
+
+  /* Paso 4 — Resumen */
+  .resumen-total-val   { font-size: 24px; }
   .resumen-total-cuota { font-size: 19px; }
+
+  /* Navegación */
+  .wizard-nav { gap: 8px; margin-top: 16px; padding-top: 16px; }
+  .wizard-btn--next, .wizard-btn--prev { padding: 12px 18px; font-size: 13px; }
+  .wizard-btn--next { flex: 1; }
 }
 
-/* ─────────────────────────────────────────
-   MUY PEQUEÑO (≤380px)
-──────────────────────────────────────────── */
+/* ── MUY PEQUEÑO ── */
 @media (max-width: 380px) {
-  .progress-step-label { display: none; }
-  .config-layout { padding: 12px 10px 120px; }
-  .flat-cat-chip { font-size: 10px; padding: 3px 8px; }
-  .product-item { padding: 12px 12px; }
-  .bb-value { font-size: 14px; }
-  .bb-cuotas-hint { display: none; }
+  .config-layout     { padding: 10px 8px 100px; }
+  .cfg-step-dot      { width: 24px; height: 24px; }
+  .flat-cat-chip     { font-size: 10px; padding: 7px 8px; }
+  .product-item      { padding: 12px 10px; }
+  .bb-value          { font-size: 16px; }
+  .bb-cuotas-hint    { display: none; }
+  .resumen-contact-grid { grid-template-columns: 1fr; }
+  .right-sidebar     { grid-template-columns: 1fr; }
 }
+
+/* ════════════════════════════════════════════
+   STEPPER HORIZONTAL
+════════════════════════════════════════════ */
+.cfg-step-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  gap: 0;
+}
+.cfg-step-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: var(--radius-s);
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.cfg-step-item:hover { background: var(--c-surface-2); }
+
+.cfg-step-dot {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--c-surface-2);
+  border: 2px solid var(--c-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.cfg-step-dot svg { stroke: var(--c-text-3); transition: stroke 0.2s; }
+
+.cfg-step-item.active .cfg-step-dot {
+  background: var(--orange); border-color: var(--orange);
+}
+.cfg-step-item.active .cfg-step-dot svg { stroke: #fff; }
+
+.cfg-step-item.completed .cfg-step-dot {
+  background: #16a34a; border-color: #16a34a;
+}
+.cfg-step-item.completed .cfg-step-dot svg { display: none; }
+.cfg-step-item.completed .cfg-step-dot::after {
+  content: '';
+  width: 14px; height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-size: contain; background-repeat: no-repeat; background-position: center;
+}
+
+.cfg-step-info {
+  display: flex; flex-direction: column; gap: 1px;
+}
+.cfg-step-num {
+  font-size: 10px; font-weight: 600; color: var(--c-text-3);
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.cfg-step-name {
+  font-size: 13px; font-weight: 700; color: var(--c-text-2);
+}
+.cfg-step-item.active .cfg-step-num  { color: var(--orange); }
+.cfg-step-item.active .cfg-step-name { color: var(--orange); }
+.cfg-step-item.completed .cfg-step-name { color: #16a34a; }
+.cfg-step-item.completed .cfg-step-num  { color: #16a34a; }
+
+.cfg-step-connector {
+  width: 32px; height: 2px; flex-shrink: 0;
+  background: var(--c-border); border-radius: 2px;
+  transition: background 0.2s;
+}
+.cfg-step-item.completed + .cfg-step-connector { background: #16a34a; }
+.cfg-step-item.active   + .cfg-step-connector { background: var(--orange-glow); }
+

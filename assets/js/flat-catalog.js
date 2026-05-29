@@ -1226,38 +1226,116 @@ function _injectStyles() {
 
     /* ── Tablet / mobile: ocultar Marca, Cat, N°Parte y DTO ── */
     @media (max-width: 760px) {
+      /* 6 columnas: # | Producto | P.Unitaria | Cant. | Total | × */
       .flat-col-headers,
-      .flat-order-row { grid-template-columns: 22px 1fr 84px 62px 30px; gap: 4px; }
+      .flat-order-row { grid-template-columns: 20px 1fr 80px 58px 76px 26px; gap: 4px; }
 
-      /* Ocultar celdas de fila */
+      /* Ocultar celdas de fila: Marca, Cat, N°Parte, Dto */
       .pr-prov, .pr-cat, .pr-partnum, .pr-dto { display: none; }
 
-      /* Ocultar cabeceras: Marca(2) Cat(4) N°Parte(5) Total(8) Dto(9) */
+      /* Ocultar cabeceras: Marca(2) Cat(4) N°Parte(5) Dto(9) */
       .flat-col-headers span:nth-child(2),
       .flat-col-headers span:nth-child(4),
       .flat-col-headers span:nth-child(5),
       .flat-col-headers span:nth-child(9) { display: none; }
 
       .flat-col-headers { padding: 10px 12px; }
-      .flat-order-row { padding: 10px 12px; }
-      .precio-base { font-size: 13px; }
-      .pr-precio-lista { align-items: flex-end; }
+      .flat-order-row   { padding: 12px 12px; }
+      .precio-base      { font-size: 13px; }
+      .pr-precio-lista  { align-items: flex-end; }
+      .pr-precio-dto    { justify-content: flex-end; font-size: 13px; font-weight: 700; }
     }
 
-    /* ── Móvil pequeño ── */
+    /* ── MÓVIL: TARJETAS CON FILAS HORIZONTALES ── */
     @media (max-width: 520px) {
-      .flat-col-headers,
-      .flat-order-row { grid-template-columns: 18px 1fr 78px 56px 28px; gap: 3px; }
+      /* Ocultar cabecera de columnas */
+      .flat-col-headers { display: none !important; }
 
-      .flat-col-headers { padding: 8px 10px; }
-      .flat-order-row { padding: 8px 10px; }
+      /* Tarjeta contenedora */
+      .flat-order-row {
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: center;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px;
+        padding: 0 12px 0;
+        margin: 0 0 10px;
+        background: #fff;
+        box-shadow: 0 1px 4px rgba(0,0,0,.05);
+        gap: 0;
+        overflow: hidden;
+      }
+      .flat-order-row:last-of-type { border-bottom: 1px solid #e2e8f0 !important; }
+      .flat-order-row:hover { background: #fff; }
+
+      /* ── Encabezado de tarjeta: selector primero + eliminar ── */
+      .pr-num { display: none !important; }
+      .pr-info--select {
+        order: 1; flex: 1; min-width: 0;
+        padding: 10px 6px 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .pr-actions {
+        order: 2; width: 32px; flex-shrink: 0;
+        justify-content: flex-end;
+        border-bottom: 1px solid #f1f5f9;
+        padding: 10px 0;
+      }
+
+      /* ── Columnas menos importantes: ocultar ── */
+      .pr-prov, .pr-cat, .pr-partnum, .pr-dto { display: none !important; }
+
+      /* ── Filas horizontales: label izquierda | valor derecha ── */
+      .pr-precio-lista {
+        order: 10 !important; width: 100% !important;
+        display: flex !important; flex-direction: row !important;
+        align-items: center !important; justify-content: space-between !important;
+        padding: 9px 0 !important; border-bottom: 1px solid #f8f9fb !important;
+        margin: 0 !important; min-width: 0;
+      }
+      .pr-qty {
+        order: 11 !important; width: 100% !important;
+        display: flex !important; flex-direction: row !important;
+        align-items: center !important; justify-content: space-between !important;
+        padding: 9px 0 !important; border-bottom: 1px solid #f8f9fb !important;
+        margin: 0 !important; min-width: 0; padding-left: 0 !important;
+      }
+      .pr-precio-dto {
+        order: 12 !important; width: 100% !important;
+        display: flex !important; flex-direction: row !important;
+        align-items: center !important; justify-content: space-between !important;
+        padding: 9px 0 !important; border-bottom: none !important;
+        margin: 0 !important; min-width: 0;
+      }
+
+      /* Labels (pseudo-elementos) */
+      .pr-precio-lista::before,
+      .pr-qty::before,
+      .pr-precio-dto::before {
+        font-size: 11px; font-weight: 600;
+        color: #7a8fa6; flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .pr-precio-lista::before { content: 'Precio unitario'; }
+      .pr-qty::before          { content: 'Cantidad'; }
+      .pr-precio-dto::before   { content: 'Total c/IVA'; }
+
+      /* Valores alineados a la derecha */
+      .pr-precio-lista { align-items: center !important; }
+      .precio-base  { font-size: 14px; font-weight: 700; color: #0d1e36; }
+      .precio-usd   { display: none; }
+
+      .pr-qty { padding-left: 0 !important; justify-content: space-between !important; }
+      .qty-spinner-wrap { padding: 3px 6px; gap: 3px; }
+      .qty-value { font-size: 14px; width: 28px; }
+
+      .pr-precio-dto { justify-content: space-between !important; }
+      .precio-dto-val { font-size: 14px; font-weight: 800; color: #FF7A00; }
+
+      /* Select y botón */
+      .flat-product-select { font-size: 12px; padding: 6px 24px 6px 8px; }
+      #btnAddFlatRow { width: 100%; justify-content: center; border-radius: 10px; }
       .flat-table-toolbar { padding: 10px 12px; }
-      .flat-product-select { font-size: 11px; padding: 4px 22px 4px 7px; }
-      .precio-base { font-size: 12px; }
-      .qty-value { font-size: 13px; width: 28px; }
-      .qty-spinner-wrap { padding: 2px 4px; gap: 2px; }
-
-      #btnAddFlatRow { justify-content: center; }
     }
 
     /* ══════════════════════════════════════════════════════

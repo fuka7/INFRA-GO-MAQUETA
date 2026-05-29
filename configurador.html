@@ -42,7 +42,8 @@ document.addEventListener('DOMContentLoaded',function(){document.querySelector('
 window.clsSetCat = function(tipo, btn) {
   document.querySelectorAll('.cls-cat-btn, .flat-cat-chip').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('[data-tipo="' + tipo + '"]').forEach(b => b.classList.add('active'));
-  /* Delegar el filtrado al motor de flat-catalog para que combine categoría + búsqueda */
+  var sel = document.getElementById('flatFilterSelect');
+  if (sel) sel.value = tipo;
   if (typeof window.aplicarFiltros === 'function') window.aplicarFiltros();
 };
 
@@ -75,44 +76,6 @@ window.clsSetCat = function(tipo, btn) {
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     BARRA DE PROGRESO
-════════════════════════════════════════ -->
-<div class="config-progress-wrap">
-  <div class="config-progress-inner">
-    <div class="progress-track">
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="progressBar" style="width:25%"></div>
-      </div>
-      <div class="progress-steps">
-        <div class="progress-step active" data-step="1">
-          <div class="progress-step-dot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          </div>
-          <span class="progress-step-label">Productos</span>
-        </div>
-        <div class="progress-step" data-step="2">
-          <div class="progress-step-dot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
-          <span class="progress-step-label">Financiamiento</span>
-        </div>
-        <div class="progress-step" data-step="3">
-          <div class="progress-step-dot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <span class="progress-step-label">Datos</span>
-        </div>
-        <div class="progress-step" data-step="4">
-          <div class="progress-step-dot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          </div>
-          <span class="progress-step-label">Resumen</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ════════════════════════════════════════
      LAYOUT PRINCIPAL
@@ -190,6 +153,29 @@ window.clsSetCat = function(tipo, btn) {
   <!-- ── WIZARD ── -->
   <div class="config-main">
 
+    <!-- STEPPER HORIZONTAL — visible en todos los pasos -->
+    <nav class="cfg-step-nav" id="cfgStepNav">
+      <div class="cfg-step-item active" data-step="1">
+        <div class="cfg-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <div class="cfg-step-info"><span class="cfg-step-num">Paso 1</span><span class="cfg-step-name">Productos</span></div>
+      </div>
+      <div class="cfg-step-connector"></div>
+      <div class="cfg-step-item" data-step="2">
+        <div class="cfg-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="cfg-step-info"><span class="cfg-step-num">Paso 2</span><span class="cfg-step-name">Financiamiento</span></div>
+      </div>
+      <div class="cfg-step-connector"></div>
+      <div class="cfg-step-item" data-step="3">
+        <div class="cfg-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="cfg-step-info"><span class="cfg-step-num">Paso 3</span><span class="cfg-step-name">Datos</span></div>
+      </div>
+      <div class="cfg-step-connector"></div>
+      <div class="cfg-step-item" data-step="4">
+        <div class="cfg-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div class="cfg-step-info"><span class="cfg-step-num">Paso 4</span><span class="cfg-step-name">Resumen</span></div>
+      </div>
+    </nav>
+
     <!-- ╔══════════════════════════════╗
          PASO 1 — EQUIPOS
          ╚══════════════════════════════╝ -->
@@ -260,6 +246,22 @@ window.clsSetCat = function(tipo, btn) {
         </div>
       </div>
 
+      <!-- Selector de categoría para mobile -->
+      <div class="flat-filter-select-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="15" height="15"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <select id="flatFilterSelect" onchange="clsSetCat(this.value, null)">
+          <option value="todos">Todos</option>
+          <option value="pc">PC</option>
+          <option value="notebook">Notebook</option>
+          <option value="servidor">Server &amp; Storage</option>
+          <option value="impresora">Impresoras</option>
+          <option value="networking">Networking</option>
+          <option value="storage">Licencias &amp; Atach</option>
+          <option value="servicio-tic">Servicios TIC</option>
+          <option value="accesorios">Accesorios</option>
+        </select>
+      </div>
+
       <!-- Barra de filtros de categoría -->
       <div class="flat-filter-bar">
         <button class="flat-cat-chip active" data-tipo="todos" onclick="clsSetCat('todos',this)">
@@ -304,7 +306,7 @@ window.clsSetCat = function(tipo, btn) {
         <div id="despachoDestinosContainer"></div>
       </div>
 
-      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+      <div style="display:flex; justify-content:center; margin-top:20px;">
         <button class="bb-btn-next" onclick="nextStep()">
           Simular financiamiento
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -797,8 +799,8 @@ document.addEventListener('keydown',function(e){
 <script src="/assets/js/catalogo.js"></script>
 <script src="/assets/js/comunas-chile.js"></script>
 <script src="/assets/js/shipping.js"></script>
-<script src="/assets/js/configurador.js"></script>
-<script src="/assets/js/flat-catalog.js"></script>
+<script src="/assets/js/configurador.js?v=3"></script>
+<script src="/assets/js/flat-catalog.js?v=4"></script>
 <script>
 (function() {
 
