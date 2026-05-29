@@ -705,6 +705,7 @@ body {
   border: 1px solid var(--c-border);
   border-radius: var(--radius-s);
   padding: 0 14px;
+  margin-top: 20px;
   margin-bottom: 10px;
   height: 44px;
 }
@@ -732,8 +733,9 @@ body {
   padding: 12px 20px;
   background: #f8f9fb;
   border: 1px solid var(--c-border);
-  border-top: none;
   border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  margin-top: 20px;
 }
 
 /* ── Chips de categoría con color propio ── */
