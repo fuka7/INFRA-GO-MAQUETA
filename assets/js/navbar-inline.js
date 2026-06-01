@@ -181,7 +181,11 @@
     }));
   }
 
-  if (document.readyState === 'loading') {
+  // Si el placeholder ya existe (script corre justo después del div), inyectar de inmediato
+  // para evitar cualquier paint del placeholder vacío → sin parpadeo.
+  if (document.getElementById('navbar-placeholder')) {
+    injectNavbar();
+  } else if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', injectNavbar);
   } else {
     injectNavbar();

@@ -112,3 +112,27 @@ body{padding-top:96px;}
 .igb-mobile-action-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;background:linear-gradient(135deg,#FF7A00,#FF9933);color:#fff !important;border:none;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;text-decoration:none;text-align:center;box-sizing:border-box;transition:opacity .2s;margin-top:6px;}
 .igb-mobile-action-btn:hover{opacity:.88;color:#fff !important;}
 @media(max-width:400px){.igb-mobile{padding:8px 10px 16px;}.igb-mobile a{padding:9px 12px;font-size:13px;}}
+
+/* ── View Transitions: navbar fija entre páginas, sin parpadeo ──
+   Browsers compatibles: Chrome 126+, Edge 126+, Safari 18+
+   En Firefox el fallback es el comportamiento actual.             */
+@supports (view-transition-name: none) {
+  @view-transition { navigation: auto; }
+
+  /* Marcar el placeholder como elemento compartido entre páginas */
+  #navbar-placeholder {
+    view-transition-name: site-navbar;
+  }
+
+  /* Suprimir cualquier animación en el navbar — queda completamente fijo */
+  ::view-transition-old(site-navbar),
+  ::view-transition-new(site-navbar) {
+    animation: none;
+  }
+
+  /* Crossfade suave para el resto del contenido (opcional, quitar si no gusta) */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.15s;
+  }
+}
