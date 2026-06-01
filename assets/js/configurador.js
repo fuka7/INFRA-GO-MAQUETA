@@ -645,8 +645,13 @@ function updateSidebar() {
   setTxt('totalNeto',      totalNeto.toLocaleString('es-CL'));
   setTxt('totalIVA',       iva.toLocaleString('es-CL'));
   setTxt('totalGeneral',   totalFinal.toLocaleString('es-CL'));
-  setTxt('ahorroTotal',    Math.round(descuento * 1.19).toLocaleString('es-CL'));
+  setTxt('ahorroTotal',    descuento > 0 ? Math.round(descuento * 1.19).toLocaleString('es-CL') : '0');
   setTxt('descuentoPct',   pctDcto > 0 ? pctDcto + '%' : '—');
+  // Ocultar el prefijo "−$" cuando no hay descuento
+  const ahorroEl = document.getElementById('ahorroTotal');
+  if (ahorroEl && ahorroEl.parentElement) {
+    ahorroEl.parentElement.style.opacity = descuento > 0 ? '1' : '0.35';
+  }
   setTxt('plazoSidebarLabel', simPlazo);
 
   /* Etiqueta del total: indica si incluye despacho */
@@ -717,14 +722,15 @@ function generateFinalSummary() {
       summaryEquipos.innerHTML = '<p class="resumen-empty">Sin productos seleccionados</p>';
     } else {
       summaryEquipos.innerHTML = eqEntries.map(([name, v]) => {
-        const sub = v.qty * v.price;
+        const sub       = v.qty * v.price;
+        const subConIVA = Math.round(sub * 1.19);
         totalEq  += sub;
         return `<div class="resumen-line-item">
           <div class="resumen-line-info">
             <span class="resumen-line-name">${name}</span>
             <span class="resumen-line-qty">× ${v.qty} unid.</span>
           </div>
-          <span class="resumen-line-price">$${fmt(sub)}</span>
+          <span class="resumen-line-price">$${fmt(subConIVA)}</span>
         </div>`;
       }).join('');
     }
@@ -739,18 +745,21 @@ function generateFinalSummary() {
       summaryServicios.innerHTML = '<p class="resumen-empty">Sin servicios seleccionados</p>';
     } else {
       summaryServicios.innerHTML = svcEntries.map(([name, svc]) => {
-        const price     = typeof svc === 'object' ? svc.price      : svc;
-        const frecuencia = typeof svc === 'object' ? svc.frecuencia : '/mes';
+        const price       = typeof svc === 'object' ? svc.price      : svc;
+        const frecuencia  = typeof svc === 'object' ? svc.frecuencia : '/mes';
+        const qty         = (typeof svc === 'object' && svc.qty) ? svc.qty : null;
+        const priceConIVA = Math.round(price * 1.19);
         totalSvc += price;
         const freqLabel = frecuencia === 'al inicio' ? ' — pago al inicio'
                         : frecuencia === '/año'       ? '/año'
                         : '/mes';
+        const qtyLabel = qty && qty > 1 ? `× ${qty} unid.` : (frecuencia === 'al inicio' ? 'pago único' : frecuencia === '/año' ? 'anual' : 'mensual');
         return `<div class="resumen-line-item">
           <div class="resumen-line-info">
             <span class="resumen-line-name">${name}</span>
-            <span class="resumen-line-qty" style="font-size:10px;opacity:0.6;">${frecuencia === 'al inicio' ? 'pago único' : frecuencia === '/año' ? 'anual' : 'mensual'}</span>
+            <span class="resumen-line-qty" style="font-size:10px;opacity:0.6;">${qtyLabel}</span>
           </div>
-          <span class="resumen-line-price">$${fmt(price)}${freqLabel}</span>
+          <span class="resumen-line-price">$${fmt(priceConIVA)}${freqLabel}</span>
         </div>`;
       }).join('');
     }
