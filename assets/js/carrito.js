@@ -45,15 +45,32 @@
   function _totalQty()   { return _items.reduce(function(s,i){ return s+i.qty; }, 0); }
   function _subtotal()   { return _items.reduce(function(s,i){ return s+i.precio*i.qty; }, 0); }
 
-  /* Detecta si un ítem es servicio consultando el catálogo */
+  /* Detecta si un ítem es servicio o licencia (no ocupa caja física) */
   function _isService(item) {
     var cat = ((window.CATALOGO || []).find(function(p){ return p.id === item.id; }) || {}).cat || '';
     return cat === 'servicios';
   }
 
+  function _isNonPhysical(item) {
+    var cat = ((window.CATALOGO || []).find(function(p){ return p.id === item.id; }) || {}).cat || '';
+    return cat === 'servicios' || cat === 'licencias';
+  }
+
   /* Cantidad solo de productos (excluye servicios) — base para el descuento por volumen */
   function _productQty() {
     return _items.reduce(function(s, i){ return s + (_isService(i) ? 0 : i.qty); }, 0);
+  }
+
+  /* Cajas físicas a despachar (excluye servicios y licencias) */
+  function _physicalBoxQty() {
+    return _items.reduce(function(s, i){ return s + (_isNonPhysical(i) ? 0 : i.qty); }, 0);
+  }
+
+  /* Costo total de envío según cantidad de cajas físicas */
+  function _totalShipCost() {
+    if (!_cartShipCalculated || _cartShipCost === 0) return 0;
+    var boxes = _physicalBoxQty();
+    return _cartShipCost * Math.max(1, boxes);
   }
 
   /* ── Descuentos por volumen (igual que configurador) ── */
@@ -590,7 +607,8 @@
     var total  = _metodo === 'tarjeta' ? Math.round(base * 1.03) : base;
     var neto   = Math.round(base / 1.19);
     var iva    = base - neto;
-    total += _cartShipCost;
+    var shipTotal = _totalShipCost();
+    total += shipTotal;
     var el;
     el = document.getElementById('igcPanelSubtotal');    if(el) el.textContent = _fmt(sub);
     el = document.getElementById('igcPanelSubtotalSvc'); if(el) el.textContent = _fmt(subSvc);
@@ -613,8 +631,9 @@
     if (rowEnvio && el) {
       if (_cartShipCalculated) {
         rowEnvio.style.display = '';
-        if (_cartShipCost > 0) {
-          el.textContent = _fmt(_cartShipCost);
+        if (shipTotal > 0) {
+          var boxes = _physicalBoxQty();
+          el.textContent = _fmt(shipTotal) + (boxes > 1 ? ' (' + boxes + ' cajas × ' + _fmt(_cartShipCost) + ')' : '');
           el.className = '';
         } else {
           el.textContent = 'Gratis';
@@ -669,7 +688,8 @@
       ].join('');
     });
 
-    total += _cartShipCost;
+    var shipTotal = _totalShipCost();
+    total += shipTotal;
 
     var el;
     el = document.getElementById('igcCksItems');    if(el) el.innerHTML = html;
@@ -680,8 +700,8 @@
     el = document.getElementById('igcCksEnvioVal');
     if (el) {
       if (_cartShipCalculated) {
-        el.textContent = _cartShipCost > 0 ? _fmt(_cartShipCost) : 'Gratis';
-        el.style.color = _cartShipCost === 0 ? '#16a34a' : '';
+        el.textContent = shipTotal > 0 ? _fmt(shipTotal) : 'Gratis';
+        el.style.color = shipTotal === 0 ? '#16a34a' : '';
       } else {
         el.textContent = 'Por definir';
         el.style.color = '';
@@ -1050,7 +1070,8 @@
       var subSvc    = _subtotalSvc();
       var base      = sub + subSvc;
       var pct       = _descuentoPct();
-      var totalFinal = (_metodo === 'tarjeta' ? Math.round(base * 1.03) : base) + _cartShipCost;
+      var shipTotal = _totalShipCost();
+      var totalFinal = (_metodo === 'tarjeta' ? Math.round(base * 1.03) : base) + shipTotal;
       var gv = function(elId) { return ((document.getElementById(elId) || {}).value || '').trim(); };
       var snapshot = {
         id:           'ped_' + Date.now(),
@@ -1068,7 +1089,7 @@
         metodo_pago:  _metodo,
         subtotal:     sub,
         total_svc:    subSvc,
-        envio:        _cartShipCost,
+        envio:        shipTotal,
         total:        totalFinal,
         dcto_pct:     pct,
         ahorro:       pct > 0 ? (rawSub - sub) : 0,
