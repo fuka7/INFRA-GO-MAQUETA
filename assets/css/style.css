@@ -1915,28 +1915,25 @@ footer {
 }
 
 .how-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
+  display: none;
 }
 
-.how-section .section-eyebrow { color: var(--gold); }
-.how-section .section-heading { color: #ffffff; }
-.how-section .section-sub     { color: rgba(255,255,255,0.55); }
+.how-section .section-eyebrow { color: var(--gold); font-size: 15px; }
+.how-section .section-heading { color: #ffffff; font-size: clamp(32px, 4.5vw, 58px); }
+.how-section .section-sub     { color: rgba(255,255,255,0.55); font-size: 20px; max-width: 640px; text-align: center; margin-left: auto; margin-right: auto; }
+
+.how-section .how-step-title  { font-size: 18px; }
+.how-section .how-step-badge  { font-size: 13px; padding: 5px 14px; white-space: nowrap; }
+.how-section .how-step-num-circle { width: 68px; height: 68px; font-size: 22px; }
 
 /* ── Pasos horizontales ── */
 .how-steps {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  max-width: 960px;
+  max-width: 1300px;
   margin: 60px auto 0;
-  padding: 0 20px;
+  padding: 0 40px;
 }
 
 .how-step {
