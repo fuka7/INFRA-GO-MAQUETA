@@ -1828,7 +1828,7 @@ footer {
 
 .why-v2-sub {
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   color: #555;
   max-width: 620px;
   margin: 0 auto 48px;
@@ -1886,12 +1886,12 @@ footer {
 .why-v2-stat-num {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
-  font-size: 26px;
+  font-size: 30px;
   line-height: 1.1;
 }
 .why-v2-stat-lbl {
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 .why-v2-stat--blue   { color: #2563EB; }
@@ -1901,7 +1901,7 @@ footer {
 .why-v2-card-title {
   font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 17px;
+  font-size: 19px;
   color: #111;
   margin-bottom: 16px;
 }
@@ -1919,7 +1919,7 @@ footer {
   align-items: center;
   gap: 10px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 13.5px;
+  font-size: 15px;
   color: #444;
   font-weight: 500;
 }
@@ -1957,8 +1957,8 @@ footer {
 .why-v2-step-icon--orange { background: rgba(255,122,0,0.12);  color: #FF7A00; }
 
 .why-v2-step-text { display: flex; flex-direction: column; line-height: 1.3; }
-.why-v2-step-text strong { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: #111; }
-.why-v2-step-text span   { font-family: 'Montserrat', sans-serif; font-size: 11px; color: #777; font-weight: 500; }
+.why-v2-step-text strong { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: #111; }
+.why-v2-step-text span   { font-family: 'Montserrat', sans-serif; font-size: 13px; color: #777; font-weight: 500; }
 
 .why-v2-arrow { font-size: 18px; color: #ccc; line-height: 1; flex-shrink: 0; }
 
