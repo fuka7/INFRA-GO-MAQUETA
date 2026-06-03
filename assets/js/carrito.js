@@ -348,8 +348,7 @@
       '</div>',
       _pct > 0 ? '<div class="igc-mini-ahorro">Ahorras ' + _fmt(_ahorro) + '</div>' : '',
       '<div class="igc-mini-btns">',
-      '  <a href="/carrito.html" class="igc-mini-btn-ver">Ver carro</a>',
-      '  <button class="igc-mini-btn-cotizar" onclick="window.location.href=\'/carrito.html\'">Comprar</button>',
+      '  <a href="/carrito.html" class="igc-mini-btn-cotizar">Ir al carro</a>',
       '</div>',
       ''
     ].join('');
@@ -806,18 +805,30 @@
     _load();
     if (!_items.length) return;
 
-    /* Guard: require region selection */
-    var regionSel = document.getElementById('igs-region-igcCartShippingWidget');
-    var errEl     = document.getElementById('igcRegionError');
+    /* Guard: require region and comuna selection */
+    var regionSel  = document.getElementById('igs-region-igcCartShippingWidget');
+    var comunaSel  = document.getElementById('igs-comuna-igcCartShippingWidget');
+    var errEl      = document.getElementById('igcRegionError');
+    var errComEl   = document.getElementById('igcComunaError');
+    var shipWrap   = document.getElementById('igcCartShipWrap');
     if (regionSel && !regionSel.value) {
-      if (errEl) { errEl.style.display = ''; setTimeout(function() { errEl.style.display = 'none'; }, 3500); }
+      if (errEl)    { errEl.style.display = '';    setTimeout(function() { errEl.style.display = 'none'; },    3500); }
+      if (errComEl)   errComEl.style.display = 'none';
       regionSel.classList.add('igc-field-error');
       setTimeout(function() { regionSel.classList.remove('igc-field-error'); }, 3500);
-      var shipWrap = document.getElementById('igcCartShipWrap');
       if (shipWrap) shipWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-    if (errEl) errEl.style.display = 'none';
+    if (comunaSel && !comunaSel.value) {
+      if (errComEl) { errComEl.style.display = ''; setTimeout(function() { errComEl.style.display = 'none'; }, 3500); }
+      if (errEl)    errEl.style.display = 'none';
+      comunaSel.classList.add('igc-field-error');
+      setTimeout(function() { comunaSel.classList.remove('igc-field-error'); }, 3500);
+      if (shipWrap) shipWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (errEl)    errEl.style.display = 'none';
+    if (errComEl) errComEl.style.display = 'none';
 
     /* Guard: require login to proceed to checkout */
     var loggedIn = (window.igbAuth && typeof window.igbAuth.current === 'function' && window.igbAuth.current())
