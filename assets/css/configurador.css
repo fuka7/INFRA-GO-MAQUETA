@@ -1316,7 +1316,55 @@ body {
 
 
 /* ════════════════════════════════════════════
-   PASO 2 — FORMULARIO
+   PASO 3 — CARDS DE FORMULARIO
+════════════════════════════════════════════ */
+
+/* Card contenedora (misma base que resumen-wrapper) */
+.paso3-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+/* Encabezado navy de la card */
+.paso3-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  background: var(--navy);
+}
+.paso3-card-header svg { flex-shrink: 0; color: rgba(255,255,255,0.7); }
+.paso3-card-header h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: #fff; margin: 0 0 2px;
+  letter-spacing: -0.2px;
+}
+.paso3-card-header p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+}
+
+/* Cuerpo con padding para la sección de dirección */
+.paso3-card-body { padding: 18px 22px 22px; }
+.paso3-card-body .paso3-location-badge-wrap { margin-bottom: 12px; }
+/* Dentro del cuerpo, el grid ya tiene el padding del contenedor */
+.paso3-card-body .config-form-grid { padding: 0; }
+
+/* El config-form-grid dentro de una card pierde su propio borde y reduce padding */
+.paso3-card .config-form-grid {
+  border: none;
+  border-radius: 0;
+  background: var(--c-surface);
+  padding: 20px 22px 24px;
+}
+
+/* ════════════════════════════════════════════
+   PASO 3 — FORMULARIO (campos)
 ════════════════════════════════════════════ */
 .config-form-grid {
   display: grid;
@@ -1336,23 +1384,6 @@ body {
 }
 .req { color: var(--orange); }
 
-/* ── Paso 3: separadores de sección ── */
-.paso3-section-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .6px;
-  color: var(--c-text-2);
-  margin: 24px 0 14px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--c-border);
-}
-.paso3-section-header:first-of-type { margin-top: 4px; }
-.paso3-section-header svg { color: var(--orange); flex-shrink: 0; }
 
 /* Badge de ubicación (modo single) */
 .paso3-location-badge-wrap { margin-bottom: 12px; }
@@ -1478,8 +1509,83 @@ body {
 
 
 /* ════════════════════════════════════════════
-   PASO 3 — RESUMEN
+   PASO 4 — RESUMEN: card única
 ════════════════════════════════════════════ */
+
+/* Contenedor único que agrupa todas las secciones */
+.resumen-wrapper {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+/* Header principal de la card — barra navy con título */
+.resumen-wrapper-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  background: var(--navy);
+}
+.resumen-wrapper-header svg {
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.7);
+}
+.resumen-wrapper-header h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: #fff;
+  margin: 0 0 2px;
+  letter-spacing: -0.2px;
+}
+.resumen-wrapper-header p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+}
+
+/* Cada sección dentro del wrapper */
+.resumen-section { border-top: 1px solid var(--c-border-s); }
+.resumen-section:first-child { border-top: none; }
+
+/* El slot de despacho (div neutro) actúa como separador cuando tiene contenido */
+#resumen-despacho-slot:not(:empty) { border-top: 1px solid var(--c-border-s); }
+#resumen-despacho-slot .resumen-section { border-top: none; }
+
+.resumen-section-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 14px 18px 6px;
+  background: transparent;
+}
+.resumen-section-header svg {
+  width: 13px; height: 13px;
+  color: #4a7fc1;
+  flex-shrink: 0;
+}
+.resumen-section-header h3 {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .9px;
+  color: #5a7a9a;
+  margin: 0;
+}
+
+.resumen-section-body { padding: 2px 0 8px; }
+
+/* Área de totales al pie de la card única */
+.resumen-total-area {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 2px solid var(--c-border);
+  background: var(--c-surface);
+}
+
+/* ── Resumen card (usada para tarjeta de contacto) ── */
 .resumen-card {
   background: var(--c-surface);
   border: 1px solid var(--c-border);
@@ -1535,7 +1641,7 @@ body {
   transition: background .12s;
 }
 .resumen-line-item:last-child { border-bottom: none; }
-.resumen-line-item:hover { background: var(--c-surface-2); }
+.resumen-line-item:hover { background: var(--c-surface); }
 .resumen-line-info { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .resumen-line-item--with-dir {
   flex-wrap: wrap;
@@ -1546,16 +1652,21 @@ body {
 .resumen-line-item--with-dir .resumen-line-price { padding-top: 2px; flex-shrink: 0; }
 .resumen-line-dir {
   flex-basis: 100%;
-  display: flex;
+  display: inline-flex;
+  align-self: flex-start;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  margin-top: 5px;
+  padding: 4px 11px 4px 8px;
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,122,0,0.4);
+  border-radius: 20px;
   font-size: 12px;
-  font-weight: 500;
-  color: var(--c-text-3);
-  padding-left: 1px;
-  line-height: 1.4;
+  font-weight: 600;
+  color: var(--orange);
+  line-height: 1.3;
 }
-.resumen-line-dir svg { flex-shrink: 0; color: var(--c-text-4); opacity: .8; }
+.resumen-line-dir svg { flex-shrink: 0; color: var(--orange); }
 .resumen-line-name {
   font-size: 14px; font-weight: 600;
   color: var(--c-text);
@@ -1600,6 +1711,8 @@ body {
   font-size: 13px; font-weight: 500;
   color: var(--c-text-2);
 }
+.resumen-total-dcto { color: #16a34a; }
+.resumen-dcto-val   { font-weight: 700; color: #16a34a; }
 .resumen-total-main {
   display: flex;
   justify-content: space-between;
@@ -2462,7 +2575,12 @@ body {
   .cw-sticky-wrap { grid-template-columns: 1fr 1fr; gap: 8px; }
   .cw-cta { display: none; }
 
-  /* Paso 2 — Simulador */
+  /* Paso 3 — Cards */
+  .paso3-card-header { padding: 16px 18px; }
+  .paso3-card-header h2 { font-size: 15px; }
+  .paso3-card-body   { padding: 14px 16px 18px; }
+
+  /* Paso 3 — Campos */
   .config-form-grid  { grid-template-columns: 1fr; padding: 16px 14px; gap: 12px; }
   .sim-plazo-btns    { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .sim-plazo-btn     { padding: 10px 6px; font-size: 13px; }
@@ -2479,10 +2597,13 @@ body {
   .step-intro p  { font-size: 14px; }
 
   /* Paso 4 — Resumen */
-  .resumen-card-header { padding: 12px 16px; }
-  .resumen-line-item   { padding: 10px 16px; gap: 12px; }
-  .resumen-total-box   { padding: 18px 18px; }
-  .resumen-contact-grid { grid-template-columns: 1fr; }
+  .resumen-wrapper-header { padding: 16px 18px; }
+  .resumen-wrapper-header h2 { font-size: 15px; }
+  .resumen-card-header    { padding: 12px 16px; }
+  .resumen-section-header { padding: 12px 16px 5px; }
+  .resumen-line-item      { padding: 10px 16px; gap: 12px; }
+  .resumen-total-area     { padding: 16px 16px; }
+  .resumen-contact-grid   { grid-template-columns: 1fr; }
 
   /* Navegación */
   .wizard-nav { gap: 10px; }

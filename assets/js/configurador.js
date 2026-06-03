@@ -569,6 +569,10 @@ function updateSidebar() {
   const pctDcto     = obtenerPctDescuento(qtyHwDiscount); // tramo correcto: solo hardware
   const descuento   = Math.round(totalEqBase - totalEqCLP); // ahorro real: lista − con descuento
   const totalNeto   = totalEqCLP + totalSvc;                // neto: hw descontado + servicios
+
+  // Exponer descuento para el resumen paso 4
+  window._summaryPctDcto      = pctDcto;
+  window._summaryDescuentoIVA = CalcEngine.conIVA(descuento);
   const iva         = CalcEngine.montoIVA(totalNeto);
   const totalConIVA = totalNeto + iva;
   const totalQty    = totalQtyEq;
@@ -765,17 +769,10 @@ function generateFinalSummary() {
   }
 
 
-  // Acordeón productos: expandir si tiene items, colapsar si no
-  const productosCard = document.getElementById('productosCard');
-  if (productosCard) {
-    productosCard.classList.toggle('resumen-card--collapsed', eqEntries.length === 0);
-  }
-
-  // Servicios: ocultar tarjeta completa si no hay servicios
-  const serviciosCard = document.getElementById('serviciosCard');
-  if (serviciosCard) {
-    serviciosCard.style.display = svcEntries.length === 0 ? 'none' : '';
-    if (svcEntries.length > 0) serviciosCard.classList.remove('resumen-card--collapsed');
+  // Sección servicios: ocultar completa si no hay servicios
+  const serviciosSection = document.getElementById('serviciosSection');
+  if (serviciosSection) {
+    serviciosSection.style.display = svcEntries.length === 0 ? 'none' : '';
   }
 
   // ── Despacho estimado (acordeón) ─────────────────────────
@@ -784,8 +781,7 @@ function generateFinalSummary() {
     const desp         = state.despacho || {};
     const despMode     = desp.mode || 'single';
     const totalConIVAD = window._summaryTotalConIVA || 0;
-    const svgTruck     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
-    const svgChevron   = '<svg class="resumen-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>';
+    const svgTruck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
 
     let body = '', hasData = false;
 
@@ -845,13 +841,12 @@ function generateFinalSummary() {
       despachoSlot.innerHTML = '';
     } else {
       despachoSlot.innerHTML = `
-        <div class="resumen-card resumen-card--collapsible" id="resumen-despacho-card">
-          <div class="resumen-card-header" onclick="document.getElementById('resumen-despacho-card').classList.toggle('resumen-card--collapsed')">
+        <div class="resumen-section" id="resumen-despacho-card">
+          <div class="resumen-section-header">
             ${svgTruck}
             <h3>Despacho estimado</h3>
-            ${svgChevron}
           </div>
-          <div class="resumen-card-body">${body}</div>
+          <div class="resumen-section-body">${body}</div>
         </div>`;
     }
   }
@@ -2207,6 +2202,20 @@ function refreshResumenTotales() {
   setTxt('summaryNeto',  fmt(neto));
   setTxt('summaryIVA',   fmt(iva));
   setTxt('summaryTotal', fmt(total));
+
+  // Fila de descuento por volumen — solo si aplica
+  const pctDcto      = window._summaryPctDcto      || 0;
+  const dctoIVA      = window._summaryDescuentoIVA || 0;
+  const dctoRow      = document.getElementById('summaryDescuentoRow');
+  if (dctoRow) {
+    if (pctDcto > 0 && dctoIVA > 0) {
+      dctoRow.style.display = '';
+      setTxt('summaryDescuentoPct', pctDcto);
+      setTxt('summaryDescuentoVal', fmt(dctoIVA));
+    } else {
+      dctoRow.style.display = 'none';
+    }
+  }
 
   // Fila de despacho en totales
   const row   = document.getElementById('summaryDespachoRow');

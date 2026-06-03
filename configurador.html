@@ -416,64 +416,72 @@ window.clsSetCat = function(tipo, btn) {
          PASO 3 — DATOS DE EMPRESA
          ╚══════════════════════════════╝ -->
     <div class="wizard-step" data-step="3">
-      <div class="step-intro">
-        <h2>Datos de tu empresa</h2>
-        <p>Completa la información de contacto para generar tu cotización formal.</p>
-      </div>
 
-      <!-- ── Sección 1: Datos de empresa ── -->
-      <div class="paso3-section-header">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Datos de empresa
-      </div>
-      <div class="config-form-grid">
-        <div class="config-field config-field--full">
-          <label class="config-label">Razón Social <span class="req">*</span></label>
-          <input type="text" id="empresa" class="config-input" placeholder="Razón social de tu empresa" autocomplete="organization">
-        </div>
-        <div class="config-field">
-          <label class="config-label">Nombre de contacto <span class="req">*</span></label>
-          <input type="text" id="contacto" class="config-input" placeholder="Nombre Apellido" autocomplete="name">
-        </div>
-        <div class="config-field">
-          <label class="config-label">Cargo</label>
-          <input type="text" id="cargo" class="config-input" placeholder="Ej: Gerente TI">
-        </div>
-        <div class="config-field">
-          <label class="config-label">Teléfono <span class="req">*</span></label>
-          <input type="tel" id="telefono" class="config-input" placeholder="+56 9 1234 5678" autocomplete="tel">
-        </div>
-        <div class="config-field">
-          <label class="config-label">Email <span class="req">*</span></label>
-          <input type="email" id="email" class="config-input" placeholder="correo@empresa.cl" autocomplete="email">
-        </div>
-        <div class="config-field config-field--full">
-          <label class="config-label">Notas adicionales</label>
-          <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
-        </div>
-      </div>
-
-      <!-- ── Sección 2: Dirección de entrega (oculta si no hay despacho seleccionado) ── -->
-      <div id="entregaSection" style="display:none">
-        <div class="paso3-section-header">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Dirección de entrega
-        </div>
-
-        <!-- Modo un destino -->
-        <div id="singleDirField">
-          <div id="singleDirLocation" class="paso3-location-badge-wrap"></div>
-          <div class="config-form-grid">
-            <div class="config-field config-field--full">
-              <label class="config-label">Calle, número, oficina</label>
-              <input type="text" id="direccion" class="config-input" placeholder="Ej: Av. Providencia 1234, Oficina 501">
-            </div>
+      <!-- Card 1: Datos de empresa -->
+      <div class="paso3-card">
+        <div class="paso3-card-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div>
+            <h2>Datos de tu empresa</h2>
+            <p>Completa la información de contacto para generar tu cotización formal.</p>
           </div>
         </div>
+        <div class="config-form-grid">
+          <div class="config-field config-field--full">
+            <label class="config-label">Razón Social <span class="req">*</span></label>
+            <input type="text" id="empresa" class="config-input" placeholder="Razón social de tu empresa" autocomplete="organization">
+          </div>
+          <div class="config-field">
+            <label class="config-label">Nombre de contacto <span class="req">*</span></label>
+            <input type="text" id="contacto" class="config-input" placeholder="Nombre Apellido" autocomplete="name">
+          </div>
+          <div class="config-field">
+            <label class="config-label">Cargo</label>
+            <input type="text" id="cargo" class="config-input" placeholder="Ej: Gerente TI">
+          </div>
+          <div class="config-field">
+            <label class="config-label">Teléfono <span class="req">*</span></label>
+            <input type="tel" id="telefono" class="config-input" placeholder="+56 9 1234 5678" autocomplete="tel">
+          </div>
+          <div class="config-field">
+            <label class="config-label">Email <span class="req">*</span></label>
+            <input type="email" id="email" class="config-input" placeholder="correo@empresa.cl" autocomplete="email">
+          </div>
+          <div class="config-field config-field--full">
+            <label class="config-label">Notas adicionales</label>
+            <textarea id="notas" class="config-input config-textarea" rows="3" placeholder="Especificaciones especiales, plazos, requerimientos técnicos…"></textarea>
+          </div>
+        </div>
+      </div>
 
-        <!-- Modo múltiples destinos -->
-        <div id="multiDirSection" style="display:none">
-          <div class="config-form-grid" id="multiDirContainer"></div>
+      <!-- Card 2: Dirección de entrega (oculta si no hay despacho seleccionado) -->
+      <div id="entregaSection" style="display:none">
+        <div class="paso3-card">
+          <div class="paso3-card-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <h2>Dirección de entrega</h2>
+              <p>Indica dónde se entregarán los productos.</p>
+            </div>
+          </div>
+
+          <div class="paso3-card-body">
+            <!-- Modo un destino -->
+            <div id="singleDirField">
+              <div id="singleDirLocation" class="paso3-location-badge-wrap"></div>
+              <div class="config-form-grid">
+                <div class="config-field config-field--full">
+                  <label class="config-label">Calle, número, oficina</label>
+                  <input type="text" id="direccion" class="config-input" placeholder="Ej: Av. Providencia 1234, Oficina 501">
+                </div>
+              </div>
+            </div>
+
+            <!-- Modo múltiples destinos -->
+            <div id="multiDirSection" style="display:none">
+              <div class="config-form-grid" id="multiDirContainer"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -504,66 +512,76 @@ window.clsSetCat = function(tipo, btn) {
          PASO 4 — RESUMEN
          ╚══════════════════════════════╝ -->
     <div class="wizard-step" data-step="4">
-      <div class="step-intro">
-        <h2>Resumen de tu cotización</h2>
-        <p>Revisa equipos, servicios y datos antes de continuar.</p>
-      </div>
 
-      <div class="resumen-card resumen-card--collapsible" id="productosCard">
-        <div class="resumen-card-header" onclick="document.getElementById('productosCard').classList.toggle('resumen-card--collapsed')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          <h3>Productos seleccionados</h3>
-          <svg class="resumen-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="resumen-card-body" id="summaryEquipos">
-          <p class="resumen-empty">Sin productos seleccionados</p>
-        </div>
-      </div>
+      <!-- Card única de resumen -->
+      <div class="resumen-wrapper">
 
-      <div class="resumen-card resumen-card--collapsible resumen-card--collapsed" id="serviciosCard">
-        <div class="resumen-card-header" onclick="document.getElementById('serviciosCard').classList.toggle('resumen-card--collapsed')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <h3>Servicios seleccionados</h3>
-          <svg class="resumen-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="resumen-card-body" id="summaryServicios">
-          <p class="resumen-empty">Sin servicios seleccionados</p>
-        </div>
-      </div>
-
-      <!-- Tarjeta de despacho inyectada por generateFinalSummary() -->
-      <div id="resumen-despacho-slot"></div>
-
-      <div class="resumen-total-box">
-
-        <div class="resumen-total-row resumen-total-desglose">
-          <span>Subtotal neto</span>
-          <span>$<span id="summaryNeto">0</span></span>
-        </div>
-        <div class="resumen-total-row resumen-total-desglose">
-          <span>IVA (19%)</span>
-          <span>$<span id="summaryIVA">0</span></span>
-        </div>
-        <div class="resumen-total-row resumen-total-desglose" id="summaryDespachoRow" style="display:none">
-          <span>Despacho</span>
-          <span id="summaryDespachoLabel">—</span>
+        <!-- Encabezado principal de la card -->
+        <div class="resumen-wrapper-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="17" height="17"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <div>
+            <h2>Resumen de tu cotización</h2>
+            <p>Revisa equipos, servicios y datos antes de continuar.</p>
+          </div>
         </div>
 
-        <div class="resumen-total-main">
-          <span>Total</span>
-          <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
+        <!-- Sección: Productos -->
+        <div class="resumen-section" id="productosSection">
+          <div class="resumen-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h3>Productos seleccionados</h3>
+          </div>
+          <div class="resumen-section-body" id="summaryEquipos">
+            <p class="resumen-empty">Sin productos seleccionados</p>
+          </div>
         </div>
 
-        <div class="resumen-total-divider"></div>
-
-        <div class="resumen-total-fin">
-          <span>Financiamiento <span id="plazoLabelSummary">24</span> meses · <span id="tasaLabelSummary">12</span>% anual</span>
-          <span class="resumen-total-cuota">$<span id="summaryCuota">0</span>/mes</span>
+        <!-- Sección: Servicios -->
+        <div class="resumen-section" id="serviciosSection">
+          <div class="resumen-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h3>Servicios seleccionados</h3>
+          </div>
+          <div class="resumen-section-body" id="summaryServicios">
+            <p class="resumen-empty">Sin servicios seleccionados</p>
+          </div>
         </div>
 
-      </div>
+        <!-- Slot: Despacho inyectado por generateFinalSummary() -->
+        <div id="resumen-despacho-slot"></div>
 
-      <!-- Bloque de info de contacto generado por generateFinalSummary() -->
+        <!-- Totales integrados en la card -->
+        <div class="resumen-total-area">
+          <div class="resumen-total-row resumen-total-desglose">
+            <span>Subtotal neto</span>
+            <span>$<span id="summaryNeto">0</span></span>
+          </div>
+          <div class="resumen-total-row resumen-total-desglose resumen-total-dcto" id="summaryDescuentoRow" style="display:none">
+            <span>Descuento por volumen (<span id="summaryDescuentoPct">0</span>%)</span>
+            <span class="resumen-dcto-val">−$<span id="summaryDescuentoVal">0</span></span>
+          </div>
+          <div class="resumen-total-row resumen-total-desglose">
+            <span>IVA (19%)</span>
+            <span>$<span id="summaryIVA">0</span></span>
+          </div>
+          <div class="resumen-total-row resumen-total-desglose" id="summaryDespachoRow" style="display:none">
+            <span>Despacho</span>
+            <span id="summaryDespachoLabel">—</span>
+          </div>
+          <div class="resumen-total-main">
+            <span>Total</span>
+            <span class="resumen-total-val">$<span id="summaryTotal">0</span></span>
+          </div>
+          <div class="resumen-total-divider"></div>
+          <div class="resumen-total-fin">
+            <span>Financiamiento <span id="plazoLabelSummary">24</span> meses · <span id="tasaLabelSummary">12</span>% anual</span>
+            <span class="resumen-total-cuota">$<span id="summaryCuota">0</span>/mes</span>
+          </div>
+        </div>
+
+      </div><!-- /resumen-wrapper -->
+
+      <!-- Card de información de contacto — separada -->
       <div id="summaryInfo"></div>
 
       <!-- Botones de acciones del paso 4 -->

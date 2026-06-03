@@ -257,7 +257,7 @@
       '  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;',
       '  background: linear-gradient(135deg,#eef4ff 0%,#f0f7ff 100%);',
       '  border: 1px solid #c4d7ff;',
-      '  border-radius: 9px; padding: 10px 14px; margin-bottom: 16px;',
+      '  border-radius: 0; padding: 10px 14px; margin-bottom: 0;',
       '  font-size: 12px; color: #2d4a7a; line-height: 1.5;',
       '  animation: igBadgeIn .3s ease;',
       '}',
