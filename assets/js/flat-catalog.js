@@ -18,15 +18,7 @@ function flatFmt(n) {
   return (n || 0).toLocaleString('es-CL');
 }
 function flatObtenerPct(totalQty) {
-  const TRAMOS = [
-    { min: 10, max: 19,   pct: 1 },
-    { min: 20, max: 29,   pct: 2 },
-    { min: 30, max: 39,   pct: 3 },
-    { min: 40, max: 49,   pct: 4 },
-    { min: 50, max: 9999, pct: 5 },
-  ];
-  const t = TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
-  return t ? t.pct : 0;
+  return CalcEngine.pctDescuento(totalQty);
 }
 
 /* Tipo → badge CSS class y abreviatura */
@@ -536,11 +528,11 @@ window.flatRefreshPrices = function flatRefreshPrices() {
     totalListaAcum  += subtotalLista;
     totalAhorroAcum += ahorro;
 
-    /* Precios para display (con IVA 19%) */
-    const priceDisp        = Math.round(price * 1.19);
-    const precioConDtoDisp = Math.round(precioConDto * 1.19);
-    const subtotalDisp     = qty * precioConDtoDisp;
-    const ahorroDisp       = Math.round(ahorro * 1.19);
+    /* Precios para display (con IVA 19%) — usar conIVA del subtotal
+       para que coincidan exactamente con los totales del sidebar */
+    const priceDisp    = CalcEngine.conIVA(price);
+    const subtotalDisp = CalcEngine.conIVA(subtotal);
+    const ahorroDisp   = CalcEngine.conIVA(ahorro);
 
     /* Precio unitario — siempre muestra el precio de 1 unidad */
     const elBase = document.getElementById(`plista-${id}`);

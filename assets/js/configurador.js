@@ -131,8 +131,7 @@ const DCTO_TRAMOS = [
 ];
 
 function obtenerPctDescuento(totalQty) {
-  const tramo = DCTO_TRAMOS.find(t => totalQty >= t.min && totalQty <= t.max);
-  return tramo ? tramo.pct : 0;
+  return CalcEngine.pctDescuento(totalQty);
 }
 
 function actualizarDescuento() {
@@ -570,7 +569,7 @@ function updateSidebar() {
   const pctDcto     = obtenerPctDescuento(qtyHwDiscount); // tramo correcto: solo hardware
   const descuento   = Math.round(totalEqBase - totalEqCLP); // ahorro real: lista − con descuento
   const totalNeto   = totalEqCLP + totalSvc;                // neto: hw descontado + servicios
-  const iva         = Math.round(totalNeto * 0.19);
+  const iva         = CalcEngine.montoIVA(totalNeto);
   const totalConIVA = totalNeto + iva;
   const totalQty    = totalQtyEq;
 
@@ -640,12 +639,12 @@ function updateSidebar() {
 
   setTxt('countEquipos',   totalQty);
   setTxt('countServicios', countSvc);
-  setTxt('totalEquipos',   Math.round(totalEqCLP * 1.19).toLocaleString('es-CL'));
-  setTxt('totalServicios', Math.round(totalSvc * 1.19).toLocaleString('es-CL'));
+  setTxt('totalEquipos',   CalcEngine.conIVA(totalEqCLP).toLocaleString('es-CL'));
+  setTxt('totalServicios', CalcEngine.conIVA(totalSvc).toLocaleString('es-CL'));
   setTxt('totalNeto',      totalNeto.toLocaleString('es-CL'));
   setTxt('totalIVA',       iva.toLocaleString('es-CL'));
   setTxt('totalGeneral',   totalFinal.toLocaleString('es-CL'));
-  setTxt('ahorroTotal',    descuento > 0 ? Math.round(descuento * 1.19).toLocaleString('es-CL') : '0');
+  setTxt('ahorroTotal',    descuento > 0 ? CalcEngine.conIVA(descuento).toLocaleString('es-CL') : '0');
   setTxt('descuentoPct',   pctDcto > 0 ? pctDcto + '%' : '—');
   // Ocultar el prefijo "−$" cuando no hay descuento
   const ahorroEl = document.getElementById('ahorroTotal');
@@ -723,7 +722,7 @@ function generateFinalSummary() {
     } else {
       summaryEquipos.innerHTML = eqEntries.map(([name, v]) => {
         const sub       = v.qty * v.price;
-        const subConIVA = Math.round(sub * 1.19);
+        const subConIVA = CalcEngine.conIVA(sub);
         totalEq  += sub;
         return `<div class="resumen-line-item">
           <div class="resumen-line-info">
@@ -748,7 +747,7 @@ function generateFinalSummary() {
         const price       = typeof svc === 'object' ? svc.price      : svc;
         const frecuencia  = typeof svc === 'object' ? svc.frecuencia : '/mes';
         const qty         = (typeof svc === 'object' && svc.qty) ? svc.qty : null;
-        const priceConIVA = Math.round(price * 1.19);
+        const priceConIVA = CalcEngine.conIVA(price);
         totalSvc += price;
         const freqLabel = frecuencia === 'al inicio' ? ' — pago al inicio'
                         : frecuencia === '/año'       ? '/año'
@@ -902,8 +901,8 @@ function initSimulador() {
   const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
 
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  setTxt('montoFinanciar',        Math.round(totalEq * 1.19).toLocaleString('es-CL'));
-  setTxt('serviciosMensualesSim', Math.round(totalSvc * 1.19).toLocaleString('es-CL'));
+  setTxt('montoFinanciar',        CalcEngine.conIVA(totalEq).toLocaleString('es-CL'));
+  setTxt('serviciosMensualesSim', CalcEngine.conIVA(totalSvc).toLocaleString('es-CL'));
 
   calcularSimulador();
 }
@@ -914,57 +913,33 @@ function calcularSimulador() {
     .reduce((s, [, e]) => s + e.qty * e.price, 0);
   const totalSvc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
 
-  const principal   = Math.round(totalEq * 1.19);
-  const svcIVA      = Math.round(totalSvc * 1.19);
-  const tasaMensual = simTasa / 100 / 12;
-  const n           = simPlazo;
-
-  let cuotaProducto = 0;
-  if (tasaMensual === 0) {
-    cuotaProducto = principal / n;
-  } else {
-    cuotaProducto = principal * (tasaMensual * Math.pow(1 + tasaMensual, n)) / (Math.pow(1 + tasaMensual, n) - 1);
-  }
-
-  const cuotaTotal = Math.round(cuotaProducto + svcIVA);
-  const totalPagar = Math.round(cuotaProducto * n + svcIVA * n);
-  const intereses  = Math.round(cuotaProducto * n - principal);
+  const sim = CalcEngine.calcularSimulador(totalEq, totalSvc, simTasa, simPlazo);
 
   const fmt    = v => v.toLocaleString('es-CL');
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
-  setTxt('simCuota',    '$' + fmt(cuotaTotal));
-  setTxt('simTotal',    '$' + fmt(totalPagar));
-  setTxt('simIntereses','$' + fmt(Math.max(0, intereses)));
+  setTxt('simCuota',    '$' + fmt(sim.cuotaTotal));
+  setTxt('simTotal',    '$' + fmt(sim.totalPagar));
+  setTxt('simIntereses','$' + fmt(sim.interesTotal));
 
-  generarTablaAmort(principal, tasaMensual, n, cuotaProducto);
+  generarTablaAmort(sim.principal, simTasa, simPlazo);
 }
 
-function generarTablaAmort(principal, tasaMensual, n, cuota) {
+function generarTablaAmort(principal, tasaAnual, n) {
   const tbody = document.getElementById('tablaAmortBody');
   if (!tbody) return;
 
-  const fmt = v => v.toLocaleString('es-CL');
-  let saldo = principal;
-  let totalCapital = 0, totalInteres = 0, totalCuota = 0;
-  let rows = '';
+  const amort = CalcEngine.calcularAmortizacion(principal, tasaAnual, n);
+  const fmt   = v => v.toLocaleString('es-CL');
 
-  for (let i = 1; i <= n; i++) {
-    const interes = Math.round(saldo * tasaMensual);
-    const capital = Math.round(cuota - interes);
-    saldo = Math.max(0, saldo - capital);
-    totalCapital += capital;
-    totalInteres += interes;
-    totalCuota   += Math.round(cuota);
-    rows += `<tr><td>${i}</td><td>$${fmt(Math.round(cuota))}</td><td>$${fmt(capital)}</td><td>$${fmt(interes)}</td><td>$${fmt(saldo)}</td></tr>`;
-  }
-
-  tbody.innerHTML = rows;
+  tbody.innerHTML = amort.filas.map(f =>
+    `<tr><td>${f.mes}</td><td>$${fmt(f.cuota)}</td><td>$${fmt(f.capital)}</td><td>$${fmt(f.interes)}</td><td>$${fmt(f.saldo)}</td></tr>`
+  ).join('');
 
   const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  setTxt('tfoot-cuota',   '$' + fmt(totalCuota));
-  setTxt('tfoot-capital', '$' + fmt(totalCapital));
-  setTxt('tfoot-interes', '$' + fmt(totalInteres));
+  setTxt('tfoot-cuota',   '$' + fmt(amort.totalCuotas));
+  setTxt('tfoot-capital', '$' + fmt(amort.totalCapital));
+  setTxt('tfoot-interes', '$' + fmt(amort.totalInteres));
 }
 
 function setPlazo(meses, btn) {
@@ -1008,12 +983,8 @@ function cerrarModalAmort(e) {
 function toggleTablaAmort() { abrirModalAmort(); }
 
 function calcularCuotaSimple() {
-  const totalEq     = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
-  const tasaMensual = simTasa / 100 / 12;
-  const n           = simPlazo;
-  if (tasaMensual === 0) return Math.round(totalEq / n).toLocaleString('es-CL');
-  const cuota = totalEq * (tasaMensual * Math.pow(1 + tasaMensual, n)) / (Math.pow(1 + tasaMensual, n) - 1);
-  return Math.round(cuota).toLocaleString('es-CL');
+  const totalEq = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
+  return CalcEngine.round(CalcEngine.cuotaExacta(totalEq, simTasa, simPlazo)).toLocaleString('es-CL');
 }
 
 // ═════════════════════════════════════════
@@ -1137,21 +1108,18 @@ function descargarCotizacionPDF(returnHtml) {
   const totalFinal = totalGenIVA + (despHay ? despPrecio : 0);
 
   // ── Financiamiento con simPlazo / simTasa reales ──────────────────────────
-  const principal     = Math.round(totalEqNeto * 1.19);
-  const svcMensualIVA = Math.round(totalSvcNeto * 1.19);
-  const tm = simTasa / 100 / 12;
-  let cuotaEq = tm === 0 ? principal / simPlazo
-    : principal * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
-  const cuotaMensual  = Math.round(cuotaEq + svcMensualIVA);
-  const totalPagarFin = Math.round(cuotaEq * simPlazo + svcMensualIVA * simPlazo + (despHay ? despPrecio : 0));
-  const intereses     = Math.max(0, Math.round(cuotaEq * simPlazo - principal));
+  const principal     = CalcEngine.conIVA(totalEqNeto);
+  const svcMensualIVA = CalcEngine.conIVA(totalSvcNeto);
+  const simFin        = CalcEngine.calcularSimulador(totalEqNeto, totalSvcNeto, simTasa, simPlazo);
+  const cuotaEq       = simFin.amort.cuotaF; // valor exacto para cálculo de totales
+  const cuotaMensual  = simFin.cuotaTotal;
+  const totalPagarFin = CalcEngine.round(simFin.amort.totalPagar + svcMensualIVA * simPlazo + (despHay ? despPrecio : 0));
+  const intereses     = simFin.interesTotal;
   const ahorro        = ahorroNeto;
 
   const computeCuota = (plazo) => {
-    const tm2 = simTasa / 100 / 12;
-    const cEq = tm2 === 0 ? principal / plazo
-      : principal * (tm2 * Math.pow(1 + tm2, plazo)) / (Math.pow(1 + tm2, plazo) - 1);
-    return Math.round(cEq + svcMensualIVA);
+    const s = CalcEngine.calcularSimulador(totalEqNeto, totalSvcNeto, simTasa, plazo);
+    return s.cuotaTotal;
   };
   const cuota12 = computeCuota(12);
   const cuota24 = computeCuota(24);
@@ -1163,12 +1131,12 @@ function descargarCotizacionPDF(returnHtml) {
 
   const eqRows = eqEntries.map(([name, v]) => {
     const p        = (window.CATALOGO || []).find(x => x.name === name);
-    const base     = p ? ((p.priceUSD > 0) ? Math.round(p.priceUSD * tc) : (p.price || 0)) : v.price;
-    const baseIVA  = base + Math.round(base * 0.19);
-    const unitIVA  = v.price + Math.round(v.price * 0.19);
+    const base     = p ? ((p.priceUSD > 0) ? CalcEngine.round(p.priceUSD * tc) : (p.price || 0)) : v.price;
+    const baseIVA  = CalcEngine.conIVA(base);
+    const unitIVA  = CalcEngine.conIVA(v.price);
     const dcto     = (p && p.cat !== 'licencias' && p.tipo !== 'accesorios') ? pctDescuento : 0;
-    const subtotal = v.qty * unitIVA;
-    const saving   = Math.max(0, v.qty * (baseIVA - unitIVA));
+    const subtotal = CalcEngine.conIVA(v.qty * v.price);
+    const saving   = Math.max(0, CalcEngine.conIVA(v.qty * base) - subtotal);
     const catLabel = p ? (p.cat === 'licencias' ? 'LIC' : p.tipo === 'accesorios' ? 'ACC' : 'HW') : 'HW';
     return `<tr>
       <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
@@ -1188,9 +1156,9 @@ function descargarCotizacionPDF(returnHtml) {
     const freq     = typeof svc === 'object' ? (svc.frecuencia || '/mes') : '/mes';
     const qty      = (typeof svc === 'object' && svc.qty) ? svc.qty : 1;
     const freqLbl  = freq === 'al inicio' ? 'pago único' : freq === '/año' ? 'anual' : 'mensual';
-    const unitNeto  = Math.round(price / qty);
-    const unitIVA   = unitNeto + Math.round(unitNeto * 0.19);
-    const totalIVA  = price + Math.round(price * 0.19);
+    const unitNeto  = CalcEngine.round(price / qty);
+    const unitIVA   = CalcEngine.conIVA(unitNeto);
+    const totalIVA  = CalcEngine.conIVA(price);
     return `<tr>
       <td ${TD('text-align:center;font-weight:600;')}>${numItem++}</td>
       <td ${TD()}><strong>${name}</strong> <span style="font-size:10px;color:#888;background:#f0f0f0;padding:1px 5px;border-radius:3px;">${freqLbl}</span></td>
@@ -1634,12 +1602,8 @@ function _guardarCotizacionLocal() {
     const despPrecio = (desp.hayValidos && !desp.gratis) ? (desp.precioTotal || 0) : 0;
     const totalFinal = totalGenIVA + despPrecio;
 
-    const principal     = Math.round(totalEqNeto * 1.19);
-    const svcMensualIVA = Math.round(totalSvcNeto * 1.19);
-    const tm = simTasa / 100 / 12;
-    let cuotaEq = tm === 0 ? principal / simPlazo
-      : principal * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
-    const cuota    = Math.round(cuotaEq + svcMensualIVA);
+    const _simLocal = CalcEngine.calcularSimulador(totalEqNeto, totalSvcNeto, simTasa, simPlazo);
+    const cuota     = _simLocal.cuotaTotal;
     const totalQty = eqEntries.reduce((s, [, v]) => s + v.qty, 0);
     const items    = eqEntries.slice(0, 8).map(([name, v]) => ({ name, qty: v.qty }));
 
@@ -2228,10 +2192,10 @@ function refreshResumenTotales() {
 
   const totalEq  = window._summaryNetoEq  || 0;
   const totalSvc = window._summaryNetoSvc || 0;
-  const eqIVA    = Math.round(totalEq * 1.19);
-  const svcIVA   = Math.round(totalSvc * 1.19);
+  const eqIVA    = CalcEngine.conIVA(totalEq);
+  const svcIVA   = CalcEngine.conIVA(totalSvc);
   const neto     = totalEq + totalSvc;
-  const iva      = Math.round(neto * 0.19);
+  const iva      = CalcEngine.montoIVA(neto);
 
   // Despacho — usa los globals que updateSidebar actualiza en tiempo real
   const shippingCost   = window._despachoPrecioTotal  || 0;
@@ -2260,14 +2224,8 @@ function refreshResumenTotales() {
   }
 
   // Financiamiento (sobre equipos + servicios, sin despacho — se paga aparte)
-  const tm = simTasa / 100 / 12;
-  let cuotaEq = 0;
-  if (tm === 0) {
-    cuotaEq = eqIVA / simPlazo;
-  } else {
-    cuotaEq = eqIVA * (tm * Math.pow(1 + tm, simPlazo)) / (Math.pow(1 + tm, simPlazo) - 1);
-  }
-  const cuotaTotal = Math.round(cuotaEq + svcIVA);
+  const cuotaEq    = CalcEngine.cuotaExacta(eqIVA, simTasa, simPlazo);
+  const cuotaTotal = CalcEngine.round(cuotaEq + svcIVA);
 
   setTxt('summaryCuota',      fmt(cuotaTotal));
   setTxt('plazoLabelSummary', simPlazo + '');
@@ -2302,7 +2260,7 @@ async function cotizarDespachoForm() {
 
   const eq  = Object.values(state.equipos).reduce((s, e) => s + e.qty * e.price, 0);
   const svc = Object.values(state.servicios).reduce((s, v) => s + (typeof v === 'object' ? v.price : v), 0);
-  const totalCompra = Math.round((eq + svc) * 1.19);
+  const totalCompra = CalcEngine.conIVA(eq + svc);
 
   wrap.style.display = '';
   inner.innerHTML = '<span class="dq-loading">Consultando tarifas…</span>';
