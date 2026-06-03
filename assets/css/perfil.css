@@ -251,7 +251,41 @@
 
 /* ── FORM: MIS DATOS ── */
 .prf-form {
-  max-width: 620px;
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── CARDS DEL FORMULARIO ── */
+.prf-card {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.prf-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  background: #0A1426;
+}
+.prf-card-header svg { flex-shrink: 0; color: rgba(255,255,255,0.7); }
+.prf-card-header h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 800;
+  color: #fff; margin: 0 0 2px;
+  letter-spacing: -0.2px;
+}
+.prf-card-header p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin: 0;
+}
+.prf-card-body {
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
